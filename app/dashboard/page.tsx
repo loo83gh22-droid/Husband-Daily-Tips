@@ -5,6 +5,7 @@ import DailyTipCard from '@/components/DailyTipCard';
 import StatsCard from '@/components/StatsCard';
 import SubscriptionBanner from '@/components/SubscriptionBanner';
 import HealthBar from '@/components/HealthBar';
+import BadgesDisplay from '@/components/BadgesDisplay';
 import Link from 'next/link';
 
 async function getUserData(auth0Id: string) {
@@ -131,15 +132,29 @@ async function getUserStats(userId: string | null) {
     }
   }
 
-  /**
-   * Derive a simple health score:
-   * - Strong streaks are rewarded heavily
-   * - Total tips give a slower, long-term boost
-   * - Capped between 0 and 100
-   */
-  const baseFromStreak = Math.min(streak * 8, 70); // up to 70% from consistency
-  const fromHistory = Math.min(totalTips * 2, 30); // up to 30% from history
-  const healthScore = Math.max(0, Math.min(100, baseFromStreak + fromHistory));
+  // Get last action date for decay
+  const lastActionDate = tips.length > 0 ? tips[0].date : undefined;
+
+  // Get badge bonuses
+  const { data: userBadges } = await supabase
+    .from('user_badges')
+    .select('badges(health_bonus)')
+    .eq('user_id', userId);
+
+  const totalBadgeBonuses =
+    userBadges?.reduce((sum: number, ub: any) => sum + (ub.badges?.health_bonus || 0), 0) || 0;
+
+  // Calculate health with decay using the new formula
+  const { calculateHealthScore } = await import('@/lib/health');
+  const healthScore = calculateHealthScore(
+    {
+      totalTips,
+      currentStreak: streak,
+      totalDays: uniqueDays,
+      lastActionDate,
+    },
+    totalBadgeBonuses,
+  );
 
   return { totalTips, currentStreak: streak, totalDays: uniqueDays, healthScore };
 }
@@ -286,6 +301,8 @@ export default async function Dashboard() {
                 icon="📅"
               />
             </div>
+
+            <BadgesDisplay userId={user.id} />
 
             <div className="bg-slate-900/70 border border-slate-800 rounded-xl p-4">
               <p className="text-xs text-slate-300 mb-1 font-medium">

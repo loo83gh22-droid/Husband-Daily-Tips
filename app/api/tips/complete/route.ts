@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { getSession } from '@auth0/nextjs-auth0';
 import { getSupabaseAdmin } from '@/lib/supabase';
+import { checkAndAwardBadges } from '@/lib/badges';
+import { calculateHealthScore } from '@/lib/health';
 
 export async function POST(request: Request) {
   try {
@@ -53,6 +55,13 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Failed to mark as completed' }, { status: 500 });
     }
 
+    // Get tip category for badge checking
+    const { data: tipData } = await supabase
+      .from('tips')
+      .select('category')
+      .eq('id', tipId)
+      .single();
+
     // Recompute basic stats to give the client an updated health score
     const { data: tips, error: tipsError } = await supabase
       .from('user_tips')
@@ -83,9 +92,36 @@ export async function POST(request: Request) {
       }
     }
 
-    const baseFromStreak = Math.min(streak * 8, 70);
-    const fromHistory = Math.min(totalTips * 2, 30);
-    const healthScore = Math.max(0, Math.min(100, baseFromStreak + fromHistory));
+    // Get last action date for decay calculation
+    const lastActionDate = tips.length > 0 ? tips[0].date : undefined;
+
+    // Check for newly earned badges
+    const newlyEarned = await checkAndAwardBadges(
+      supabase,
+      user.id,
+      { totalTips, currentStreak: streak, totalDays: uniqueDays },
+      tipData?.category,
+    );
+
+    // Calculate total badge health bonuses
+    const { data: userBadges } = await supabase
+      .from('user_badges')
+      .select('badges(health_bonus)')
+      .eq('user_id', user.id);
+
+    const totalBadgeBonuses =
+      userBadges?.reduce((sum, ub: any) => sum + (ub.badges?.health_bonus || 0), 0) || 0;
+
+    // Calculate health with decay
+    const healthScore = calculateHealthScore(
+      {
+        totalTips,
+        currentStreak: streak,
+        totalDays: uniqueDays,
+        lastActionDate,
+      },
+      totalBadgeBonuses,
+    );
 
     return NextResponse.json({
       success: true,
@@ -95,6 +131,12 @@ export async function POST(request: Request) {
         totalDays: uniqueDays,
         healthScore,
       },
+      newlyEarnedBadges: newlyEarned.map((n) => ({
+        name: n.badge.name,
+        description: n.badge.description,
+        icon: n.badge.icon,
+        healthBonus: n.healthBonus,
+      })),
     });
   } catch (error) {
     console.error('Unexpected error completing tip:', error);

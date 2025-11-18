@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { format } from 'date-fns';
+import ReflectionModal from './ReflectionModal';
 
 interface Tip {
   id: string;
@@ -20,6 +21,10 @@ export default function DailyTipCard({ tip }: DailyTipCardProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isCompleted, setIsCompleted] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [showReflection, setShowReflection] = useState(false);
+  const [newlyEarnedBadges, setNewlyEarnedBadges] = useState<
+    Array<{ name: string; description: string; icon: string; healthBonus: number }>
+  >([]);
 
   const handleMarkDone = async () => {
     if (isSubmitting || isCompleted) return;
@@ -39,7 +44,20 @@ export default function DailyTipCard({ tip }: DailyTipCardProps) {
         throw new Error('Failed to mark as done');
       }
 
+      const data = await response.json();
       setIsCompleted(true);
+
+      // Show badge notifications if any were earned
+      if (data.newlyEarnedBadges && data.newlyEarnedBadges.length > 0) {
+        setNewlyEarnedBadges(data.newlyEarnedBadges);
+        // Auto-hide badge notification after 5 seconds
+        setTimeout(() => setNewlyEarnedBadges([]), 5000);
+      }
+
+      // Show reflection modal after a brief delay
+      setTimeout(() => {
+        setShowReflection(true);
+      }, 500);
     } catch (error) {
       console.error(error);
       setErrorMessage('Could not save this action. You can try again in a moment.');
@@ -91,10 +109,41 @@ export default function DailyTipCard({ tip }: DailyTipCardProps) {
       </div>
 
       {errorMessage && (
-        <p className="mt-3 text-[11px] text-rose-400">
-          {errorMessage}
-        </p>
+        <p className="mt-3 text-[11px] text-rose-400">{errorMessage}</p>
       )}
+
+      {/* Badge notification */}
+      {newlyEarnedBadges.length > 0 && (
+        <div className="mt-4 p-4 bg-primary-500/10 border border-primary-500/30 rounded-lg">
+          <p className="text-xs font-semibold text-primary-300 mb-2">🎉 Badge Earned!</p>
+          {newlyEarnedBadges.map((badge, idx) => (
+            <div key={idx} className="flex items-center gap-2 mb-2 last:mb-0">
+              <span className="text-xl">{badge.icon}</span>
+              <div>
+                <p className="text-sm font-medium text-slate-200">{badge.name}</p>
+                <p className="text-xs text-slate-400">{badge.description}</p>
+                {badge.healthBonus > 0 && (
+                  <p className="text-xs text-primary-300 mt-1">
+                    +{badge.healthBonus} health bonus
+                  </p>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Reflection Modal */}
+      <ReflectionModal
+        isOpen={showReflection}
+        onClose={() => setShowReflection(false)}
+        tipId={tip.id}
+        tipTitle={tip.title}
+        onSuccess={() => {
+          // Refresh page to show updated stats
+          window.location.reload();
+        }}
+      />
     </div>
   );
 }
