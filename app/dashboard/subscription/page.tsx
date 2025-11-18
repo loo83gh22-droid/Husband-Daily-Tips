@@ -74,7 +74,7 @@ export default async function SubscriptionPage() {
             Select the plan that works best for you. You can upgrade or downgrade at any time.
           </p>
 
-        <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+          <div className="grid md:grid-cols-3 gap-8">
           {plans.map((plan) => {
             const isCurrent = plan.tier === currentTier;
             const isPopular = plan.popular;
@@ -142,20 +142,21 @@ export default async function SubscriptionPage() {
               </div>
             );
           })}
-        </div>
+          </div>
 
-        <div className="mt-12 max-w-3xl mx-auto bg-slate-900/80 border border-slate-800 rounded-xl shadow-lg p-8">
-          <h2 className="text-2xl font-bold text-slate-50 mb-4">Payment Integration</h2>
-          <p className="text-slate-300 mb-4">
-            To enable payments, you'll need to integrate a payment provider like Stripe. Here's what you need to do:
-          </p>
-          <ol className="list-decimal list-inside space-y-2 text-slate-300">
-            <li>Set up a Stripe account and get your API keys</li>
-            <li>Install Stripe SDK: <code className="bg-slate-800 px-2 py-1 rounded text-slate-200">npm install stripe @stripe/stripe-js</code></li>
-            <li>Create API routes for checkout and webhooks</li>
-            <li>Update the subscription buttons to call your Stripe checkout</li>
-            <li>Handle subscription updates in Supabase based on Stripe webhooks</li>
-          </ol>
+          <div className="mt-12 max-w-3xl mx-auto bg-slate-900/80 border border-slate-800 rounded-xl shadow-lg p-8">
+            <h2 className="text-2xl font-bold text-slate-50 mb-4">Payment Integration</h2>
+            <p className="text-slate-300 mb-4">
+              To enable payments, you'll need to integrate a payment provider like Stripe. Here's what you need to do:
+            </p>
+            <ol className="list-decimal list-inside space-y-2 text-slate-300">
+              <li>Set up a Stripe account and get your API keys</li>
+              <li>Install Stripe SDK: <code className="bg-slate-800 px-2 py-1 rounded text-slate-200">npm install stripe @stripe/stripe-js</code></li>
+              <li>Create API routes for checkout and webhooks</li>
+              <li>Update the subscription buttons to call your Stripe checkout</li>
+              <li>Handle subscription updates in Supabase based on Stripe webhooks</li>
+            </ol>
+          </div>
         </div>
       </main>
     </div>
