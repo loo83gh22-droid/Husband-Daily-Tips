@@ -6,6 +6,7 @@ import StatsCard from '@/components/StatsCard';
 import SubscriptionBanner from '@/components/SubscriptionBanner';
 import HealthBar from '@/components/HealthBar';
 import BadgesDisplay from '@/components/BadgesDisplay';
+import DashboardNav from '@/components/DashboardNav';
 import Link from 'next/link';
 
 async function getUserData(auth0Id: string) {
@@ -40,37 +41,14 @@ async function getTodayTip(userId: string | null, subscriptionTier: string) {
     return existingTip.tips;
   }
 
-  // Get a random tip based on subscription tier
+  // Get a random tip - all tips accessible during testing
   const { data: tips, error } = await supabase
     .from('tips')
     .select('*')
-    .eq('tier', subscriptionTier)
     .limit(100);
 
   if (error || !tips || tips.length === 0) {
-    // Fallback to free tier tips
-    const { data: freeTips } = await supabase
-      .from('tips')
-      .select('*')
-      .eq('tier', 'free')
-      .limit(100);
-
-    if (!freeTips || freeTips.length === 0) {
-      return null;
-    }
-
-    const randomTip = freeTips[Math.floor(Math.random() * freeTips.length)];
-    
-    // Save to user_tips
-    if (userId) {
-      await supabase.from('user_tips').insert({
-        user_id: userId,
-        tip_id: randomTip.id,
-        date: today,
-      });
-    }
-
-    return randomTip;
+    return null;
   }
 
   const randomTip = tips[Math.floor(Math.random() * tips.length)];
@@ -193,42 +171,13 @@ export default async function Dashboard() {
   }
 
   const subscriptionTier = user.subscription_tier || 'free';
-  const todayTip = await getTodayTip(user.id, subscriptionTier);
+  // Remove tier restrictions - all tips accessible to all users during testing
+  const todayTip = await getTodayTip(user.id, 'premium'); // Use premium to get better tips
   const stats = await getUserStats(user.id);
 
   return (
     <div className="min-h-screen bg-slate-950">
-      {/* Navigation */}
-      <nav className="bg-slate-950/80 border-b border-slate-900 backdrop-blur">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex justify-between items-center">
-            <div className="flex items-center gap-2">
-              <div className="inline-flex h-8 w-8 items-center justify-center rounded-md bg-primary-600/10 border border-primary-500/40">
-                <span className="text-sm font-semibold text-primary-400">HD</span>
-              </div>
-              <div>
-                <h1 className="text-sm font-semibold tracking-wide text-slate-100">
-                  Husband Daily Tips
-                </h1>
-                <p className="text-[11px] text-slate-500">
-                  Daily structure, not pressure.
-                </p>
-              </div>
-            </div>
-            <div className="flex items-center gap-4">
-              <span className="text-xs text-slate-400 capitalize hidden md:inline">
-                {subscriptionTier} plan
-              </span>
-              <Link
-                href="/api/auth/logout"
-                className="px-4 py-2 text-xs md:text-sm text-slate-200 border border-slate-700 rounded-lg hover:bg-slate-900 transition-colors"
-              >
-                Sign Out
-              </Link>
-            </div>
-          </div>
-        </div>
-      </nav>
+      <DashboardNav />
 
       <main className="container mx-auto px-4 py-8 md:py-10">
         {/* Subscription Banner */}

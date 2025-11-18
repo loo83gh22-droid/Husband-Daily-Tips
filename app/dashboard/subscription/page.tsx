@@ -1,7 +1,7 @@
 import { getSession } from '@auth0/nextjs-auth0';
 import { redirect } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
-import Link from 'next/link';
+import DashboardNav from '@/components/DashboardNav';
 
 async function getUserSubscription(auth0Id: string) {
   const { data: user } = await supabase
@@ -62,37 +62,17 @@ export default async function SubscriptionPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
-      <nav className="bg-white shadow-sm border-b border-gray-200">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex justify-between items-center">
-            <Link href="/dashboard" className="text-2xl font-bold text-gray-900">
-              Husband Daily Tips
-            </Link>
-            <Link
-              href="/api/auth/logout"
-              className="px-4 py-2 text-gray-700 hover:text-gray-900 transition-colors"
-            >
-              Sign Out
-            </Link>
-          </div>
-        </div>
-      </nav>
+    <div className="min-h-screen bg-slate-950">
+      <DashboardNav />
 
-      <main className="container mx-auto px-4 py-8">
-        <div className="mb-6">
-          <Link
-            href="/dashboard"
-            className="text-primary-600 hover:text-primary-700 font-semibold"
-          >
-            ← Back to Dashboard
-          </Link>
-        </div>
-
-        <h1 className="text-4xl font-bold text-gray-900 mb-4 text-center">Choose Your Plan</h1>
-        <p className="text-center text-gray-600 mb-12 max-w-2xl mx-auto">
-          Select the plan that works best for you. You can upgrade or downgrade at any time.
-        </p>
+      <main className="container mx-auto px-4 py-8 md:py-10">
+        <div className="max-w-5xl mx-auto">
+          <h1 className="text-3xl md:text-4xl font-semibold text-slate-50 mb-4 text-center">
+            Choose Your Plan
+          </h1>
+          <p className="text-center text-slate-400 mb-12 max-w-2xl mx-auto">
+            Select the plan that works best for you. You can upgrade or downgrade at any time.
+          </p>
 
         <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
           {plans.map((plan) => {
@@ -102,10 +82,10 @@ export default async function SubscriptionPage() {
             return (
               <div
                 key={plan.tier}
-                className={`bg-white rounded-xl shadow-lg p-8 border-2 ${
+                className={`bg-slate-900/80 border rounded-xl shadow-lg p-8 border-2 ${
                   isPopular
                     ? 'border-primary-600 transform scale-105'
-                    : 'border-gray-200'
+                    : 'border-slate-800'
                 } ${isCurrent ? 'ring-2 ring-primary-400' : ''}`}
               >
                 {isPopular && (
@@ -114,20 +94,20 @@ export default async function SubscriptionPage() {
                   </div>
                 )}
                 {isCurrent && (
-                  <div className="bg-green-100 text-green-800 text-xs font-bold px-3 py-1 rounded-full inline-block mb-4">
+                  <div className="bg-green-500/20 text-green-400 text-xs font-bold px-3 py-1 rounded-full inline-block mb-4 border border-green-500/30">
                     CURRENT PLAN
                   </div>
                 )}
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">{plan.name}</h3>
-                <div className="text-4xl font-bold text-gray-900 mb-4">
+                <h3 className="text-2xl font-bold text-slate-50 mb-2">{plan.name}</h3>
+                <div className="text-4xl font-bold text-slate-50 mb-4">
                   ${plan.price}
-                  <span className="text-lg text-gray-600">/month</span>
+                  <span className="text-lg text-slate-400">/month</span>
                 </div>
                 <ul className="space-y-3 mb-6">
                   {plan.features.map((feature, index) => (
-                    <li key={index} className="flex items-center text-gray-600">
+                    <li key={index} className="flex items-center text-slate-300">
                       <svg
-                        className="w-5 h-5 text-green-500 mr-2"
+                        className="w-5 h-5 text-green-400 mr-2"
                         fill="currentColor"
                         viewBox="0 0 20 20"
                       >
@@ -144,7 +124,7 @@ export default async function SubscriptionPage() {
                 {isCurrent ? (
                   <button
                     disabled
-                    className="w-full px-6 py-3 bg-gray-300 text-gray-600 rounded-lg font-semibold cursor-not-allowed"
+                    className="w-full px-6 py-3 bg-slate-800 text-slate-500 rounded-lg font-semibold cursor-not-allowed border border-slate-700"
                   >
                     Current Plan
                   </button>
@@ -152,8 +132,8 @@ export default async function SubscriptionPage() {
                   <button
                     className={`w-full px-6 py-3 rounded-lg font-semibold transition-colors ${
                       isPopular
-                        ? 'bg-primary-600 text-white hover:bg-primary-700'
-                        : 'bg-gray-100 text-gray-900 hover:bg-gray-200'
+                        ? 'bg-primary-500 text-slate-950 hover:bg-primary-400'
+                        : 'bg-slate-800 text-slate-200 hover:bg-slate-700 border border-slate-700'
                     }`}
                   >
                     {plan.price === 0 ? 'Downgrade' : 'Upgrade'}
@@ -164,14 +144,14 @@ export default async function SubscriptionPage() {
           })}
         </div>
 
-        <div className="mt-12 max-w-3xl mx-auto bg-white rounded-xl shadow-lg p-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">Payment Integration</h2>
-          <p className="text-gray-600 mb-4">
+        <div className="mt-12 max-w-3xl mx-auto bg-slate-900/80 border border-slate-800 rounded-xl shadow-lg p-8">
+          <h2 className="text-2xl font-bold text-slate-50 mb-4">Payment Integration</h2>
+          <p className="text-slate-300 mb-4">
             To enable payments, you'll need to integrate a payment provider like Stripe. Here's what you need to do:
           </p>
-          <ol className="list-decimal list-inside space-y-2 text-gray-600">
+          <ol className="list-decimal list-inside space-y-2 text-slate-300">
             <li>Set up a Stripe account and get your API keys</li>
-            <li>Install Stripe SDK: <code className="bg-gray-100 px-2 py-1 rounded">npm install stripe @stripe/stripe-js</code></li>
+            <li>Install Stripe SDK: <code className="bg-slate-800 px-2 py-1 rounded text-slate-200">npm install stripe @stripe/stripe-js</code></li>
             <li>Create API routes for checkout and webhooks</li>
             <li>Update the subscription buttons to call your Stripe checkout</li>
             <li>Handle subscription updates in Supabase based on Stripe webhooks</li>

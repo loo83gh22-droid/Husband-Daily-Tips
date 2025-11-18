@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { format } from 'date-fns';
 import ReflectionModal from './ReflectionModal';
+import SocialShare from './SocialShare';
 
 interface Tip {
   id: string;
@@ -102,10 +103,16 @@ export default function DailyTipCard({ tip }: DailyTipCardProps) {
             Save for later
           </button>
         </div>
-        <p className="text-[11px] text-slate-500">
-          Completing this nudges your health bar up. Skipping it won&apos;t break anything—but
-          patterns always tell the truth.
-        </p>
+        <div className="flex flex-col gap-2">
+          <p className="text-[11px] text-slate-500">
+            Completing this nudges your health bar up. Skipping it won&apos;t break anything—but
+            patterns always tell the truth.
+          </p>
+          <SocialShare
+            title={tip.title}
+            text={`Today's action: ${tip.title} - ${tip.content.substring(0, 100)}...`}
+          />
+        </div>
       </div>
 
       {errorMessage && (

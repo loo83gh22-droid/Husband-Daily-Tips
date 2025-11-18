@@ -1,7 +1,7 @@
 import { getSession } from '@auth0/nextjs-auth0';
 import { redirect } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
-import Link from 'next/link';
+import DashboardNav from '@/components/DashboardNav';
 
 async function getDeepThoughts() {
   const { data: thoughts, error } = await supabase
@@ -36,39 +36,9 @@ export default async function DeepThoughtsPage() {
 
   return (
     <div className="min-h-screen bg-slate-950">
-      <nav className="bg-slate-950/80 border-b border-slate-900 backdrop-blur">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex justify-between items-center">
-            <Link href="/dashboard" className="flex items-center gap-2">
-              <div className="inline-flex h-8 w-8 items-center justify-center rounded-md bg-primary-600/10 border border-primary-500/40">
-                <span className="text-sm font-semibold text-primary-400">HD</span>
-              </div>
-              <div>
-                <h1 className="text-sm font-semibold tracking-wide text-slate-100">
-                  Husband Daily Tips
-                </h1>
-                <p className="text-[11px] text-slate-500">Daily structure, not pressure.</p>
-              </div>
-            </Link>
-            <Link
-              href="/api/auth/logout"
-              className="px-4 py-2 text-xs md:text-sm text-slate-200 border border-slate-700 rounded-lg hover:bg-slate-900 transition-colors"
-            >
-              Sign Out
-            </Link>
-          </div>
-        </div>
-      </nav>
+      <DashboardNav />
 
       <main className="container mx-auto px-4 py-8 md:py-10">
-        <div className="mb-6">
-          <Link
-            href="/dashboard"
-            className="text-primary-300 hover:text-primary-200 text-sm font-semibold"
-          >
-            ← Back to Dashboard
-          </Link>
-        </div>
 
         <div className="max-w-4xl mx-auto">
           <div className="mb-8">

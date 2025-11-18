@@ -1,7 +1,7 @@
 import { getSession } from '@auth0/nextjs-auth0';
 import { redirect } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
-import Link from 'next/link';
+import DashboardNav from '@/components/DashboardNav';
 
 async function getUserTips(auth0Id: string) {
   const { data: user } = await supabase
@@ -37,69 +37,52 @@ export default async function TipsPage() {
   const tips = await getUserTips(auth0Id);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
-      <nav className="bg-white shadow-sm border-b border-gray-200">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex justify-between items-center">
-            <Link href="/dashboard" className="text-2xl font-bold text-gray-900">
-              Husband Daily Tips
-            </Link>
-            <Link
-              href="/api/auth/logout"
-              className="px-4 py-2 text-gray-700 hover:text-gray-900 transition-colors"
-            >
-              Sign Out
-            </Link>
-          </div>
-        </div>
-      </nav>
+    <div className="min-h-screen bg-slate-950">
+      <DashboardNav />
 
-      <main className="container mx-auto px-4 py-8">
-        <div className="mb-6">
-          <Link
-            href="/dashboard"
-            className="text-primary-600 hover:text-primary-700 font-semibold"
-          >
-            ← Back to Dashboard
-          </Link>
-        </div>
+      <main className="container mx-auto px-4 py-8 md:py-10">
+        <div className="max-w-4xl mx-auto">
+          <h1 className="text-3xl md:text-4xl font-semibold text-slate-50 mb-8">Your Tips History</h1>
 
-        <h1 className="text-3xl font-bold text-gray-900 mb-8">Your Tips History</h1>
+          {tips.length === 0 ? (
+            <div className="bg-slate-900/80 border border-slate-800 rounded-xl p-8 text-center">
+              <p className="text-slate-300">
+                You haven't received any tips yet. Check back tomorrow!
+              </p>
+            </div>
+          ) : (
+            <div className="space-y-6">
+              {tips.map((userTip: any) => {
+                const tip = userTip.tips;
+                if (!tip) return null;
 
-        {tips.length === 0 ? (
-          <div className="bg-white rounded-xl shadow-lg p-8 text-center">
-            <p className="text-gray-600">You haven't received any tips yet. Check back tomorrow!</p>
-          </div>
-        ) : (
-          <div className="space-y-6">
-            {tips.map((userTip: any) => {
-              const tip = userTip.tips;
-              if (!tip) return null;
-
-              return (
-                <div
-                  key={userTip.id}
-                  className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-primary-600"
-                >
-                  <div className="flex items-start justify-between mb-4">
-                    <div>
-                      <span className="inline-block px-3 py-1 bg-primary-100 text-primary-700 text-sm font-semibold rounded-full mb-2">
-                        {tip.category}
-                      </span>
-                      <h3 className="text-xl font-bold text-gray-900 mb-2">{tip.title}</h3>
+                return (
+                  <div
+                    key={userTip.id}
+                    className="bg-slate-900/80 border border-slate-800 rounded-xl p-6 md:p-8 border-l-4 border-primary-600"
+                  >
+                    <div className="flex items-start justify-between mb-4">
+                      <div>
+                        <span className="inline-block px-3 py-1 bg-primary-500/10 text-primary-300 text-xs font-semibold rounded-full mb-2">
+                          {tip.category}
+                        </span>
+                        <h3 className="text-xl md:text-2xl font-semibold text-slate-50 mb-2">
+                          {tip.title}
+                        </h3>
+                      </div>
+                      <div className="text-xs text-slate-500">
+                        {new Date(userTip.date).toLocaleDateString()}
+                      </div>
                     </div>
-                    <div className="text-sm text-gray-500">
-                      {new Date(userTip.date).toLocaleDateString()}
-                    </div>
+                    <p className="text-slate-200 leading-relaxed whitespace-pre-line">
+                      {tip.content}
+                    </p>
                   </div>
-                  <p className="text-gray-700 leading-relaxed whitespace-pre-line">
-                    {tip.content}
-                  </p>
-                </div>
-              );
-            })}
-          </div>
-        )}
+                );
+              })}
+            </div>
+          )}
+        </div>
       </main>
     </div>
   );
