@@ -1,0 +1,105 @@
+import { NextResponse } from 'next/server';
+import { getSession } from '@auth0/nextjs-auth0';
+import { getSupabaseAdmin } from '@/lib/supabase';
+
+export async function POST(request: Request) {
+  try {
+    const session = await getSession();
+
+    if (!session?.user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const auth0Id = session.user.sub;
+    const { tipId } = await request.json();
+
+    if (!tipId) {
+      return NextResponse.json({ error: 'Missing tipId' }, { status: 400 });
+    }
+
+    const supabase = getSupabaseAdmin();
+
+    // Look up the internal user id for this Auth0 user
+    const { data: user, error: userError } = await supabase
+      .from('users')
+      .select('id')
+      .eq('auth0_id', auth0Id)
+      .single();
+
+    if (userError || !user) {
+      console.error('Error fetching user for completion:', userError);
+      return NextResponse.json({ error: 'User not found' }, { status: 404 });
+    }
+
+    const today = new Date().toISOString().split('T')[0];
+
+    // Mark the tip as completed for today (or insert if for some reason the row doesn't exist)
+    const { error: upsertError } = await supabase
+      .from('user_tips')
+      .upsert(
+        {
+          user_id: user.id,
+          tip_id: tipId,
+          date: today,
+          completed: true,
+        },
+        {
+          onConflict: 'user_id,tip_id,date',
+        },
+      );
+
+    if (upsertError) {
+      console.error('Error marking tip as completed:', upsertError);
+      return NextResponse.json({ error: 'Failed to mark as completed' }, { status: 500 });
+    }
+
+    // Recompute basic stats to give the client an updated health score
+    const { data: tips, error: tipsError } = await supabase
+      .from('user_tips')
+      .select('date')
+      .eq('user_id', user.id)
+      .order('date', { ascending: false });
+
+    if (tipsError || !tips) {
+      return NextResponse.json({ success: true });
+    }
+
+    const totalTips = tips.length;
+    const uniqueDays = new Set(tips.map((t) => t.date)).size;
+
+    let streak = 0;
+    const todayDate = new Date();
+    todayDate.setHours(0, 0, 0, 0);
+
+    for (let i = 0; i < 365; i++) {
+      const checkDate = new Date(todayDate);
+      checkDate.setDate(todayDate.getDate() - i);
+      const dateStr = checkDate.toISOString().split('T')[0];
+
+      if (tips.some((t) => t.date === dateStr)) {
+        streak++;
+      } else {
+        break;
+      }
+    }
+
+    const baseFromStreak = Math.min(streak * 8, 70);
+    const fromHistory = Math.min(totalTips * 2, 30);
+    const healthScore = Math.max(0, Math.min(100, baseFromStreak + fromHistory));
+
+    return NextResponse.json({
+      success: true,
+      stats: {
+        totalTips,
+        currentStreak: streak,
+        totalDays: uniqueDays,
+        healthScore,
+      },
+    });
+  } catch (error) {
+    console.error('Unexpected error completing tip:', error);
+    return NextResponse.json({ error: 'Unexpected error' }, { status: 500 });
+  }
+}
+
+
