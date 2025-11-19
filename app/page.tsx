@@ -275,12 +275,12 @@ export default async function Home() {
         {/* Pricing Section */}
         <section className="mt-24 border-t border-slate-800 pt-12">
           <div className="max-w-5xl mx-auto">
-            <h2 className="text-2xl md:text-3xl font-semibold text-slate-50 mb-2 text-center">
-              For men who want structure, not fluff.
+            <h2 className="text-2xl md:text-3xl font-bold text-slate-50 mb-2 text-center">
+              Pick Your Level
             </h2>
             <p className="text-sm text-slate-400 text-center mb-10 max-w-2xl mx-auto">
-              Start free. Upgrade only if the daily structure and health bar are genuinely helping you
-              show up better at home.
+              Start free. Upgrade only if the daily structure and health bar are actually helping you
+              show up better at home. No BS, no contracts.
             </p>
           <div className="grid md:grid-cols-3 gap-8">
           <div className="bg-white p-8 rounded-xl shadow-lg">
@@ -343,7 +343,7 @@ export default async function Home() {
                   <svg className="w-5 h-5 text-emerald-400 mr-2" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                   </svg>
-                  Access to stories library
+                  Access to How To Guides
                 </li>
               </ul>
               <Link
