@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import AccountMenu from './AccountMenu';
+import BrandLogo from './BrandLogo';
 
 export default function DashboardNav() {
   const pathname = usePathname();
@@ -20,17 +21,7 @@ export default function DashboardNav() {
     <nav className="bg-slate-950/80 border-b border-slate-900 backdrop-blur sticky top-0 z-40">
       <div className="container mx-auto px-4 py-3">
         <div className="flex items-center justify-between">
-          <Link href="/dashboard" className="flex items-center gap-2">
-            <div className="inline-flex h-8 w-8 items-center justify-center rounded-md bg-primary-600/10 border border-primary-500/40">
-              <span className="text-sm font-semibold text-primary-400">HD</span>
-            </div>
-            <div>
-              <h1 className="text-sm font-semibold tracking-wide text-slate-100">
-                Husband Daily Tips
-              </h1>
-              <p className="text-[11px] text-slate-500">Level up your marriage game.</p>
-            </div>
-          </Link>
+          <BrandLogo variant="nav" />
 
           <div className="flex items-center gap-1 md:gap-2">
             {navLinks.map((link) => {

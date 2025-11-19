@@ -79,7 +79,7 @@ export async function GET(request: Request) {
     // Get user stats for progress calculation
     const stats = await getUserStats(user.id);
 
-    // Get all badges
+    // Get all badges - use DISTINCT ON to prevent duplicates
     const { data: allBadges, error: badgesError } = await supabase
       .from('badges')
       .select('*')
@@ -89,6 +89,11 @@ export async function GET(request: Request) {
     if (badgesError || !allBadges) {
       return NextResponse.json({ error: 'Failed to fetch badges' }, { status: 500 });
     }
+
+    // Deduplicate badges by ID (in case of database duplicates)
+    const uniqueBadges = Array.from(
+      new Map(allBadges.map((badge) => [badge.id, badge])).values()
+    );
 
     // Get user's earned badges
     const { data: earnedBadges, error: earnedError } = await supabase
@@ -102,7 +107,7 @@ export async function GET(request: Request) {
 
     // Calculate progress for each badge and combine with earned status
     const badgesWithProgress = await Promise.all(
-      allBadges.map(async (badge) => {
+      uniqueBadges.map(async (badge) => {
         const earned_at = earnedMap.get(badge.id);
         let progress = null;
 

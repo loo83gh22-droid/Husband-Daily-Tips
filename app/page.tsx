@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { getSession } from '@auth0/nextjs-auth0';
 import { redirect } from 'next/navigation';
+import BrandLogo from '@/components/BrandLogo';
 
 export default async function Home() {
   const session = await getSession();
@@ -14,19 +15,7 @@ export default async function Home() {
       {/* Navigation */}
       <nav className="border-b border-slate-800 bg-slate-950/80 backdrop-blur">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="inline-flex h-8 w-8 items-center justify-center rounded-md bg-primary-600/10 border border-primary-500/40">
-              <span className="text-sm font-semibold text-primary-400">HD</span>
-            </div>
-            <div>
-              <p className="text-sm font-semibold tracking-wide text-slate-100">
-                Husband Daily Tips
-              </p>
-              <p className="text-xs text-slate-400">
-                Quiet, practical structure for your marriage.
-              </p>
-            </div>
-          </div>
+          <BrandLogo variant="nav" showTagline={false} />
 
           <div className="flex items-center gap-3">
             <Link
@@ -449,7 +438,7 @@ export default async function Home() {
       <footer className="border-t border-slate-900/80 bg-slate-950">
         <div className="container mx-auto px-4 py-6 flex flex-col md:flex-row items-center justify-between gap-3">
           <p className="text-xs text-slate-500">
-            © {new Date().getFullYear()} Husband Daily Tips. Built for husbands who don&apos;t want to sleepwalk through their marriage.
+            © {new Date().getFullYear()} Best Husband Ever. Built for husbands who don&apos;t want to sleepwalk through their marriage.
           </p>
           <p className="text-[11px] text-slate-600">
             This is not therapy. It&apos;s a daily practice tool. Use it to support—not replace—honest conversations with your wife.

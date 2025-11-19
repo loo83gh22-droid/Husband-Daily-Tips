@@ -6,8 +6,8 @@ import { UserProvider } from '@auth0/nextjs-auth0/client';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'Husband Daily Tips - Become a Better Partner',
-  description: 'Daily tips and guidance to help you become a better husband and partner',
+  title: 'Best Husband Ever - Level Up Your Marriage Game',
+  description: 'Daily tips, challenges, and guidance to help you become the best husband ever',
 };
 
 export default function RootLayout({
