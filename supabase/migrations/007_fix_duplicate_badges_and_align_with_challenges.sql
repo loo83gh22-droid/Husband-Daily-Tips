@@ -6,14 +6,14 @@ WHERE id NOT IN (
   GROUP BY name, requirement_type, requirement_value
 );
 
--- Now add badges that align with challenge categories/themes
--- These badges will be earned by completing challenges in each category
+-- Now add badges that align with action categories/themes
+-- These badges will be earned by completing actions in each category
 
 -- Communication Badges
 INSERT INTO badges (name, description, icon, badge_type, requirement_type, requirement_value, health_bonus)
 SELECT 
   'Communication Champion',
-  'Complete 10 communication-focused challenges or tips',
+  'Complete 10 communication-focused actions or tips',
   '💬',
   'big_idea',
   'category_count',
@@ -26,7 +26,7 @@ WHERE NOT EXISTS (
 INSERT INTO badges (name, description, icon, badge_type, requirement_type, requirement_value, health_bonus)
 SELECT 
   'Active Listener',
-  'Complete 5 active listening challenges',
+  'Complete 5 active listening actions',
   '👂',
   'big_idea',
   'category_count',
@@ -40,7 +40,7 @@ WHERE NOT EXISTS (
 INSERT INTO badges (name, description, icon, badge_type, requirement_type, requirement_value, health_bonus)
 SELECT 
   'Romance Master',
-  'Complete 10 romance-focused challenges or tips',
+  'Complete 10 romance-focused actions or tips',
   '💕',
   'big_idea',
   'category_count',
@@ -93,7 +93,7 @@ WHERE NOT EXISTS (
 INSERT INTO badges (name, description, icon, badge_type, requirement_type, requirement_value, health_bonus)
 SELECT 
   'Gratitude Champion',
-  'Complete 15 gratitude challenges',
+  'Complete 15 gratitude actions',
   '🌟',
   'big_idea',
   'gratitude_actions',
@@ -107,7 +107,7 @@ WHERE NOT EXISTS (
 INSERT INTO badges (name, description, icon, badge_type, requirement_type, requirement_value, health_bonus)
 SELECT 
   'Partnership Pro',
-  'Complete 10 partnership-focused challenges or tips',
+  'Complete 10 partnership-focused actions or tips',
   '🤝',
   'big_idea',
   'category_count',
@@ -120,7 +120,7 @@ WHERE NOT EXISTS (
 INSERT INTO badges (name, description, icon, badge_type, requirement_type, requirement_value, health_bonus)
 SELECT 
   'Support System',
-  'Support your partner through a major goal or challenge',
+  'Support your partner through a major goal or difficult time',
   '💪',
   'big_idea',
   'support_actions',
@@ -134,7 +134,7 @@ WHERE NOT EXISTS (
 INSERT INTO badges (name, description, icon, badge_type, requirement_type, requirement_value, health_bonus)
 SELECT 
   'Intimacy Expert',
-  'Complete 10 intimacy-focused challenges or tips',
+  'Complete 10 intimacy-focused actions or tips',
   '💝',
   'big_idea',
   'category_count',
