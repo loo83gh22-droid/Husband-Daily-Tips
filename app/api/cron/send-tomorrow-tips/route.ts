@@ -131,11 +131,13 @@ export async function GET(request: Request) {
 
         if (success) {
           sentCount++;
+          console.log(`✅ Email sent to ${user.email}`);
         } else {
           errorCount++;
+          console.error(`❌ Failed to send email to ${user.email}`);
         }
-      } catch (error) {
-        console.error(`Error processing user ${user.id}:`, error);
+      } catch (error: any) {
+        console.error(`Error processing user ${user.id} (${user.email}):`, error?.message || error);
         errorCount++;
       }
     }
