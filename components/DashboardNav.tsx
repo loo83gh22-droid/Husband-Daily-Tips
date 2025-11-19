@@ -10,7 +10,7 @@ export default function DashboardNav() {
 
   const navLinks = [
     { href: '/dashboard', label: 'Dashboard', icon: '📊' },
-    { href: '/dashboard/challenges', label: 'Challenges', icon: '🎯' },
+    { href: '/dashboard/actions', label: 'Actions', icon: '🎯' },
     { href: '/dashboard/badges', label: 'Badges', icon: '🏆' },
     { href: '/dashboard/journal', label: 'Journal', icon: '📝' },
     { href: '/dashboard/team-wins', label: 'Team Wins', icon: '💪' },

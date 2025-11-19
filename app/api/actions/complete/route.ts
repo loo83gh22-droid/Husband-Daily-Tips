@@ -1,0 +1,223 @@
+import { NextResponse } from 'next/server';
+import { getSession } from '@auth0/nextjs-auth0';
+import { getSupabaseAdmin } from '@/lib/supabase';
+import { checkAndAwardBadges } from '@/lib/badges';
+
+/**
+ * Mark an action as complete
+ */
+export async function POST(request: Request) {
+  try {
+    const session = await getSession();
+
+    if (!session?.user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const auth0Id = session.user.sub;
+    const body = await request.json();
+    const { actionId, notes, linkToJournal } = body;
+
+    if (!actionId) {
+      return NextResponse.json({ error: 'Missing actionId' }, { status: 400 });
+    }
+
+    const supabase = getSupabaseAdmin();
+
+    // Get user
+    const { data: user, error: userError } = await supabase
+      .from('users')
+      .select('id')
+      .eq('auth0_id', auth0Id)
+      .single();
+
+    if (userError || !user) {
+      return NextResponse.json({ error: 'User not found' }, { status: 404 });
+    }
+
+    // Get action
+    const { data: action, error: actionError } = await supabase
+      .from('actions')
+      .select('*')
+      .eq('id', actionId)
+      .single();
+
+    if (actionError || !action) {
+      return NextResponse.json({ error: 'Action not found' }, { status: 404 });
+    }
+
+    // Always create journal entry for action completions
+    // This is the running record of all action completions
+    let journalEntryId: string | null = null;
+    const journalContent = notes 
+      ? `Action: ${action.name}\n\n${notes}`
+      : `Action: ${action.name}\n\nCompleted on ${new Date().toLocaleDateString()}`;
+    
+    const { data: journalEntry, error: journalError } = await supabase
+      .from('reflections')
+      .insert({
+        user_id: user.id,
+        content: journalContent,
+        shared_to_forum: false,
+      })
+      .select('id')
+      .single();
+
+    if (!journalError && journalEntry) {
+      journalEntryId = journalEntry.id;
+    } else if (journalError) {
+      console.error('Error creating journal entry:', journalError);
+      // Continue anyway - don't fail the action completion if journal fails
+    }
+
+    // Mark as complete (allow multiple completions)
+    const { data: completion, error: insertError } = await supabase
+      .from('user_action_completions')
+      .insert({
+        user_id: user.id,
+        action_id: actionId,
+        notes: notes || null,
+        journal_entry_id: journalEntryId,
+      })
+      .select('id')
+      .single();
+
+    if (insertError) {
+      console.error('Error completing action:', insertError);
+      return NextResponse.json(
+        { error: 'Failed to complete action' },
+        { status: 500 },
+      );
+    }
+
+    // Check for badge progress (if action has requirement_type)
+    if (action.requirement_type) {
+      // Get user stats for badge checking
+      const { data: tips } = await supabase
+        .from('user_tips')
+        .select('date, tips(category)')
+        .eq('user_id', user.id);
+
+      const totalTips = tips?.length || 0;
+      const uniqueDays = new Set(tips?.map((t) => t.date)).size;
+
+      // Calculate streak
+      let streak = 0;
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      for (let i = 0; i < 365; i++) {
+        const checkDate = new Date(today);
+        checkDate.setDate(today.getDate() - i);
+        const dateStr = checkDate.toISOString().split('T')[0];
+
+        if (tips?.some((t) => t.date === dateStr)) {
+          streak++;
+        } else {
+          break;
+        }
+      }
+
+      // Get ALL action completions (including the one we just added)
+      // Count each completion instance (not just unique actions)
+      const { data: actionCompletions } = await supabase
+        .from('user_action_completions')
+        .select('actions(requirement_type)')
+        .eq('user_id', user.id);
+
+      const actionCounts: Record<string, number> = {};
+      actionCompletions?.forEach((ac: any) => {
+        const reqType = ac.actions?.requirement_type;
+        if (reqType) {
+          // Count each instance (multiple completions of same action count multiple times)
+          actionCounts[reqType] = (actionCounts[reqType] || 0) + 1;
+        }
+      });
+
+      // Check badges with updated action counts
+      const newlyEarned = await checkAndAwardBadges(
+        supabase,
+        user.id,
+        {
+          totalTips,
+          currentStreak: streak,
+          totalDays: uniqueDays,
+          actionCounts, // Now using actionCounts directly
+        },
+        action.category,
+      );
+
+      // Return newly earned badges if any
+      if (newlyEarned.length > 0) {
+        return NextResponse.json({
+          success: true,
+          newlyEarnedBadges: newlyEarned.map((n) => ({
+            name: n.badge.name,
+            description: n.badge.description,
+            icon: n.badge.icon,
+            healthBonus: n.healthBonus,
+          })),
+        });
+      }
+    }
+
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error('Unexpected error completing action:', error);
+    return NextResponse.json({ error: 'Unexpected error' }, { status: 500 });
+  }
+}
+
+/**
+ * Mark an action as incomplete (uncomplete)
+ */
+export async function DELETE(request: Request) {
+  try {
+    const session = await getSession();
+
+    if (!session?.user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const auth0Id = session.user.sub;
+    const { actionId } = await request.json();
+
+    if (!actionId) {
+      return NextResponse.json({ error: 'Missing actionId' }, { status: 400 });
+    }
+
+    const supabase = getSupabaseAdmin();
+
+    // Get user
+    const { data: user, error: userError } = await supabase
+      .from('users')
+      .select('id')
+      .eq('auth0_id', auth0Id)
+      .single();
+
+    if (userError || !user) {
+      return NextResponse.json({ error: 'User not found' }, { status: 404 });
+    }
+
+    // Remove completion
+    const { error: deleteError } = await supabase
+      .from('user_action_completions')
+      .delete()
+      .eq('user_id', user.id)
+      .eq('action_id', actionId);
+
+    if (deleteError) {
+      console.error('Error uncompleting action:', deleteError);
+      return NextResponse.json(
+        { error: 'Failed to uncomplete action' },
+        { status: 500 },
+      );
+    }
+
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error('Unexpected error uncompleting action:', error);
+    return NextResponse.json({ error: 'Unexpected error' }, { status: 500 });
+  }
+}
+

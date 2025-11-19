@@ -10,7 +10,7 @@ export async function checkAndAwardBadges(
     totalTips: number;
     currentStreak: number;
     totalDays: number;
-    challengeCounts?: Record<string, number>; // e.g., { 'gratitude_actions': 5, 'surprise_actions': 2 }
+    actionCounts?: Record<string, number>; // e.g., { 'gratitude_actions': 5, 'surprise_actions': 2 }
   },
   tipCategory?: string,
 ) {
@@ -49,18 +49,18 @@ export async function checkAndAwardBadges(
         break;
 
       case 'category_count':
-        // Count challenges or tips in the matching category
-        // For Communication Champion: count communication challenges/tips
-        // For Romance Rookie: count romance challenges/tips
+        // Count actions or tips in the matching category
+        // For Communication Champion: count communication actions/tips
+        // For Romance Rookie: count romance actions/tips
         let categoryCount = 0;
 
-        // Count challenges in this category (if challengeCounts available)
-        if (stats.challengeCounts) {
-          // Get challenges that match this badge's expected category
-          // We'll need to check challenge categories
-          const { data: categoryChallenges } = await supabase
-            .from('user_challenge_completions')
-            .select('challenges(category)')
+        // Count actions in this category (if actionCounts available)
+        if (stats.actionCounts) {
+          // Get actions that match this badge's expected category
+          // We'll need to check action categories
+          const { data: categoryActions } = await supabase
+            .from('user_action_completions')
+            .select('actions(category)')
             .eq('user_id', userId);
 
           // Match by badge name to determine category
@@ -74,8 +74,8 @@ export async function checkAndAwardBadges(
 
           if (targetCategory) {
             categoryCount =
-              categoryChallenges?.filter(
-                (cc: any) => cc.challenges?.category === targetCategory,
+              categoryActions?.filter(
+                (ac: any) => ac.actions?.category === targetCategory,
               ).length || 0;
           }
 
@@ -105,9 +105,9 @@ export async function checkAndAwardBadges(
       case 'conflict_resolutions':
       case 'love_languages':
       case 'milestone_actions':
-        // Check challenge completions for this requirement type
-        if (stats.challengeCounts) {
-          const count = stats.challengeCounts[badge.requirement_type] || 0;
+        // Check action completions for this requirement type
+        if (stats.actionCounts) {
+          const count = stats.actionCounts[badge.requirement_type] || 0;
           if (count >= (badge.requirement_value || 0)) {
             earned = true;
           }
@@ -145,7 +145,7 @@ export async function calculateBadgeProgress(
     totalTips: number;
     currentStreak: number;
     totalDays: number;
-    challengeCounts?: Record<string, number>;
+    actionCounts?: Record<string, number>;
   },
 ): Promise<{ current: number; target: number; percentage: number }> {
   const target = badge.requirement_value || 0;
@@ -172,15 +172,15 @@ export async function calculateBadgeProgress(
       else if (badgeName.includes('intimacy')) targetCategory = 'Intimacy';
 
       if (targetCategory) {
-        // Count challenges in this category
-        const { data: categoryChallenges } = await supabase
-          .from('user_challenge_completions')
-          .select('challenges(category)')
+        // Count actions in this category
+        const { data: categoryActions } = await supabase
+          .from('user_action_completions')
+          .select('actions(category)')
           .eq('user_id', userId);
 
         categoryCount =
-          categoryChallenges?.filter(
-            (cc: any) => cc.challenges?.category === targetCategory,
+          categoryActions?.filter(
+            (ac: any) => ac.actions?.category === targetCategory,
           ).length || 0;
 
         // Also count tips in this category
@@ -196,17 +196,17 @@ export async function calculateBadgeProgress(
       current = categoryCount;
       break;
 
-    case 'gratitude_actions':
-    case 'surprise_actions':
-    case 'apology_actions':
-    case 'support_actions':
-    case 'date_nights':
-    case 'conflict_resolutions':
-    case 'love_languages':
-    case 'milestone_actions':
-      if (stats.challengeCounts) {
-        current = stats.challengeCounts[badge.requirement_type] || 0;
-      }
+      case 'gratitude_actions':
+      case 'surprise_actions':
+      case 'apology_actions':
+      case 'support_actions':
+      case 'date_nights':
+      case 'conflict_resolutions':
+      case 'love_languages':
+      case 'milestone_actions':
+          if (stats.actionCounts) {
+            current = stats.actionCounts[badge.requirement_type] || 0;
+          }
       break;
 
     default:

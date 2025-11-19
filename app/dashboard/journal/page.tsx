@@ -40,20 +40,20 @@ async function getUserReflections(auth0Id: string) {
       });
     }
 
-    // Get challenge completions linked to reflections
+    // Get action completions linked to reflections
     const reflectionIds = reflections.map((r: any) => r.id);
-    const { data: challengeCompletions } = await supabase
-      .from('user_challenge_completions')
-      .select('journal_entry_id, challenges(name, icon)')
+    const { data: actionCompletions } = await supabase
+      .from('user_action_completions')
+      .select('journal_entry_id, actions(name, icon)')
       .in('journal_entry_id', reflectionIds);
 
-    // Map challenge info to reflections
+    // Map action info to reflections
     reflections.forEach((reflection: any) => {
-      const completion = challengeCompletions?.find(
-        (cc: any) => cc.journal_entry_id === reflection.id,
+      const completion = actionCompletions?.find(
+        (ac: any) => ac.journal_entry_id === reflection.id,
       );
       if (completion) {
-        reflection.challenge = completion.challenges;
+        reflection.action = completion.actions;
       }
     });
   }

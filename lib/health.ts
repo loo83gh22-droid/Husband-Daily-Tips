@@ -1,9 +1,10 @@
 /**
- * Calculate health score with time-based decay
+ * Calculate health score with time-based decay and unique action bonus
  * 
  * Formula:
- * - Base from streak (up to 70%)
- * - Base from total history (up to 30%)
+ * - Base from streak (up to 50%) - rewards consistency
+ * - Base from total history (up to 20%) - rewards overall activity
+ * - Unique actions bonus (up to 30%) - rewards trying different actions
  * - Decay penalty if last action was > 2 days ago
  */
 export function calculateHealthScore(
@@ -12,18 +13,22 @@ export function calculateHealthScore(
     currentStreak: number;
     totalDays: number;
     lastActionDate?: string; // YYYY-MM-DD format
+    uniqueActions?: number; // Count of unique tips + unique actions completed
   },
   badgeBonuses: number = 0,
 ): number {
-  const { totalTips, currentStreak, totalDays, lastActionDate } = stats;
+  const { totalTips, currentStreak, totalDays, lastActionDate, uniqueActions = 0 } = stats;
 
-  // Base score from consistency (streak)
-  const baseFromStreak = Math.min(currentStreak * 8, 70);
+  // Base score from consistency (streak) - reduced from 70 to 50
+  const baseFromStreak = Math.min(currentStreak * 6, 50);
 
-  // Base score from total history
-  const fromHistory = Math.min(totalTips * 2, 30);
+  // Base score from total history - reduced from 30 to 20
+  const fromHistory = Math.min(totalTips * 1.5, 20);
 
-  let baseScore = baseFromStreak + fromHistory;
+  // Unique actions bonus - NEW: rewards variety (up to 30 points)
+  const uniqueActionsBonus = Math.min(uniqueActions * 3, 30);
+
+  let baseScore = baseFromStreak + fromHistory + uniqueActionsBonus;
 
   // Apply decay if last action was more than 2 days ago
   if (lastActionDate) {

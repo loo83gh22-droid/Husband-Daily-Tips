@@ -15,7 +15,7 @@ interface JournalEntryProps {
         category: string;
       };
     };
-    challenge?: {
+    action?: {
       name: string;
       icon: string;
     };
@@ -28,7 +28,7 @@ export default function JournalEntry({ reflection }: JournalEntryProps) {
 
   const tip = reflection.user_tips?.tips;
   const isShared = reflection.shared_to_forum;
-  const challenge = reflection.challenge;
+  const action = reflection.action;
 
   const handleToggleFavorite = async () => {
     setIsTogglingFavorite(true);
@@ -65,12 +65,12 @@ export default function JournalEntry({ reflection }: JournalEntryProps) {
     >
       <div className="flex items-start justify-between mb-4">
         <div className="flex-1">
-          {challenge && (
+          {action && (
             <div className="mb-2">
-              <span className="text-xs text-slate-500">Challenge completed:</span>
+              <span className="text-xs text-slate-500">Action completed:</span>
               <div className="flex items-center gap-2 mt-1">
-                {challenge.icon && <span className="text-lg">{challenge.icon}</span>}
-                <p className="text-sm font-medium text-slate-200">{challenge.name}</p>
+                {action.icon && <span className="text-lg">{action.icon}</span>}
+                <p className="text-sm font-medium text-slate-200">{action.name}</p>
               </div>
             </div>
           )}

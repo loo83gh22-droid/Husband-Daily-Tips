@@ -2,10 +2,10 @@
 
 import { useState } from 'react';
 
-interface ChallengeCompletionModalProps {
+interface ActionCompletionModalProps {
   isOpen: boolean;
   onClose: () => void;
-  challenge: {
+  action: {
     id: string;
     name: string;
     description: string;
@@ -14,12 +14,12 @@ interface ChallengeCompletionModalProps {
   onComplete: (notes?: string, linkToJournal?: boolean) => Promise<void>; // linkToJournal always true now, but keeping for API compatibility
 }
 
-export default function ChallengeCompletionModal({
+export default function ActionCompletionModal({
   isOpen,
   onClose,
-  challenge,
+  action,
   onComplete,
-}: ChallengeCompletionModalProps) {
+}: ActionCompletionModalProps) {
   const [notes, setNotes] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -31,11 +31,11 @@ export default function ChallengeCompletionModal({
 
     try {
       // Always link to journal - notes are required for journal entry
-      await onComplete(notes.trim() || `Completed: ${challenge.name}`, true);
+      await onComplete(notes.trim() || `Completed: ${action.name}`, true);
       setNotes('');
       onClose();
     } catch (error) {
-      console.error('Error completing challenge:', error);
+      console.error('Error completing action:', error);
     } finally {
       setIsSubmitting(false);
     }
@@ -46,10 +46,10 @@ export default function ChallengeCompletionModal({
       <div className="bg-slate-900 border border-slate-800 rounded-xl p-6 md:p-8 max-w-md w-full mx-4 shadow-2xl">
         <div className="flex items-start justify-between mb-4">
           <div className="flex items-center gap-3">
-            {challenge.icon && <span className="text-3xl">{challenge.icon}</span>}
+            {action.icon && <span className="text-3xl">{action.icon}</span>}
             <div>
-              <h3 className="text-xl font-semibold text-slate-50">{challenge.name}</h3>
-              <p className="text-sm text-slate-400 mt-1">{challenge.description}</p>
+              <h3 className="text-xl font-semibold text-slate-50">{action.name}</h3>
+              <p className="text-sm text-slate-400 mt-1">{action.description}</p>
             </div>
           </div>
           <button

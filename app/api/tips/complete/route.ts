@@ -108,27 +108,27 @@ export async function POST(request: Request) {
     // Get last action date for decay calculation
     const lastActionDate = tips.length > 0 ? tips[0].date : undefined;
 
-        // Get challenge completions for badge checking
-        // Count each completion instance (not just unique challenges)
-        const { data: challengeCompletions } = await supabase
-          .from('user_challenge_completions')
-          .select('challenges(requirement_type)')
+        // Get action completions for badge checking
+        // Count each completion instance (not just unique actions)
+        const { data: actionCompletions } = await supabase
+          .from('user_action_completions')
+          .select('actions(requirement_type)')
           .eq('user_id', user.id);
 
-        const challengeCounts: Record<string, number> = {};
-        challengeCompletions?.forEach((cc: any) => {
-          const reqType = cc.challenges?.requirement_type;
+        const actionCounts: Record<string, number> = {};
+        actionCompletions?.forEach((ac: any) => {
+          const reqType = ac.actions?.requirement_type;
           if (reqType) {
-            // Count each instance (multiple completions of same challenge count multiple times)
-            challengeCounts[reqType] = (challengeCounts[reqType] || 0) + 1;
+            // Count each instance (multiple completions of same action count multiple times)
+            actionCounts[reqType] = (actionCounts[reqType] || 0) + 1;
           }
         });
 
-    // Check for newly earned badges (with challenge counts)
+    // Check for newly earned badges (with action counts)
     const newlyEarned = await checkAndAwardBadges(
       supabase,
       user.id,
-      { totalTips, currentStreak: streak, totalDays: uniqueDays, challengeCounts },
+      { totalTips, currentStreak: streak, totalDays: uniqueDays, actionCounts },
       tipData?.category,
     );
 
