@@ -2,6 +2,7 @@ import { getSession } from '@auth0/nextjs-auth0';
 import { redirect } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import DashboardNav from '@/components/DashboardNav';
+import DeepThoughtsPost from '@/components/DeepThoughtsPost';
 
 async function getDeepThoughts() {
   const { data: thoughts, error } = await supabase
@@ -60,88 +61,9 @@ export default async function DeepThoughtsPage() {
             </div>
           ) : (
             <div className="space-y-6">
-              {thoughts.map((thought: any) => {
-                const user = thought.users;
-                const displayName = user?.name || user?.email?.split('@')[0] || 'Anonymous';
-
-                return (
-                  <article
-                    key={thought.id}
-                    className="bg-slate-900/80 border border-slate-800 rounded-xl p-6 md:p-8"
-                  >
-                    <div className="flex items-start justify-between mb-4">
-                      <div>
-                        <div className="flex items-center gap-2 mb-2">
-                          <span className="text-xs text-slate-500">From</span>
-                          <span className="text-sm font-medium text-slate-200">{displayName}</span>
-                          {thought.tip_category && (
-                            <>
-                              <span className="text-slate-600">•</span>
-                              <span className="text-xs text-slate-400 capitalize">
-                                {thought.tip_category}
-                              </span>
-                            </>
-                          )}
-                        </div>
-                        <time className="text-xs text-slate-500">
-                          {new Date(thought.created_at).toLocaleDateString('en-US', {
-                            month: 'short',
-                            day: 'numeric',
-                            year: 'numeric',
-                          })}
-                        </time>
-                      </div>
-                    </div>
-
-                    <div className="prose prose-invert max-w-none">
-                      <p className="text-slate-200 leading-relaxed whitespace-pre-line">
-                        {thought.content}
-                      </p>
-                    </div>
-
-                    {thought.deep_thoughts_comments &&
-                      thought.deep_thoughts_comments.length > 0 && (
-                        <div className="mt-6 pt-6 border-t border-slate-800">
-                          <p className="text-xs text-slate-400 mb-3">
-                            {thought.deep_thoughts_comments.length} comment
-                            {thought.deep_thoughts_comments.length !== 1 ? 's' : ''}
-                          </p>
-                          <div className="space-y-4">
-                            {thought.deep_thoughts_comments.map((comment: any) => {
-                              const commentUser = comment.users;
-                              const commentName =
-                                commentUser?.name ||
-                                commentUser?.email?.split('@')[0] ||
-                                'Anonymous';
-
-                              return (
-                                <div
-                                  key={comment.id}
-                                  className="bg-slate-800/50 rounded-lg p-4 border border-slate-700/50"
-                                >
-                                  <div className="flex items-center gap-2 mb-2">
-                                    <span className="text-xs font-medium text-slate-300">
-                                      {commentName}
-                                    </span>
-                                    <time className="text-xs text-slate-500">
-                                      {new Date(comment.created_at).toLocaleDateString('en-US', {
-                                        month: 'short',
-                                        day: 'numeric',
-                                      })}
-                                    </time>
-                                  </div>
-                                  <p className="text-sm text-slate-300 leading-relaxed">
-                                    {comment.content}
-                                  </p>
-                                </div>
-                              );
-                            })}
-                          </div>
-                        </div>
-                      )}
-                  </article>
-                );
-              })}
+              {thoughts.map((thought: any) => (
+                <DeepThoughtsPost key={thought.id} thought={thought} />
+              ))}
             </div>
           )}
         </div>
