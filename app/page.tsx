@@ -53,7 +53,7 @@ export default async function Home() {
             </h1>
             <p className="text-base md:text-lg text-slate-300 leading-relaxed mb-8 max-w-2xl">
               No fluff. No BS. Just real, actionable steps from dudes who figured it out. 
-              One daily challenge. One clear win. Build the marriage you actually want.
+              One daily action. One clear win. Build the marriage you actually want.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 mb-6">
@@ -304,7 +304,7 @@ export default async function Home() {
             </div>
             <h3 className="text-xl font-bold text-gray-900 mb-2">Personalized</h3>
             <p className="text-gray-600">
-              Get tips tailored to your relationship stage, challenges, and goals for maximum impact.
+              Get tips tailored to your relationship stage, actions, and goals for maximum impact.
             </p>
           </div>
         </div>
