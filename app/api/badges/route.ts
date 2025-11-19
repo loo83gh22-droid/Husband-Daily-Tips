@@ -1,6 +1,57 @@
 import { NextResponse } from 'next/server';
 import { getSession } from '@auth0/nextjs-auth0';
 import { supabase } from '@/lib/supabase';
+import { calculateBadgeProgress } from '@/lib/badges';
+
+async function getUserStats(userId: string) {
+  // Get tips for stats
+  const { data: tips } = await supabase
+    .from('user_tips')
+    .select('date')
+    .eq('user_id', userId)
+    .order('date', { ascending: false });
+
+  const totalTips = tips?.length || 0;
+  const uniqueDays = new Set(tips?.map((t) => t.date)).size;
+
+  // Calculate streak
+  let streak = 0;
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  for (let i = 0; i < 365; i++) {
+    const checkDate = new Date(today);
+    checkDate.setDate(today.getDate() - i);
+    const dateStr = checkDate.toISOString().split('T')[0];
+
+    if (tips?.some((t) => t.date === dateStr)) {
+      streak++;
+    } else {
+      break;
+    }
+  }
+
+  // Get challenge completions for challengeCounts
+  const { data: challengeCompletions } = await supabase
+    .from('user_challenge_completions')
+    .select('challenges(requirement_type)')
+    .eq('user_id', userId);
+
+  const challengeCounts: Record<string, number> = {};
+  challengeCompletions?.forEach((cc: any) => {
+    const reqType = cc.challenges?.requirement_type;
+    if (reqType) {
+      challengeCounts[reqType] = (challengeCounts[reqType] || 0) + 1;
+    }
+  });
+
+  return {
+    totalTips,
+    currentStreak: streak,
+    totalDays: uniqueDays,
+    challengeCounts,
+  };
+}
 
 export async function GET(request: Request) {
   try {
@@ -25,6 +76,9 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
+    // Get user stats for progress calculation
+    const stats = await getUserStats(user.id);
+
     // Get all badges
     const { data: allBadges, error: badgesError } = await supabase
       .from('badges')
@@ -46,13 +100,26 @@ export async function GET(request: Request) {
       earnedBadges?.map((eb) => [eb.badge_id, eb.earned_at]) || [],
     );
 
-    // Combine badges with earned status
-    const badgesWithStatus = allBadges.map((badge) => ({
-      ...badge,
-      earned_at: earnedMap.get(badge.id) || undefined,
-    }));
+    // Calculate progress for each badge and combine with earned status
+    const badgesWithProgress = await Promise.all(
+      allBadges.map(async (badge) => {
+        const earned_at = earnedMap.get(badge.id);
+        let progress = null;
 
-    return NextResponse.json({ badges: badgesWithStatus });
+        // Only calculate progress for unearned badges
+        if (!earned_at) {
+          progress = await calculateBadgeProgress(supabase, user.id, badge, stats);
+        }
+
+        return {
+          ...badge,
+          earned_at: earned_at || undefined,
+          progress,
+        };
+      }),
+    );
+
+    return NextResponse.json({ badges: badgesWithProgress });
   } catch (error) {
     console.error('Unexpected error fetching badges:', error);
     return NextResponse.json({ error: 'Unexpected error' }, { status: 500 });

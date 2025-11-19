@@ -9,6 +9,11 @@ interface Badge {
   icon: string;
   badge_type: 'consistency' | 'big_idea';
   earned_at?: string;
+  progress?: {
+    current: number;
+    target: number;
+    percentage: number;
+  } | null;
 }
 
 interface BadgesDisplayProps {
@@ -82,22 +87,47 @@ export default function BadgesDisplay({ userId }: BadgesDisplayProps) {
       {pendingBadges.length > 0 && (
         <div>
           <p className="text-xs text-slate-400 mb-3 uppercase tracking-wide">In Progress</p>
-          <div className="grid grid-cols-4 md:grid-cols-6 gap-3">
-            {pendingBadges.slice(0, 6).map((badge) => (
-              <div
-                key={badge.id}
-                className="flex flex-col items-center p-2 bg-slate-800/20 rounded-lg border border-slate-700/50 opacity-50"
-                title={`${badge.name}: ${badge.description}`}
-              >
-                <span className="text-2xl mb-1 grayscale">{badge.icon}</span>
-                <span className="text-[10px] text-slate-500 text-center leading-tight">
-                  {badge.name}
-                </span>
-              </div>
-            ))}
+          <div className="space-y-3">
+            {pendingBadges.slice(0, 6).map((badge) => {
+              const progress = badge.progress;
+              const showProgress = progress && progress.target > 0;
+
+              return (
+                <div
+                  key={badge.id}
+                  className="p-3 bg-slate-800/30 rounded-lg border border-slate-700/50"
+                  title={`${badge.name}: ${badge.description}`}
+                >
+                  <div className="flex items-center gap-3 mb-2">
+                    <span className="text-2xl grayscale flex-shrink-0">{badge.icon}</span>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs font-medium text-slate-300 leading-tight mb-1">
+                        {badge.name}
+                      </p>
+                      {showProgress && (
+                        <div className="flex items-center gap-2">
+                          <div className="flex-1 bg-slate-700/50 rounded-full h-1.5 overflow-hidden">
+                            <div
+                              className="bg-primary-500 h-full rounded-full transition-all"
+                              style={{ width: `${progress.percentage}%` }}
+                            />
+                          </div>
+                          <span className="text-[10px] text-slate-400 font-medium whitespace-nowrap">
+                            {progress.current}/{progress.target}
+                          </span>
+                        </div>
+                      )}
+                      {!showProgress && (
+                        <p className="text-[10px] text-slate-500">Not started</p>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
           </div>
           {pendingBadges.length > 6 && (
-            <p className="text-xs text-slate-500 mt-2 text-center">
+            <p className="text-xs text-slate-500 mt-3 text-center">
               +{pendingBadges.length - 6} more to unlock
             </p>
           )}

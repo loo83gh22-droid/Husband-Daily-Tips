@@ -134,3 +134,87 @@ export async function checkAndAwardBadges(
   return newlyEarned;
 }
 
+/**
+ * Calculate progress toward earning a badge (without awarding it)
+ */
+export async function calculateBadgeProgress(
+  supabase: SupabaseClient,
+  userId: string,
+  badge: any,
+  stats: {
+    totalTips: number;
+    currentStreak: number;
+    totalDays: number;
+    challengeCounts?: Record<string, number>;
+  },
+): Promise<{ current: number; target: number; percentage: number }> {
+  const target = badge.requirement_value || 0;
+  let current = 0;
+
+  switch (badge.requirement_type) {
+    case 'total_actions':
+      current = stats.totalTips;
+      break;
+
+    case 'streak_days':
+      current = stats.currentStreak;
+      break;
+
+    case 'category_count':
+      // Count challenges or tips in the matching category
+      let categoryCount = 0;
+      const badgeName = badge.name.toLowerCase();
+      let targetCategory = '';
+      if (badgeName.includes('communication')) targetCategory = 'Communication';
+      else if (badgeName.includes('romance')) targetCategory = 'Romance';
+      else if (badgeName.includes('gratitude')) targetCategory = 'Gratitude';
+      else if (badgeName.includes('partnership')) targetCategory = 'Partnership';
+      else if (badgeName.includes('intimacy')) targetCategory = 'Intimacy';
+
+      if (targetCategory) {
+        // Count challenges in this category
+        const { data: categoryChallenges } = await supabase
+          .from('user_challenge_completions')
+          .select('challenges(category)')
+          .eq('user_id', userId);
+
+        categoryCount =
+          categoryChallenges?.filter(
+            (cc: any) => cc.challenges?.category === targetCategory,
+          ).length || 0;
+
+        // Also count tips in this category
+        const { data: categoryTips } = await supabase
+          .from('user_tips')
+          .select('tip_id, tips(category)')
+          .eq('user_id', userId);
+
+        const tipCount =
+          categoryTips?.filter((ct: any) => ct.tips?.category === targetCategory).length || 0;
+        categoryCount += tipCount;
+      }
+      current = categoryCount;
+      break;
+
+    case 'gratitude_actions':
+    case 'surprise_actions':
+    case 'apology_actions':
+    case 'support_actions':
+    case 'date_nights':
+    case 'conflict_resolutions':
+    case 'love_languages':
+    case 'milestone_actions':
+      if (stats.challengeCounts) {
+        current = stats.challengeCounts[badge.requirement_type] || 0;
+      }
+      break;
+
+    default:
+      current = 0;
+  }
+
+  const percentage = target > 0 ? Math.min(100, Math.round((current / target) * 100)) : 0;
+
+  return { current, target, percentage };
+}
+
