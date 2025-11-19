@@ -4,7 +4,7 @@ import { supabase } from '@/lib/supabase';
 import DashboardNav from '@/components/DashboardNav';
 import TipCard from '@/components/TipCard';
 
-async function getUserTips(auth0Id: string) {
+async function getFavoriteTips(auth0Id: string) {
   const { data: user } = await supabase
     .from('users')
     .select('id')
@@ -17,8 +17,9 @@ async function getUserTips(auth0Id: string) {
     .from('user_tips')
     .select('*, tips(*)')
     .eq('user_id', user.id)
+    .eq('favorited', true)
     .order('date', { ascending: false })
-    .limit(50);
+    .limit(100);
 
   if (error || !userTips) {
     return [];
@@ -27,7 +28,7 @@ async function getUserTips(auth0Id: string) {
   return userTips;
 }
 
-export default async function TipsPage() {
+export default async function FavoritesPage() {
   const session = await getSession();
 
   if (!session?.user) {
@@ -35,7 +36,7 @@ export default async function TipsPage() {
   }
 
   const auth0Id = session.user.sub;
-  const tips = await getUserTips(auth0Id);
+  const favoriteTips = await getFavoriteTips(auth0Id);
 
   return (
     <div className="min-h-screen bg-slate-950">
@@ -43,17 +44,28 @@ export default async function TipsPage() {
 
       <main className="container mx-auto px-4 py-8 md:py-10">
         <div className="max-w-4xl mx-auto">
-          <h1 className="text-3xl md:text-4xl font-semibold text-slate-50 mb-8">Your Tips History</h1>
+          <div className="mb-8">
+            <h1 className="text-3xl md:text-4xl font-semibold text-slate-50 mb-2">
+              Your Favorites
+            </h1>
+            <p className="text-slate-400 text-sm md:text-base">
+              Tips you&apos;ve marked as favorites for easy reference.
+            </p>
+            <div className="mt-2 text-sm text-slate-500">
+              {favoriteTips.length} favorite{favoriteTips.length !== 1 ? 's' : ''}
+            </div>
+          </div>
 
-          {tips.length === 0 ? (
+          {favoriteTips.length === 0 ? (
             <div className="bg-slate-900/80 border border-slate-800 rounded-xl p-8 text-center">
-              <p className="text-slate-300">
-                You haven't received any tips yet. Check back tomorrow!
+              <p className="text-slate-300 mb-2">No favorites yet.</p>
+              <p className="text-slate-500 text-sm">
+                Click the star icon on any tip to add it to your favorites.
               </p>
             </div>
           ) : (
             <div className="space-y-6">
-              {tips.map((userTip: any) => {
+              {favoriteTips.map((userTip: any) => {
                 const tip = userTip.tips;
                 if (!tip) return null;
 
@@ -72,5 +84,4 @@ export default async function TipsPage() {
     </div>
   );
 }
-
 

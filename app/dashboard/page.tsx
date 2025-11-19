@@ -41,7 +41,11 @@ async function getTodayTip(userId: string | null, subscriptionTier: string) {
     .single();
 
   if (existingTip) {
-    return existingTip.tips;
+    return {
+      ...existingTip.tips,
+      favorited: existingTip.favorited || false,
+      userTipId: existingTip.id,
+    };
   }
 
   // Check for recurring tips due today (e.g., weekly check-in)
