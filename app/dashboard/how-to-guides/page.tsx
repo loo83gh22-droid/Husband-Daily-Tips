@@ -274,7 +274,7 @@ export default async function HowToGuidesPage() {
 
           <div className="mt-12 bg-slate-900/50 border border-slate-800 rounded-xl p-6 text-center">
             <p className="text-slate-400 text-sm">
-              More guides coming soon. Share your own wins in Hell Yeahs.
+              More guides coming soon. Share your own wins in Team Wins.
             </p>
           </div>
         </div>

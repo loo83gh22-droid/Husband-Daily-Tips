@@ -267,7 +267,7 @@ export default async function Home() {
             </div>
 
             <p className="mt-6 text-xs text-slate-500">
-              More guides coming soon. Share your own wins in Hell Yeahs.
+              More guides coming soon. Share your own wins in Team Wins.
             </p>
           </div>
         </section>
