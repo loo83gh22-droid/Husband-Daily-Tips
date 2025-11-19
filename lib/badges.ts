@@ -161,7 +161,7 @@ export async function calculateBadgeProgress(
       break;
 
     case 'category_count':
-      // Count challenges or tips in the matching category
+      // Count actions or tips in the matching category
       let categoryCount = 0;
       const badgeName = badge.name.toLowerCase();
       let targetCategory = '';

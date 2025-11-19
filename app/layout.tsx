@@ -7,7 +7,7 @@ const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: 'Best Husband Ever - Level Up Your Marriage Game',
-  description: 'Daily tips, challenges, and guidance to help you become the best husband ever',
+  description: 'Daily tips, actions, and guidance to help you become the best husband ever',
 };
 
 export default function RootLayout({

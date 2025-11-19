@@ -2,6 +2,57 @@ import { getSession } from '@auth0/nextjs-auth0';
 import { redirect } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import DashboardNav from '@/components/DashboardNav';
+import { calculateBadgeProgress } from '@/lib/badges';
+
+async function getUserStats(userId: string) {
+  // Get tips for stats
+  const { data: tips } = await supabase
+    .from('user_tips')
+    .select('date')
+    .eq('user_id', userId)
+    .order('date', { ascending: false });
+
+  const totalTips = tips?.length || 0;
+  const uniqueDays = new Set(tips?.map((t) => t.date)).size;
+
+  // Calculate streak
+  let streak = 0;
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  for (let i = 0; i < 365; i++) {
+    const checkDate = new Date(today);
+    checkDate.setDate(today.getDate() - i);
+    const dateStr = checkDate.toISOString().split('T')[0];
+
+    if (tips?.some((t) => t.date === dateStr)) {
+      streak++;
+    } else {
+      break;
+    }
+  }
+
+  // Get action completions for actionCounts
+  const { data: actionCompletions } = await supabase
+    .from('user_action_completions')
+    .select('actions(requirement_type)')
+    .eq('user_id', userId);
+
+  const actionCounts: Record<string, number> = {};
+  actionCompletions?.forEach((ac: any) => {
+    const reqType = ac.actions?.requirement_type;
+    if (reqType) {
+      actionCounts[reqType] = (actionCounts[reqType] || 0) + 1;
+    }
+  });
+
+  return {
+    totalTips,
+    currentStreak: streak,
+    totalDays: uniqueDays,
+    actionCounts,
+  };
+}
 
 async function getUserBadges(auth0Id: string) {
   const { data: user } = await supabase
@@ -12,12 +63,28 @@ async function getUserBadges(auth0Id: string) {
 
   if (!user) return { badges: [], earnedMap: new Map() };
 
-  // Get all badges - deduplicate at query level using DISTINCT
+  // Get user stats for progress calculation
+  const stats = await getUserStats(user.id);
+
+  // Get all badges
   const { data: allBadges } = await supabase
     .from('badges')
     .select('*')
     .order('badge_type', { ascending: true })
     .order('requirement_value', { ascending: true });
+
+  // Deduplicate badges by name + requirement_type + requirement_value
+  // Keep the one with the lowest ID (oldest badge)
+  const badgeKeyMap = new Map<string, any>();
+  (allBadges || []).forEach((badge) => {
+    const key = `${badge.name}-${badge.requirement_type}-${badge.requirement_value || ''}`;
+    const existing = badgeKeyMap.get(key);
+    if (!existing || badge.id < existing.id) {
+      badgeKeyMap.set(key, badge);
+    }
+  });
+
+  const uniqueBadges = Array.from(badgeKeyMap.values());
 
   // Get user's earned badges
   const { data: earnedBadges } = await supabase
@@ -29,12 +96,26 @@ async function getUserBadges(auth0Id: string) {
     earnedBadges?.map((eb) => [eb.badge_id, eb.earned_at]) || [],
   );
 
-  const badgesWithStatus = (allBadges || []).map((badge) => ({
-    ...badge,
-    earned_at: earnedMap.get(badge.id) || undefined,
-  }));
+  // Calculate progress for each badge and combine with earned status
+  const badgesWithProgress = await Promise.all(
+    uniqueBadges.map(async (badge) => {
+      const earned_at = earnedMap.get(badge.id);
+      let progress = null;
 
-  return { badges: badgesWithStatus, earnedMap };
+      // Only calculate progress for unearned badges
+      if (!earned_at) {
+        progress = await calculateBadgeProgress(supabase, user.id, badge, stats);
+      }
+
+      return {
+        ...badge,
+        earned_at: earned_at || undefined,
+        progress,
+      };
+    }),
+  );
+
+  return { badges: badgesWithProgress, earnedMap };
 }
 
 export default async function BadgesPage() {
@@ -47,46 +128,41 @@ export default async function BadgesPage() {
   const auth0Id = session.user.sub;
   const { badges } = await getUserBadges(auth0Id);
 
-  // Deduplicate badges by ID (in case of database duplicates)
-  const uniqueBadges = Array.from(
-    new Map(badges.map((badge) => [badge.id, badge])).values()
-  );
-
-  // Group badges by challenge theme/category
+  // Group badges by action theme/category
   const badgeThemes = {
-    Communication: uniqueBadges.filter((b) =>
+    Communication: badges.filter((b) =>
       b.name.toLowerCase().includes('communication') ||
       b.name.toLowerCase().includes('listener') ||
       b.name.toLowerCase().includes('apology') ||
       b.name.toLowerCase().includes('conflict') ||
       b.name.toLowerCase().includes('peacemaker')
     ),
-    Romance: uniqueBadges.filter((b) =>
+    Romance: badges.filter((b) =>
       b.name.toLowerCase().includes('romance') ||
       b.name.toLowerCase().includes('date night') ||
       b.name.toLowerCase().includes('surprise')
     ),
-    Gratitude: uniqueBadges.filter((b) =>
+    Gratitude: badges.filter((b) =>
       b.name.toLowerCase().includes('gratitude')
     ),
-    Partnership: uniqueBadges.filter((b) =>
+    Partnership: badges.filter((b) =>
       b.name.toLowerCase().includes('partnership') ||
       b.name.toLowerCase().includes('support system') ||
       b.name.toLowerCase().includes('relationship architect')
     ),
-    Intimacy: uniqueBadges.filter((b) =>
+    Intimacy: badges.filter((b) =>
       b.name.toLowerCase().includes('intimacy') ||
       b.name.toLowerCase().includes('love language')
     ),
-    Conflict: uniqueBadges.filter((b) =>
+    Conflict: badges.filter((b) =>
       b.name.toLowerCase().includes('conflict') ||
       b.name.toLowerCase().includes('peacemaker')
     ),
-    Consistency: uniqueBadges.filter((b) => b.badge_type === 'consistency'),
+    Consistency: badges.filter((b) => b.badge_type === 'consistency'),
   };
 
-  const earnedCount = uniqueBadges.filter((b) => b.earned_at).length;
-  const totalCount = uniqueBadges.length;
+  const earnedCount = badges.filter((b) => b.earned_at).length;
+  const totalCount = badges.length;
 
   return (
     <div className="min-h-screen bg-slate-950">
@@ -135,6 +211,9 @@ export default async function BadgesPage() {
                   <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                     {themeBadges.map((badge) => {
                       const isEarned = !!badge.earned_at;
+                      const progress = badge.progress;
+                      const showProgress = !isEarned && progress && progress.target > 0;
+
                       return (
                         <div
                           key={badge.id}
@@ -145,31 +224,58 @@ export default async function BadgesPage() {
                           }`}
                         >
                           <div className="text-center">
-                            <div className="text-4xl mb-2">{badge.icon}</div>
+                            <div className={`text-4xl mb-2 ${isEarned ? '' : 'grayscale opacity-50'}`}>
+                              {badge.icon}
+                            </div>
                             <h3 className="text-sm font-semibold text-slate-200 mb-1">
                               {badge.name}
                             </h3>
                             <p className="text-xs text-slate-400 mb-2 leading-tight">
                               {badge.description}
                             </p>
-                            <div className="flex items-center justify-center gap-2 text-xs">
+                            
+                            {/* Progress indicator */}
+                            {showProgress && (
+                              <div className="mb-2">
+                                <div className="flex items-center justify-center gap-2 mb-1">
+                                  <div className="flex-1 bg-slate-700/50 rounded-full h-2 overflow-hidden max-w-[120px]">
+                                    <div
+                                      className="bg-primary-500 h-full rounded-full transition-all"
+                                      style={{ width: `${progress.percentage}%` }}
+                                    />
+                                  </div>
+                                  <span className="text-[10px] text-slate-400 font-medium whitespace-nowrap">
+                                    {progress.current}/{progress.target}
+                                  </span>
+                                </div>
+                                <p className="text-[10px] text-slate-500">
+                                  {progress.percentage}% complete
+                                </p>
+                              </div>
+                            )}
+
+                            <div className="flex flex-col items-center gap-1 text-xs">
                               {badge.health_bonus > 0 && (
                                 <span className="text-primary-300">
                                   +{badge.health_bonus} health
                                 </span>
                               )}
                               {isEarned && (
-                                <span className="text-green-400">✓ Earned</span>
+                                <span className="text-green-400 font-medium">✓ Earned</span>
                               )}
                             </div>
-                            {badge.requirement_value && (
+                            
+                            {/* Requirement info - only show if not earned and no progress */}
+                            {!isEarned && !showProgress && badge.requirement_value && (
                               <p className="text-[10px] text-slate-500 mt-2">
                                 Requires: {badge.requirement_value}{' '}
                                 {badge.requirement_type === 'streak_days'
                                   ? 'days'
                                   : badge.requirement_type === 'total_actions'
                                     ? 'actions'
-                                    : ''}
+                                    : badge.requirement_type === 'category_count'
+                                      ? 'in category'
+                                      : badge.requirement_type?.replace('_', ' ') || ''}
                               </p>
                             )}
                           </div>
