@@ -4,7 +4,7 @@ import { supabase } from '@/lib/supabase';
 import DashboardNav from '@/components/DashboardNav';
 import DeepThoughtsPost from '@/components/DeepThoughtsPost';
 
-async function getHellYeahs() {
+async function getTeamWins() {
   const { data: thoughts, error } = await supabase
     .from('deep_thoughts')
     .select(`
@@ -19,21 +19,21 @@ async function getHellYeahs() {
     .limit(50);
 
   if (error) {
-    console.error('Error fetching hell yeahs:', error);
+    console.error('Error fetching team wins:', error);
     return [];
   }
 
   return thoughts || [];
 }
 
-export default async function HellYeahsPage() {
+export default async function TeamWinsPage() {
   const session = await getSession();
 
   if (!session?.user) {
     redirect('/api/auth/login');
   }
 
-  const thoughts = await getHellYeahs();
+  const thoughts = await getTeamWins();
 
   return (
     <div className="min-h-screen bg-slate-950">
@@ -43,7 +43,7 @@ export default async function HellYeahsPage() {
         <div className="max-w-4xl mx-auto">
           <div className="mb-8">
             <h1 className="text-3xl md:text-4xl font-bold text-slate-50 mb-2">
-              💪 Hell Yeahs
+              💪 Team Wins
             </h1>
             <p className="text-slate-400 text-sm md:text-base">
               Real wins from husbands who are crushing it. Celebrate the victories, learn from the
@@ -53,7 +53,7 @@ export default async function HellYeahsPage() {
 
           {thoughts.length === 0 ? (
             <div className="bg-slate-900/80 border border-slate-800 rounded-xl p-12 text-center">
-              <p className="text-slate-400 mb-4">No hell yeahs yet.</p>
+              <p className="text-slate-400 mb-4">No team wins yet.</p>
               <p className="text-sm text-slate-500">
                 Complete an action and choose to share your win to see it here.
               </p>

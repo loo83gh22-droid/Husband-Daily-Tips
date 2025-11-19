@@ -10,14 +10,24 @@ async function getUserReflections(auth0Id: string) {
     .eq('auth0_id', auth0Id)
     .single();
 
-  if (!user) return [];
+  if (!user) return { favorites: [], regular: [] };
 
+  // Get all reflections
   const { data: reflections, error } = await supabase
     .from('reflections')
     .select('*')
     .eq('user_id', user.id)
     .order('created_at', { ascending: false })
     .limit(100);
+
+  // Get favorited tips to identify favorite reflections
+  const { data: favoritedUserTips } = await supabase
+    .from('user_tips')
+    .select('id, favorited')
+    .eq('user_id', user.id)
+    .eq('favorited', true);
+
+  const favoritedTipIds = new Set(favoritedUserTips?.map((ut) => ut.id) || []);
 
   // Get tip info separately if user_tip_id exists
   if (reflections && reflections.length > 0) {
@@ -35,6 +45,8 @@ async function getUserReflections(auth0Id: string) {
       reflections.forEach((reflection: any) => {
         const userTip = userTips?.find((ut: any) => ut.id === reflection.user_tip_id);
         reflection.user_tips = userTip;
+        // Mark as favorite if linked to a favorited tip
+        reflection.isFavorite = reflection.user_tip_id && favoritedTipIds.has(reflection.user_tip_id);
       });
     }
 
@@ -58,10 +70,19 @@ async function getUserReflections(auth0Id: string) {
 
   if (error) {
     console.error('Error fetching reflections:', error);
-    return [];
+    return { favorites: [], regular: [] };
   }
 
-  return reflections || [];
+  // Separate favorites and regular entries, both sorted chronologically (newest first)
+  const favorites = (reflections || [])
+    .filter((r: any) => r.isFavorite)
+    .sort((a: any, b: any) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+  
+  const regular = (reflections || [])
+    .filter((r: any) => !r.isFavorite)
+    .sort((a: any, b: any) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+
+  return { favorites, regular };
 }
 
 export default async function JournalPage() {
@@ -72,7 +93,8 @@ export default async function JournalPage() {
   }
 
   const auth0Id = session.user.sub;
-  const reflections = await getUserReflections(auth0Id);
+  const { favorites, regular } = await getUserReflections(auth0Id);
+  const allReflections = [...favorites, ...regular];
 
   return (
     <div className="min-h-screen bg-slate-950">
@@ -85,12 +107,11 @@ export default async function JournalPage() {
               Your Journal
             </h1>
             <p className="text-slate-400 text-sm md:text-base">
-              Private reflections on your journey. These are yours alone—unless you choose to
-              share them.
+              Private reflections on your journey. Favorites appear at the top.
             </p>
           </div>
 
-          {reflections.length === 0 ? (
+          {allReflections.length === 0 ? (
             <div className="bg-slate-900/80 border border-slate-800 rounded-xl p-12 text-center">
               <p className="text-slate-400 mb-4">No reflections yet.</p>
               <p className="text-sm text-slate-500">
@@ -99,65 +120,144 @@ export default async function JournalPage() {
             </div>
           ) : (
             <div className="space-y-6">
-              {reflections.map((reflection: any) => {
-                const tip = reflection.user_tips?.tips;
-                const isShared = reflection.shared_to_forum;
-                const challenge = reflection.challenge;
+              {favorites.length > 0 && (
+                <div className="mb-8">
+                  <h2 className="text-lg font-semibold text-slate-200 mb-4 flex items-center gap-2">
+                    <span>⭐</span>
+                    <span>Favorites</span>
+                  </h2>
+                  <div className="space-y-6">
+                    {favorites.map((reflection: any) => {
+                      const tip = reflection.user_tips?.tips;
+                      const isShared = reflection.shared_to_forum;
+                      const challenge = reflection.challenge;
 
-                return (
-                  <article
-                    key={reflection.id}
-                    className="bg-slate-900/80 border border-slate-800 rounded-xl p-6 md:p-8"
-                  >
-                    <div className="flex items-start justify-between mb-4">
-                      <div>
-                        {challenge && (
-                          <div className="mb-2">
-                            <span className="text-xs text-slate-500">Challenge completed:</span>
-                            <div className="flex items-center gap-2 mt-1">
-                              {challenge.icon && <span className="text-lg">{challenge.icon}</span>}
-                              <p className="text-sm font-medium text-slate-200">{challenge.name}</p>
+                      return (
+                        <article
+                          key={reflection.id}
+                          className="bg-slate-900/80 border border-slate-800 rounded-xl p-6 md:p-8 border-l-4 border-yellow-500/50"
+                        >
+                          <div className="flex items-start justify-between mb-4">
+                            <div>
+                              {challenge && (
+                                <div className="mb-2">
+                                  <span className="text-xs text-slate-500">Challenge completed:</span>
+                                  <div className="flex items-center gap-2 mt-1">
+                                    {challenge.icon && <span className="text-lg">{challenge.icon}</span>}
+                                    <p className="text-sm font-medium text-slate-200">{challenge.name}</p>
+                                  </div>
+                                </div>
+                              )}
+                              {tip && (
+                                <div className="mb-2">
+                                  <span className="text-xs text-slate-500">Reflection on:</span>
+                                  <p className="text-sm font-medium text-slate-200 mt-1">
+                                    {tip.title}
+                                  </p>
+                                  {tip.category && (
+                                    <span className="inline-block mt-1 px-2 py-0.5 bg-primary-500/10 text-primary-300 text-xs rounded-full">
+                                      {tip.category}
+                                    </span>
+                                  )}
+                                </div>
+                              )}
+                              <time className="text-xs text-slate-500">
+                                {new Date(reflection.created_at).toLocaleDateString('en-US', {
+                                  month: 'long',
+                                  day: 'numeric',
+                                  year: 'numeric',
+                                  hour: 'numeric',
+                                  minute: '2-digit',
+                                })}
+                              </time>
                             </div>
-                          </div>
-                        )}
-                        {tip && (
-                          <div className="mb-2">
-                            <span className="text-xs text-slate-500">Reflection on:</span>
-                            <p className="text-sm font-medium text-slate-200 mt-1">
-                              {tip.title}
-                            </p>
-                            {tip.category && (
-                              <span className="inline-block mt-1 px-2 py-0.5 bg-primary-500/10 text-primary-300 text-xs rounded-full">
-                                {tip.category}
+                            {isShared && (
+                              <span className="text-xs px-2 py-1 bg-primary-500/20 text-primary-300 rounded-full border border-primary-500/30">
+                                Shared to Team Wins
                               </span>
                             )}
                           </div>
-                        )}
-                        <time className="text-xs text-slate-500">
-                          {new Date(reflection.created_at).toLocaleDateString('en-US', {
-                            month: 'long',
-                            day: 'numeric',
-                            year: 'numeric',
-                            hour: 'numeric',
-                            minute: '2-digit',
-                          })}
-                        </time>
-                      </div>
-                      {isShared && (
-                        <span className="text-xs px-2 py-1 bg-primary-500/20 text-primary-300 rounded-full border border-primary-500/30">
-                          Shared to Hell Yeahs
-                        </span>
-                      )}
-                    </div>
 
-                    <div className="prose prose-invert max-w-none">
-                      <p className="text-slate-200 leading-relaxed whitespace-pre-line">
-                        {reflection.content}
-                      </p>
-                    </div>
-                  </article>
-                );
-              })}
+                          <div className="prose prose-invert max-w-none">
+                            <p className="text-slate-200 leading-relaxed whitespace-pre-line">
+                              {reflection.content}
+                            </p>
+                          </div>
+                        </article>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {regular.length > 0 && (
+                <div>
+                  {favorites.length > 0 && (
+                    <h2 className="text-lg font-semibold text-slate-200 mb-4">All Entries</h2>
+                  )}
+                  <div className="space-y-6">
+                    {regular.map((reflection: any) => {
+                      const tip = reflection.user_tips?.tips;
+                      const isShared = reflection.shared_to_forum;
+                      const challenge = reflection.challenge;
+
+                      return (
+                        <article
+                          key={reflection.id}
+                          className="bg-slate-900/80 border border-slate-800 rounded-xl p-6 md:p-8"
+                        >
+                          <div className="flex items-start justify-between mb-4">
+                            <div>
+                              {challenge && (
+                                <div className="mb-2">
+                                  <span className="text-xs text-slate-500">Challenge completed:</span>
+                                  <div className="flex items-center gap-2 mt-1">
+                                    {challenge.icon && <span className="text-lg">{challenge.icon}</span>}
+                                    <p className="text-sm font-medium text-slate-200">{challenge.name}</p>
+                                  </div>
+                                </div>
+                              )}
+                              {tip && (
+                                <div className="mb-2">
+                                  <span className="text-xs text-slate-500">Reflection on:</span>
+                                  <p className="text-sm font-medium text-slate-200 mt-1">
+                                    {tip.title}
+                                  </p>
+                                  {tip.category && (
+                                    <span className="inline-block mt-1 px-2 py-0.5 bg-primary-500/10 text-primary-300 text-xs rounded-full">
+                                      {tip.category}
+                                    </span>
+                                  )}
+                                </div>
+                              )}
+                              <time className="text-xs text-slate-500">
+                                {new Date(reflection.created_at).toLocaleDateString('en-US', {
+                                  month: 'long',
+                                  day: 'numeric',
+                                  year: 'numeric',
+                                  hour: 'numeric',
+                                  minute: '2-digit',
+                                })}
+                              </time>
+                            </div>
+                            {isShared && (
+                              <span className="text-xs px-2 py-1 bg-primary-500/20 text-primary-300 rounded-full border border-primary-500/30">
+                                Shared to Team Wins
+                              </span>
+                            )}
+                          </div>
+
+                          <div className="prose prose-invert max-w-none">
+                            <p className="text-slate-200 leading-relaxed whitespace-pre-line">
+                              {reflection.content}
+                            </p>
+                          </div>
+                        </article>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </div>

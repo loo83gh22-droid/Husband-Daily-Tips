@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import AccountMenu from './AccountMenu';
 
 export default function DashboardNav() {
   const pathname = usePathname();
@@ -9,11 +10,10 @@ export default function DashboardNav() {
   const navLinks = [
     { href: '/dashboard', label: 'Dashboard', icon: '📊' },
     { href: '/dashboard/challenges', label: 'Challenges', icon: '🎯' },
-    { href: '/dashboard/how-to-guides', label: 'How To Guides', icon: '🔧' },
-    { href: '/dashboard/hell-yeahs', label: 'Hell Yeahs', icon: '💪' },
     { href: '/dashboard/badges', label: 'Badges', icon: '🏆' },
-    { href: '/dashboard/favorites', label: 'Favorites', icon: '⭐' },
     { href: '/dashboard/journal', label: 'Journal', icon: '📝' },
+    { href: '/dashboard/team-wins', label: 'Team Wins', icon: '💪' },
+    { href: '/dashboard/how-to-guides', label: 'How To Guides', icon: '🔧' },
   ];
 
   return (
@@ -50,12 +50,7 @@ export default function DashboardNav() {
                 </Link>
               );
             })}
-            <Link
-              href="/api/auth/logout"
-              className="px-3 py-2 text-xs md:text-sm text-slate-200 border border-slate-700 rounded-lg hover:bg-slate-900 transition-colors ml-2"
-            >
-              Sign Out
-            </Link>
+            <AccountMenu />
           </div>
         </div>
       </div>
