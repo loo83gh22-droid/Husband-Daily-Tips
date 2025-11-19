@@ -154,10 +154,10 @@ export default function DailyTipCard({ tip }: DailyTipCardProps) {
           </button>
         </div>
         <div className="flex flex-col gap-2">
-          <p className="text-[11px] text-slate-500">
-            Completing this nudges your health bar up. Skipping it won&apos;t break anything—but
-            patterns always tell the truth.
-          </p>
+              <p className="text-[11px] text-slate-500">
+                Completing this boosts your health bar. Skipping it won&apos;t break anything—but
+                consistency is what actually moves the needle.
+              </p>
           <SocialShare
             title={tip.title}
             text={`Today's action: ${tip.title} - ${tip.content.substring(0, 100)}...`}

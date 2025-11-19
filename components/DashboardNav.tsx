@@ -9,8 +9,8 @@ export default function DashboardNav() {
   const navLinks = [
     { href: '/dashboard', label: 'Dashboard', icon: '📊' },
     { href: '/dashboard/challenges', label: 'Challenges', icon: '🎯' },
-    { href: '/dashboard/stories', label: 'Stories', icon: '📖' },
-    { href: '/dashboard/deep-thoughts', label: 'Deep Thoughts', icon: '💭' },
+    { href: '/dashboard/how-to-guides', label: 'How To Guides', icon: '🔧' },
+    { href: '/dashboard/hell-yeahs', label: 'Hell Yeahs', icon: '💪' },
     { href: '/dashboard/badges', label: 'Badges', icon: '🏆' },
     { href: '/dashboard/journal', label: 'Journal', icon: '📝' },
   ];
@@ -27,7 +27,7 @@ export default function DashboardNav() {
               <h1 className="text-sm font-semibold tracking-wide text-slate-100">
                 Husband Daily Tips
               </h1>
-              <p className="text-[11px] text-slate-500">Daily structure, not pressure.</p>
+              <p className="text-[11px] text-slate-500">Level up your marriage game.</p>
             </div>
           </Link>
 

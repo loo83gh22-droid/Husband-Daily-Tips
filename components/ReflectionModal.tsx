@@ -100,7 +100,7 @@ export default function ReflectionModal({
               disabled={isSubmitting}
             />
             <label htmlFor="shareToForum" className="text-sm text-slate-300 cursor-pointer">
-              <span className="font-medium">Share to Deep Thoughts</span>
+              <span className="font-medium">Share to Hell Yeahs</span>
               <span className="block text-xs text-slate-500 mt-1">
                 Other members can see this (anonymously) and comment. Help others learn from your
                 experience.

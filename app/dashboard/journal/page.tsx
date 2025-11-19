@@ -145,7 +145,7 @@ export default async function JournalPage() {
                       </div>
                       {isShared && (
                         <span className="text-xs px-2 py-1 bg-primary-500/20 text-primary-300 rounded-full border border-primary-500/30">
-                          Shared to Deep Thoughts
+                          Shared to Hell Yeahs
                         </span>
                       )}
                     </div>

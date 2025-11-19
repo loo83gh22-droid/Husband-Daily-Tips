@@ -256,9 +256,9 @@ export default async function Dashboard() {
                 <h2 className="text-2xl md:text-3xl font-semibold text-slate-50">
                   Today&apos;s action
                 </h2>
-                <p className="text-xs text-slate-400 mt-1">
-                  One concrete step to move your marriage in the right direction.
-                </p>
+                    <p className="text-xs text-slate-400 mt-1">
+                      One concrete step to level up your marriage game.
+                    </p>
               </div>
               <div className="hidden md:flex flex-col items-end text-xs text-slate-400">
                 <span>Logged in as</span>

@@ -30,10 +30,10 @@ export default async function Home() {
 
           <div className="flex items-center gap-3">
             <Link
-              href="#stories"
+              href="#how-to-guides"
               className="hidden md:inline-flex text-sm text-slate-300 hover:text-white transition-colors"
             >
-              Stories
+              How To Guides
             </Link>
             <Link
               href="#how-it-works"
@@ -55,17 +55,16 @@ export default async function Home() {
       <main className="container mx-auto px-4 py-16 md:py-24">
         <div className="max-w-5xl mx-auto grid md:grid-cols-[3fr,2fr] gap-12 items-start">
           <div>
-            <p className="text-xs font-semibold tracking-[0.2em] text-primary-400 uppercase mb-4">
-              MARRIAGE IS TOO IMPORTANT TO LEAVE TO CHANCE
+            <p className="text-xs font-bold tracking-[0.2em] text-primary-400 uppercase mb-4">
+              STOP WINGING IT. START WINNING.
             </p>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-semibold text-slate-50 tracking-tight mb-6">
-              A system for being a better husband,
-              <span className="block text-primary-400">one small commitment at a time.</span>
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-slate-50 tracking-tight mb-6">
+              Level up your marriage game,
+              <span className="block text-primary-400">one action at a time.</span>
             </h1>
             <p className="text-base md:text-lg text-slate-300 leading-relaxed mb-8 max-w-2xl">
-              This isn&apos;t another hype app. It&apos;s a quiet, structured way to
-              show up for your wife: one clear action every day, backed by relationship
-              research and real stories from men doing the work.
+              No fluff. No BS. Just real, actionable steps from dudes who figured it out. 
+              One daily challenge. One clear win. Build the marriage you actually want.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 mb-6">
@@ -76,20 +75,20 @@ export default async function Home() {
                 Start with today&apos;s action
               </Link>
               <Link
-                href="#stories"
+                href="#how-to-guides"
                 className="inline-flex items-center justify-center px-7 py-3.5 rounded-lg border border-slate-700 text-sm font-semibold text-slate-100 hover:bg-slate-900 transition-colors"
               >
-                Read husbands&apos; stories
+                Check out the guides
               </Link>
             </div>
 
             <div className="flex flex-wrap items-center gap-4 text-xs text-slate-400">
               <div className="flex items-center gap-2">
                 <span className="inline-flex h-2 w-2 rounded-full bg-emerald-400" />
-                <span>Designed to be used in under 5 minutes a day.</span>
+                <span>5 minutes a day. That&apos;s it.</span>
               </div>
               <span className="hidden md:inline text-slate-700">•</span>
-              <span>Built for men who take their vows seriously.</span>
+              <span>For dudes who want to actually be good at this.</span>
             </div>
           </div>
 
@@ -186,93 +185,89 @@ export default async function Home() {
 
               <div className="bg-slate-900/60 border border-slate-800 rounded-xl p-6">
                 <p className="text-xs font-semibold text-primary-300 mb-2 uppercase tracking-[0.2em]">
-                  03. Stories
+                  03. How To Guides
                 </p>
                 <h3 className="text-lg font-semibold text-slate-50 mb-2">
-                  Learn from men like you
+                  Get shit done around the house
                 </h3>
                 <p className="text-sm text-slate-300">
-                  Free, anonymous stories from husbands doing the work—what&apos;s helped, what hasn&apos;t,
-                  and what they&apos;d do differently.
+                  Practical guides to fix, build, and handle things. Show competence. Build confidence. 
+                  Actually impress your wife with skills.
                 </p>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Stories Section (Free) */}
+        {/* How To Guides Section (Free) */}
         <section
-          id="stories"
+          id="how-to-guides"
           className="mt-24 border-t border-slate-800 pt-12 pb-8"
         >
           <div className="max-w-5xl mx-auto">
             <div className="flex items-center justify-between mb-6">
               <div>
-                <h2 className="text-2xl md:text-3xl font-semibold text-slate-50 mb-1">
-                  Stories from the work.
+                <h2 className="text-2xl md:text-3xl font-bold text-slate-50 mb-1">
+                  How To Guides: Get Shit Done
                 </h2>
                 <p className="text-sm text-slate-400">
-                  A free library of short, anonymous snapshots from real husbands.
+                  Practical guides to fix, build, and handle things around the house. Show competence. Build confidence.
                 </p>
               </div>
               <span className="hidden md:inline-flex rounded-full bg-emerald-500/10 border border-emerald-500/40 px-3 py-1 text-xs font-medium text-emerald-300">
-                Always free to read
+                Always free
               </span>
             </div>
 
             <div className="grid md:grid-cols-3 gap-6">
-              <article className="bg-slate-900/70 border border-slate-800 rounded-xl p-5 flex flex-col">
-                <p className="text-[11px] font-semibold text-emerald-300 uppercase tracking-[0.2em] mb-2">
-                  SMALL SHIFT
+              <article className="bg-slate-900/70 border border-slate-800 rounded-xl p-5 flex flex-col hover:border-primary-500/50 transition-colors">
+                <p className="text-[11px] font-bold text-emerald-300 uppercase tracking-[0.2em] mb-2">
+                  HOME REPAIR
                 </p>
-                <h3 className="text-sm font-semibold text-slate-50 mb-2">
-                  &quot;We stopped going to bed angry.&quot;
+                <h3 className="text-sm font-bold text-slate-50 mb-2">
+                  Fix a Leaky Faucet
                 </h3>
                 <p className="text-xs text-slate-300 mb-3 flex-1">
-                  I started asking one question every night: &quot;Is there anything between us we need to clear?&quot;
-                  The first week was uncomfortable. The second week felt lighter than our last two years.
+                  Stop that annoying drip-drip-drip. This step-by-step guide will have you fixing faucets in under 20 minutes. Your wife will notice.
                 </p>
                 <p className="text-[11px] text-slate-500">
-                  Husband, 36 · married 9 years · 2 kids
+                  Easy • 20 min
                 </p>
               </article>
 
-              <article className="bg-slate-900/70 border border-slate-800 rounded-xl p-5 flex flex-col">
-                <p className="text-[11px] font-semibold text-sky-300 uppercase tracking-[0.2em] mb-2">
-                  BIG HUSBAND MOVE
+              <article className="bg-slate-900/70 border border-slate-800 rounded-xl p-5 flex flex-col hover:border-primary-500/50 transition-colors">
+                <p className="text-[11px] font-bold text-sky-300 uppercase tracking-[0.2em] mb-2">
+                  ORGANIZATION
                 </p>
-                <h3 className="text-sm font-semibold text-slate-50 mb-2">
-                  &quot;I took over Sundays.&quot;
+                <h3 className="text-sm font-bold text-slate-50 mb-2">
+                  Organize the Garage
                 </h3>
                 <p className="text-xs text-slate-300 mb-3 flex-1">
-                  Every Sunday is mine: breakfast, kids, cleanup, logistics. She doesn&apos;t touch a dish.
-                  It&apos;s not flowers-and-fireworks romantic, but she tells her friends about it every week.
+                  Transform that disaster zone into a functional space. Learn the system that actually works and keeps things organized long-term.
                 </p>
                 <p className="text-[11px] text-slate-500">
-                  Husband, 41 · married 12 years · 3 kids
+                  Medium • 2-3 hours
                 </p>
               </article>
 
-              <article className="bg-slate-900/70 border border-slate-800 rounded-xl p-5 flex flex-col">
-                <p className="text-[11px] font-semibold text-amber-300 uppercase tracking-[0.2em] mb-2">
-                  HARD LESSON
+              <article className="bg-slate-900/70 border border-slate-800 rounded-xl p-5 flex flex-col hover:border-primary-500/50 transition-colors">
+                <p className="text-[11px] font-bold text-amber-300 uppercase tracking-[0.2em] mb-2">
+                  OUTDOOR
                 </p>
-                <h3 className="text-sm font-semibold text-slate-50 mb-2">
-                  &quot;I waited until she was done.&quot;
+                <h3 className="text-sm font-bold text-slate-50 mb-2">
+                  Build a Raised Garden Bed
                 </h3>
                 <p className="text-xs text-slate-300 mb-3 flex-1">
-                  I thought I had more time to get serious about us. I didn&apos;t. If you&aposre reading this and
-                  things feel &quot;fine but fragile,&quot; don&apos;t wait. Start now. Small things matter.
+                  Show off your skills and give your wife fresh herbs or veggies. This project looks impressive but is surprisingly straightforward.
                 </p>
                 <p className="text-[11px] text-slate-500">
-                  Husband, 48 · divorced · choosing to show up differently
+                  Medium • 3-4 hours
                 </p>
               </article>
             </div>
 
             <p className="mt-6 text-xs text-slate-500">
-              Stories are anonymous, lightly edited for clarity, and never sold. Future versions of this app
-              will let you submit your own.
+              More guides coming soon. Share your own wins in Hell Yeahs.
             </p>
           </div>
         </section>
