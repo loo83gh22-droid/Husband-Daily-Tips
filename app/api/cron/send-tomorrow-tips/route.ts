@@ -119,6 +119,8 @@ export async function GET(request: Request) {
         }
 
         // Send email
+        // Note: Resend free tier only allows sending to the account owner's email
+        // To send to all users, verify a domain at resend.com/domains
         const success = await sendTomorrowTipEmail(
           user.email,
           user.name || user.email.split('@')[0],
@@ -134,7 +136,13 @@ export async function GET(request: Request) {
           console.log(`✅ Email sent to ${user.email}`);
         } else {
           errorCount++;
-          console.error(`❌ Failed to send email to ${user.email}`);
+          // Check if it's a Resend domain verification issue
+          const isDomainIssue = user.email !== process.env.RESEND_VERIFIED_EMAIL;
+          if (isDomainIssue) {
+            console.warn(`⚠️  Skipped ${user.email} - Resend free tier only allows sending to verified email. Verify a domain to send to all users.`);
+          } else {
+            console.error(`❌ Failed to send email to ${user.email}`);
+          }
         }
       } catch (error: any) {
         console.error(`Error processing user ${user.id} (${user.email}):`, error?.message || error);
