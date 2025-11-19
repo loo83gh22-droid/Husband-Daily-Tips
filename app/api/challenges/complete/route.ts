@@ -15,7 +15,8 @@ export async function POST(request: Request) {
     }
 
     const auth0Id = session.user.sub;
-    const { challengeId } = await request.json();
+    const body = await request.json();
+    const { challengeId, notes, linkToJournal } = body;
 
     if (!challengeId) {
       return NextResponse.json({ error: 'Missing challengeId' }, { status: 400 });
