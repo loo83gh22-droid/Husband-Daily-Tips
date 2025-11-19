@@ -53,9 +53,23 @@ export async function GET(request: Request) {
       .select('id, email, name')
       .not('email', 'is', null);
 
-    if (usersError || !users) {
+    if (usersError) {
       console.error('Error fetching users:', usersError);
-      return NextResponse.json({ error: 'Failed to fetch users' }, { status: 500 });
+      return NextResponse.json(
+        { error: 'Failed to fetch users', details: usersError.message },
+        { status: 500 }
+      );
+    }
+
+    if (!users || users.length === 0) {
+      console.warn('No users found in database');
+      return NextResponse.json({
+        success: true,
+        sent: 0,
+        errors: 0,
+        total: 0,
+        message: 'No users found in database',
+      });
     }
 
     // Get tomorrow's date
