@@ -22,29 +22,40 @@ import { sendTomorrowTipEmail } from '@/lib/email';
 
 export async function GET(request: Request) {
   // Verify this is a cron request
-  // Vercel wraps headers in x-vercel-sc-headers, so check both places
+  // Vercel may modify headers, so check multiple sources
   let authHeader = 
     request.headers.get('authorization') || 
     request.headers.get('Authorization') ||
     request.headers.get('AUTHORIZATION');
   
-  // If not found in regular headers, check Vercel's wrapped headers
+  // Also check x-forwarded-authorization (if Vercel preserves it)
   if (!authHeader) {
-    const vercelHeaders = request.headers.get('x-vercel-sc-headers');
-    if (vercelHeaders) {
-      try {
-        const parsed = JSON.parse(vercelHeaders);
-        authHeader = parsed.Authorization || parsed.authorization;
-      } catch (e) {
-        // Ignore parse errors
-      }
-    }
+    authHeader = 
+      request.headers.get('x-forwarded-authorization') ||
+      request.headers.get('x-forwarded-authorization');
   }
   
   const expectedAuth = `Bearer ${process.env.CRON_SECRET}`;
   
+  // Debug: log what we're comparing (first 20 chars only for security)
+  console.log('Auth check:', {
+    hasHeader: !!authHeader,
+    headerStart: authHeader?.substring(0, 20) || 'none',
+    expectedStart: expectedAuth.substring(0, 20),
+    matches: authHeader === expectedAuth,
+  });
+  
   if (!authHeader || authHeader !== expectedAuth) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    return NextResponse.json({ 
+      error: 'Unauthorized',
+      debug: {
+        hasHeader: !!authHeader,
+        headerLength: authHeader?.length || 0,
+        expectedLength: expectedAuth.length,
+        headerStart: authHeader?.substring(0, 30) || 'none',
+        expectedStart: expectedAuth.substring(0, 30),
+      }
+    }, { status: 401 });
   }
 
   try {
