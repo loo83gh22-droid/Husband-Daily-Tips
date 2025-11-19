@@ -60,7 +60,7 @@ export default async function HowToGuidesPage() {
       ],
     },
     'show-up-right': {
-      name: 'Show Up Right',
+      name: 'Show Up & Step Up (HELP!)',
       description: 'Actually help. Be a partner, not just a passenger.',
       icon: '🤝',
       guides: [
@@ -107,7 +107,7 @@ export default async function HowToGuidesPage() {
       ],
     },
     'romance-that-works': {
-      name: 'Romance That Works',
+      name: 'Romance Right',
       description: 'Dates, surprises, and making her feel special—without the cheesy stuff.',
       icon: '💕',
       guides: [
@@ -154,7 +154,7 @@ export default async function HowToGuidesPage() {
       ],
     },
     'fix-it-yourself': {
-      name: 'Fix It Yourself',
+      name: 'Mr. Fix It (Around the House)',
       description: 'Handle home repairs and DIY projects like a boss.',
       icon: '🔧',
       guides: [
