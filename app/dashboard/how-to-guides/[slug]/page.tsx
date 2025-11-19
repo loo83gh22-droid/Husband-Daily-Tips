@@ -346,6 +346,525 @@ Do it when you don't need the oven for 12-24 hours. Weekend mornings are perfect
 
 Your oven is clean. It didn't take 3 hours of scrubbing. Your wife noticed. You didn't use harsh chemicals. That's a win.`,
   },
+  'plan-perfect-date-night': {
+    id: 5,
+    title: 'Plan the Perfect, No-Pressure Date Night',
+    category: 'Relationship',
+    difficulty: 'Easy',
+    time: '30 min planning',
+    excerpt: 'Skip the "what do you want to do?" conversation. Plan a date that actually works, doesn\'t stress her out, and shows you put thought into it.',
+    content: `## Why This Matters
+
+The "what do you want to do?" conversation is a trap. It puts pressure on her to plan, and then you're just along for the ride. When you plan the date, you're taking initiative. You're showing you thought about what she'd actually enjoy. That matters way more than how much you spend.
+
+## The Secret: Think About Her, Not You
+
+This isn't about what you want to do. It's about what she'd enjoy. What does she like? What relaxes her? What makes her feel special? Start there.
+
+**The rule:** If you're not sure, pay attention. What does she talk about? What does she get excited about? Use that.
+
+## Step-by-Step Planning
+
+### 1. Pick the Day (But Be Flexible)
+
+Don't spring it on her last minute. Give her a heads up: "Hey, I want to plan something for us Friday night. Are you free?" If she's not, be flexible. The goal is connection, not a rigid schedule.
+
+**Pro tip:** Check her calendar if you share one. Don't plan something when she's already stressed or busy.
+
+### 2. Consider Her Energy Level
+
+Is she exhausted from work? Plan something low-key. Is she energized? Maybe something more active. Read the room. A fancy dinner when she's dead tired isn't thoughtful—it's tone-deaf.
+
+**Low-energy options:**
+- Takeout and a movie at home
+- A quiet restaurant she likes
+- A walk somewhere pretty
+- Coffee and conversation
+
+**Higher-energy options:**
+- A concert or show
+- Trying a new restaurant
+- An activity she's mentioned wanting to try
+- A day trip somewhere
+
+### 3. Handle the Logistics
+
+You plan it. You handle:
+- Reservations (if needed)
+- Directions
+- Parking
+- Timing
+
+Don't make her think about any of it. The whole point is to take something off her plate, not add to it.
+
+### 4. Keep It Simple
+
+You don't need to plan an elaborate multi-stop evening. One good thing is better than three mediocre things. A nice dinner. A walk. A movie. Pick one and do it well.
+
+**Common mistake:** Overthinking it. A simple, thoughtful date beats a complicated one every time.
+
+### 5. Be Present
+
+When you're on the date, actually be there. Put your phone away. Listen. Engage. Ask questions. This isn't about checking a box—it's about connecting.
+
+## What Makes a Date "No Pressure"
+
+- **No expectations:** It's not about getting something in return. It's about spending time together.
+- **No stress:** She doesn't have to plan anything, think about anything, or worry about anything.
+- **No pressure to perform:** You're not trying to impress. You're trying to connect.
+- **Flexibility:** If something isn't working, adjust. Be willing to change plans.
+
+## Common Mistakes
+
+- **Planning what you want:** This isn't about you. It's about her.
+- **Last-minute planning:** "What do you want to do tonight?" is not planning.
+- **Overcomplicating it:** Simple and thoughtful beats elaborate and stressful.
+- **Having an agenda:** This isn't transactional. It's about connection.
+- **Ignoring her energy:** If she's exhausted, don't plan something that requires energy.
+
+## The Win
+
+You planned something. She didn't have to think about it. You spent quality time together. She felt seen and cared for. That's a win.`,
+  },
+  'help-hosting-party': {
+    id: 6,
+    title: 'Help When You\'re Hosting the Party',
+    category: 'Relationship',
+    difficulty: 'Easy',
+    time: 'Party duration',
+    excerpt: 'Don\'t be the husband who disappears when guests arrive. Actually help. Know what to do, when to do it, and how to make hosting easier for her.',
+    content: `## Why This Matters
+
+Hosting is stressful. There's cleaning, cooking, setup, and then managing everything during the party. If you disappear or "help" by asking "what do you need?" every five minutes, you're making it worse. Actually help. Know what to do without being asked.
+
+## The Secret: Anticipate, Don't Ask
+
+Don't wait for her to tell you what to do. Look around. What needs to be done? Do it. If you're not sure, think about what you'd want help with if you were hosting.
+
+## Before the Party
+
+### 1. Clean Without Being Asked
+
+The house needs to be clean. Don't wait for her to ask. Just do it:
+- Vacuum
+- Clean the bathrooms (especially the guest bathroom)
+- Wipe down surfaces
+- Take out trash
+- Clear clutter
+
+**Pro tip:** Do this the day before, not the day of. Last-minute cleaning adds stress.
+
+### 2. Handle Setup
+
+- Set up extra seating if needed
+- Clear space for coats/bags
+- Set out extra toilet paper, hand towels
+- Check that everything works (lights, music, etc.)
+
+### 3. Prep Food/Drinks
+
+If you're cooking, help. If she's cooking, handle drinks, appetizers, or whatever she assigns you. Don't wait for instructions—ask what you can take off her plate.
+
+## During the Party
+
+### 1. Greet Guests
+
+When people arrive, actually greet them. Take coats. Offer drinks. Make them feel welcome. Don't disappear into another room.
+
+### 2. Keep Things Stocked
+
+- Refill drinks
+- Restock appetizers
+- Empty trash if it's getting full
+- Check bathrooms (toilet paper, towels)
+
+**The rule:** If you see something that needs doing, do it. Don't announce it. Just do it.
+
+### 3. Engage, But Stay Aware
+
+Talk to guests, but keep an eye on her. Is she stressed? Does she need something? Can you take something off her plate?
+
+**Watch for signals:**
+- Is she in the kitchen alone while everyone else is socializing?
+- Does she look overwhelmed?
+- Is she doing cleanup while guests are still there?
+
+### 4. Handle Problems
+
+Something breaks? Spill? Handle it. Don't make her deal with it. You're a team. Act like it.
+
+## After the Party
+
+### 1. Help Clean Up
+
+Don't wait until the next day. Help clean up that night:
+- Load the dishwasher
+- Put away food
+- Take out trash
+- Wipe down surfaces
+
+**The rule:** Don't go to bed until cleanup is done. She shouldn't wake up to a disaster zone.
+
+### 2. Don't Complain
+
+Even if you're tired, don't complain about cleaning up. Just do it. She's probably more tired than you are.
+
+## What "Actually Help" Looks Like
+
+- **You see something that needs doing, you do it.** No asking.
+- **You anticipate needs.** If drinks are low, refill them. If trash is full, empty it.
+- **You stay present.** You're not on your phone or in another room.
+- **You handle problems.** You don't make her deal with everything.
+- **You clean up.** Without being asked, without complaining.
+
+## Common Mistakes
+
+- **Asking "what do you need?" constantly:** Look around. Figure it out.
+- **Disappearing:** Don't vanish when guests arrive. Actually help.
+- **Half-helping:** Don't start something and leave it for her to finish.
+- **Complaining:** Don't complain about helping. Just help.
+- **Waiting for instructions:** Anticipate. Don't wait to be told.
+
+## The Win
+
+You actually helped. The party went smoothly. She didn't have to stress about everything. She felt supported. That's a win.`,
+  },
+  'give-genuine-compliment': {
+    id: 7,
+    title: 'Give a Genuine Compliment That Actually Lands',
+    category: 'Relationship',
+    difficulty: 'Easy',
+    time: '30 seconds',
+    excerpt: 'Move beyond "you look nice." Learn how to give compliments that feel real, specific, and actually make her feel seen and appreciated.',
+    content: `## Why This Matters
+
+Generic compliments don't land. "You look nice" is better than nothing, but it's not memorable. A genuine, specific compliment shows you're actually paying attention. It makes her feel seen, not just noticed.
+
+## The Secret: Be Specific
+
+The difference between a generic compliment and a genuine one is specificity. Instead of "you look nice," say what specifically looks nice. Instead of "you're great," say what specifically is great about her.
+
+## What Makes a Compliment Land
+
+### 1. Be Specific
+
+**Generic:** "You look nice."
+**Specific:** "That color really brings out your eyes. You look amazing."
+
+**Generic:** "You're a good mom."
+**Specific:** "I love how patient you were with the kids earlier when they were being difficult. That was impressive."
+
+**Generic:** "You're smart."
+**Specific:** "The way you handled that situation at work—you were so strategic. I'm impressed."
+
+### 2. Notice Character, Not Just Appearance
+
+Appearance compliments are fine, but character compliments hit deeper. Notice:
+- How she handles stress
+- How she treats other people
+- How she solves problems
+- How she shows up for you
+
+**Examples:**
+- "I love how you always make people feel welcome."
+- "You have such a good heart. I see how you care about people."
+- "You're so resilient. I admire how you handle challenges."
+
+### 3. Notice Effort
+
+When she does something, notice the effort:
+- "I can tell you put thought into this. Thank you."
+- "You worked really hard on this. I see that."
+- "I appreciate how much effort you put into making this nice."
+
+### 4. Be Genuine
+
+Don't compliment just to compliment. If you don't mean it, she'll know. Pay attention. Notice things. When you genuinely appreciate something, say it.
+
+## When to Give Compliments
+
+- **In the moment:** When you notice something, say it. Don't wait.
+- **When she's stressed:** A genuine compliment can lift her up.
+- **When she does something well:** Acknowledge it.
+- **Randomly:** Don't only compliment when you want something. Compliment because you notice.
+
+## How to Give Them
+
+### 1. Look Her in the Eye
+
+When you give a compliment, actually look at her. Don't say it while looking at your phone or the TV.
+
+### 2. Be Sincere
+
+Your tone matters. Say it like you mean it. Because you should mean it.
+
+### 3. Don't Follow It with a Request
+
+Don't give a compliment and then ask for something. That makes it feel transactional.
+
+### 4. Don't Overdo It
+
+Too many compliments can feel insincere. One genuine compliment is better than five generic ones.
+
+## Examples That Actually Work
+
+**Appearance:**
+- "That dress looks incredible on you. The way it fits—wow."
+- "Your hair looks really good today. Did you do something different?"
+- "You have the best smile. It lights up your whole face."
+
+**Character:**
+- "I love how you always see the best in people. That's a gift."
+- "You're so good at making people feel comfortable. I've noticed that about you."
+- "You have such a strong sense of what's right. I respect that about you."
+
+**Effort:**
+- "This meal is amazing. I can tell you put a lot of thought into it."
+- "The house looks great. I know you worked hard on it."
+- "Thank you for handling that. I know it wasn't easy."
+
+**Actions:**
+- "The way you handled that situation was really impressive."
+- "I love how you always remember the little things."
+- "You're so good at [specific thing]. I'm always impressed."
+
+## Common Mistakes
+
+- **Being generic:** "You look nice" doesn't land like "that color looks amazing on you."
+- **Only complimenting appearance:** Notice her character, effort, and actions too.
+- **Complimenting to get something:** Don't make it transactional.
+- **Not meaning it:** If you don't mean it, don't say it.
+- **Overdoing it:** One genuine compliment beats five generic ones.
+
+## The Win
+
+You gave a compliment that actually landed. She felt seen and appreciated. You noticed something specific about her. That's a win.`,
+  },
+  'be-present-quality-time': {
+    id: 8,
+    title: 'Be Present During Quality Time (Actually)',
+    category: 'Relationship',
+    difficulty: 'Medium',
+    time: 'Ongoing',
+    excerpt: 'Put the phone down. Actually listen. Be there mentally, not just physically. Learn how to give her your full attention without it feeling forced.',
+    content: `## Why This Matters
+
+Being physically present but mentally checked out is worse than not being there at all. She knows when you're not really there. When you're on your phone, thinking about work, or just waiting for the conversation to end, she feels it. Actually being present—giving her your full attention—is one of the most valuable things you can give her.
+
+## The Secret: Put Everything Else Away
+
+Your phone. Your work thoughts. Your to-do list. All of it. Put it away. For this moment, there's nothing else. Just her. Just this conversation. Just this time together.
+
+## What "Actually Present" Looks Like
+
+### 1. Put Your Phone Away
+
+Not face down on the table. Not in your pocket where you'll check it. Actually away. In another room if you need to. Out of sight, out of mind.
+
+**The rule:** If you can't go 30 minutes without checking your phone, that's a problem. Fix it.
+
+### 2. Make Eye Contact
+
+When she's talking, look at her. Not at the TV. Not at your phone. Not past her. At her. Eye contact shows you're actually listening.
+
+### 3. Listen to Understand, Not to Respond
+
+Don't listen waiting for your turn to talk. Listen to actually understand what she's saying. What's she really saying? What's she feeling? What does she need?
+
+**The difference:**
+- **Listening to respond:** You're thinking about what you'll say next.
+- **Listening to understand:** You're focused on what she's saying and what it means.
+
+### 4. Ask Follow-Up Questions
+
+Show you're actually listening by asking questions:
+- "Tell me more about that."
+- "How did that make you feel?"
+- "What happened next?"
+
+This shows you're engaged, not just waiting for her to finish.
+
+### 5. Don't Try to Fix Everything
+
+Sometimes she just needs to vent. She doesn't need you to solve it. She needs you to listen. Don't jump to solutions. Just be there.
+
+**The rule:** Unless she asks for advice, don't give it. Just listen and validate.
+
+## When to Be Present
+
+- **During conversations:** Actually listen. Don't multitask.
+- **During meals:** Put the phone away. Talk. Connect.
+- **During activities together:** Be there. Don't just go through the motions.
+- **When she's stressed:** Give her your full attention. Don't half-listen.
+
+## How to Actually Do It
+
+### 1. Set Boundaries
+
+- "I'm putting my phone away for the next hour. Just us."
+- Turn off notifications.
+- Let work wait.
+
+### 2. Practice Active Listening
+
+- Nod. Show you're listening.
+- Make eye contact.
+- Don't interrupt.
+- Ask questions.
+- Reflect back what you heard: "So what you're saying is..."
+
+### 3. Notice When You Drift
+
+Your mind will wander. That's normal. When you notice it, bring it back. Focus on her. On what she's saying. On this moment.
+
+### 4. Put Away Distractions
+
+- Phone in another room
+- TV off (unless you're watching together)
+- Work thoughts can wait
+- To-do list can wait
+
+## Common Mistakes
+
+- **Phone on the table:** Even if you're not using it, it's a distraction. Put it away.
+- **Multitasking:** You can't listen and do something else. Pick one.
+- **Waiting for your turn:** You're not having a debate. You're having a conversation.
+- **Trying to fix everything:** Sometimes she just needs you to listen.
+- **Half-listening:** She knows when you're not really there.
+
+## The Challenge
+
+Try this: For one conversation, put everything away. Phone, distractions, everything. Just be there. Listen. Engage. See how different it feels.
+
+## The Win
+
+You were actually present. She felt heard and seen. You connected. That's a win.`,
+  },
+  'handle-surprise-right': {
+    id: 9,
+    title: 'Plan a Surprise That Doesn\'t Stress Her Out',
+    category: 'Relationship',
+    difficulty: 'Medium',
+    time: '1-2 hours planning',
+    excerpt: 'Surprises can backfire if you don\'t think them through. Learn how to plan something that feels thoughtful, not overwhelming or inconvenient.',
+    content: `## Why This Matters
+
+Surprises can be amazing—or they can be stressful. The difference is in the planning. A good surprise shows you thought about her. A bad surprise shows you only thought about the gesture. Think it through. Make it about her, not about you.
+
+## The Secret: Consider Her, Not the Gesture
+
+This isn't about how impressive the surprise is. It's about whether she'll actually enjoy it. Will it stress her out? Will it be inconvenient? Will she feel pressured? Think about that first.
+
+## What Makes a Surprise Good
+
+### 1. It Fits Her Schedule
+
+Don't surprise her with something that conflicts with her plans. Check her calendar. Make sure she's free. If you're not sure, give her a heads up: "I have something planned for us Saturday. Are you free?"
+
+**The rule:** A surprise that forces her to cancel something is a bad surprise.
+
+### 2. It Matches Her Energy
+
+Is she exhausted? Don't plan something that requires energy. Is she stressed? Don't add more stress. Read the room. Match her energy level.
+
+**Low-energy surprises:**
+- Her favorite takeout
+- A massage appointment
+- A quiet evening at home
+- Something that takes pressure off, not adds it
+
+**Higher-energy surprises:**
+- Tickets to something she wants to see
+- A day trip somewhere
+- An activity she's mentioned wanting to try
+
+### 3. It's Something She'd Actually Want
+
+This is the most important part. Is this something she'd actually enjoy? Or is it something you think she should enjoy?
+
+**Think about:**
+- What does she talk about wanting to do?
+- What does she get excited about?
+- What relaxes her?
+- What makes her feel special?
+
+### 4. It Doesn't Create Work for Her
+
+A surprise that creates more work for her is a bad surprise. Don't:
+- Surprise her with guests when the house is a mess
+- Plan something that requires her to get ready when she's exhausted
+- Create a situation where she has to scramble
+
+### 5. It's Thoughtful, Not Just Expensive
+
+Expensive doesn't mean thoughtful. A small, well-thought-out surprise beats an expensive, tone-deaf one every time.
+
+## How to Plan It
+
+### 1. Think About Her
+
+What would she actually enjoy? What would make her feel special? What would take pressure off, not add it?
+
+### 2. Consider Logistics
+
+- Is she free?
+- Does it fit her schedule?
+- Will it stress her out?
+- Does it create work for her?
+
+### 3. Plan the Details
+
+Handle everything:
+- Reservations
+- Timing
+- Logistics
+- Everything
+
+Don't make her think about any of it.
+
+### 4. Give a Heads Up (If Needed)
+
+Some surprises need a heads up:
+- "I have something planned for us Friday. Can you keep it free?"
+- "Wear something nice Saturday. I have a surprise."
+
+This isn't ruining the surprise—it's making sure it actually works.
+
+## Examples of Good Surprises
+
+**Low-key, thoughtful:**
+- Her favorite meal delivered
+- A massage appointment booked
+- A clean house when she gets home
+- Her favorite show queued up with snacks ready
+
+**More involved, but still thoughtful:**
+- Tickets to something she's mentioned wanting to see
+- A day trip somewhere she'd enjoy
+- An activity she's talked about wanting to try
+- A weekend away (with plenty of notice)
+
+## Examples of Bad Surprises
+
+**Don't do these:**
+- Surprise guests when the house is a mess
+- A fancy dinner when she's exhausted
+- Something that requires her to cancel plans
+- A surprise that creates more work for her
+- Something you want to do, not something she'd want
+
+## Common Mistakes
+
+- **Not considering her schedule:** Don't surprise her when she's busy or has plans.
+- **Not matching her energy:** Don't plan something energetic when she's exhausted.
+- **Thinking about the gesture, not her:** Make it about what she'd enjoy, not what's impressive.
+- **Creating work for her:** Don't make her scramble or stress.
+- **Not giving a heads up when needed:** Some surprises need advance notice.
+
+## The Win
+
+You planned a surprise that actually worked. She felt thought about, not stressed out. She enjoyed it. That's a win.`,
+  },
   'install-smart-thermostat': {
     id: 4,
     title: 'Install a Smart Thermostat',

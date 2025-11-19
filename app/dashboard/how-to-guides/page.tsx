@@ -57,6 +57,51 @@ export default async function HowToGuidesPage() {
       difficulty: 'Medium',
       time: '1 hour',
     },
+    {
+      slug: 'plan-perfect-date-night',
+      title: 'Plan the Perfect, No-Pressure Date Night',
+      excerpt:
+        'Skip the "what do you want to do?" conversation. Plan a date that actually works, doesn\'t stress her out, and shows you put thought into it.',
+      category: 'Relationship',
+      difficulty: 'Easy',
+      time: '30 min planning',
+    },
+    {
+      slug: 'help-hosting-party',
+      title: 'Help When You\'re Hosting the Party',
+      excerpt:
+        'Don\'t be the husband who disappears when guests arrive. Actually help. Know what to do, when to do it, and how to make hosting easier for her.',
+      category: 'Relationship',
+      difficulty: 'Easy',
+      time: 'Party duration',
+    },
+    {
+      slug: 'give-genuine-compliment',
+      title: 'Give a Genuine Compliment That Actually Lands',
+      excerpt:
+        'Move beyond "you look nice." Learn how to give compliments that feel real, specific, and actually make her feel seen and appreciated.',
+      category: 'Relationship',
+      difficulty: 'Easy',
+      time: '30 seconds',
+    },
+    {
+      slug: 'be-present-quality-time',
+      title: 'Be Present During Quality Time (Actually)',
+      excerpt:
+        'Put the phone down. Actually listen. Be there mentally, not just physically. Learn how to give her your full attention without it feeling forced.',
+      category: 'Relationship',
+      difficulty: 'Medium',
+      time: 'Ongoing',
+    },
+    {
+      slug: 'handle-surprise-right',
+      title: 'Plan a Surprise That Doesn\'t Stress Her Out',
+      excerpt:
+        'Surprises can backfire if you don\'t think them through. Learn how to plan something that feels thoughtful, not overwhelming or inconvenient.',
+      category: 'Relationship',
+      difficulty: 'Medium',
+      time: '1-2 hours planning',
+    },
   ];
 
   return (
