@@ -1,12 +1,43 @@
--- Rename challenges table to actions
-ALTER TABLE IF EXISTS challenges RENAME TO actions;
+-- Rename challenges table to actions (if it exists and hasn't been renamed)
+DO $$
+BEGIN
+  IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'challenges') THEN
+    ALTER TABLE challenges RENAME TO actions;
+  END IF;
+END $$;
 
--- Rename user_challenge_completions table to user_action_completions
-ALTER TABLE IF EXISTS user_challenge_completions RENAME TO user_action_completions;
+-- Rename user_challenge_completions table to user_action_completions (if it exists and hasn't been renamed)
+DO $$
+BEGIN
+  IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'user_challenge_completions') THEN
+    ALTER TABLE user_challenge_completions RENAME TO user_action_completions;
+  END IF;
+END $$;
 
 -- Rename columns that reference challenges
-ALTER TABLE IF EXISTS user_action_completions 
-  RENAME COLUMN challenge_id TO action_id;
+-- Check if column exists before renaming (PostgreSQL doesn't support IF EXISTS for RENAME COLUMN)
+DO $$
+BEGIN
+  -- Check if user_action_completions table exists and has challenge_id column
+  IF EXISTS (
+    SELECT 1 
+    FROM information_schema.columns 
+    WHERE table_name = 'user_action_completions' 
+    AND column_name = 'challenge_id'
+  ) THEN
+    ALTER TABLE user_action_completions RENAME COLUMN challenge_id TO action_id;
+  END IF;
+  
+  -- Also check if it's still named user_challenge_completions (in case table rename failed)
+  IF EXISTS (
+    SELECT 1 
+    FROM information_schema.columns 
+    WHERE table_name = 'user_challenge_completions' 
+    AND column_name = 'challenge_id'
+  ) THEN
+    ALTER TABLE user_challenge_completions RENAME COLUMN challenge_id TO action_id;
+  END IF;
+END $$;
 
 -- Update indexes
 DROP INDEX IF EXISTS idx_challenges_category;
