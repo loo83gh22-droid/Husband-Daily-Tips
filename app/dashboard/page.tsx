@@ -8,6 +8,7 @@ import HealthBar from '@/components/HealthBar';
 import BadgesDisplay from '@/components/BadgesDisplay';
 import DashboardNav from '@/components/DashboardNav';
 import CalendarExport from '@/components/CalendarExport';
+import AutoCalendarToggle from '@/components/AutoCalendarToggle';
 import Link from 'next/link';
 
 async function getUserData(auth0Id: string) {
@@ -314,6 +315,8 @@ export default async function Dashboard() {
             </div>
 
             <BadgesDisplay userId={user.id} />
+
+            <AutoCalendarToggle />
 
             <CalendarExport />
 

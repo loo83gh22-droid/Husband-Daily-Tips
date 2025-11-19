@@ -26,6 +26,7 @@ export default function DailyTipCard({ tip }: DailyTipCardProps) {
   const [newlyEarnedBadges, setNewlyEarnedBadges] = useState<
     Array<{ name: string; description: string; icon: string; healthBonus: number }>
   >([]);
+  const [isExportingCalendar, setIsExportingCalendar] = useState(false);
 
   const handleMarkDone = async () => {
     if (isSubmitting || isCompleted) return;
@@ -67,6 +68,41 @@ export default function DailyTipCard({ tip }: DailyTipCardProps) {
     }
   };
 
+  const handleExportToCalendar = async () => {
+    setIsExportingCalendar(true);
+    try {
+      const response = await fetch('/api/calendar/tip', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          tipId: tip.id,
+          date: new Date().toISOString().split('T')[0],
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to export to calendar');
+      }
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `daily-action-${tip.id}.ics`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (error) {
+      console.error('Error exporting to calendar:', error);
+      alert('Failed to export to calendar. Please try again.');
+    } finally {
+      setIsExportingCalendar(false);
+    }
+  };
+
   return (
     <div className="bg-slate-900/80 rounded-xl shadow-lg p-8 mb-6 border border-slate-800">
       <div className="flex items-start justify-between mb-4">
@@ -87,8 +123,8 @@ export default function DailyTipCard({ tip }: DailyTipCardProps) {
         </p>
       </div>
 
-      <div className="mt-6 flex flex-col sm:flex-row gap-3 sm:items-center justify-between">
-        <div className="flex gap-3">
+      <div className="mt-6 flex flex-col gap-4">
+        <div className="flex flex-wrap gap-3">
           <button
             onClick={handleMarkDone}
             disabled={isSubmitting || isCompleted}
@@ -101,6 +137,20 @@ export default function DailyTipCard({ tip }: DailyTipCardProps) {
             className="px-4 py-2 border border-slate-700 text-slate-100 text-sm rounded-lg hover:bg-slate-900 transition-colors"
           >
             Save for later
+          </button>
+          <button
+            onClick={handleExportToCalendar}
+            disabled={isExportingCalendar}
+            className="px-4 py-2 border border-primary-500/50 text-primary-300 text-sm font-medium rounded-lg hover:bg-primary-500/10 transition-colors disabled:opacity-50 disabled:cursor-default flex items-center gap-2"
+          >
+            {isExportingCalendar ? (
+              'Exporting...'
+            ) : (
+              <>
+                <span>📅</span>
+                <span>Send to Calendar</span>
+              </>
+            )}
           </button>
         </div>
         <div className="flex flex-col gap-2">
