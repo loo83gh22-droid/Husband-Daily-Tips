@@ -86,8 +86,7 @@ export default async function ChallengesPage() {
     challengesByTheme[theme].push(challenge);
   });
   
-  // Log for debugging (server-side - check terminal)
-  console.log(`[Challenges Page] Total unique challenges: ${seenChallengeIds.size}, Total in array: ${challenges.length}`);
+  // Note: Each theme section renders its own ChallengesList component
 
   // Calculate progress for each theme
   const themeProgress: Record<string, { completed: number; total: number }> = {};
