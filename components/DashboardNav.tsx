@@ -12,6 +12,7 @@ export default function DashboardNav() {
     { href: '/dashboard/how-to-guides', label: 'How To Guides', icon: '🔧' },
     { href: '/dashboard/hell-yeahs', label: 'Hell Yeahs', icon: '💪' },
     { href: '/dashboard/badges', label: 'Badges', icon: '🏆' },
+    { href: '/dashboard/favorites', label: 'Favorites', icon: '⭐' },
     { href: '/dashboard/journal', label: 'Journal', icon: '📝' },
   ];
 

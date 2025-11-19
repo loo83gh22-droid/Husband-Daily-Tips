@@ -12,6 +12,8 @@ interface Tip {
   category: string;
   tier: string;
   created_at: string;
+  favorited?: boolean;
+  userTipId?: string;
 }
 
 interface DailyTipCardProps {
@@ -27,6 +29,8 @@ export default function DailyTipCard({ tip }: DailyTipCardProps) {
     Array<{ name: string; description: string; icon: string; healthBonus: number }>
   >([]);
   const [isExportingCalendar, setIsExportingCalendar] = useState(false);
+  const [isFavorited, setIsFavorited] = useState(tip.favorited || false);
+  const [isTogglingFavorite, setIsTogglingFavorite] = useState(false);
 
   const handleMarkDone = async () => {
     if (isSubmitting || isCompleted) return;
@@ -103,6 +107,31 @@ export default function DailyTipCard({ tip }: DailyTipCardProps) {
     }
   };
 
+  const handleToggleFavorite = async () => {
+    setIsTogglingFavorite(true);
+    try {
+      const response = await fetch('/api/tips/favorite', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ tipId: tip.id }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to toggle favorite');
+      }
+
+      const data = await response.json();
+      setIsFavorited(data.favorited);
+    } catch (error) {
+      console.error('Error toggling favorite:', error);
+      alert('Failed to update favorite. Please try again.');
+    } finally {
+      setIsTogglingFavorite(false);
+    }
+  };
+
   return (
     <div className="bg-slate-900/80 rounded-xl shadow-lg p-8 mb-6 border border-slate-800">
       <div className="flex items-start justify-between mb-4">
@@ -149,6 +178,24 @@ export default function DailyTipCard({ tip }: DailyTipCardProps) {
               <>
                 <span>📅</span>
                 <span>Send to Calendar</span>
+              </>
+            )}
+          </button>
+          <button
+            onClick={handleToggleFavorite}
+            disabled={isTogglingFavorite}
+            className={`px-4 py-2 border text-sm font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-default flex items-center gap-2 ${
+              isFavorited
+                ? 'border-yellow-500/50 bg-yellow-500/10 text-yellow-300 hover:bg-yellow-500/20'
+                : 'border-slate-700 text-slate-300 hover:bg-slate-900'
+            }`}
+          >
+            {isTogglingFavorite ? (
+              '...'
+            ) : (
+              <>
+                <span>{isFavorited ? '⭐' : '☆'}</span>
+                <span>{isFavorited ? 'Favorited' : 'Favorite'}</span>
               </>
             )}
           </button>
