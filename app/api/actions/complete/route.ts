@@ -90,6 +90,37 @@ export async function POST(request: Request) {
       );
     }
 
+    // Also mark as completed in user_daily_actions if it's today's action
+    const today = new Date().toISOString().split('T')[0];
+    const { data: dailyAction } = await supabase
+      .from('user_daily_actions')
+      .select('id')
+      .eq('user_id', user.id)
+      .eq('action_id', actionId)
+      .eq('date', today)
+      .single();
+
+    if (dailyAction) {
+      // Mark as completed
+      await supabase
+        .from('user_daily_actions')
+        .update({ completed: true })
+        .eq('id', dailyAction.id);
+
+      // Track daily health points (capped at 6 per day)
+      // Each daily action completion gives exactly 6 points (one-time per day)
+      // This ensures maximum health accrual is 6 points per day
+      await supabase
+        .from('daily_health_points')
+        .upsert({
+          user_id: user.id,
+          date: today,
+          points_earned: 6, // Always 6 points for completing daily action (capped)
+        }, {
+          onConflict: 'user_id,date',
+        });
+    }
+
     // Check for badge progress (if action has requirement_type)
     if (action.requirement_type) {
       // Get user stats for badge checking

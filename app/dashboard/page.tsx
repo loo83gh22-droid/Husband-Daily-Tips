@@ -25,111 +25,93 @@ async function getUserData(auth0Id: string) {
   return user;
 }
 
-async function getTodayTip(userId: string | null, subscriptionTier: string) {
+async function getTodayAction(userId: string | null, subscriptionTier: string) {
   if (!userId) return null;
 
   // Get today's date in YYYY-MM-DD format
   const today = new Date().toISOString().split('T')[0];
-  const dayOfWeek = new Date().getDay(); // 0 = Sunday, 6 = Saturday
 
-  // Check if user has already seen today's tip
-  const { data: existingTip } = await supabase
-    .from('user_tips')
-    .select('*, tips(*)')
+  // Check if user has already seen today's action
+  const { data: existingAction } = await supabase
+    .from('user_daily_actions')
+    .select('*, actions(*)')
     .eq('user_id', userId)
     .eq('date', today)
     .single();
 
-  if (existingTip) {
+  if (existingAction) {
     return {
-      ...existingTip.tips,
-      favorited: existingTip.favorited || false,
-      userTipId: existingTip.id,
+      ...existingAction.actions,
+      favorited: existingAction.favorited || false,
+      userActionId: existingAction.id,
+      isAction: true, // Flag to indicate this is an action, not a tip
     };
   }
 
-  // Check for recurring tips due today (e.g., weekly check-in)
-  const { data: recurringTips } = await supabase
-    .from('tips')
+  // Get actions user hasn't seen in the last 30 days
+  const thirtyDaysAgo = new Date();
+  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+  const thirtyDaysAgoStr = thirtyDaysAgo.toISOString().split('T')[0];
+
+  // Get actions user has seen in the last 30 days
+  const { data: recentActions } = await supabase
+    .from('user_daily_actions')
+    .select('action_id')
+    .eq('user_id', userId)
+    .gte('date', thirtyDaysAgoStr);
+
+  const seenActionIds = recentActions?.map((ra) => ra.action_id) || [];
+
+  // Get available actions - all actions are available to all tiers
+  let { data: actions, error } = await supabase
+    .from('actions')
     .select('*')
-    .eq('is_recurring', true)
-    .eq('recurrence_type', 'weekly')
-    .eq('recurrence_day', dayOfWeek);
-
-  if (recurringTips && recurringTips.length > 0) {
-    // Check if already completed this week
-    const weekStart = new Date();
-    weekStart.setDate(weekStart.getDate() - dayOfWeek);
-    weekStart.setHours(0, 0, 0, 0);
-
-    for (const recurringTip of recurringTips) {
-      const { data: completion } = await supabase
-        .from('recurring_tip_completions')
-        .select('*')
-        .eq('user_id', userId)
-        .eq('tip_id', recurringTip.id)
-        .gte('scheduled_date', weekStart.toISOString().split('T')[0])
-        .eq('completed', true)
-        .single();
-
-      // If not completed this week, this is today's tip
-      if (!completion) {
-        // Schedule it
-        await supabase.from('recurring_tip_completions').upsert({
-          user_id: userId,
-          tip_id: recurringTip.id,
-          scheduled_date: today,
-          completed: false,
-        });
-
-        // Save to user_tips
-        await supabase.from('user_tips').insert({
-          user_id: userId,
-          tip_id: recurringTip.id,
-          date: today,
-        });
-
-        return recurringTip;
-      }
-    }
-  }
-
-  // Get a random tip - all tips accessible during testing
-  const { data: tips, error } = await supabase
-    .from('tips')
-    .select('*')
-    .eq('is_recurring', false) // Don't show recurring tips as random tips
     .limit(100);
 
-  if (error || !tips || tips.length === 0) {
-    // Fallback: get any tip if no non-recurring tips
-    const { data: allTips } = await supabase.from('tips').select('*').limit(100);
-    if (!allTips || allTips.length === 0) {
+  // Filter out actions seen in last 30 days
+  if (actions && seenActionIds.length > 0) {
+    actions = actions.filter((action) => !seenActionIds.includes(action.id));
+  }
+
+  if (error || !actions || actions.length === 0) {
+    // Fallback: if no actions available (all seen), get any action anyway
+    const { data: allActions } = await supabase
+      .from('actions')
+      .select('*')
+      .limit(100);
+
+    if (!allActions || allActions.length === 0) {
       return null;
     }
-    const randomTip = allTips[Math.floor(Math.random() * allTips.length)];
+    const randomAction = allActions[Math.floor(Math.random() * allActions.length)];
 
-    await supabase.from('user_tips').insert({
+    await supabase.from('user_daily_actions').insert({
       user_id: userId,
-      tip_id: randomTip.id,
+      action_id: randomAction.id,
       date: today,
     });
 
-    return randomTip;
+    return {
+      ...randomAction,
+      isAction: true,
+    };
   }
 
-  const randomTip = tips[Math.floor(Math.random() * tips.length)];
+  const randomAction = actions[Math.floor(Math.random() * actions.length)];
 
-  // Save to user_tips
+  // Save to user_daily_actions
   if (userId) {
-    await supabase.from('user_tips').insert({
+    await supabase.from('user_daily_actions').insert({
       user_id: userId,
-      tip_id: randomTip.id,
+      action_id: randomAction.id,
       date: today,
     });
   }
 
-  return randomTip;
+  return {
+    ...randomAction,
+    isAction: true,
+  };
 }
 
 async function getUserStats(userId: string | null) {
@@ -201,7 +183,16 @@ async function getUserStats(userId: string | null) {
   // Total unique actions = unique tips + unique actions
   const uniqueActions = uniqueTipIds.size + uniqueActionIds.size;
 
-  // Get badge bonuses
+  // Count total days where daily action was completed (capped at 6 points per day)
+  const { data: dailyActionCompletions } = await supabase
+    .from('user_daily_actions')
+    .select('date')
+    .eq('user_id', userId)
+    .eq('completed', true);
+
+  const totalDailyActionCompletions = dailyActionCompletions?.length || 0;
+
+  // Get badge bonuses (now 0, but keeping for backward compatibility)
   const { data: userBadges } = await supabase
     .from('user_badges')
     .select('badges(health_bonus)')
@@ -210,7 +201,7 @@ async function getUserStats(userId: string | null) {
   const totalBadgeBonuses =
     userBadges?.reduce((sum: number, ub: any) => sum + (ub.badges?.health_bonus || 0), 0) || 0;
 
-  // Calculate health with decay using the new formula (includes unique actions bonus)
+  // Calculate health with decay using the new formula (capped at 6 points per day)
   const { calculateHealthScore } = await import('@/lib/health');
   const healthScore = calculateHealthScore(
     {
@@ -219,8 +210,9 @@ async function getUserStats(userId: string | null) {
       totalDays: uniqueDays,
       lastActionDate,
       uniqueActions,
+      totalDailyActionCompletions, // Days where daily action was completed (each day = up to 6 points)
     },
-    totalBadgeBonuses,
+    totalBadgeBonuses, // Now 0 (badges are reference only)
   );
 
   return { totalTips, currentStreak: streak, totalDays: uniqueDays, healthScore };
@@ -261,7 +253,7 @@ export default async function Dashboard() {
 
   const subscriptionTier = user.subscription_tier || 'free';
   // Remove tier restrictions - all tips accessible to all users during testing
-  const todayTip = await getTodayTip(user.id, 'premium'); // Use premium to get better tips
+  const todayAction = await getTodayAction(user.id, user.subscription_tier || 'free');
   const stats = await getUserStats(user.id);
 
   return (
@@ -294,12 +286,12 @@ export default async function Dashboard() {
               </div>
             </div>
 
-            {todayTip ? (
-              <DailyTipCard tip={todayTip} />
+            {todayAction ? (
+              <DailyTipCard tip={todayAction} />
             ) : (
               <div className="bg-slate-900/80 rounded-xl shadow-lg p-8 text-center border border-slate-800">
                 <p className="text-slate-300">
-                  No tips available at the moment. Please check back later.
+                  No action available at the moment. Please check back later.
                 </p>
               </div>
             )}

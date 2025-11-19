@@ -7,13 +7,19 @@ import SocialShare from './SocialShare';
 
 interface Tip {
   id: string;
-  title: string;
-  content: string;
+  title?: string; // For tips
+  name?: string; // For actions
+  content?: string; // For tips
+  description?: string; // For actions
+  benefit?: string; // For actions - why it's valuable
   category: string;
-  tier: string;
+  tier?: string;
   created_at: string;
   favorited?: boolean;
   userTipId?: string;
+  userActionId?: string;
+  isAction?: boolean; // Flag to indicate if this is an action
+  icon?: string; // For actions
 }
 
 interface DailyTipCardProps {
@@ -38,12 +44,18 @@ export default function DailyTipCard({ tip }: DailyTipCardProps) {
     setErrorMessage(null);
 
     try {
-      const response = await fetch('/api/tips/complete', {
+      // Use action completion API if it's an action, otherwise use tip API
+      const endpoint = tip.isAction ? '/api/actions/complete' : '/api/tips/complete';
+      const body = tip.isAction 
+        ? { actionId: tip.id }
+        : { tipId: tip.id };
+      
+      const response = await fetch(endpoint, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ tipId: tip.id }),
+        body: JSON.stringify(body),
       });
 
       if (!response.ok) {
@@ -139,7 +151,10 @@ export default function DailyTipCard({ tip }: DailyTipCardProps) {
           <span className="inline-block px-3 py-1 bg-primary-500/10 text-primary-300 text-xs font-semibold rounded-full mb-2">
             {tip.category}
           </span>
-          <h3 className="text-2xl font-semibold text-slate-50 mb-2">{tip.title}</h3>
+          <h3 className="text-2xl font-semibold text-slate-50 mb-2 flex items-center gap-2">
+            {tip.icon && <span>{tip.icon}</span>}
+            {tip.title || tip.name}
+          </h3>
         </div>
         <div className="text-xs text-slate-500 text-right">
           {format(new Date(), 'MMM d, yyyy')}
@@ -147,9 +162,15 @@ export default function DailyTipCard({ tip }: DailyTipCardProps) {
       </div>
       
       <div className="prose max-w-none">
-        <p className="text-slate-200 text-base leading-relaxed whitespace-pre-line">
-          {tip.content}
+        <p className="text-slate-200 text-base leading-relaxed whitespace-pre-line mb-3">
+          {tip.content || tip.description}
         </p>
+        {tip.benefit && (
+          <div className="mt-4 p-4 bg-slate-800/50 border-l-4 border-primary-500/50 rounded-r-lg">
+            <p className="text-xs font-semibold text-primary-300 mb-1">Why this matters:</p>
+            <p className="text-slate-300 text-sm leading-relaxed">{tip.benefit}</p>
+          </div>
+        )}
       </div>
 
       <div className="mt-6 flex flex-col gap-4">
@@ -206,8 +227,8 @@ export default function DailyTipCard({ tip }: DailyTipCardProps) {
                 consistency is what actually moves the needle.
               </p>
           <SocialShare
-            title={tip.title}
-            text={`Today's action: ${tip.title} - ${tip.content.substring(0, 100)}...`}
+            title={tip.title || tip.name || ''}
+            text={`Today's action: ${tip.title || tip.name} - ${(tip.content || tip.description || '').substring(0, 100)}...`}
           />
         </div>
       </div>

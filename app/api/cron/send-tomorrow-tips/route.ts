@@ -96,54 +96,82 @@ export async function GET(request: Request) {
     let sentCount = 0;
     let errorCount = 0;
 
-    // For each user, get a tip for tomorrow
+    // For each user, get an action for tomorrow
     for (const user of users) {
       try {
-        // Check if user already has a tip for tomorrow
-        const { data: existingTip } = await supabase
-          .from('user_tips')
-          .select('tip_id, tips(*)')
+        // Check if user already has an action for tomorrow
+        const { data: existingAction } = await supabase
+          .from('user_daily_actions')
+          .select('action_id, actions(*)')
           .eq('user_id', user.id)
           .eq('date', tomorrowStr)
           .single();
 
-        let tip;
-        if (existingTip?.tips) {
-          tip = existingTip.tips;
+        let action;
+        if (existingAction?.actions) {
+          action = existingAction.actions;
         } else {
-          // Get a random tip (all accessible during testing)
-          const { data: tips } = await supabase
-            .from('tips')
+          // Get actions user hasn't seen in the last 30 days
+          const thirtyDaysAgo = new Date();
+          thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+          const thirtyDaysAgoStr = thirtyDaysAgo.toISOString().split('T')[0];
+
+          // Get actions user has seen in the last 30 days
+          const { data: recentActions } = await supabase
+            .from('user_daily_actions')
+            .select('action_id')
+            .eq('user_id', user.id)
+            .gte('date', thirtyDaysAgoStr);
+
+          const seenActionIds = recentActions?.map((ra) => ra.action_id) || [];
+
+          // Get available actions - all actions are available to all tiers
+          let { data: actions } = await supabase
+            .from('actions')
             .select('*')
             .limit(100);
 
-          if (!tips || tips.length === 0) {
-            console.error(`No tips available for user ${user.id}`);
-            errorCount++;
-            continue;
+          // Filter out actions seen in last 30 days
+          if (actions && seenActionIds.length > 0) {
+            actions = actions.filter((action) => !seenActionIds.includes(action.id));
           }
 
-          tip = tips[Math.floor(Math.random() * tips.length)];
+          if (!actions || actions.length === 0) {
+            // Fallback: if no actions available, get any action anyway
+            const { data: allActions } = await supabase
+              .from('actions')
+              .select('*')
+              .limit(100);
 
-          // Pre-assign tip for tomorrow
-          await supabase.from('user_tips').insert({
+            if (!allActions || allActions.length === 0) {
+              console.error(`No actions available for user ${user.id}`);
+              errorCount++;
+              continue;
+            }
+            action = allActions[Math.floor(Math.random() * allActions.length)];
+          } else {
+            action = actions[Math.floor(Math.random() * actions.length)];
+          }
+
+          // Pre-assign action for tomorrow
+          await supabase.from('user_daily_actions').insert({
             user_id: user.id,
-            tip_id: tip.id,
+            action_id: action.id,
             date: tomorrowStr,
             completed: false,
           });
         }
 
-        // Send email
+        // Send email with tomorrow's action
         // Note: Resend free tier only allows sending to the account owner's email
         // To send to all users, verify a domain at resend.com/domains
         const success = await sendTomorrowTipEmail(
           user.email,
           user.name || user.email.split('@')[0],
           {
-            title: tip.title,
-            content: tip.content,
-            category: tip.category,
+            title: action.name,
+            content: `${action.description}\n\nWhy this matters: ${action.benefit || 'Every action strengthens your relationship.'}`,
+            category: action.category,
           },
         );
 

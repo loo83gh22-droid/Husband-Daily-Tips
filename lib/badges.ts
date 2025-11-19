@@ -71,6 +71,9 @@ export async function checkAndAwardBadges(
           else if (badgeName.includes('gratitude')) targetCategory = 'Gratitude';
           else if (badgeName.includes('partnership')) targetCategory = 'Partnership';
           else if (badgeName.includes('intimacy')) targetCategory = 'Intimacy';
+          else if (badgeName.includes('outdoor') || badgeName.includes('nature') || badgeName.includes('hiking') || badgeName.includes('walk') || badgeName.includes('camping')) targetCategory = 'Outdoor Activities';
+          else if (badgeName.includes('adventure') || badgeName.includes('explore') || badgeName.includes('explorer')) targetCategory = 'Adventure';
+          else if (badgeName.includes('active') || badgeName.includes('fitness') || badgeName.includes('sport')) targetCategory = 'Active Together';
 
           if (targetCategory) {
             categoryCount =
@@ -105,6 +108,17 @@ export async function checkAndAwardBadges(
       case 'conflict_resolutions':
       case 'love_languages':
       case 'milestone_actions':
+      // New outdoor/adventure requirement types
+      case 'outdoor_actions':
+      case 'walk_actions':
+      case 'hiking_actions':
+      case 'streaking_actions':
+      case 'adventure_actions':
+      case 'camping_actions':
+      case 'water_activities':
+      case 'run_actions':
+      case 'sports_actions':
+      case 'weekend_streak':
         // Check action completions for this requirement type
         if (stats.actionCounts) {
           const count = stats.actionCounts[badge.requirement_type] || 0;
@@ -170,6 +184,9 @@ export async function calculateBadgeProgress(
       else if (badgeName.includes('gratitude')) targetCategory = 'Gratitude';
       else if (badgeName.includes('partnership')) targetCategory = 'Partnership';
       else if (badgeName.includes('intimacy')) targetCategory = 'Intimacy';
+      else if (badgeName.includes('outdoor') || badgeName.includes('nature') || badgeName.includes('hiking') || badgeName.includes('walk') || badgeName.includes('camping')) targetCategory = 'Outdoor Activities';
+      else if (badgeName.includes('adventure') || badgeName.includes('explore') || badgeName.includes('explorer')) targetCategory = 'Adventure';
+      else if (badgeName.includes('active') || badgeName.includes('fitness') || badgeName.includes('sport')) targetCategory = 'Active Together';
 
       if (targetCategory) {
         // Count actions in this category
@@ -204,6 +221,17 @@ export async function calculateBadgeProgress(
       case 'conflict_resolutions':
       case 'love_languages':
       case 'milestone_actions':
+      // New outdoor/adventure requirement types
+      case 'outdoor_actions':
+      case 'walk_actions':
+      case 'hiking_actions':
+      case 'streaking_actions':
+      case 'adventure_actions':
+      case 'camping_actions':
+      case 'water_activities':
+      case 'run_actions':
+      case 'sports_actions':
+      case 'weekend_streak':
           if (stats.actionCounts) {
             current = stats.actionCounts[badge.requirement_type] || 0;
           }
