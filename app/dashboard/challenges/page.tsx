@@ -20,15 +20,25 @@ async function getChallenges(auth0Id: string) {
     .order('category', { ascending: true })
     .order('name', { ascending: true });
 
-  // Get user's completed challenges
+  // Get user's completed challenges (all instances)
   const { data: completions } = await supabase
     .from('user_challenge_completions')
-    .select('challenge_id, completed_at')
-    .eq('user_id', user.id);
+    .select('id, challenge_id, completed_at, notes')
+    .eq('user_id', user.id)
+    .order('completed_at', { ascending: false });
 
-  const completedMap = new Map(
-    completions?.map((c) => [c.challenge_id, c.completed_at]) || [],
-  );
+  // Group completions by challenge_id
+  const completedMap = new Map<string, Array<{ id: string; completed_at: string; notes: string | null }>>();
+  completions?.forEach((c) => {
+    if (!completedMap.has(c.challenge_id)) {
+      completedMap.set(c.challenge_id, []);
+    }
+    completedMap.get(c.challenge_id)!.push({
+      id: c.id,
+      completed_at: c.completed_at,
+      notes: c.notes,
+    });
+  });
 
   return {
     challenges: challenges || [],

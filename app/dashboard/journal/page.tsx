@@ -37,6 +37,23 @@ async function getUserReflections(auth0Id: string) {
         reflection.user_tips = userTip;
       });
     }
+
+    // Get challenge completions linked to reflections
+    const reflectionIds = reflections.map((r: any) => r.id);
+    const { data: challengeCompletions } = await supabase
+      .from('user_challenge_completions')
+      .select('journal_entry_id, challenges(name, icon)')
+      .in('journal_entry_id', reflectionIds);
+
+    // Map challenge info to reflections
+    reflections.forEach((reflection: any) => {
+      const completion = challengeCompletions?.find(
+        (cc: any) => cc.journal_entry_id === reflection.id,
+      );
+      if (completion) {
+        reflection.challenge = completion.challenges;
+      }
+    });
   }
 
   if (error) {
@@ -85,6 +102,7 @@ export default async function JournalPage() {
               {reflections.map((reflection: any) => {
                 const tip = reflection.user_tips?.tips;
                 const isShared = reflection.shared_to_forum;
+                const challenge = reflection.challenge;
 
                 return (
                   <article
@@ -93,6 +111,15 @@ export default async function JournalPage() {
                   >
                     <div className="flex items-start justify-between mb-4">
                       <div>
+                        {challenge && (
+                          <div className="mb-2">
+                            <span className="text-xs text-slate-500">Challenge completed:</span>
+                            <div className="flex items-center gap-2 mt-1">
+                              {challenge.icon && <span className="text-lg">{challenge.icon}</span>}
+                              <p className="text-sm font-medium text-slate-200">{challenge.name}</p>
+                            </div>
+                          </div>
+                        )}
                         {tip && (
                           <div className="mb-2">
                             <span className="text-xs text-slate-500">Reflection on:</span>

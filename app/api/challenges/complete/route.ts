@@ -45,23 +45,35 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Challenge not found' }, { status: 404 });
     }
 
-    // Check if already completed
-    const { data: existing } = await supabase
-      .from('user_challenge_completions')
-      .select('id')
-      .eq('user_id', user.id)
-      .eq('challenge_id', challengeId)
-      .single();
+    // Create journal entry if notes provided and linkToJournal is true
+    let journalEntryId: string | null = null;
+    if (linkToJournal && notes) {
+      const { data: journalEntry, error: journalError } = await supabase
+        .from('reflections')
+        .insert({
+          user_id: user.id,
+          content: `Challenge: ${challenge.name}\n\n${notes}`,
+          shared_to_forum: false,
+        })
+        .select('id')
+        .single();
 
-    if (existing) {
-      return NextResponse.json({ error: 'Already completed' }, { status: 400 });
+      if (!journalError && journalEntry) {
+        journalEntryId = journalEntry.id;
+      }
     }
 
-    // Mark as complete
-    const { error: insertError } = await supabase.from('user_challenge_completions').insert({
-      user_id: user.id,
-      challenge_id: challengeId,
-    });
+    // Mark as complete (allow multiple completions)
+    const { data: completion, error: insertError } = await supabase
+      .from('user_challenge_completions')
+      .insert({
+        user_id: user.id,
+        challenge_id: challengeId,
+        notes: notes || null,
+        journal_entry_id: journalEntryId,
+      })
+      .select('id')
+      .single();
 
     if (insertError) {
       console.error('Error completing challenge:', insertError);
@@ -99,19 +111,21 @@ export async function POST(request: Request) {
         }
       }
 
-      // Get ALL challenge completions (including the one we just added)
-      const { data: challengeCompletions } = await supabase
-        .from('user_challenge_completions')
-        .select('challenges(requirement_type)')
-        .eq('user_id', user.id);
+          // Get ALL challenge completions (including the one we just added)
+          // Count each completion instance (not just unique challenges)
+          const { data: challengeCompletions } = await supabase
+            .from('user_challenge_completions')
+            .select('challenges(requirement_type)')
+            .eq('user_id', user.id);
 
-      const challengeCounts: Record<string, number> = {};
-      challengeCompletions?.forEach((cc: any) => {
-        const reqType = cc.challenges?.requirement_type;
-        if (reqType) {
-          challengeCounts[reqType] = (challengeCounts[reqType] || 0) + 1;
-        }
-      });
+          const challengeCounts: Record<string, number> = {};
+          challengeCompletions?.forEach((cc: any) => {
+            const reqType = cc.challenges?.requirement_type;
+            if (reqType) {
+              // Count each instance (multiple completions of same challenge count multiple times)
+              challengeCounts[reqType] = (challengeCounts[reqType] || 0) + 1;
+            }
+          });
 
       // Check badges with updated challenge counts
       const newlyEarned = await checkAndAwardBadges(

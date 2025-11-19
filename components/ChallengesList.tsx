@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { format } from 'date-fns';
+import ChallengeCompletionModal from './ChallengeCompletionModal';
 
 interface Challenge {
   id: string;
@@ -13,9 +14,15 @@ interface Challenge {
   icon: string | null;
 }
 
+interface ChallengeCompletion {
+  id: string;
+  completed_at: string;
+  notes: string | null;
+}
+
 interface ChallengesListProps {
   challenges: Challenge[];
-  completedMap: Map<string, string>;
+  completedMap: Map<string, ChallengeCompletion[]>; // Changed to array of completions
   userId: string;
 }
 
@@ -24,28 +31,33 @@ export default function ChallengesList({
   completedMap,
   userId,
 }: ChallengesListProps) {
-  const [localCompleted, setLocalCompleted] = useState<Set<string>>(
-    new Set(Array.from(completedMap.keys())),
-  );
-  const [isToggling, setIsToggling] = useState<string | null>(null);
+  const [selectedChallenge, setSelectedChallenge] = useState<Challenge | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [newlyEarnedBadges, setNewlyEarnedBadges] = useState<
     Array<{ name: string; description: string; icon: string; healthBonus: number }>
   >([]);
 
-  const handleToggle = async (challengeId: string, isCompleted: boolean) => {
-    setIsToggling(challengeId);
+  const handleCompleteChallenge = async (notes?: string, linkToJournal?: boolean) => {
+    if (!selectedChallenge) return;
+
+    setIsSubmitting(true);
 
     try {
       const response = await fetch('/api/challenges/complete', {
-        method: isCompleted ? 'DELETE' : 'POST',
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ challengeId }),
+        body: JSON.stringify({
+          challengeId: selectedChallenge.id,
+          notes: notes || null,
+          linkToJournal: linkToJournal || false,
+        }),
       });
 
       if (!response.ok) {
-        throw new Error('Failed to update challenge');
+        throw new Error('Failed to complete challenge');
       }
 
       const data = await response.json();
@@ -53,29 +65,24 @@ export default function ChallengesList({
       // Show badge notifications if any were earned
       if (data.newlyEarnedBadges && data.newlyEarnedBadges.length > 0) {
         setNewlyEarnedBadges(data.newlyEarnedBadges);
-        // Auto-hide badge notification after 5 seconds
         setTimeout(() => setNewlyEarnedBadges([]), 5000);
       }
 
-      // Update local state
-      const newCompleted = new Set(localCompleted);
-      if (isCompleted) {
-        newCompleted.delete(challengeId);
-      } else {
-        newCompleted.add(challengeId);
-      }
-      setLocalCompleted(newCompleted);
-
-      // Refresh page to update badge progress
+      // Refresh page to show new completion
       setTimeout(() => {
         window.location.reload();
       }, 500);
     } catch (error) {
-      console.error('Error toggling challenge:', error);
-      alert('Failed to update challenge. Please try again.');
+      console.error('Error completing challenge:', error);
+      throw error;
     } finally {
-      setIsToggling(null);
+      setIsSubmitting(false);
     }
+  };
+
+  const handleOpenModal = (challenge: Challenge) => {
+    setSelectedChallenge(challenge);
+    setIsModalOpen(true);
   };
 
   return (
@@ -103,71 +110,88 @@ export default function ChallengesList({
 
       <div className="grid md:grid-cols-2 gap-4">
         {challenges.map((challenge) => {
-        const isCompleted = localCompleted.has(challenge.id);
-        const completedAt = completedMap.get(challenge.id);
+          const completions = completedMap.get(challenge.id) || [];
+          const completionCount = completions.length;
+          const latestCompletion = completions.length > 0 ? completions[0] : null;
 
-        return (
-          <div
-            key={challenge.id}
-            className={`p-4 rounded-lg border transition-all ${
-              isCompleted
-                ? 'bg-primary-500/10 border-primary-500/30'
-                : 'bg-slate-800/30 border-slate-700/50'
-            }`}
-          >
-            <div className="flex items-start gap-3">
-              <button
-                onClick={() => handleToggle(challenge.id, isCompleted)}
-                disabled={isToggling === challenge.id}
-                className={`flex-shrink-0 w-6 h-6 rounded border-2 flex items-center justify-center transition-all ${
-                  isCompleted
-                    ? 'bg-primary-500 border-primary-500'
-                    : 'border-slate-600 hover:border-primary-500'
-                } ${isToggling === challenge.id ? 'opacity-50 cursor-wait' : 'cursor-pointer'}`}
-                aria-label={isCompleted ? 'Mark as incomplete' : 'Mark as complete'}
-              >
-                {isCompleted && (
-                  <svg
-                    className="w-4 h-4 text-slate-950"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
+          return (
+            <div
+              key={challenge.id}
+              className={`p-4 rounded-lg border transition-all ${
+                completionCount > 0
+                  ? 'bg-primary-500/10 border-primary-500/30'
+                  : 'bg-slate-800/30 border-slate-700/50'
+              }`}
+            >
+              <div className="flex items-start gap-3">
+                <div className="flex-shrink-0">
+                  {completionCount > 0 && (
+                    <div className="w-6 h-6 rounded-full bg-primary-500 flex items-center justify-center mb-2">
+                      <span className="text-xs font-bold text-slate-950">{completionCount}</span>
+                    </div>
+                  )}
+                  <button
+                    onClick={() => handleOpenModal(challenge)}
+                    disabled={isSubmitting}
+                    className="w-6 h-6 rounded border-2 border-primary-500 bg-primary-500/20 hover:bg-primary-500/30 flex items-center justify-center transition-all disabled:opacity-50"
+                    aria-label="Mark as complete"
+                    title="Complete this challenge"
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={3}
-                      d="M5 13l4 4L19 7"
-                    />
-                  </svg>
-                )}
-              </button>
-
-              <div className="flex-1 min-w-0">
-                <div className="flex items-start gap-2 mb-1">
-                  {challenge.icon && <span className="text-lg">{challenge.icon}</span>}
-                  <h3
-                    className={`text-sm font-semibold ${
-                      isCompleted ? 'text-slate-200 line-through' : 'text-slate-200'
-                    }`}
-                  >
-                    {challenge.name}
-                  </h3>
+                    <svg
+                      className="w-4 h-4 text-primary-300"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={3}
+                        d="M12 4v16m8-8H4"
+                      />
+                    </svg>
+                  </button>
                 </div>
-                <p className="text-xs text-slate-400 leading-relaxed mb-2">
-                  {challenge.description}
-                </p>
-                {completedAt && (
-                  <p className="text-[10px] text-primary-300">
-                    Completed {format(new Date(completedAt), 'MMM d, yyyy')}
+
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-start gap-2 mb-1">
+                    {challenge.icon && <span className="text-lg">{challenge.icon}</span>}
+                    <h3 className="text-sm font-semibold text-slate-200">{challenge.name}</h3>
+                  </div>
+                  <p className="text-xs text-slate-400 leading-relaxed mb-2">
+                    {challenge.description}
                   </p>
-                )}
+                  {completionCount > 0 && (
+                    <div className="space-y-1">
+                      <p className="text-[10px] text-primary-300 font-medium">
+                        Completed {completionCount} time{completionCount !== 1 ? 's' : ''}
+                      </p>
+                      {latestCompletion && (
+                        <p className="text-[10px] text-slate-500">
+                          Latest: {format(new Date(latestCompletion.completed_at), 'MMM d, yyyy')}
+                        </p>
+                      )}
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
-          </div>
-        );
-      })}
+          );
+        })}
       </div>
+
+      {/* Completion Modal */}
+      {selectedChallenge && (
+        <ChallengeCompletionModal
+          isOpen={isModalOpen}
+          onClose={() => {
+            setIsModalOpen(false);
+            setSelectedChallenge(null);
+          }}
+          challenge={selectedChallenge}
+          onComplete={handleCompleteChallenge}
+        />
+      )}
     </>
   );
 }
