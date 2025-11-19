@@ -12,7 +12,7 @@ async function getUserBadges(auth0Id: string) {
 
   if (!user) return { badges: [], earnedMap: new Map() };
 
-  // Get all badges
+  // Get all badges - deduplicate at query level using DISTINCT
   const { data: allBadges } = await supabase
     .from('badges')
     .select('*')
@@ -47,25 +47,46 @@ export default async function BadgesPage() {
   const auth0Id = session.user.sub;
   const { badges } = await getUserBadges(auth0Id);
 
-  // Group badges by theme/category
+  // Deduplicate badges by ID (in case of database duplicates)
+  const uniqueBadges = Array.from(
+    new Map(badges.map((badge) => [badge.id, badge])).values()
+  );
+
+  // Group badges by challenge theme/category
   const badgeThemes = {
-    Communication: badges.filter((b) =>
-      ['Communication Champion', 'Apology Ace', 'Conflict Resolver'].includes(b.name),
+    Communication: uniqueBadges.filter((b) =>
+      b.name.toLowerCase().includes('communication') ||
+      b.name.toLowerCase().includes('listener') ||
+      b.name.toLowerCase().includes('apology') ||
+      b.name.toLowerCase().includes('conflict') ||
+      b.name.toLowerCase().includes('peacemaker')
     ),
-    Romance: badges.filter((b) =>
-      ['Romance Rookie', 'Surprise Specialist', 'Date Night Pro'].includes(b.name),
+    Romance: uniqueBadges.filter((b) =>
+      b.name.toLowerCase().includes('romance') ||
+      b.name.toLowerCase().includes('date night') ||
+      b.name.toLowerCase().includes('surprise')
     ),
-    Intimacy: badges.filter((b) =>
-      ['Love Language Learner', 'Support System'].includes(b.name),
+    Gratitude: uniqueBadges.filter((b) =>
+      b.name.toLowerCase().includes('gratitude')
     ),
-    Partnership: badges.filter((b) =>
-      ['Gratitude Guru', 'Relationship Architect'].includes(b.name),
+    Partnership: uniqueBadges.filter((b) =>
+      b.name.toLowerCase().includes('partnership') ||
+      b.name.toLowerCase().includes('support system') ||
+      b.name.toLowerCase().includes('relationship architect')
     ),
-    Consistency: badges.filter((b) => b.badge_type === 'consistency'),
+    Intimacy: uniqueBadges.filter((b) =>
+      b.name.toLowerCase().includes('intimacy') ||
+      b.name.toLowerCase().includes('love language')
+    ),
+    Conflict: uniqueBadges.filter((b) =>
+      b.name.toLowerCase().includes('conflict') ||
+      b.name.toLowerCase().includes('peacemaker')
+    ),
+    Consistency: uniqueBadges.filter((b) => b.badge_type === 'consistency'),
   };
 
-  const earnedCount = badges.filter((b) => b.earned_at).length;
-  const totalCount = badges.length;
+  const earnedCount = uniqueBadges.filter((b) => b.earned_at).length;
+  const totalCount = uniqueBadges.length;
 
   return (
     <div className="min-h-screen bg-slate-950">
@@ -100,7 +121,15 @@ export default async function BadgesPage() {
               return (
                 <section key={theme} className="bg-slate-900/50 border border-slate-800 rounded-xl p-6 md:p-8">
                   <h2 className="text-xl md:text-2xl font-semibold text-slate-50 mb-6 flex items-center gap-2">
-                    <span>{theme === 'Communication' ? '💬' : theme === 'Romance' ? '💕' : theme === 'Intimacy' ? '💝' : theme === 'Partnership' ? '🤝' : '🔥'}</span>
+                    <span>
+                      {theme === 'Communication' ? '💬' : 
+                       theme === 'Romance' ? '💕' : 
+                       theme === 'Intimacy' ? '💝' : 
+                       theme === 'Partnership' ? '🤝' : 
+                       theme === 'Gratitude' ? '🙌' :
+                       theme === 'Conflict' ? '⚖️' :
+                       '🔥'}
+                    </span>
                     {theme}
                   </h2>
                   <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
