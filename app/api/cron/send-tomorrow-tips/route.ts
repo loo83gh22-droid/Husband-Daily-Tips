@@ -28,6 +28,23 @@ export async function GET(request: Request) {
   }
 
   try {
+    // Check environment variables
+    if (!process.env.SUPABASE_SERVICE_ROLE_KEY) {
+      console.error('SUPABASE_SERVICE_ROLE_KEY not configured');
+      return NextResponse.json(
+        { error: 'Database not configured', message: 'SUPABASE_SERVICE_ROLE_KEY missing' },
+        { status: 500 }
+      );
+    }
+
+    if (!process.env.RESEND_API_KEY) {
+      console.error('RESEND_API_KEY not configured');
+      return NextResponse.json(
+        { error: 'Email service not configured', message: 'RESEND_API_KEY missing' },
+        { status: 500 }
+      );
+    }
+
     const supabase = getSupabaseAdmin();
 
     // Get all active users
@@ -115,9 +132,16 @@ export async function GET(request: Request) {
       errors: errorCount,
       total: users.length,
     });
-  } catch (error) {
+  } catch (error: any) {
     console.error('Unexpected error in cron job:', error);
-    return NextResponse.json({ error: 'Unexpected error' }, { status: 500 });
+    return NextResponse.json(
+      { 
+        error: 'Unexpected error',
+        message: error?.message || 'Unknown error',
+        details: process.env.NODE_ENV === 'development' ? error?.stack : undefined
+      },
+      { status: 500 }
+    );
   }
 }
 
