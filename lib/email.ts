@@ -26,7 +26,7 @@ export async function sendTomorrowTipEmail(
 
   try {
     const { data, error } = await resend.emails.send({
-      from: process.env.RESEND_FROM_EMAIL || 'Husband Daily Tips <onboarding@resend.dev>',
+      from: process.env.RESEND_FROM_EMAIL || 'Best Husband Ever <onboarding@resend.dev>',
       to: email,
       subject: `Tomorrow's Action: ${tip.title}`,
       html: `
@@ -40,8 +40,8 @@ export async function sendTomorrowTipEmail(
           <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #1f2937; background-color: #f9fafb; margin: 0; padding: 0;">
             <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 40px 20px;">
               <div style="text-align: center; margin-bottom: 30px;">
-                <h1 style="color: #0ea5e9; font-size: 24px; margin: 0;">Husband Daily Tips</h1>
-                <p style="color: #6b7280; font-size: 14px; margin: 5px 0 0 0;">Daily structure, not pressure.</p>
+                <h1 style="color: #0ea5e9; font-size: 24px; margin: 0;">Best Husband Ever</h1>
+                <p style="color: #6b7280; font-size: 14px; margin: 5px 0 0 0;">Level up your marriage game.</p>
               </div>
               
               <div style="background-color: #0f172a; border-radius: 8px; padding: 30px; margin-bottom: 30px; border-left: 4px solid #0ea5e9;">
@@ -69,7 +69,7 @@ export async function sendTomorrowTipEmail(
               
               <div style="text-align: center; padding-top: 20px; border-top: 1px solid #e5e7eb;">
                 <p style="color: #6b7280; font-size: 12px; margin: 0;">
-                  You're receiving this because you signed up for Husband Daily Tips.
+                  You're receiving this because you signed up for Best Husband Ever.
                 </p>
                 <p style="color: #9ca3af; font-size: 11px; margin: 10px 0 0 0;">
                   <a href="${process.env.AUTH0_BASE_URL}/dashboard" style="color: #0ea5e9; text-decoration: none;">View Dashboard</a> | 
