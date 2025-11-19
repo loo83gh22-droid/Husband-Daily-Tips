@@ -865,6 +865,666 @@ This isn't ruining the surprise—it's making sure it actually works.
 
 You planned a surprise that actually worked. She felt thought about, not stressed out. She enjoyed it. That's a win.`,
   },
+  'write-love-note': {
+    id: 10,
+    title: 'Write a Love Note That Doesn\'t Sound Cheesy',
+    category: 'Romance',
+    difficulty: 'Easy',
+    time: '10 min',
+    excerpt: 'Skip the Hallmark card. Write something real that actually means something. Learn how to express yourself without it feeling forced or fake.',
+    content: `## Why This Matters
+
+Hallmark cards are generic. They say nothing. A real note—something you wrote—shows you actually thought about her. It's personal. It's meaningful. And it doesn't have to be poetry. It just has to be real.
+
+## The Secret: Be Specific, Not Generic
+
+Don't write "you're amazing" and call it a day. Be specific. What specifically do you appreciate? What specifically do you love about her? What specifically made you think of her?
+
+## What Makes a Note Real
+
+### 1. Be Specific
+
+**Generic:** "You're the best wife ever."
+**Specific:** "I love how you always remember the little things—like how I take my coffee, or that I hate when the house is too cold. You pay attention. That matters to me."
+
+**Generic:** "I love you."
+**Specific:** "I love how you handle stress. When things get crazy, you stay calm and figure it out. I admire that about you."
+
+### 2. Notice the Little Things
+
+What does she do that you appreciate? Notice it. Write about it.
+- How she takes care of you
+- How she handles the kids
+- How she makes you feel
+- How she shows up for you
+
+### 3. Be Honest
+
+Don't write what you think you should write. Write what you actually feel. If you're not great with words, that's fine. Simple and honest beats flowery and fake every time.
+
+### 4. Don't Make It About You
+
+This isn't about how great you are or what you do. It's about her. Focus on her. What you appreciate about her. What you love about her.
+
+## How to Write It
+
+### 1. Start with What You Notice
+
+What did you notice about her recently? What did she do that you appreciated? Start there.
+
+### 2. Be Specific
+
+Don't say "you're great." Say what specifically is great. Don't say "I love you." Say what specifically you love.
+
+### 3. Keep It Simple
+
+You don't need to write a novel. A few sentences that are real and specific are better than a page of generic stuff.
+
+### 4. Write It by Hand
+
+If you can, write it by hand. It's more personal. It shows you took the time.
+
+## Examples That Work
+
+**Short and specific:**
+"I noticed how you handled that situation with the kids earlier. You were patient when I would have lost it. I'm grateful for that. You make me better."
+
+**Appreciation:**
+"Thank you for everything you do. I know I don't always say it, but I see it. I see how hard you work, how much you care, how you show up. I appreciate you."
+
+**What you love:**
+"I love how you laugh at my stupid jokes. I love how you make me feel at home. I love how you see the best in me even when I don't."
+
+## Common Mistakes
+
+- **Being generic:** "You're amazing" doesn't land like something specific.
+- **Making it about you:** Focus on her, not yourself.
+- **Trying too hard:** Simple and honest beats flowery and fake.
+- **Not being specific:** Specificity is what makes it real.
+
+## The Win
+
+You wrote something real. She felt seen and appreciated. You expressed yourself without it feeling forced. That's a win.`,
+  },
+  'plan-weekend-getaway': {
+    id: 11,
+    title: 'Plan a Weekend Getaway She\'ll Actually Enjoy',
+    category: 'Romance',
+    difficulty: 'Medium',
+    time: '2-3 hours planning',
+    excerpt: 'Not just any trip—one that she\'ll actually want to go on. Think through the details, match her energy, and make it about connection, not just a destination.',
+    content: `## Why This Matters
+
+A weekend away can be amazing—or it can be stressful. The difference is in the planning. Think it through. Make it about her, not about checking a box. Make it about connection, not just getting away.
+
+## The Secret: Think About Her, Not the Trip
+
+This isn't about how cool the destination is. It's about whether she'll actually enjoy it. Will it stress her out? Will it be relaxing? Will it feel like a break or more work?
+
+## What Makes a Getaway Good
+
+### 1. It Fits Her Schedule
+
+Don't plan a trip when she's already stressed or busy. Check her calendar. Make sure she can actually go. Give her plenty of notice.
+
+**The rule:** A trip that forces her to cancel things or scramble is a bad trip.
+
+### 2. It Matches What She Needs
+
+Does she need rest? Plan something relaxing. Does she need adventure? Plan something active. Does she need connection? Plan something focused on time together.
+
+**Think about:**
+- What does she need right now?
+- What would actually feel like a break?
+- What would she enjoy?
+
+### 3. You Handle the Logistics
+
+You plan it. You handle:
+- Reservations
+- Directions
+- Packing list (if needed)
+- Everything
+
+Don't make her think about any of it. The whole point is to take something off her plate.
+
+### 4. It's Not About the Destination
+
+The destination matters less than the experience. A simple trip done well beats a fancy trip done poorly.
+
+## How to Plan It
+
+### 1. Think About What She Needs
+
+What does she need right now? Rest? Adventure? Connection? Start there.
+
+### 2. Consider Her Energy
+
+Is she exhausted? Plan something low-key. Is she energized? Maybe something more active.
+
+### 3. Handle Everything
+
+You plan it. You book it. You handle logistics. Don't make her think about any of it.
+
+### 4. Give Her a Heads Up
+
+Don't surprise her with a trip next weekend. Give her notice. "I'm planning something for us in a few weeks. Can you keep that weekend free?"
+
+## Examples of Good Getaways
+
+**Relaxing:**
+- A cabin in the woods
+- A beach house
+- A spa weekend
+- Somewhere quiet where you can just be together
+
+**Active:**
+- A hiking trip
+- A city you've both wanted to visit
+- An activity she's mentioned wanting to try
+- Somewhere with things to do
+
+**Connection-focused:**
+- Somewhere without distractions
+- Somewhere you can actually talk and connect
+- Somewhere that's about time together, not activities
+
+## Common Mistakes
+
+- **Not considering her schedule:** Don't plan a trip when she's busy or stressed.
+- **Not matching her energy:** Don't plan something active when she needs rest.
+- **Making her plan it:** You plan it. Handle everything.
+- **Not giving notice:** Give her plenty of time to prepare.
+- **Focusing on destination over experience:** The experience matters more than where you go.
+
+## The Win
+
+You planned a trip she actually enjoyed. She felt relaxed and connected. You spent quality time together. That's a win.`,
+  },
+  'handle-morning-routine': {
+    id: 12,
+    title: 'Take Over the Morning Routine (Without Being Asked)',
+    category: 'Partnership',
+    difficulty: 'Easy',
+    time: 'Morning routine',
+    excerpt: 'Give her a break. Handle breakfast, kids, whatever needs doing. Show up without her having to ask or manage you.',
+    content: `## Why This Matters
+
+Mornings are chaos. Kids need to be fed, dressed, and out the door. Breakfast needs to happen. Lunches need to be packed. If she's handling all of it while you're just getting ready, that's not partnership. Take over. Give her a break.
+
+## The Secret: Do It Without Being Asked
+
+Don't wait for her to ask. Don't wait for her to tell you what to do. Just do it. Look around. See what needs doing. Do it.
+
+## What "Taking Over" Looks Like
+
+### 1. Get Up Earlier
+
+If you're sleeping in while she's handling everything, that's the problem. Get up. Be part of the solution, not part of the problem.
+
+### 2. Handle Breakfast
+
+Make breakfast. For everyone. Don't just make your own. Make it for the family. Handle it.
+
+### 3. Handle the Kids
+
+Get them dressed. Get them fed. Get them ready. Don't make her manage you while she's managing them.
+
+### 4. Pack Lunches
+
+If lunches need to be packed, pack them. Don't wait to be asked.
+
+### 5. Clean Up
+
+After breakfast, clean up. Don't leave a mess for her to deal with.
+
+## The System
+
+### Day 1: Just Do It
+
+Pick a day. Just do it. Handle everything. Don't ask what to do. Just do it.
+
+### Day 2: Do It Again
+
+Do it again. Make it a habit. Not a one-time thing.
+
+### Day 3: Own It
+
+This is yours now. You own the morning routine. She doesn't have to think about it.
+
+## Common Mistakes
+
+- **Waiting to be asked:** Don't wait. Just do it.
+- **Making her manage you:** Don't ask what to do. Figure it out.
+- **Doing it once:** Make it a habit, not a gesture.
+- **Expecting credit:** Don't do it for credit. Do it because it needs doing.
+- **Half-doing it:** Don't start something and leave it for her to finish.
+
+## The Win
+
+You took over the morning routine. She got a break. She didn't have to ask or manage you. That's a win.`,
+  },
+  'notice-what-needs-doing': {
+    id: 13,
+    title: 'Notice What Needs Doing (And Do It)',
+    category: 'Partnership',
+    difficulty: 'Easy',
+    time: 'Ongoing',
+    excerpt: 'Stop waiting to be told. Look around. See what needs doing. Do it. This is what being a partner actually looks like.',
+    content: `## Why This Matters
+
+If you're waiting to be told what to do, you're not being a partner. You're being managed. A partner sees what needs doing and does it. They don't wait for instructions. They don't need to be asked.
+
+## The Secret: Look Around
+
+Stop and look. What needs doing? What's not done? What would make her life easier? Do that.
+
+## What to Notice
+
+### 1. The Obvious Stuff
+
+- Dishes in the sink
+- Trash that needs to go out
+- Laundry that needs to be done
+- Things that are out of place
+
+### 2. The Stuff That's Her Job
+
+If there's something that's "her job," do it anyway. Don't wait for her to ask. Just do it.
+
+### 3. The Stuff That Would Help
+
+What would make her life easier? What would take something off her plate? Do that.
+
+## How to Actually Do It
+
+### 1. Look Around
+
+Take 30 seconds. Look around. What needs doing?
+
+### 2. Do It
+
+Don't ask. Don't announce it. Just do it.
+
+### 3. Make It a Habit
+
+Do this regularly. Not just once. Make it how you operate.
+
+## Common Mistakes
+
+- **Waiting to be told:** Don't wait. Just do it.
+- **Asking what to do:** Look around. Figure it out.
+- **Doing it for credit:** Don't announce it. Just do it.
+- **Only doing obvious stuff:** Think about what would actually help.
+
+## The Win
+
+You noticed what needed doing and did it. She didn't have to ask. You were a partner, not someone to be managed. That's a win.`,
+  },
+  'help-when-shes-stressed': {
+    id: 14,
+    title: 'Help When She\'s Stressed (The Right Way)',
+    category: 'Partnership',
+    difficulty: 'Medium',
+    time: 'Varies',
+    excerpt: 'Don\'t try to fix it. Don\'t make it about you. Actually help. Learn what she needs when she\'s overwhelmed and how to provide it.',
+    content: `## Why This Matters
+
+When she's stressed, your instinct might be to fix it or make it about you. That's not helpful. Actually helping means understanding what she needs and providing it—not what you think she needs, but what she actually needs.
+
+## The Secret: Ask What She Needs
+
+Don't assume. Don't try to fix it. Ask: "What do you need right now?" Then do that.
+
+## What "Actually Help" Looks Like
+
+### 1. Take Something Off Her Plate
+
+What can you take off her plate? What can you handle so she doesn't have to?
+
+- Handle dinner
+- Take care of the kids
+- Handle something she's worried about
+- Just give her space
+
+### 2. Don't Try to Fix It
+
+Unless she asks for solutions, don't offer them. She might just need to vent. She might just need you to listen.
+
+### 3. Don't Make It About You
+
+This isn't about how her stress affects you. This is about her. Focus on her.
+
+### 4. Give Her What She Needs
+
+Ask what she needs. Then do that. It might be:
+- Space
+- Help with something specific
+- Just to be listened to
+- Something else entirely
+
+## Common Mistakes
+
+- **Trying to fix it:** Don't offer solutions unless she asks.
+- **Making it about you:** Focus on her, not yourself.
+- **Assuming what she needs:** Ask. Don't assume.
+- **Adding to her stress:** Don't make things more complicated.
+
+## The Win
+
+You helped when she was stressed. You gave her what she actually needed. She felt supported. That's a win.`,
+  },
+  'handle-household-tasks': {
+    id: 15,
+    title: 'Own Household Tasks (Without Resentment)',
+    category: 'Partnership',
+    difficulty: 'Easy',
+    time: 'Ongoing',
+    excerpt: 'Pick something and own it. Don\'t do it for credit. Don\'t do it to be thanked. Do it because it needs doing and you\'re a partner.',
+    content: `## Why This Matters
+
+If you're doing household tasks for credit or to be thanked, you're missing the point. These things need doing. You're a partner. Own them. Do them because they need doing, not because you want recognition.
+
+## The Secret: Own It
+
+Pick something. Own it. It's yours now. You do it. Not because you're asked. Not because you want credit. Because it needs doing.
+
+## What to Own
+
+### 1. Pick Something Specific
+
+- Taking out the trash
+- Doing the dishes
+- Handling laundry
+- Cleaning the bathrooms
+- Mowing the lawn
+- Whatever needs doing
+
+### 2. Own It Completely
+
+It's yours. You do it. You don't wait to be asked. You don't do it sometimes. You own it.
+
+### 3. Do It Without Resentment
+
+Don't do it and then complain. Don't do it and expect credit. Just do it. It needs doing. You're doing it.
+
+## How to Actually Do It
+
+### 1. Pick Something
+
+Look around. What needs doing regularly? Pick something.
+
+### 2. Own It
+
+This is yours now. You do it. Not sometimes. Always.
+
+### 3. Do It Without Fanfare
+
+Don't announce it. Don't expect credit. Just do it.
+
+## Common Mistakes
+
+- **Doing it for credit:** Don't do it to be thanked. Do it because it needs doing.
+- **Doing it sometimes:** Own it. Do it consistently.
+- **Complaining about it:** Don't do it and then complain. Just do it.
+- **Waiting to be asked:** Don't wait. Just do it.
+
+## The Win
+
+You own a household task. You do it consistently. You don't do it for credit. You do it because it needs doing. That's a win.`,
+  },
+  'listen-without-fixing': {
+    id: 16,
+    title: 'Listen Without Trying to Fix Everything',
+    category: 'Communication',
+    difficulty: 'Medium',
+    time: 'Varies',
+    excerpt: 'Sometimes she just needs to vent. She doesn\'t need solutions. She needs you to listen. Learn the difference and when to just be there.',
+    content: `## Why This Matters
+
+Your instinct when she's upset is probably to fix it. That's not always what she needs. Sometimes she just needs to vent. Sometimes she just needs you to listen. Learn the difference.
+
+## The Secret: Listen First, Fix Later
+
+Unless she asks for solutions, don't offer them. Just listen. Be there. Validate what she's feeling.
+
+## What "Just Listening" Looks Like
+
+### 1. Don't Offer Solutions
+
+Unless she asks, don't try to fix it. Don't offer advice. Just listen.
+
+### 2. Validate Her Feelings
+
+"I can see why that's frustrating."
+"That sounds really hard."
+"I understand why you feel that way."
+
+### 3. Ask Questions
+
+Show you're listening by asking questions:
+- "Tell me more about that."
+- "How did that make you feel?"
+- "What happened next?"
+
+### 4. Be Present
+
+Actually be there. Don't be thinking about what you'll say. Just listen.
+
+## When to Fix vs. When to Listen
+
+**Listen when:**
+- She's venting
+- She's processing something
+- She's expressing feelings
+- She hasn't asked for solutions
+
+**Fix when:**
+- She asks for advice
+- She asks what you think
+- She's looking for solutions
+- She explicitly wants help
+
+## Common Mistakes
+
+- **Trying to fix everything:** Don't offer solutions unless she asks.
+- **Not validating feelings:** Acknowledge what she's feeling.
+- **Making it about you:** Focus on her, not yourself.
+- **Not actually listening:** Be present. Don't just wait for your turn to talk.
+
+## The Win
+
+You listened without trying to fix it. She felt heard. She got to process what she needed to process. That's a win.`,
+  },
+  'have-hard-conversation': {
+    id: 17,
+    title: 'Have a Hard Conversation (Without It Becoming a Fight)',
+    category: 'Communication',
+    difficulty: 'Hard',
+    time: '30-60 min',
+    excerpt: 'Difficult conversations don\'t have to turn into arguments. Learn how to communicate about tough topics without defensiveness or escalation.',
+    content: `## Why This Matters
+
+Hard conversations are inevitable. How you handle them determines whether you work through things or make them worse. Learn how to have difficult conversations without them turning into fights.
+
+## The Secret: Focus on Understanding, Not Winning
+
+This isn't a debate. You're not trying to win. You're trying to understand each other and work through something.
+
+## How to Have a Hard Conversation
+
+### 1. Pick the Right Time
+
+Don't have a hard conversation when:
+- You're both stressed
+- You're both tired
+- You're both angry
+- There's no time to actually talk
+
+Pick a time when you can both focus and actually talk.
+
+### 2. Use "I" Statements
+
+Don't say "you always" or "you never." Say "I feel" or "I notice."
+
+**Instead of:** "You never help around the house."
+**Say:** "I feel overwhelmed when I'm handling everything by myself."
+
+### 3. Listen to Understand
+
+Don't listen waiting for your turn to talk. Listen to actually understand what she's saying.
+
+### 4. Don't Get Defensive
+
+If she says something that's hard to hear, don't get defensive. Listen. Try to understand where she's coming from.
+
+### 5. Focus on Solutions
+
+Once you both understand each other, focus on solutions. What can you both do differently? How can you work through this?
+
+## Common Mistakes
+
+- **Getting defensive:** Don't defend yourself. Listen and try to understand.
+- **Making it about winning:** This isn't a debate. You're trying to work through something.
+- **Using "you" statements:** Use "I" statements instead.
+- **Having it at the wrong time:** Pick a time when you can both actually talk.
+
+## The Win
+
+You had a hard conversation without it becoming a fight. You understood each other. You worked through it. That's a win.`,
+  },
+  'ask-better-questions': {
+    id: 18,
+    title: 'Ask Questions That Actually Matter',
+    category: 'Communication',
+    difficulty: 'Easy',
+    time: 'Ongoing',
+    excerpt: 'Move beyond "how was your day?" Learn how to ask questions that show you\'re actually interested and help you understand what\'s going on with her.',
+    content: `## Why This Matters
+
+"How was your day?" is fine, but it's generic. It doesn't show you're actually interested. Better questions show you're paying attention and actually want to understand what's going on with her.
+
+## The Secret: Be Specific and Follow Up
+
+Don't ask generic questions. Ask specific ones. And when she answers, follow up. Show you're actually listening.
+
+## What Makes a Good Question
+
+### 1. Be Specific
+
+**Generic:** "How was your day?"
+**Specific:** "How did that meeting go that you were worried about?"
+
+**Generic:** "What's up?"
+**Specific:** "You seemed stressed earlier. What's going on?"
+
+### 2. Show You're Paying Attention
+
+Ask about things she's mentioned:
+- "How did that thing you were working on turn out?"
+- "Did you talk to your friend about that situation?"
+- "How are you feeling about that decision you were making?"
+
+### 3. Ask About Feelings
+
+Don't just ask what happened. Ask how she felt about it.
+- "How did that make you feel?"
+- "What was that like for you?"
+- "How are you feeling about that?"
+
+### 4. Follow Up
+
+When she answers, follow up. Ask more questions. Show you're actually interested.
+
+## Examples of Better Questions
+
+**Instead of "how was your day?":**
+- "What was the best part of your day?"
+- "What was the hardest part of your day?"
+- "What are you looking forward to this week?"
+
+**Instead of "what's up?":**
+- "You seem [stressed/happy/excited]. What's going on?"
+- "What's on your mind?"
+- "How are you feeling today?"
+
+**Instead of generic questions:**
+- Ask about specific things she's mentioned
+- Ask about how she's feeling
+- Ask about what she's thinking about
+
+## Common Mistakes
+
+- **Asking generic questions:** Be specific. Show you're paying attention.
+- **Not following up:** When she answers, ask more questions.
+- **Not asking about feelings:** Ask how she feels, not just what happened.
+- **Asking to be polite:** Actually be interested. Actually listen.
+
+## The Win
+
+You asked a question that actually mattered. She felt heard and understood. You connected. That's a win.`,
+  },
+  'apologize-right-way': {
+    id: 19,
+    title: 'Apologize the Right Way (Without Excuses)',
+    category: 'Communication',
+    difficulty: 'Medium',
+    time: '5-10 min',
+    excerpt: 'A real apology doesn\'t include "but" or excuses. Learn how to take responsibility, acknowledge impact, and actually make things right.',
+    content: `## Why This Matters
+
+A bad apology makes things worse. A good apology actually fixes things. Learn the difference. Learn how to apologize the right way—without excuses, without "but," without making it about you.
+
+## The Secret: Take Responsibility
+
+A real apology is about taking responsibility. Not explaining why you did it. Not making excuses. Just taking responsibility and acknowledging the impact.
+
+## What Makes a Good Apology
+
+### 1. Take Responsibility
+
+"I'm sorry I [specific thing you did]."
+
+Don't say "I'm sorry you feel that way." Say "I'm sorry I did that."
+
+### 2. Acknowledge the Impact
+
+"I know that [how it affected her]."
+
+Acknowledge how what you did affected her. Show you understand the impact.
+
+### 3. Don't Make Excuses
+
+Don't say "I'm sorry, but..." Don't explain why you did it. Just take responsibility.
+
+### 4. Commit to Doing Better
+
+"I'll [specific thing you'll do differently]."
+
+Don't just say you're sorry. Say what you'll do differently.
+
+## Examples of Good Apologies
+
+**Bad:** "I'm sorry you got upset, but I was just trying to help."
+**Good:** "I'm sorry I didn't listen when you told me what you needed. I know that made you feel unheard. I'll listen better next time."
+
+**Bad:** "I'm sorry, but I was stressed."
+**Good:** "I'm sorry I snapped at you. I know that hurt you. I'll handle my stress better so I don't take it out on you."
+
+**Bad:** "I'm sorry if I offended you."
+**Good:** "I'm sorry I said that. I know it was hurtful. I shouldn't have said it, and I won't say things like that again."
+
+## Common Mistakes
+
+- **Including "but":** Don't make excuses. Just apologize.
+- **Saying "I'm sorry you feel that way":** That's not an apology. That's blaming her for feeling that way.
+- **Not acknowledging impact:** Show you understand how it affected her.
+- **Not committing to change:** Say what you'll do differently.
+
+## The Win
+
+You apologized the right way. You took responsibility. You acknowledged the impact. You committed to doing better. That's a win.`,
+  },
   'install-smart-thermostat': {
     id: 4,
     title: 'Install a Smart Thermostat',
