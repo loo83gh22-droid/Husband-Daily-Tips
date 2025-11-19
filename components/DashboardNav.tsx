@@ -8,6 +8,7 @@ export default function DashboardNav() {
 
   const navLinks = [
     { href: '/dashboard', label: 'Dashboard', icon: '📊' },
+    { href: '/dashboard/challenges', label: 'Challenges', icon: '🎯' },
     { href: '/dashboard/stories', label: 'Stories', icon: '📖' },
     { href: '/dashboard/deep-thoughts', label: 'Deep Thoughts', icon: '💭' },
     { href: '/dashboard/badges', label: 'Badges', icon: '🏆' },

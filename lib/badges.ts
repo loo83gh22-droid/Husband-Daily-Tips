@@ -10,6 +10,7 @@ export async function checkAndAwardBadges(
     totalTips: number;
     currentStreak: number;
     totalDays: number;
+    challengeCounts?: Record<string, number>; // e.g., { 'gratitude_actions': 5, 'surprise_actions': 2 }
   },
   tipCategory?: string,
 ) {
@@ -48,9 +49,69 @@ export async function checkAndAwardBadges(
         break;
 
       case 'category_count':
-        // This would require tracking category-specific counts
-        // For now, we'll implement basic version
-        // TODO: Enhance with category tracking
+        // Count challenges or tips in the matching category
+        // For Communication Champion: count communication challenges/tips
+        // For Romance Rookie: count romance challenges/tips
+        let categoryCount = 0;
+
+        // Count challenges in this category (if challengeCounts available)
+        if (stats.challengeCounts) {
+          // Get challenges that match this badge's expected category
+          // We'll need to check challenge categories
+          const { data: categoryChallenges } = await supabase
+            .from('user_challenge_completions')
+            .select('challenges(category)')
+            .eq('user_id', userId);
+
+          // Match by badge name to determine category
+          const badgeName = badge.name.toLowerCase();
+          let targetCategory = '';
+          if (badgeName.includes('communication')) targetCategory = 'Communication';
+          else if (badgeName.includes('romance')) targetCategory = 'Romance';
+          else if (badgeName.includes('gratitude')) targetCategory = 'Gratitude';
+          else if (badgeName.includes('partnership')) targetCategory = 'Partnership';
+          else if (badgeName.includes('intimacy')) targetCategory = 'Intimacy';
+
+          if (targetCategory) {
+            categoryCount =
+              categoryChallenges?.filter(
+                (cc: any) => cc.challenges?.category === targetCategory,
+              ).length || 0;
+          }
+
+          // Also count tips in this category
+          if (targetCategory) {
+            const { data: categoryTips } = await supabase
+              .from('user_tips')
+              .select('tip_id, tips(category)')
+              .eq('user_id', userId);
+
+            const tipCount =
+              categoryTips?.filter((ct: any) => ct.tips?.category === targetCategory).length || 0;
+            categoryCount += tipCount;
+          }
+        }
+
+        if (categoryCount >= (badge.requirement_value || 0)) {
+          earned = true;
+        }
+        break;
+
+      case 'gratitude_actions':
+      case 'surprise_actions':
+      case 'apology_actions':
+      case 'support_actions':
+      case 'date_nights':
+      case 'conflict_resolutions':
+      case 'love_languages':
+      case 'milestone_actions':
+        // Check challenge completions for this requirement type
+        if (stats.challengeCounts) {
+          const count = stats.challengeCounts[badge.requirement_type] || 0;
+          if (count >= (badge.requirement_value || 0)) {
+            earned = true;
+          }
+        }
         break;
 
       // Add more requirement types as needed

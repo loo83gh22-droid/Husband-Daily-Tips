@@ -108,11 +108,25 @@ export async function POST(request: Request) {
     // Get last action date for decay calculation
     const lastActionDate = tips.length > 0 ? tips[0].date : undefined;
 
-    // Check for newly earned badges
+    // Get challenge completions for badge checking
+    const { data: challengeCompletions } = await supabase
+      .from('user_challenge_completions')
+      .select('challenges(requirement_type)')
+      .eq('user_id', user.id);
+
+    const challengeCounts: Record<string, number> = {};
+    challengeCompletions?.forEach((cc: any) => {
+      const reqType = cc.challenges?.requirement_type;
+      if (reqType) {
+        challengeCounts[reqType] = (challengeCounts[reqType] || 0) + 1;
+      }
+    });
+
+    // Check for newly earned badges (with challenge counts)
     const newlyEarned = await checkAndAwardBadges(
       supabase,
       user.id,
-      { totalTips, currentStreak: streak, totalDays: uniqueDays },
+      { totalTips, currentStreak: streak, totalDays: uniqueDays, challengeCounts },
       tipData?.category,
     );
 
