@@ -48,7 +48,7 @@ export default async function ChallengesPage() {
   const { challenges, completedMap, userId } = await getChallenges(auth0Id);
 
   // Group challenges by theme/category
-  const challengesByTheme: Record<string, typeof challenges> = {};
+  const challengesByTheme: Record<string, Array<typeof challenges[0]>> = {};
   challenges.forEach((challenge) => {
     const theme = challenge.theme || challenge.category.toLowerCase();
     if (!challengesByTheme[theme]) {
