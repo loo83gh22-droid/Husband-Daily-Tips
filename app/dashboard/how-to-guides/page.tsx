@@ -9,10 +9,10 @@ export default async function HowToGuidesPage() {
     redirect('/api/auth/login');
   }
 
-  // Sample guides - in the future these could come from a database
+  // Guide data with slugs for routing
   const guides = [
     {
-      id: 1,
+      slug: 'fix-leaky-faucet',
       title: 'Fix a Leaky Faucet Like a Pro',
       excerpt:
         'Stop that annoying drip-drip-drip. This step-by-step guide will have you fixing faucets in under 20 minutes. Your wife will notice, and you\'ll feel like a boss.',
@@ -21,7 +21,7 @@ export default async function HowToGuidesPage() {
       time: '20 min',
     },
     {
-      id: 2,
+      slug: 'organize-garage',
       title: 'Organize the Garage (Without Losing Your Mind)',
       excerpt:
         'Transform that disaster zone into a functional space. Learn the system that actually works and keeps things organized long-term.',
@@ -30,7 +30,7 @@ export default async function HowToGuidesPage() {
       time: '2-3 hours',
     },
     {
-      id: 3,
+      slug: 'build-garden-bed',
       title: 'Build a Simple Raised Garden Bed',
       excerpt:
         'Show off your skills and give your wife fresh herbs or veggies. This project looks impressive but is surprisingly straightforward.',
@@ -39,7 +39,7 @@ export default async function HowToGuidesPage() {
       time: '3-4 hours',
     },
     {
-      id: 4,
+      slug: 'deep-clean-oven',
       title: 'Deep Clean the Oven (The Right Way)',
       excerpt:
         'No harsh chemicals, no hours of scrubbing. The method that actually works and doesn\'t make you want to throw the oven out the window.',
@@ -48,7 +48,7 @@ export default async function HowToGuidesPage() {
       time: '45 min',
     },
     {
-      id: 5,
+      slug: 'install-smart-thermostat',
       title: 'Install a Smart Thermostat',
       excerpt:
         'Save money, impress your wife, and control the temperature from your phone. This upgrade pays for itself and makes you look tech-savvy.',
@@ -76,28 +76,44 @@ export default async function HowToGuidesPage() {
 
           <div className="space-y-6">
             {guides.map((guide) => (
-              <article
-                key={guide.id}
-                className="bg-slate-900/80 border border-slate-800 rounded-xl p-6 md:p-8 hover:border-primary-500/50 transition-colors"
+              <Link
+                key={guide.slug}
+                href={`/dashboard/how-to-guides/${guide.slug}`}
+                className="block"
               >
-                <div className="flex items-start justify-between mb-4">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-2">
-                      <span className="inline-block px-3 py-1 bg-primary-500/10 text-primary-300 text-xs font-semibold rounded-full">
-                        {guide.category}
-                      </span>
-                      <span className="text-xs text-slate-500">
-                        {guide.difficulty} • {guide.time}
-                      </span>
+                <article className="bg-slate-900/80 border border-slate-800 rounded-xl p-6 md:p-8 hover:border-primary-500/50 hover:bg-slate-900 transition-all cursor-pointer">
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="inline-block px-3 py-1 bg-primary-500/10 text-primary-300 text-xs font-semibold rounded-full">
+                          {guide.category}
+                        </span>
+                        <span className="text-xs text-slate-500">
+                          {guide.difficulty} • {guide.time}
+                        </span>
+                      </div>
+                      <h2 className="text-xl md:text-2xl font-bold text-slate-50 mb-2 group-hover:text-primary-300 transition-colors">
+                        {guide.title}
+                      </h2>
                     </div>
-                    <h2 className="text-xl md:text-2xl font-bold text-slate-50 mb-2">
-                      {guide.title}
-                    </h2>
+                    <svg
+                      className="w-5 h-5 text-slate-500 flex-shrink-0 ml-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M9 5l7 7-7 7"
+                      />
+                    </svg>
                   </div>
-                </div>
 
-                <p className="text-slate-300 leading-relaxed">{guide.excerpt}</p>
-              </article>
+                  <p className="text-slate-300 leading-relaxed">{guide.excerpt}</p>
+                </article>
+              </Link>
             ))}
           </div>
 
