@@ -3,10 +3,9 @@
  * Install: npm install resend
  */
 
-// Uncomment when Resend is installed
-// import { Resend } from 'resend';
+import { Resend } from 'resend';
 
-// const resend = new Resend(process.env.RESEND_API_KEY);
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export interface EmailTip {
   title: string;
@@ -19,11 +18,15 @@ export async function sendTomorrowTipEmail(
   name: string,
   tip: EmailTip,
 ): Promise<boolean> {
-  // TODO: Uncomment when Resend is set up
-  /*
+  // Check if Resend is configured
+  if (!process.env.RESEND_API_KEY) {
+    console.error('RESEND_API_KEY not configured');
+    return false;
+  }
+
   try {
     const { data, error } = await resend.emails.send({
-      from: 'Husband Daily Tips <tips@yourdomain.com>',
+      from: process.env.RESEND_FROM_EMAIL || 'Husband Daily Tips <onboarding@resend.dev>',
       to: email,
       subject: `Tomorrow's Action: ${tip.title}`,
       html: `
@@ -89,11 +92,5 @@ export async function sendTomorrowTipEmail(
     console.error('Unexpected error sending email:', error);
     return false;
   }
-  */
-
-  // Placeholder - remove when Resend is set up
-  console.log('Email service not configured. Would send to:', email);
-  console.log('Tip:', tip);
-  return false;
 }
 
