@@ -23,8 +23,25 @@ import { sendTomorrowTipEmail } from '@/lib/email';
 export async function GET(request: Request) {
   // Verify this is a cron request (Vercel adds a header)
   const authHeader = request.headers.get('authorization');
-  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  const expectedAuth = `Bearer ${process.env.CRON_SECRET}`;
+  
+  // Debug logging (remove after fixing)
+  console.log('Auth header received:', authHeader ? 'present' : 'missing');
+  console.log('CRON_SECRET exists:', !!process.env.CRON_SECRET);
+  console.log('Expected:', expectedAuth.substring(0, 20) + '...');
+  console.log('Received:', authHeader ? authHeader.substring(0, 20) + '...' : 'null');
+  
+  if (authHeader !== expectedAuth) {
+    console.log('Auth mismatch!');
+    return NextResponse.json({ 
+      error: 'Unauthorized',
+      debug: {
+        hasHeader: !!authHeader,
+        hasSecret: !!process.env.CRON_SECRET,
+        headerLength: authHeader?.length || 0,
+        expectedLength: expectedAuth.length,
+      }
+    }, { status: 401 });
   }
 
   try {
