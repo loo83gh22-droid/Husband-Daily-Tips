@@ -46,22 +46,28 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Challenge not found' }, { status: 404 });
     }
 
-    // Create journal entry if notes provided and linkToJournal is true
+    // Always create journal entry for challenge completions
+    // This is the running record of all challenge completions
     let journalEntryId: string | null = null;
-    if (linkToJournal && notes) {
-      const { data: journalEntry, error: journalError } = await supabase
-        .from('reflections')
-        .insert({
-          user_id: user.id,
-          content: `Challenge: ${challenge.name}\n\n${notes}`,
-          shared_to_forum: false,
-        })
-        .select('id')
-        .single();
+    const journalContent = notes 
+      ? `Challenge: ${challenge.name}\n\n${notes}`
+      : `Challenge: ${challenge.name}\n\nCompleted on ${new Date().toLocaleDateString()}`;
+    
+    const { data: journalEntry, error: journalError } = await supabase
+      .from('reflections')
+      .insert({
+        user_id: user.id,
+        content: journalContent,
+        shared_to_forum: false,
+      })
+      .select('id')
+      .single();
 
-      if (!journalError && journalEntry) {
-        journalEntryId = journalEntry.id;
-      }
+    if (!journalError && journalEntry) {
+      journalEntryId = journalEntry.id;
+    } else if (journalError) {
+      console.error('Error creating journal entry:', journalError);
+      // Continue anyway - don't fail the challenge completion if journal fails
     }
 
     // Mark as complete (allow multiple completions)

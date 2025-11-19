@@ -119,12 +119,16 @@ END;
 $$ language 'plpgsql';
 
 -- Triggers to automatically update updated_at
+-- Drop triggers if they exist first (to avoid errors on re-run)
+DROP TRIGGER IF EXISTS update_reflections_updated_at ON reflections;
 CREATE TRIGGER update_reflections_updated_at BEFORE UPDATE ON reflections
     FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
+DROP TRIGGER IF EXISTS update_deep_thoughts_updated_at ON deep_thoughts;
 CREATE TRIGGER update_deep_thoughts_updated_at BEFORE UPDATE ON deep_thoughts
     FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
+DROP TRIGGER IF EXISTS update_deep_thoughts_comments_updated_at ON deep_thoughts_comments;
 CREATE TRIGGER update_deep_thoughts_comments_updated_at BEFORE UPDATE ON deep_thoughts_comments
     FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 ```
@@ -266,6 +270,8 @@ INSERT INTO challenges (name, description, category, theme, requirement_type, ic
 ('Apologize and Make Amends', 'Apologize for a mistake and take concrete steps to make amends.', 'Conflict Resolution', 'conflict', 'conflict_resolutions', '💚');
 
 -- Update updated_at trigger
+-- Drop trigger if it exists first (to avoid errors on re-run)
+DROP TRIGGER IF EXISTS update_challenges_updated_at ON challenges;
 CREATE TRIGGER update_challenges_updated_at BEFORE UPDATE ON challenges
     FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 ```

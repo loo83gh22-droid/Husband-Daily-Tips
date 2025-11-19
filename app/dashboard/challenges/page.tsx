@@ -57,9 +57,17 @@ export default async function ChallengesPage() {
   const auth0Id = session.user.sub;
   const { challenges, completedMap, userId } = await getChallenges(auth0Id);
 
-  // Group challenges by theme/category
+  // Group challenges by theme/category (ensure each challenge appears only once)
   const challengesByTheme: Record<string, Array<typeof challenges[0]>> = {};
+  const seenChallengeIds = new Set<string>();
+  
   challenges.forEach((challenge) => {
+    // Skip if we've already seen this challenge
+    if (seenChallengeIds.has(challenge.id)) {
+      return;
+    }
+    seenChallengeIds.add(challenge.id);
+    
     const theme = challenge.theme || challenge.category.toLowerCase();
     if (!challengesByTheme[theme]) {
       challengesByTheme[theme] = [];

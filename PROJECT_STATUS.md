@@ -51,17 +51,16 @@
 4. ✅ Migration 005 - Multiple Challenge Completions
 
 **Verification**: See `MIGRATION_VERIFICATION.md` for verification steps
-4. Paste and click "Run"
-5. Should see "Success. No rows returned"
 
-**What This Creates**:
+**What Was Created**:
 - `badges` table (20 badge definitions)
 - `user_badges` table (tracks earned badges)
 - `reflections` table (private journal)
 - `deep_thoughts` table (forum posts)
 - `deep_thoughts_comments` table (comments)
-
-**Without This**: Badges and reflections won't work!
+- `recurring_tip_completions` table (weekly check-ins)
+- `challenges` table (30 challenges)
+- `user_challenge_completions` table (challenge tracking)
 
 ---
 

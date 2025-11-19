@@ -11,7 +11,7 @@ interface ChallengeCompletionModalProps {
     description: string;
     icon: string | null;
   };
-  onComplete: (notes?: string, linkToJournal?: boolean) => Promise<void>;
+  onComplete: (notes?: string, linkToJournal?: boolean) => Promise<void>; // linkToJournal always true now, but keeping for API compatibility
 }
 
 export default function ChallengeCompletionModal({
@@ -21,7 +21,6 @@ export default function ChallengeCompletionModal({
   onComplete,
 }: ChallengeCompletionModalProps) {
   const [notes, setNotes] = useState('');
-  const [linkToJournal, setLinkToJournal] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   if (!isOpen) return null;
@@ -31,7 +30,8 @@ export default function ChallengeCompletionModal({
     setIsSubmitting(true);
 
     try {
-      await onComplete(notes.trim() || undefined, linkToJournal);
+      // Always link to journal - notes are required for journal entry
+      await onComplete(notes.trim() || `Completed: ${challenge.name}`, true);
       setNotes('');
       onClose();
     } catch (error) {
@@ -76,26 +76,16 @@ export default function ChallengeCompletionModal({
             <textarea
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              placeholder="How did it go? What did you learn? (This will be saved to your journal)"
+              placeholder="How did it go? What did you learn? This will be saved to your journal."
               rows={4}
               className="w-full px-4 py-2 bg-slate-800/50 border border-slate-700 rounded-lg text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none"
               disabled={isSubmitting}
             />
           </div>
 
-          <div className="flex items-center gap-2">
-            <input
-              type="checkbox"
-              id="linkToJournal"
-              checked={linkToJournal}
-              onChange={(e) => setLinkToJournal(e.target.checked)}
-              className="w-4 h-4 rounded border-slate-600 bg-slate-800 text-primary-500 focus:ring-primary-500"
-              disabled={isSubmitting}
-            />
-            <label htmlFor="linkToJournal" className="text-sm text-slate-300 cursor-pointer">
-              Save to journal
-            </label>
-          </div>
+          <p className="text-xs text-slate-400">
+            Your notes will be automatically saved to your journal as a record of this completion.
+          </p>
 
           <div className="flex gap-3 pt-2">
             <button
