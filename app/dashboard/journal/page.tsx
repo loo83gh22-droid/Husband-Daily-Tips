@@ -14,15 +14,30 @@ async function getUserReflections(auth0Id: string) {
 
   const { data: reflections, error } = await supabase
     .from('reflections')
-    .select(`
-      *,
-      user_tips (
-        tips (title, category)
-      )
-    `)
+    .select('*')
     .eq('user_id', user.id)
     .order('created_at', { ascending: false })
     .limit(100);
+
+  // Get tip info separately if user_tip_id exists
+  if (reflections && reflections.length > 0) {
+    const tipIds = reflections
+      .map((r: any) => r.user_tip_id)
+      .filter((id: any) => id !== null);
+
+    if (tipIds.length > 0) {
+      const { data: userTips } = await supabase
+        .from('user_tips')
+        .select('id, tips(title, category)')
+        .in('id', tipIds);
+
+      // Map tip info to reflections
+      reflections.forEach((reflection: any) => {
+        const userTip = userTips?.find((ut: any) => ut.id === reflection.user_tip_id);
+        reflection.user_tips = userTip;
+      });
+    }
+  }
 
   if (error) {
     console.error('Error fetching reflections:', error);

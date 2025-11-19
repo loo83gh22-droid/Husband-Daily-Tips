@@ -7,6 +7,7 @@ import SubscriptionBanner from '@/components/SubscriptionBanner';
 import HealthBar from '@/components/HealthBar';
 import BadgesDisplay from '@/components/BadgesDisplay';
 import DashboardNav from '@/components/DashboardNav';
+import CalendarExport from '@/components/CalendarExport';
 import Link from 'next/link';
 
 async function getUserData(auth0Id: string) {
@@ -28,6 +29,7 @@ async function getTodayTip(userId: string | null, subscriptionTier: string) {
 
   // Get today's date in YYYY-MM-DD format
   const today = new Date().toISOString().split('T')[0];
+  const dayOfWeek = new Date().getDay(); // 0 = Sunday, 6 = Saturday
 
   // Check if user has already seen today's tip
   const { data: existingTip } = await supabase
@@ -41,14 +43,74 @@ async function getTodayTip(userId: string | null, subscriptionTier: string) {
     return existingTip.tips;
   }
 
+  // Check for recurring tips due today (e.g., weekly check-in)
+  const { data: recurringTips } = await supabase
+    .from('tips')
+    .select('*')
+    .eq('is_recurring', true)
+    .eq('recurrence_type', 'weekly')
+    .eq('recurrence_day', dayOfWeek);
+
+  if (recurringTips && recurringTips.length > 0) {
+    // Check if already completed this week
+    const weekStart = new Date();
+    weekStart.setDate(weekStart.getDate() - dayOfWeek);
+    weekStart.setHours(0, 0, 0, 0);
+
+    for (const recurringTip of recurringTips) {
+      const { data: completion } = await supabase
+        .from('recurring_tip_completions')
+        .select('*')
+        .eq('user_id', userId)
+        .eq('tip_id', recurringTip.id)
+        .gte('scheduled_date', weekStart.toISOString().split('T')[0])
+        .eq('completed', true)
+        .single();
+
+      // If not completed this week, this is today's tip
+      if (!completion) {
+        // Schedule it
+        await supabase.from('recurring_tip_completions').upsert({
+          user_id: userId,
+          tip_id: recurringTip.id,
+          scheduled_date: today,
+          completed: false,
+        });
+
+        // Save to user_tips
+        await supabase.from('user_tips').insert({
+          user_id: userId,
+          tip_id: recurringTip.id,
+          date: today,
+        });
+
+        return recurringTip;
+      }
+    }
+  }
+
   // Get a random tip - all tips accessible during testing
   const { data: tips, error } = await supabase
     .from('tips')
     .select('*')
+    .eq('is_recurring', false) // Don't show recurring tips as random tips
     .limit(100);
 
   if (error || !tips || tips.length === 0) {
-    return null;
+    // Fallback: get any tip if no non-recurring tips
+    const { data: allTips } = await supabase.from('tips').select('*').limit(100);
+    if (!allTips || allTips.length === 0) {
+      return null;
+    }
+    const randomTip = allTips[Math.floor(Math.random() * allTips.length)];
+
+    await supabase.from('user_tips').insert({
+      user_id: userId,
+      tip_id: randomTip.id,
+      date: today,
+    });
+
+    return randomTip;
   }
 
   const randomTip = tips[Math.floor(Math.random() * tips.length)];
@@ -252,6 +314,8 @@ export default async function Dashboard() {
             </div>
 
             <BadgesDisplay userId={user.id} />
+
+            <CalendarExport />
 
             <div className="bg-slate-900/70 border border-slate-800 rounded-xl p-4">
               <p className="text-xs text-slate-300 mb-1 font-medium">

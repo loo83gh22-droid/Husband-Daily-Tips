@@ -55,12 +55,25 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Failed to mark as completed' }, { status: 500 });
     }
 
-    // Get tip category for badge checking
+    // Check if this is a recurring tip and mark it as completed
     const { data: tipData } = await supabase
       .from('tips')
-      .select('category')
+      .select('category, is_recurring, recurrence_type')
       .eq('id', tipId)
       .single();
+
+    if (tipData?.is_recurring) {
+      // Mark recurring tip as completed
+      await supabase
+        .from('recurring_tip_completions')
+        .update({
+          completed: true,
+          completed_date: new Date().toISOString(),
+        })
+        .eq('user_id', user.id)
+        .eq('tip_id', tipId)
+        .eq('scheduled_date', today);
+    }
 
     // Recompute basic stats to give the client an updated health score
     const { data: tips, error: tipsError } = await supabase
