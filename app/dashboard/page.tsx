@@ -180,6 +180,27 @@ async function getUserStats(userId: string | null) {
   // Get last action date for decay
   const lastActionDate = tips.length > 0 ? tips[0].date : undefined;
 
+  // Get unique actions count (unique tips + unique actions completed)
+  // Count unique tips completed
+  const { data: completedTips } = await supabase
+    .from('user_tips')
+    .select('tip_id')
+    .eq('user_id', userId)
+    .eq('completed', true);
+
+  const uniqueTipIds = new Set(completedTips?.map((t) => t.tip_id) || []);
+  
+  // Count unique actions completed
+  const { data: completedActions } = await supabase
+    .from('user_action_completions')
+    .select('action_id')
+    .eq('user_id', userId);
+
+  const uniqueActionIds = new Set(completedActions?.map((a) => a.action_id) || []);
+  
+  // Total unique actions = unique tips + unique actions
+  const uniqueActions = uniqueTipIds.size + uniqueActionIds.size;
+
   // Get badge bonuses
   const { data: userBadges } = await supabase
     .from('user_badges')
@@ -189,7 +210,7 @@ async function getUserStats(userId: string | null) {
   const totalBadgeBonuses =
     userBadges?.reduce((sum: number, ub: any) => sum + (ub.badges?.health_bonus || 0), 0) || 0;
 
-  // Calculate health with decay using the new formula
+  // Calculate health with decay using the new formula (includes unique actions bonus)
   const { calculateHealthScore } = await import('@/lib/health');
   const healthScore = calculateHealthScore(
     {
@@ -197,6 +218,7 @@ async function getUserStats(userId: string | null) {
       currentStreak: streak,
       totalDays: uniqueDays,
       lastActionDate,
+      uniqueActions,
     },
     totalBadgeBonuses,
   );

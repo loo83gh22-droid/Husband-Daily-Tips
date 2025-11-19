@@ -2,9 +2,9 @@
 
 import { useState } from 'react';
 import { format } from 'date-fns';
-import ChallengeCompletionModal from './ChallengeCompletionModal';
+import ActionCompletionModal from './ActionCompletionModal';
 
-interface Challenge {
+interface Action {
   id: string;
   name: string;
   description: string;
@@ -14,50 +14,50 @@ interface Challenge {
   icon: string | null;
 }
 
-interface ChallengeCompletion {
+interface ActionCompletion {
   id: string;
   completed_at: string;
   notes: string | null;
 }
 
-interface ChallengesListProps {
-  challenges: Challenge[];
-  completedMap: Map<string, ChallengeCompletion[]>; // Changed to array of completions
+interface ActionsListProps {
+  actions: Action[];
+  completedMap: Map<string, ActionCompletion[]>; // Changed to array of completions
   userId: string;
 }
 
-export default function ChallengesList({
-  challenges,
+export default function ActionsList({
+  actions,
   completedMap,
   userId,
-}: ChallengesListProps) {
-  const [selectedChallenge, setSelectedChallenge] = useState<Challenge | null>(null);
+}: ActionsListProps) {
+  const [selectedAction, setSelectedAction] = useState<Action | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [newlyEarnedBadges, setNewlyEarnedBadges] = useState<
     Array<{ name: string; description: string; icon: string; healthBonus: number }>
   >([]);
 
-  const handleCompleteChallenge = async (notes?: string, linkToJournal?: boolean) => {
-    if (!selectedChallenge) return;
+  const handleCompleteAction = async (notes?: string, linkToJournal?: boolean) => {
+    if (!selectedAction) return;
 
     setIsSubmitting(true);
 
     try {
-      const response = await fetch('/api/challenges/complete', {
+      const response = await fetch('/api/actions/complete', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          challengeId: selectedChallenge.id,
+          actionId: selectedAction.id,
           notes: notes || null,
           linkToJournal: linkToJournal || false,
         }),
       });
 
       if (!response.ok) {
-        throw new Error('Failed to complete challenge');
+        throw new Error('Failed to complete action');
       }
 
       const data = await response.json();
@@ -73,15 +73,15 @@ export default function ChallengesList({
         window.location.reload();
       }, 500);
     } catch (error) {
-      console.error('Error completing challenge:', error);
+      console.error('Error completing action:', error);
       throw error;
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const handleOpenModal = (challenge: Challenge) => {
-    setSelectedChallenge(challenge);
+  const handleOpenModal = (action: Action) => {
+    setSelectedAction(action);
     setIsModalOpen(true);
   };
 
@@ -109,19 +109,19 @@ export default function ChallengesList({
       )}
 
       <div className="grid md:grid-cols-2 gap-4">
-        {challenges
-          .filter((challenge, index, self) => 
+        {actions
+          .filter((action, index, self) => 
             // Ensure no duplicates by ID
-            index === self.findIndex((c) => c.id === challenge.id)
+            index === self.findIndex((a) => a.id === action.id)
           )
-          .map((challenge) => {
-          const completions = completedMap.get(challenge.id) || [];
+          .map((action) => {
+          const completions = completedMap.get(action.id) || [];
           const completionCount = completions.length;
           const latestCompletion = completions.length > 0 ? completions[0] : null;
 
           return (
             <div
-              key={`challenge-${challenge.id}`}
+              key={`action-${action.id}`}
               className={`p-4 rounded-lg border transition-all ${
                 completionCount > 0
                   ? 'bg-primary-500/10 border-primary-500/30'
@@ -136,11 +136,11 @@ export default function ChallengesList({
                     </div>
                   )}
                   <button
-                    onClick={() => handleOpenModal(challenge)}
+                    onClick={() => handleOpenModal(action)}
                     disabled={isSubmitting}
                     className="w-6 h-6 rounded border-2 border-primary-500 bg-primary-500/20 hover:bg-primary-500/30 flex items-center justify-center transition-all disabled:opacity-50"
                     aria-label="Mark as complete"
-                    title="Complete this challenge"
+                    title="Complete this action"
                   >
                     <svg
                       className="w-4 h-4 text-primary-300"
@@ -160,11 +160,11 @@ export default function ChallengesList({
 
                 <div className="flex-1 min-w-0">
                   <div className="flex items-start gap-2 mb-1">
-                    {challenge.icon && <span className="text-lg">{challenge.icon}</span>}
-                    <h3 className="text-sm font-semibold text-slate-200">{challenge.name}</h3>
+                    {action.icon && <span className="text-lg">{action.icon}</span>}
+                    <h3 className="text-sm font-semibold text-slate-200">{action.name}</h3>
                   </div>
                   <p className="text-xs text-slate-400 leading-relaxed mb-2">
-                    {challenge.description}
+                    {action.description}
                   </p>
                   {completionCount > 0 && (
                     <div className="space-y-1">
@@ -186,15 +186,15 @@ export default function ChallengesList({
       </div>
 
       {/* Completion Modal */}
-      {selectedChallenge && (
-        <ChallengeCompletionModal
+      {selectedAction && (
+        <ActionCompletionModal
           isOpen={isModalOpen}
           onClose={() => {
             setIsModalOpen(false);
-            setSelectedChallenge(null);
+            setSelectedAction(null);
           }}
-          challenge={selectedChallenge}
-          onComplete={handleCompleteChallenge}
+          action={selectedAction}
+          onComplete={handleCompleteAction}
         />
       )}
     </>

@@ -31,17 +31,17 @@ async function getUserStats(userId: string) {
     }
   }
 
-  // Get challenge completions for challengeCounts
-  const { data: challengeCompletions } = await supabase
-    .from('user_challenge_completions')
-    .select('challenges(requirement_type)')
+  // Get action completions for actionCounts
+  const { data: actionCompletions } = await supabase
+    .from('user_action_completions')
+    .select('actions(requirement_type)')
     .eq('user_id', userId);
 
-  const challengeCounts: Record<string, number> = {};
-  challengeCompletions?.forEach((cc: any) => {
-    const reqType = cc.challenges?.requirement_type;
+  const actionCounts: Record<string, number> = {};
+  actionCompletions?.forEach((ac: any) => {
+    const reqType = ac.actions?.requirement_type;
     if (reqType) {
-      challengeCounts[reqType] = (challengeCounts[reqType] || 0) + 1;
+      actionCounts[reqType] = (actionCounts[reqType] || 0) + 1;
     }
   });
 
@@ -49,7 +49,7 @@ async function getUserStats(userId: string) {
     totalTips,
     currentStreak: streak,
     totalDays: uniqueDays,
-    challengeCounts,
+    actionCounts,
   };
 }
 
