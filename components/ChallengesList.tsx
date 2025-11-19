@@ -31,6 +31,10 @@ export default function ChallengesList({
   completedMap,
   userId,
 }: ChallengesListProps) {
+  // Log for debugging (client-side - check browser console)
+  console.log(`[ChallengesList] Received ${challenges.length} challenges`);
+  console.log(`[ChallengesList] Unique challenge IDs:`, new Set(challenges.map(c => c.id)).size);
+  
   const [selectedChallenge, setSelectedChallenge] = useState<Challenge | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
