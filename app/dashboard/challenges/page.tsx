@@ -13,12 +13,20 @@ async function getChallenges(auth0Id: string) {
 
   if (!user) return { challenges: [], completedMap: new Map() };
 
-  // Get all challenges
+  // Get all challenges - use distinct to avoid duplicates
   const { data: challenges } = await supabase
     .from('challenges')
     .select('*')
     .order('category', { ascending: true })
     .order('name', { ascending: true });
+
+  // Remove any duplicates by ID (in case database has duplicates)
+  const uniqueChallenges = challenges
+    ? challenges.filter(
+        (challenge, index, self) =>
+          index === self.findIndex((c) => c.id === challenge.id),
+      )
+    : [];
 
   // Get user's completed challenges (all instances)
   const { data: completions } = await supabase
@@ -41,7 +49,7 @@ async function getChallenges(auth0Id: string) {
   });
 
   return {
-    challenges: challenges || [],
+    challenges: uniqueChallenges,
     completedMap,
     userId: user.id,
   };
@@ -58,12 +66,15 @@ export default async function ChallengesPage() {
   const { challenges, completedMap, userId } = await getChallenges(auth0Id);
 
   // Group challenges by theme/category (ensure each challenge appears only once)
+  // Use a Map to ensure uniqueness by ID
   const challengesByTheme: Record<string, Array<typeof challenges[0]>> = {};
   const seenChallengeIds = new Set<string>();
   
+  // Double-check for duplicates and group by theme
   challenges.forEach((challenge) => {
-    // Skip if we've already seen this challenge
+    // Skip if we've already seen this challenge ID
     if (seenChallengeIds.has(challenge.id)) {
+      console.warn(`Duplicate challenge detected: ${challenge.name} (${challenge.id})`);
       return;
     }
     seenChallengeIds.add(challenge.id);
@@ -74,6 +85,9 @@ export default async function ChallengesPage() {
     }
     challengesByTheme[theme].push(challenge);
   });
+  
+  // Log for debugging
+  console.log(`Total unique challenges: ${seenChallengeIds.size}, Total in array: ${challenges.length}`);
 
   // Calculate progress for each theme
   const themeProgress: Record<string, { completed: number; total: number }> = {};

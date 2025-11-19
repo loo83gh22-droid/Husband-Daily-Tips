@@ -109,14 +109,19 @@ export default function ChallengesList({
       )}
 
       <div className="grid md:grid-cols-2 gap-4">
-        {challenges.map((challenge) => {
+        {challenges
+          .filter((challenge, index, self) => 
+            // Ensure no duplicates by ID
+            index === self.findIndex((c) => c.id === challenge.id)
+          )
+          .map((challenge) => {
           const completions = completedMap.get(challenge.id) || [];
           const completionCount = completions.length;
           const latestCompletion = completions.length > 0 ? completions[0] : null;
 
           return (
             <div
-              key={challenge.id}
+              key={`challenge-${challenge.id}`}
               className={`p-4 rounded-lg border transition-all ${
                 completionCount > 0
                   ? 'bg-primary-500/10 border-primary-500/30'
