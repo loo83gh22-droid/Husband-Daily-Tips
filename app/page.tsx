@@ -60,8 +60,9 @@ export default async function Home() {
               <span className="block text-primary-400">one action at a time.</span>
             </h1>
             <p className="text-base md:text-lg text-slate-300 leading-relaxed mb-8 max-w-2xl">
-              No fluff. No BS. Just real, actionable steps from dudes who figured it out. 
-              One daily action. One clear win. Become the husband you and your partner deserve.
+              Look, marriage is hard. You know it, we know it. But here&apos;s the thing—it doesn&apos;t have to be complicated. 
+              One small action a day. One moment where you actually show up. No grand gestures needed. 
+              Just consistent, real effort. Become the husband you and your partner deserve.
             </p>
 
             <div className="mb-8">
@@ -84,10 +85,10 @@ export default async function Home() {
             <div className="flex flex-wrap items-center gap-4 text-xs text-slate-400">
               <div className="flex items-center gap-2">
                 <span className="inline-flex h-2 w-2 rounded-full bg-emerald-400" />
-                <span>5 minutes a day. That&apos;s it.</span>
+                <span>5 minutes a day. Seriously.</span>
               </div>
               <span className="hidden md:inline text-slate-700">•</span>
-              <span>For dudes who want to actually be good at this.</span>
+              <span>For guys who are tired of winging it and ready to actually figure this out.</span>
             </div>
           </div>
 
@@ -99,7 +100,7 @@ export default async function Home() {
                   RELATIONSHIP HEALTH
                 </p>
                 <p className="mt-1 text-sm text-slate-300">
-                  A simple visual of how consistently you&apos;re showing up.
+                  Your honest, no-BS relationship meter. It tells you what you need to hear.
                 </p>
               </div>
               <span className="text-xl">❤️</span>
@@ -134,8 +135,8 @@ export default async function Home() {
             </ul>
 
             <p className="mt-4 text-[11px] text-slate-500">
-              You don&apos;t see your wife as a checklist. This bar is for you:
-              a quiet, honest mirror of your follow-through.
+              This isn&apos;t about checking boxes. It&apos;s about being honest with yourself 
+              about whether you&apos;re actually showing up or just going through the motions.
             </p>
           </div>
         </div>
@@ -164,8 +165,8 @@ export default async function Home() {
                   One clear thing to do today
                 </h3>
                 <p className="text-sm text-slate-300">
-                  We translate expert relationship research into simple, specific actions you can
-                  take in under 5 minutes.
+                  No vague advice. No &quot;communicate better&quot; nonsense. Just one specific thing you can do 
+                  right now that actually makes a difference. Takes 5 minutes. No excuses.
                 </p>
               </div>
 
@@ -177,8 +178,8 @@ export default async function Home() {
                   See your consistency at a glance
                 </h3>
                 <p className="text-sm text-slate-300">
-                  Your health bar rises when you follow through and slowly drains when you don&apos;t.
-                  It&apos;s not about perfection—just honest momentum.
+                  When you show up, it goes up. When you don&apos;t, it goes down. Simple. 
+                  No judgment, just truth. It&apos;s the accountability partner you didn&apos;t know you needed.
                 </p>
               </div>
 
@@ -190,8 +191,8 @@ export default async function Home() {
                   Journal your journey, share your wins
                 </h3>
                 <p className="text-sm text-slate-300">
-                  Keep a private journal of your reflections and optionally share wins with the community. 
-                  See your growth over time and learn from other husbands doing the work.
+                  Write down what actually happened. What worked. What didn&apos;t. What surprised you. 
+                  Keep it private, or share your wins with other guys who get it. Real talk from real husbands.
                 </p>
               </div>
             </div>
@@ -219,7 +220,9 @@ export default async function Home() {
                   </h3>
                 </div>
                 <p className="text-sm text-slate-300 mb-4">
-                  Get one personalized action every day. Each action is specific, actionable, and takes less than 5 minutes. Complete actions to build your health bar and earn badges.
+                  Every morning, you get one thing to do. Not a lecture. Not a theory. Just one concrete action 
+                  that takes less than 5 minutes. Do it, mark it done, watch your health bar grow. 
+                  It&apos;s that simple—and that powerful.
                 </p>
                 <div className="space-y-2 text-xs text-slate-400">
                   <div className="flex items-center gap-2">
@@ -245,7 +248,9 @@ export default async function Home() {
                   </h3>
                 </div>
                 <p className="text-sm text-slate-300 mb-4">
-                  Earn badges as you complete actions and build consistency. Badges recognize your progress in different relationship areas and motivate you to keep going.
+                  Yeah, we gamified it. Because sometimes you need that little dopamine hit when you&apos;ve 
+                  actually followed through for 7 days straight. Badges celebrate the small wins that add up 
+                  to big changes. And honestly? It feels good to see that progress.
                 </p>
                 <div className="space-y-2 text-xs text-slate-400">
                   <div className="flex items-center gap-2">
@@ -287,7 +292,9 @@ export default async function Home() {
                   </h3>
                 </div>
                 <p className="text-sm text-slate-300 mb-4">
-                  After completing each action, reflect on what happened. Your private journal helps you track your growth, notice patterns, and celebrate your wins. Mark favorites to revisit your best moments.
+                  After you do the thing, write down what actually happened. Did it go well? Did it surprise you? 
+                  Did you learn something? This is your space to be honest about what&apos;s working and what isn&apos;t. 
+                  No one else sees it. Just you, being real with yourself.
                 </p>
                 <div className="space-y-2 text-xs text-slate-400">
                   <div className="flex items-center gap-2">
@@ -313,7 +320,9 @@ export default async function Home() {
                   </h3>
                 </div>
                 <p className="text-sm text-slate-300 mb-4">
-                  Share your wins with other husbands who are on the same journey. See real victories, learn from breakthroughs, and build momentum together. It&apos;s a community of dudes actually doing the work.
+                  Sometimes you nail it. Sometimes you try something and it actually works. Share those moments 
+                  with other guys who get it. Read their wins. Get inspired. Realize you&apos;re not the only one 
+                  trying to figure this marriage thing out. We&apos;re all in this together.
                 </p>
                 <div className="space-y-2 text-xs text-slate-400">
                   <div className="flex items-center gap-2">
