@@ -216,35 +216,22 @@ export default function HealthBar({ value }: HealthBarProps) {
             </button>
             
             {/* Hover Popup */}
-            <div className="absolute left-0 bottom-full mb-2 w-80 bg-slate-800 border border-slate-700 rounded-lg p-4 shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
-              <div className="absolute bottom-0 left-4 transform translate-y-1/2 rotate-45 w-2 h-2 bg-slate-800 border-r border-b border-slate-700"></div>
+            <div className="absolute left-0 bottom-full mb-2 w-72 bg-slate-800 border border-slate-700 rounded-lg p-3 shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+              <div className="absolute bottom-0 left-3 transform translate-y-1/2 rotate-45 w-2 h-2 bg-slate-800 border-r border-b border-slate-700"></div>
               
-              <p className="text-xs text-slate-300 mb-2 font-semibold">
-                How your health works
+              <p className="text-xs text-slate-200 mb-2 font-semibold">
+                How it works
               </p>
               <p className="text-[11px] text-slate-400 leading-relaxed mb-3">
-                Your bar climbs when you follow through on daily actions and make intentional
-                &quot;big husband&quot; moves. It slowly drains when you disappear. It&apos;s not a score
-                for your wife—it&apos;s an honest dashboard for you.
+                Climbing: daily actions and &quot;big husband&quot; moves. Draining: inactivity. This is your honest dashboard, not a score for her.
               </p>
 
-              <div className="pt-3 border-t border-slate-700/50">
-                <p className="text-xs text-slate-300 mb-2 font-semibold">
-                  What are &quot;Big Husband Moves&quot;?
+              <div className="pt-2 border-t border-slate-700/50">
+                <p className="text-xs text-slate-200 mb-1.5 font-semibold">
+                  Big Husband Moves
                 </p>
-                <p className="text-[11px] text-slate-400 leading-relaxed mb-2">
-                  These are larger, meaningful actions that go beyond daily tasks—significant gestures that show thoughtfulness and commitment.
-                </p>
-                <ul className="text-[11px] text-slate-400 space-y-1 list-disc list-inside ml-1">
-                  <li>Planning a surprise date night or weekend trip</li>
-                  <li>Taking initiative on major household projects</li>
-                  <li>Writing a heartfelt letter or note</li>
-                  <li>Organizing a special celebration for her</li>
-                  <li>Making time for deep conversations</li>
-                  <li>Supporting her goals in a meaningful way</li>
-                </ul>
-                <p className="text-[10px] text-slate-500 mt-3 italic">
-                  Currently, all actions contribute equally to health. Big husband moves may receive special bonuses in future updates.
+                <p className="text-[11px] text-slate-400 leading-relaxed">
+                  Meaningful gestures beyond daily tasks—surprise dates, major projects, heartfelt notes, special celebrations. Currently equal value; bonus points coming soon.
                 </p>
               </div>
             </div>
