@@ -122,12 +122,18 @@ export default function DailyTipCard({ tip }: DailyTipCardProps) {
   const handleToggleFavorite = async () => {
     setIsTogglingFavorite(true);
     try {
-      const response = await fetch('/api/tips/favorite', {
+      // Use action favorite API if it's an action, otherwise use tip favorite API
+      const endpoint = tip.isAction ? '/api/actions/favorite' : '/api/tips/favorite';
+      const body = tip.isAction 
+        ? { actionId: tip.id }
+        : { tipId: tip.id };
+      
+      const response = await fetch(endpoint, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ tipId: tip.id }),
+        body: JSON.stringify(body),
       });
 
       if (!response.ok) {
