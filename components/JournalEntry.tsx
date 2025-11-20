@@ -31,6 +31,8 @@ export default function JournalEntry({ reflection }: JournalEntryProps) {
   const [isShared, setIsShared] = useState(reflection.shared_to_forum || false);
   const [isTogglingShare, setIsTogglingShare] = useState(false);
   const [currentContent, setCurrentContent] = useState(reflection.content);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [isDeleted, setIsDeleted] = useState(false);
 
   const tip = reflection.user_tips?.tips;
   const action = reflection.action;
@@ -136,7 +138,43 @@ export default function JournalEntry({ reflection }: JournalEntryProps) {
     }
   };
 
+  const handleDelete = async () => {
+    if (!confirm('Are you sure you want to delete this journal entry? This will also remove any linked action completion.')) {
+      return;
+    }
+
+    setIsDeleting(true);
+    try {
+      const response = await fetch('/api/reflections/delete', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          reflectionId: reflection.id,
+        }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to delete entry');
+      }
+
+      setIsDeleted(true);
+      // Reload the page to refresh the journal list
+      window.location.reload();
+    } catch (error: any) {
+      console.error('Error deleting reflection:', error);
+      alert(error.message || 'Failed to delete entry. Please try again.');
+      setIsDeleting(false);
+    }
+  };
+
   const isFavorite = isFavorited;
+
+  if (isDeleted) {
+    return null;
+  }
 
   return (
     <article
@@ -251,6 +289,45 @@ export default function JournalEntry({ reflection }: JournalEntryProps) {
               </svg>
             )}
           </button>
+          {!isEditing && (
+            <button
+              onClick={handleDelete}
+              disabled={isDeleting}
+              className="p-2 rounded-lg text-red-400 hover:bg-red-500/10 transition-colors disabled:opacity-50 disabled:cursor-default"
+              aria-label="Delete entry"
+              title="Delete this entry"
+            >
+              {isDeleting ? (
+                <svg
+                  className="w-4 h-4 animate-spin"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                  />
+                </svg>
+              ) : (
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                  />
+                </svg>
+              )}
+            </button>
+          )}
           {isShared && !isEditing && (
             <span className="text-xs px-2 py-1 bg-primary-500/20 text-primary-300 rounded-full border border-primary-500/30">
               Shared to Team Wins
