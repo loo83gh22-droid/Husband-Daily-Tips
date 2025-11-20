@@ -25,7 +25,7 @@ async function getUserData(auth0Id: string) {
   return user;
 }
 
-async function getTodayAction(userId: string | null, subscriptionTier: string) {
+async function getTodayAction(userId: string | null, subscriptionTier: string, categoryScores?: any) {
   if (!userId) return null;
 
   // Get today's date in YYYY-MM-DD format
@@ -71,6 +71,40 @@ async function getTodayAction(userId: string | null, subscriptionTier: string) {
   // Filter out actions seen in last 30 days
   if (actions && seenActionIds.length > 0) {
     actions = actions.filter((action) => !seenActionIds.includes(action.id));
+  }
+
+  // Personalize action selection based on survey results (areas needing improvement)
+  if (actions && categoryScores && actions.length > 0) {
+    // Map category names to match action categories
+    const categoryMapping: Record<string, string> = {
+      'communication': 'Communication',
+      'romance': 'Romance',
+      'partnership': 'Partnership',
+      'intimacy': 'Intimacy',
+      'conflict': 'Communication', // Conflict is handled through Communication
+    };
+
+    // Find lowest scoring category (where they need most improvement)
+    const scores = [
+      { category: 'communication', score: categoryScores.communication_score || 50 },
+      { category: 'romance', score: categoryScores.romance_score || 50 },
+      { category: 'partnership', score: categoryScores.partnership_score || 50 },
+      { category: 'intimacy', score: categoryScores.intimacy_score || 50 },
+      { category: 'conflict', score: categoryScores.conflict_score || 50 },
+    ];
+    
+    scores.sort((a, b) => a.score - b.score);
+    const lowestCategory = scores[0];
+    const targetCategory = categoryMapping[lowestCategory.category];
+
+    // Prioritize actions in the category where they need most improvement
+    const priorityActions = actions.filter((a) => a.category === targetCategory);
+    if (priorityActions.length > 0) {
+      // 70% chance to pick from priority category, 30% random
+      if (Math.random() < 0.7) {
+        actions = priorityActions;
+      }
+    }
   }
 
   if (error || !actions || actions.length === 0) {
@@ -121,8 +155,18 @@ async function getUserStats(userId: string | null) {
       currentStreak: 0,
       totalDays: 0,
       healthScore: 0,
+      baselineHealth: null,
     };
   }
+
+  // Get survey summary (baseline health and category scores)
+  const { data: surveySummary } = await supabase
+    .from('survey_summary')
+    .select('baseline_health, communication_score, romance_score, partnership_score, intimacy_score, conflict_score')
+    .eq('user_id', userId)
+    .single();
+  
+  const baselineHealth = surveySummary?.baseline_health || null;
 
   const { data: tips, error } = await supabase
     .from('user_tips')
@@ -135,7 +179,8 @@ async function getUserStats(userId: string | null) {
       totalTips: 0,
       currentStreak: 0,
       totalDays: 0,
-      healthScore: 0,
+      healthScore: baselineHealth || 0,
+      baselineHealth,
     };
   }
 
@@ -203,7 +248,7 @@ async function getUserStats(userId: string | null) {
 
   // Calculate health with decay using the new formula (capped at 6 points per day)
   const { calculateHealthScore } = await import('@/lib/health');
-  const healthScore = calculateHealthScore(
+  const calculatedHealth = calculateHealthScore(
     {
       totalTips,
       currentStreak: streak,
@@ -215,7 +260,30 @@ async function getUserStats(userId: string | null) {
     totalBadgeBonuses, // Now 0 (badges are reference only)
   );
 
-  return { totalTips, currentStreak: streak, totalDays: uniqueDays, healthScore };
+  // If user has baseline health, add it to calculated health (but don't go above 100)
+  // Baseline represents their starting point, and they can build from there
+  // If no actions yet, use baseline; otherwise baseline + calculated improvements
+  const healthScore = baselineHealth !== null
+    ? Math.min(100, baselineHealth + calculatedHealth)
+    : calculatedHealth;
+
+  // Extract category scores for personalization
+  const categoryScores = surveySummary ? {
+    communication_score: surveySummary.communication_score,
+    romance_score: surveySummary.romance_score,
+    partnership_score: surveySummary.partnership_score,
+    intimacy_score: surveySummary.intimacy_score,
+    conflict_score: surveySummary.conflict_score,
+  } : null;
+
+  return { 
+    totalTips, 
+    currentStreak: streak, 
+    totalDays: uniqueDays, 
+    healthScore, 
+    baselineHealth,
+    categoryScores,
+  };
 }
 
 export default async function Dashboard() {
@@ -239,6 +307,7 @@ export default async function Dashboard() {
         email: session.user.email,
         name: session.user.name || session.user.email,
         subscription_tier: 'free',
+        survey_completed: false,
       })
       .select()
       .single();
@@ -251,10 +320,18 @@ export default async function Dashboard() {
     user = newUser;
   }
 
+  // Redirect to survey if not completed
+  if (!user.survey_completed) {
+    redirect('/dashboard/survey');
+  }
+
   const subscriptionTier = user.subscription_tier || 'free';
-  // Remove tier restrictions - all tips accessible to all users during testing
-  const todayAction = await getTodayAction(user.id, user.subscription_tier || 'free');
+  
+  // Get stats first to get category scores for personalization
   const stats = await getUserStats(user.id);
+  
+  // Remove tier restrictions - all tips accessible to all users during testing
+  const todayAction = await getTodayAction(user.id, user.subscription_tier || 'free', stats.categoryScores);
 
   return (
     <div className="min-h-screen bg-slate-950">

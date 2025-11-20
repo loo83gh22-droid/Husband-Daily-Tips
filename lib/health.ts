@@ -16,6 +16,7 @@ export function calculateHealthScore(
     lastActionDate?: string; // YYYY-MM-DD format
     uniqueActions?: number; // Count of unique tips + unique actions completed
     totalDailyActionCompletions?: number; // Total days where daily action was completed (capped at 6 per day)
+    baselineHealth?: number | null; // Baseline from survey (0-100)
   },
   badgeBonuses: number = 0, // Badges now give 0 bonus (reference only)
 ): number {
