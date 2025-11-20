@@ -126,19 +126,16 @@ export async function POST(request: Request) {
       ? (categoryScores.conflict.total / categoryScores.conflict.count) * 20
       : 50; // Default to 50 if no questions
 
-    // For simple 3-question survey: use average of answered categories for baseline
-    // If we have answers, use those; otherwise use overall average
-    const answeredScores = [
-      categoryScores.communication.count > 0 ? communicationScore : null,
-      categoryScores.romance.count > 0 ? romanceScore : null,
-      categoryScores.partnership.count > 0 ? partnershipScore : null,
-      categoryScores.intimacy.count > 0 ? intimacyScore : null,
-      categoryScores.conflict.count > 0 ? conflictScore : null,
-    ].filter((score): score is number => score !== null);
+    // Calculate baseline health from all category scores
+    // For conflict: if no questions answered, use average of other categories
+    const finalConflictScore = categoryScores.conflict.count > 0
+      ? conflictScore
+      : (communicationScore + romanceScore + partnershipScore + intimacyScore) / 4;
 
-    const baselineHealth = answeredScores.length > 0
-      ? Math.round(answeredScores.reduce((sum, score) => sum + score, 0) / answeredScores.length)
-      : 50; // Default to 50 if no answers
+    // Baseline health is the average of all 5 category scores
+    const baselineHealth = Math.round(
+      (communicationScore + romanceScore + partnershipScore + intimacyScore + finalConflictScore) / 5
+    );
 
     // Save survey summary
     const { error: summaryError } = await supabase.from('survey_summary').upsert({
@@ -148,7 +145,7 @@ export async function POST(request: Request) {
       romance_score: Math.round(romanceScore * 100) / 100,
       partnership_score: Math.round(partnershipScore * 100) / 100,
       intimacy_score: Math.round(intimacyScore * 100) / 100,
-      conflict_score: Math.round(conflictScore * 100) / 100,
+      conflict_score: Math.round(finalConflictScore * 100) / 100,
       completed_at: new Date().toISOString(),
     }, {
       onConflict: 'user_id',
@@ -178,7 +175,7 @@ export async function POST(request: Request) {
         romance: Math.round(romanceScore * 100) / 100,
         partnership: Math.round(partnershipScore * 100) / 100,
         intimacy: Math.round(intimacyScore * 100) / 100,
-        conflict: Math.round(conflictScore * 100) / 100,
+        conflict: Math.round(finalConflictScore * 100) / 100,
       },
     });
   } catch (error) {

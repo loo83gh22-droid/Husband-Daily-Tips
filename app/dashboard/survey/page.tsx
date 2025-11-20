@@ -52,10 +52,10 @@ export default async function SurveyPage() {
               Welcome! Let&apos;s get started
             </h1>
             <p className="text-slate-400 text-base md:text-lg">
-              This quick 3-question survey helps us understand your relationship and provide personalized actions.
+              This 10-question survey helps us understand your relationship and provide personalized actions.
               <br />
               <span className="text-sm text-slate-500 mt-2 block">
-                Takes less than 1 minute • Your answers are private
+                Takes about 2 minutes • Your answers are private
               </span>
             </p>
           </div>
