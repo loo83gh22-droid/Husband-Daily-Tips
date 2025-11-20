@@ -263,7 +263,7 @@ export default function DailyTipCard({ tip }: DailyTipCardProps) {
         isOpen={showReflection}
         onClose={() => setShowReflection(false)}
         tipId={tip.id}
-        tipTitle={tip.title}
+        tipTitle={tip.title || tip.name || 'Action'}
         onSuccess={() => {
           // Refresh page to show updated stats
           window.location.reload();
