@@ -5,346 +5,151 @@ import DashboardNav from '@/components/DashboardNav';
 
 // Guide data - in the future this could come from a database
 const guides: Record<string, any> = {
-  'fix-leaky-faucet': {
-    id: 1,
-    title: 'Fix a Leaky Faucet Like a Pro',
-    category: 'Home Repair',
-    difficulty: 'Easy',
-    time: '20 min',
-    excerpt: 'Stop that annoying drip-drip-drip. This step-by-step guide will have you fixing faucets in under 20 minutes. Your wife will notice, and you\'ll feel like a boss.',
-    content: `## Why This Matters
-
-That constant drip-drip-drip isn't just annoying—it's wasting water and money. More importantly, fixing it yourself shows competence. Your wife notices when you handle things without calling a plumber.
-
-## What You'll Need
-
-- Adjustable wrench
-- Screwdriver (flathead or Phillips, depending on your faucet)
-- Replacement O-ring or cartridge (check your faucet model)
-- Plumber's tape (optional but recommended)
-- Rag or towel
-
-## Step-by-Step
-
-### 1. Turn Off the Water Supply
-
-Find the shut-off valves under the sink. Turn them clockwise until they're fully closed. If you can't find them or they're stuck, turn off the main water supply to the house.
-
-**Pro tip:** Test by turning on the faucet. If water still comes out, you didn't shut it off completely.
-
-### 2. Remove the Handle
-
-Look for a small cap or cover on top of the handle. Pop it off with a flathead screwdriver. Underneath, you'll find a screw. Remove it and pull the handle straight up.
-
-**Common issue:** If the handle is stuck, gently wiggle it while pulling. Don't force it—you'll break something.
-
-### 3. Remove the Stem or Cartridge
-
-Use your adjustable wrench to unscrew the packing nut. Once it's off, pull out the stem or cartridge. This is where the leak is usually happening.
-
-**What to look for:** Check the O-ring (the rubber ring around the stem). If it's cracked, worn, or missing, that's your problem.
-
-### 4. Replace the O-Ring or Cartridge
-
-If it's just the O-ring, replace it with an exact match from the hardware store. If it's the whole cartridge, you'll need to match the model number.
-
-**Pro tip:** Take the old part with you to the store. Makes matching way easier.
-
-### 5. Reassemble Everything
-
-Put everything back in reverse order:
-- Insert the new stem/cartridge
-- Screw on the packing nut (not too tight—snug is enough)
-- Put the handle back on
-- Screw it in place
-
-### 6. Turn the Water Back On
-
-Slowly turn the shut-off valves counterclockwise. Check for leaks. If you see water, turn it off and tighten a bit more.
-
-## Common Mistakes
-
-- **Overtightening:** You'll strip threads or crack something. Snug is enough.
-- **Wrong parts:** Make sure you match the exact model. Not all faucets are the same.
-- **Skipping the shut-off:** You'll flood your kitchen. Don't be that guy.
-
-## When to Call a Pro
-
-If you've tried this and it's still leaking, or if you have a fancy faucet with no visible parts, call a plumber. No shame in it. But try this first—you'll surprise yourself.
-
-## The Win
-
-You fixed something. You didn't call someone. You saved money. Your wife noticed. That's a win.`,
-  },
-  'organize-garage': {
-    id: 2,
-    title: 'Organize the Garage (Without Losing Your Mind)',
-    category: 'Organization',
+  // Communication guides
+  'share-your-feelings': {
+    id: 20,
+    title: 'Share Your Feelings (Without Making It About You)',
+    category: 'Communication',
     difficulty: 'Medium',
-    time: '2-3 hours',
-    excerpt: 'Transform that disaster zone into a functional space. Learn the system that actually works and keeps things organized long-term.',
+    time: 'Ongoing',
+    excerpt: 'Learn how to open up and be vulnerable in a way that builds connection, not walls. Express what you\'re feeling without turning it into a problem she needs to solve.',
     content: `## Why This Matters
 
-Your garage is probably a disaster. Tools everywhere, boxes you haven't opened in years, and that one thing you know you need but can never find. Organizing it isn't just about neatness—it's about being able to actually use the space and find what you need when you need it.
+Sharing your feelings creates emotional intimacy. But if you do it wrong, it becomes a burden she has to carry. Learn how to express yourself in ways that build connection instead of creating distance.
 
-## What You'll Need
+## The Secret: Share, Don't Dump
 
-- Heavy-duty trash bags
-- Cardboard boxes (for donations)
-- Labels and a marker
-- Shelving units (if you don't have any)
-- Clear storage bins
-- A full day (seriously, don't rush this)
+There's a difference between sharing your feelings and dumping your problems on her. Sharing is about connection. Dumping is about making her responsible for fixing how you feel.
 
-## The System That Actually Works
+## How to Share Your Feelings
 
-### Step 1: Empty Everything Out
+### 1. Start Small
 
-Pull everything out of the garage. Yes, everything. Put it in the driveway or yard. This is the only way to see what you actually have.
+You don't have to share everything at once. Start with smaller feelings:
+- "I'm feeling a bit stressed about work today."
+- "I'm excited about this weekend."
+- "I'm worried about [something specific]."
 
-**Pro tip:** Do this on a day with good weather. You don't want your stuff getting rained on.
+### 2. Use "I" Statements
 
-### Step 2: Sort Into Piles
+"I feel [emotion] about [situation]."
 
-Create these categories:
-- **Keep and use regularly** (tools, sports equipment you actually use)
-- **Keep but store** (seasonal stuff, sentimental items)
-- **Donate** (stuff that's still good but you don't need)
-- **Trash** (broken, useless, or expired items)
-- **Sell** (if it's worth your time)
+Not: "You make me feel..." or "This situation is making me..."
 
-**The rule:** If you haven't used it in a year and it's not sentimental, it goes.
+### 3. Don't Make It Her Problem
 
-### Step 3: Zone Your Garage
+Share what you're feeling, but don't expect her to fix it. She can listen and support you, but you're responsible for managing your emotions.
 
-Divide your garage into zones:
-- **Workbench area** (tools, hardware)
-- **Storage zone** (seasonal items, boxes)
-- **Active use zone** (things you grab regularly)
-- **Vehicle space** (you know, for your car)
+### 4. Be Specific
 
-### Step 4: Install Shelving
+"I'm feeling overwhelmed" is vague. "I'm feeling overwhelmed because I have three big deadlines this week" is specific and helps her understand.
 
-If you don't have shelves, get some. Heavy-duty metal shelving units are worth every penny. Put them along the walls, not in the middle.
+### 5. Ask for What You Need
 
-**Pro tip:** Leave space between shelves and the wall for air circulation. Prevents moisture issues.
+If you want something specific, ask for it:
+- "I just need you to listen."
+- "I'd love a hug."
+- "I need some space to process this."
 
-### Step 5: Use Clear Bins
+Don't expect her to read your mind.
 
-Store things in clear, labeled bins. You can see what's inside without opening them. Label the front and top.
+## What Not to Do
 
-**What goes in bins:**
-- Seasonal decorations
-- Sports equipment
-- Tools by category
-- Hardware and small parts
+- **Don't use your feelings to manipulate:** "I feel hurt when you..." (if you're just trying to get her to do something)
+- **Don't dump everything at once:** Share gradually, not all at once
+- **Don't make it about her:** "I feel bad because you..." is not sharing—it's blaming
+- **Don't expect her to fix it:** She can support you, but you're responsible for your feelings
 
-### Step 6: Create a Tool Wall
+## Examples
 
-Hang frequently used tools on a pegboard or wall-mounted system. You'll use them more if you can see them and grab them easily.
+**Good sharing:**
+"I'm feeling stressed about this work project. I'm worried I won't meet the deadline. I think I just need to talk through it."
 
-### Step 7: Keep the Floor Clear
+**Dumping:**
+"I'm so stressed and you're not helping and everything is terrible and I don't know what to do!"
 
-Your car should fit in the garage. If it doesn't, you have too much stuff. Keep walkways clear. Nothing should be on the floor except your vehicle.
+**Good sharing:**
+"I'm feeling disconnected lately. I miss spending quality time together. Can we plan something this weekend?"
 
-## The Maintenance System
-
-- **Once a month:** Quick sweep, put things back where they belong
-- **Every 6 months:** Full review—what haven't you used? Get rid of it.
-- **When you bring something new in:** Something old goes out. One in, one out.
-
-## Common Mistakes
-
-- **Keeping everything "just in case":** That's how you end up with a hoarder garage.
-- **No system:** Just throwing things on shelves doesn't work long-term.
-- **Rushing it:** This takes time. Do it right the first time.
+**Dumping:**
+"You never spend time with me and I'm lonely and you don't care!"
 
 ## The Win
 
-You can find your tools. Your car fits. Your wife can park in there. You look like you have your shit together. That's a win.`,
+You shared your feelings. She understood. You felt closer. That's a win.`,
   },
-  'build-garden-bed': {
-    id: 3,
-    title: 'Build a Simple Raised Garden Bed',
-    category: 'Outdoor',
-    difficulty: 'Medium',
-    time: '3-4 hours',
-    excerpt: 'Show off your skills and give your wife fresh herbs or veggies. This project looks impressive but is surprisingly straightforward.',
-    content: `## Why This Matters
-
-Fresh herbs and vegetables from your own garden? That's next-level. Your wife will be impressed, you'll save money, and you'll have something to show for a weekend project. Plus, gardening is actually pretty satisfying.
-
-## What You'll Need
-
-- 4 pieces of 2x8 or 2x10 lumber (8 feet long each)
-- 4 corner brackets (L-brackets)
-- Wood screws (2.5 inches)
-- Drill with drill bit
-- Level
-- Landscape fabric (optional but recommended)
-- Soil and compost
-- Plants or seeds
-
-**Cost:** About $50-80 depending on wood quality and size.
-
-## Step-by-Step
-
-### 1. Choose Your Location
-
-Pick a spot that gets at least 6 hours of sunlight per day. Make sure it's level and has good drainage. Not too close to trees (roots will compete for nutrients).
-
-**Size recommendation:** 4x4 feet is perfect for beginners. Big enough to grow plenty, small enough to manage.
-
-### 2. Cut Your Lumber
-
-Cut two 4-foot pieces and two 4-foot pieces (or whatever size you want). Most hardware stores will cut it for you if you ask.
-
-**Pro tip:** Use cedar or redwood if you can afford it. They last longer and resist rot.
-
-### 3. Assemble the Frame
-
-Lay out your boards in a rectangle. Use corner brackets to join them at the corners. Pre-drill holes to avoid splitting the wood, then screw in the brackets.
-
-**Make it square:** Measure diagonally from corner to corner. If both measurements are the same, it's square.
-
-### 4. Level the Ground
-
-Where you're placing the bed, level the ground. Remove grass, weeds, and rocks. You don't need to dig deep—just make it flat.
-
-### 5. Place the Frame
-
-Set your frame in place. Use a level to make sure it's even. If the ground isn't perfectly level, you can adjust by digging a bit more on the high side.
-
-### 6. Add Landscape Fabric (Optional)
-
-Line the bottom with landscape fabric. This prevents weeds from growing up into your bed while still allowing drainage.
-
-### 7. Fill with Soil
-
-Mix good quality topsoil with compost (about 70/30 ratio). Fill the bed almost to the top, leaving about an inch of space.
-
-**Don't skimp on soil:** Good soil = good plants. Bad soil = wasted effort.
-
-### 8. Plant Your Seeds or Seedlings
-
-Follow the instructions on your seed packets or plant tags. Different plants need different spacing.
-
-**Beginner-friendly plants:**
-- Herbs (basil, rosemary, thyme)
-- Lettuce
-- Tomatoes (if you have room)
-- Peppers
-
-### 9. Water and Maintain
-
-Water regularly, especially in the first few weeks. Check the soil—if it's dry an inch down, it's time to water.
-
-## Common Mistakes
-
-- **Wrong location:** Not enough sun = sad plants
-- **Bad soil:** Don't use dirt from your yard. Buy good soil.
-- **Overwatering:** More plants die from too much water than too little
-- **Too big too fast:** Start small. You can always build another one.
-
-## When to Build
-
-Early spring is ideal, but you can build anytime. Just plant according to the season.
-
-## The Win
-
-You built something. You're growing food. Your wife is impressed. You have fresh herbs for cooking. That's a win.`,
-  },
-  'deep-clean-oven': {
-    id: 4,
-    title: 'Deep Clean the Oven (The Right Way)',
-    category: 'Cleaning',
+  'daily-check-in': {
+    id: 21,
+    title: 'Do a Real Daily Check-In',
+    category: 'Communication',
     difficulty: 'Easy',
-    time: '45 min',
-    excerpt: 'No harsh chemicals, no hours of scrubbing. The method that actually works and doesn\'t make you want to throw the oven out the window.',
+    time: '10-15 min',
+    excerpt: 'Move beyond "how was your day?" Learn how to have meaningful daily conversations that show you care and help you stay connected.',
     content: `## Why This Matters
 
-Your oven is probably disgusting. Years of baked-on grease, food spills, and who knows what else. Cleaning it the wrong way is a nightmare. Do it the right way, and it's actually not that bad. Your wife will notice. Trust me.
+Daily check-ins keep you connected. They prevent small issues from becoming big problems. They show you care about her day and what's going on with her.
 
-## What You'll Need
+## The Secret: Make It a Ritual
 
-- Baking soda
-- White vinegar
-- Spray bottle
-- Sponge or scrub brush
-- Razor blade scraper (for glass door)
-- Old towels or rags
-- Patience (45 minutes, not 3 hours)
+Don't make it random. Make it a regular thing. Same time every day. Same place. It becomes something you both look forward to.
 
-## The Method That Actually Works
+## How to Do a Real Check-In
 
-### Step 1: Remove the Racks
+### 1. Pick a Time
 
-Take out the oven racks. Set them aside. You'll clean these separately in the sink with soap and water.
+Choose a time that works for both of you:
+- Morning coffee
+- After work
+- Before bed
+- During dinner
 
-**Pro tip:** Soak the racks in hot, soapy water while you clean the oven. Makes them way easier to clean.
+**The key:** Make it consistent. Same time, every day.
 
-### Step 2: Make the Paste
+### 2. Put Everything Away
 
-Mix baking soda with just enough water to make a thick paste. You want it spreadable but not runny. Think toothpaste consistency.
+No phones. No TV. No distractions. Just the two of you, talking.
 
-### Step 3: Spread the Paste
+### 3. Ask Better Questions
 
-Cover the entire inside of the oven with the baking soda paste. Don't be shy—get it everywhere. Avoid the heating elements if you can.
+Move beyond "how was your day?" Ask:
+- "What was the best part of your day?"
+- "What was the hardest part?"
+- "What are you looking forward to?"
+- "What's on your mind?"
 
-**How thick:** About 1/4 inch. You want good coverage.
+### 4. Actually Listen
 
-### Step 4: Let It Sit
+Don't just wait for your turn to talk. Listen. Ask follow-up questions. Show you're interested.
 
-Leave it overnight. Yes, overnight. The baking soda needs time to break down the grease and grime. This is the secret—let chemistry do the work.
+### 5. Share Your Day Too
 
-**Alternative:** If you're in a hurry, leave it for at least 2-3 hours. Overnight is better.
+It's not just about her. Share your day. What went well? What was hard? What are you thinking about?
 
-### Step 5: Wipe It Out
+### 6. Check In About Your Relationship
 
-After it's sat, use a damp rag or sponge to wipe out the paste. Most of the grime will come with it. You might need to scrub a bit, but it should come off easily.
+Every few days, check in about how things are going between you:
+- "How are we doing?"
+- "Is there anything you need from me?"
+- "What's working well for us right now?"
 
-**If it's stubborn:** Add a bit more baking soda paste to that spot and let it sit another 30 minutes.
+## What Makes It "Real"
 
-### Step 6: Spray with Vinegar
-
-Fill a spray bottle with white vinegar. Spray the entire inside of the oven. It'll fizz (that's the baking soda reacting). This helps break down any remaining residue.
-
-### Step 7: Final Wipe
-
-Wipe everything out with a clean, damp rag. Get all the paste and vinegar residue out.
-
-### Step 8: Clean the Glass Door
-
-For the glass door, use a razor blade scraper. Hold it at a 45-degree angle and scrape off the baked-on gunk. Be careful not to scratch the glass.
-
-**Pro tip:** Spray the glass with vinegar first to loosen things up.
-
-### Step 9: Clean the Racks
-
-By now, your racks have been soaking. Scrub them with a scrub brush or steel wool. Rinse and dry.
-
-### Step 10: Put It Back Together
-
-Put the racks back in. You're done.
-
-## Why This Works
-
-Baking soda is a mild abrasive that breaks down grease. The overnight soak gives it time to work. Vinegar helps dissolve remaining residue. Together, they're way more effective than harsh chemicals, and they won't make your kitchen smell like a chemical plant.
+- **Consistency:** Same time, every day
+- **Presence:** No distractions, just you two
+- **Curiosity:** Actually interested in her answers
+- **Vulnerability:** Share your own stuff too
+- **Connection:** It's about staying connected, not just checking a box
 
 ## Common Mistakes
 
-- **Rushing it:** If you don't let the baking soda sit long enough, you'll be scrubbing for hours.
-- **Using too much water:** The paste should be thick, not runny.
-- **Skipping the vinegar step:** It really does help.
-- **Trying to clean it in one go:** Let it sit overnight. Seriously.
-
-## When to Do This
-
-Do it when you don't need the oven for 12-24 hours. Weekend mornings are perfect.
+- **Making it transactional:** "Did you do X? Did you remember Y?"
+- **Not listening:** Asking questions but not paying attention to answers
+- **Making it about you:** Turning it into a chance to talk about your problems
+- **Skipping it:** "We're too busy" is how you drift apart
 
 ## The Win
 
-Your oven is clean. It didn't take 3 hours of scrubbing. Your wife noticed. You didn't use harsh chemicals. That's a win.`,
+You checked in. You stayed connected. You know what's going on with each other. That's a win.`,
   },
   'plan-perfect-date-night': {
     id: 5,
@@ -1525,104 +1330,1360 @@ Don't just say you're sorry. Say what you'll do differently.
 
 You apologized the right way. You took responsibility. You acknowledged the impact. You committed to doing better. That's a win.`,
   },
-  'install-smart-thermostat': {
-    id: 4,
-    title: 'Install a Smart Thermostat',
-    category: 'Smart Home',
-    difficulty: 'Medium',
-    time: '1 hour',
-    excerpt: 'Save money, impress your wife, and control the temperature from your phone. This upgrade pays for itself and makes you look tech-savvy.',
+  // Additional Communication guides
+  'express-gratitude-to-partner': {
+    id: 22,
+    title: 'Express Gratitude to Your Partner',
+    category: 'Communication',
+    difficulty: 'Easy',
+    time: '1 min',
+    excerpt: 'Learn how to thank your partner for specific things in ways that feel genuine and meaningful, not like you\'re checking a box.',
     content: `## Why This Matters
 
-Smart thermostats save money on energy bills, make your home more comfortable, and you can control them from your phone. Your wife will love being able to adjust the temperature without getting up. Plus, you look like you know what you're doing with technology.
+Gratitude strengthens bonds. When you express genuine gratitude, you're showing you notice what she does and you appreciate it. This creates a positive atmosphere and makes her feel valued.
 
-## What You'll Need
+## The Secret: Be Specific
 
-- Smart thermostat (Nest, Ecobee, or similar)
-- Screwdriver
-- Drill (if you need to mount it)
-- Level
-- Wire labels (optional but helpful)
-- Smartphone with the app installed
+Generic "thanks" doesn't land. Specific gratitude shows you're paying attention and you actually appreciate what she did.
 
-**Cost:** $100-250 depending on the model. It pays for itself in energy savings within a year or two.
+## How to Express Gratitude
 
-## Step-by-Step
+### 1. Be Specific
 
-### Step 1: Turn Off the Power
+**Generic:** "Thanks for dinner."
+**Specific:** "Thanks for making that pasta dish. I know you were tired, and it meant a lot that you still cooked."
 
-Go to your circuit breaker and turn off the power to your HVAC system. This is important—you're working with electrical wires.
+### 2. Notice the Effort
 
-**Safety first:** Test the wires with a voltage tester to make sure they're off. Don't skip this.
+Acknowledge the work she put in, not just the result:
+- "I appreciate how much thought you put into planning this."
+- "Thank you for handling that stressful situation. I know that wasn't easy."
 
-### Step 2: Remove the Old Thermostat
+### 3. Notice Character
 
-Unscrew the old thermostat from the wall. Gently pull it away. You'll see wires connected to terminals.
+Thank her for who she is, not just what she does:
+- "I'm grateful for how patient you are with me."
+- "Thank you for always being so thoughtful."
 
-**Take a photo:** Before you disconnect anything, take a picture of the wiring. This is your backup if you forget what goes where.
+### 4. Do It Regularly
 
-### Step 3: Label the Wires
+Don't wait for big moments. Express gratitude for small things too:
+- "Thanks for making coffee this morning."
+- "I appreciate you taking care of that."
 
-Label each wire with the terminal it was connected to. Use tape or wire labels. Common labels:
-- R (power)
-- W (heat)
-- Y (cooling)
-- G (fan)
-- C (common)
+## When to Express Gratitude
 
-**Pro tip:** If you don't have a C wire, you might need an adapter. Check your thermostat's requirements.
+- When she does something for you
+- When she handles something stressful
+- When she shows up for you
+- When she makes an effort
+- Just because (gratitude for who she is)
 
-### Step 4: Disconnect the Wires
+## Common Mistakes
 
-Carefully disconnect each wire. Don't let them fall back into the wall. If they do, you'll have to fish them out, which is annoying.
-
-**Trick:** Wrap the wires around a pencil to keep them from falling.
-
-### Step 5: Mount the New Base
-
-Hold the new thermostat's base plate against the wall. Use a level to make sure it's straight. Mark the screw holes, then drill and mount it.
-
-**If the holes don't line up:** You might need to patch the old holes and drill new ones.
-
-### Step 6: Connect the Wires
-
-Connect each wire to the corresponding terminal on the new thermostat. Match the labels you made earlier.
-
-**Double-check:** Make sure each wire is securely connected. Loose connections cause problems.
-
-### Step 7: Attach the Thermostat
-
-Snap the thermostat onto the base plate. It should click into place.
-
-### Step 8: Turn the Power Back On
-
-Go back to the circuit breaker and turn the power back on.
-
-### Step 9: Set It Up
-
-Follow the on-screen instructions to set up your new thermostat. You'll need to:
-- Connect to Wi-Fi
-- Set your preferences
-- Download the app on your phone
-- Link it to your account
-
-### Step 10: Test It
-
-Test both heating and cooling to make sure everything works. Adjust the temperature and make sure the system responds.
-
-## Common Issues
-
-- **No C wire:** Some older systems don't have a C (common) wire. You might need an adapter. Check your thermostat's instructions.
-- **Wrong wire labels:** If your system doesn't work, double-check your wire connections against the photo you took.
-- **Wi-Fi connection:** Make sure your thermostat is close enough to your router, or use a Wi-Fi extender.
-
-## When to Call a Pro
-
-If you're not comfortable working with electrical wires, or if your system is complex (like a heat pump with multiple stages), call an HVAC professional. No shame in it.
+- **Being generic:** "Thanks" is better than nothing, but specific is better
+- **Only thanking for big things:** Notice and appreciate the small things too
+- **Making it transactional:** Don't only thank her when you want something
+- **Forgetting to thank:** If you notice it, say it
 
 ## The Win
 
-You installed smart home technology. You can control your thermostat from your phone. Your energy bills will go down. Your wife is impressed. That's a win.`,
+You expressed genuine gratitude. She felt seen and appreciated. You strengthened your bond. That's a win.`,
+  },
+  'practice-5-1-ratio': {
+    id: 23,
+    title: 'Practice the 5:1 Ratio',
+    category: 'Communication',
+    difficulty: 'Medium',
+    time: 'Ongoing',
+    excerpt: 'Research shows healthy relationships need 5 positive interactions for every negative one. Learn how to build this ratio and rebuild connection.',
+    content: `## Why This Matters
+
+Research from relationship expert John Gottman shows that healthy relationships need 5 positive interactions for every negative one. If you're criticizing, complaining, or being negative more than you're being positive, you're eroding your connection.
+
+## The Secret: Focus on What's Working
+
+It's easy to notice what's wrong. It takes effort to notice what's right. Make that effort. Build the positive interactions.
+
+## How to Build the 5:1 Ratio
+
+### 1. Count Your Interactions
+
+For one day, notice:
+- How many positive things you say or do
+- How many negative things you say or do
+
+**The goal:** 5 positives for every 1 negative.
+
+### 2. Increase Positives
+
+Find ways to add positive interactions:
+- Compliments
+- Appreciation
+- Physical affection
+- Acts of service
+- Quality time
+- Words of affirmation
+
+### 3. Reduce Negatives
+
+Notice when you're being negative:
+- Criticism
+- Complaints
+- Sarcasm
+- Defensiveness
+- Stonewalling
+
+**The rule:** If you can't say something positive, at least don't say something negative.
+
+### 4. Make It a Habit
+
+This isn't a one-time thing. Make it a daily practice. Notice what's working. Express appreciation. Build the positive.
+
+## Examples of Positive Interactions
+
+- "I appreciate you doing that."
+- "You handled that really well."
+- A hug or kiss
+- Doing something helpful without being asked
+- Asking about her day
+- A genuine compliment
+
+## Examples of Negative Interactions
+
+- Criticism: "You always..."
+- Complaints: "Why didn't you..."
+- Sarcasm: "Oh, great..."
+- Defensiveness: "That's not my fault..."
+- Stonewalling: Ignoring or shutting down
+
+## Common Mistakes
+
+- **Only focusing on negatives:** What's wrong is easy to see. What's right takes effort.
+- **Not counting:** You probably have more negatives than you think.
+- **Faking it:** Positives need to be genuine, not forced.
+- **Giving up:** Building this ratio takes time. Keep at it.
+
+## The Win
+
+You built the 5:1 ratio. You're focusing on what's working. Your relationship feels more positive. That's a win.`,
+  },
+  // Additional Intimacy guides
+  'practice-acts-of-service': {
+    id: 24,
+    title: 'Practice Acts of Service as a Love Language',
+    category: 'Intimacy',
+    difficulty: 'Easy',
+    time: 'Varies',
+    excerpt: 'Learn how to show love through actions. Do things for her that make her life easier and show you care.',
+    content: `## Why This Matters
+
+For some people, actions speak louder than words. When acts of service are her love language, doing things for her shows love in a way words can't.
+
+## The Secret: Do Things That Matter to Her
+
+It's not about what you think she needs. It's about what actually makes her life easier or better.
+
+## How to Practice Acts of Service
+
+### 1. Notice What She Does
+
+Pay attention to:
+- What tasks stress her out
+- What she complains about having to do
+- What she does regularly that you could do
+- What would give her a break
+
+### 2. Do It Without Being Asked
+
+The whole point is to take something off her plate. If she has to ask, it's not the same.
+
+### 3. Do It Well
+
+Don't half-ass it. If you're going to do it, do it right:
+- Clean the kitchen, not just load the dishwasher
+- Handle the morning routine, not just make coffee
+- Take care of something completely, not just start it
+
+### 4. Don't Make It About You
+
+Don't announce it. Don't expect thanks. Just do it. Acts of service are about making her life easier, not getting credit.
+
+## Examples of Acts of Service
+
+- Handle the morning routine (breakfast, kids, etc.)
+- Clean something without being asked
+- Take over a task she usually does
+- Handle something stressful for her
+- Do something that gives her a break
+- Take care of something she's been putting off
+
+## What Makes It Meaningful
+
+- **It's something she actually needs:** Not what you think she needs
+- **You do it without being asked:** Anticipate, don't wait
+- **You do it well:** Complete it, don't half-do it
+- **You don't make it about you:** Just do it, don't announce it
+
+## Common Mistakes
+
+- **Doing what you want to do:** It's about what she needs, not what you think she needs
+- **Half-doing it:** If you're going to do it, do it right
+- **Expecting thanks:** Acts of service aren't transactional
+- **Making her manage you:** Don't ask what to do—figure it out
+
+## The Win
+
+You did something that made her life easier. She felt cared for. You showed love through action. That's a win.`,
+  },
+  'practice-words-of-affirmation': {
+    id: 25,
+    title: 'Practice Words of Affirmation',
+    category: 'Intimacy',
+    difficulty: 'Easy',
+    time: '30 seconds',
+    excerpt: 'Learn how to use words to make her feel deeply loved. Speak her love language through genuine, specific affirmations.',
+    content: `## Why This Matters
+
+For some people, words have power. When words of affirmation are her love language, what you say (or don't say) matters deeply. Your words can build her up or tear her down.
+
+## The Secret: Be Specific and Genuine
+
+Generic words don't land. Specific, genuine words of affirmation show you're paying attention and you actually see her.
+
+## How to Practice Words of Affirmation
+
+### 1. Notice What You Appreciate
+
+Pay attention to:
+- Her character traits
+- How she handles things
+- What she does for you
+- Who she is as a person
+
+### 2. Be Specific
+
+**Generic:** "You're great."
+**Specific:** "I love how patient you are with the kids. That's really impressive."
+
+### 3. Focus on Character
+
+Affirm who she is, not just what she does:
+- "You're so resilient."
+- "I admire how you handle challenges."
+- "You have such a good heart."
+
+### 4. Say It Regularly
+
+Don't wait for special occasions. Say it when you notice it. Make it a habit.
+
+## Examples of Words of Affirmation
+
+- "I'm proud of you."
+- "You handled that really well."
+- "I appreciate how you..."
+- "You're so good at..."
+- "I love how you..."
+- "You make me feel..."
+
+## What Makes It Meaningful
+
+- **It's specific:** Not generic, but specific to her
+- **It's genuine:** You actually mean it
+- **It's about character:** Who she is, not just what she does
+- **It's regular:** You say it often, not just on special occasions
+
+## Common Mistakes
+
+- **Being generic:** "You're great" doesn't land like specific affirmations
+- **Only saying it when you want something:** Affirmations aren't transactional
+- **Not saying it enough:** If you notice it, say it
+- **Focusing only on appearance:** Character affirmations hit deeper
+
+## The Win
+
+You affirmed her. She felt seen and valued. You spoke her love language. That's a win.`,
+  },
+  // Additional Partnership guides
+  'take-over-chore-completely': {
+    id: 26,
+    title: 'Take Over a Chore Completely (Without Being Asked)',
+    category: 'Partnership',
+    difficulty: 'Easy',
+    time: 'Varies',
+    excerpt: 'Pick one of her regular chores and own it. Do it consistently, do it well, and do it without her having to think about it.',
+    content: `## Why This Matters
+
+When you take over a chore completely, you're taking something off her mental load. She doesn't have to think about it, manage it, or remind you. You just do it. That's what partnership looks like.
+
+## The Secret: Own It Completely
+
+Don't just do it sometimes. Don't do it when asked. Own it. Make it yours. Do it consistently and well.
+
+## How to Take Over a Chore
+
+### 1. Pick Something She Usually Does
+
+Look at what she does regularly:
+- Morning routine
+- Meal planning
+- Laundry
+- Cleaning something specific
+- Managing something
+
+### 2. Learn How She Does It
+
+Ask her how she does it (once). Learn her system. Then do it that way.
+
+### 3. Do It Consistently
+
+Don't do it once and forget. Make it yours. Do it regularly, without being asked.
+
+### 4. Do It Well
+
+Don't half-do it. Do it completely. Do it the way she would do it.
+
+## Examples of Chores to Take Over
+
+- Morning routine (breakfast, kids, etc.)
+- Meal planning and grocery shopping
+- Laundry (wash, dry, fold, put away)
+- Cleaning a specific room regularly
+- Managing bills or paperwork
+- Taking care of pets
+- Handling school/kid stuff
+
+## What "Completely" Means
+
+- **You do it regularly:** Not just when you feel like it
+- **You do it well:** Not half-done
+- **You do it without being asked:** She doesn't have to think about it
+- **You own it:** It's yours now, not hers
+
+## Common Mistakes
+
+- **Doing it once and stopping:** Consistency matters
+- **Doing it your way:** Learn her way and do it that way
+- **Half-doing it:** If you're going to do it, do it completely
+- **Making her manage you:** Don't ask what to do—just do it
+
+## The Win
+
+You took over a chore completely. She doesn't have to think about it anymore. You're a true partner. That's a win.`,
+  },
+  'be-proactive-around-house': {
+    id: 27,
+    title: 'Be Proactive Around the House',
+    category: 'Partnership',
+    difficulty: 'Easy',
+    time: 'Ongoing',
+    excerpt: 'Notice what needs to be done and do it. Don\'t wait to be told. Don\'t wait for her to do it. Just notice and do it.',
+    content: `## Why This Matters
+
+When you're proactive, you're taking initiative. You're showing you're paying attention and you're a partner, not just a passenger. This prevents small tasks from becoming sources of resentment.
+
+## The Secret: Notice, Don't Wait
+
+Don't wait for her to tell you what needs doing. Look around. Notice. Do it.
+
+## How to Be Proactive
+
+### 1. Look Around
+
+Regularly scan your environment:
+- What's out of place?
+- What needs cleaning?
+- What needs fixing?
+- What needs doing?
+
+### 2. Notice Patterns
+
+Pay attention to:
+- What she does regularly
+- What stresses her out
+- What she complains about
+- What she handles that you could handle
+
+### 3. Do It Without Being Asked
+
+If you see something that needs doing, do it. Don't announce it. Don't wait for permission. Just do it.
+
+### 4. Make It a Habit
+
+This isn't a one-time thing. Make noticing and doing a regular habit.
+
+## Examples of Being Proactive
+
+- Empty the dishwasher when it's clean
+- Take out trash when it's full
+- Clean up messes you see
+- Handle something before it becomes a problem
+- Do something that prevents her from having to do it
+- Notice what needs restocking and restock it
+
+## What Makes It "Proactive"
+
+- **You notice it:** You're paying attention
+- **You do it without being asked:** You take initiative
+- **You do it before it's a problem:** You prevent issues
+- **You do it consistently:** It's a habit, not a one-time thing
+
+## Common Mistakes
+
+- **Waiting to be told:** That's reactive, not proactive
+- **Only doing obvious things:** Notice the less obvious things too
+- **Doing it once:** Make it a habit
+- **Making her manage you:** Don't ask what to do—figure it out
+
+## The Win
+
+You were proactive. You noticed what needed doing and did it. She didn't have to think about it or ask. That's a win.`,
+  },
+  // Additional Romance guides
+  'plan-surprise-date': {
+    id: 28,
+    title: 'Plan a Surprise Date (That She\'ll Actually Love)',
+    category: 'Romance',
+    difficulty: 'Medium',
+    time: '1-2 hours planning',
+    excerpt: 'Learn how to plan a surprise that feels thoughtful and exciting, not overwhelming or inconvenient.',
+    content: `## Why This Matters
+
+Surprises show you're thinking about her. They show you put effort into making her feel special. But surprises can backfire if you don't think them through.
+
+## The Secret: Think About Her, Not You
+
+This isn't about what you want to do. It's about what she'd actually enjoy. What does she like? What would make her feel special? Start there.
+
+## How to Plan a Surprise Date
+
+### 1. Consider Her Preferences
+
+Think about:
+- What does she like to do?
+- What relaxes her?
+- What makes her feel special?
+- What has she mentioned wanting to do?
+
+### 2. Consider Her Energy Level
+
+Is she exhausted? Plan something low-key. Is she energized? Maybe something more active. Read the room.
+
+### 3. Handle the Logistics
+
+You plan it. You handle:
+- Reservations
+- Timing
+- Details
+- Everything
+
+Don't make her think about any of it.
+
+### 4. Give Her a Heads Up (If Needed)
+
+Some people don't like complete surprises. If that's her, give her a general heads up: "I'm planning something for us Friday. Keep it free."
+
+### 5. Keep It Simple
+
+One good thing is better than three mediocre things. Don't overcomplicate it.
+
+## What Makes a Surprise Good
+
+- **It's something she'd actually enjoy:** Not what you want to do
+- **It's well-planned:** You handled the logistics
+- **It matches her energy:** You read the room
+- **It's thoughtful:** You put effort into it
+
+## Common Mistakes
+
+- **Planning what you want:** This is about her, not you
+- **Not considering her energy:** A fancy dinner when she's exhausted isn't thoughtful
+- **Overcomplicating it:** Simple and thoughtful beats elaborate
+- **Making her manage it:** You plan it, you handle it
+
+## The Win
+
+You planned a surprise. She loved it. She felt special and cared for. That's a win.`,
+  },
+  'give-physical-affection': {
+    id: 29,
+    title: 'Give Physical Affection (Without Expecting Sex)',
+    category: 'Romance',
+    difficulty: 'Easy',
+    time: 'Ongoing',
+    excerpt: 'Learn how to show physical affection that isn\'t about sex. Hugs, hand-holding, and cuddling rebuild physical connection.',
+    content: `## Why This Matters
+
+Physical touch releases oxytocin (the bonding hormone). But if every touch leads to sex, she'll start avoiding touch. Non-sexual physical affection rebuilds the physical connection that makes you feel like partners.
+
+## The Secret: Touch Without Agenda
+
+Touch her because you want to connect, not because you want something. Make it about connection, not expectation.
+
+## How to Give Physical Affection
+
+### 1. Start Small
+
+- A hug when you see her
+- A kiss on the forehead
+- Holding her hand
+- A hand on her back
+
+### 2. Make It Regular
+
+Don't only touch her when you want sex. Touch her regularly, just because.
+
+### 3. Make It About Connection
+
+Touch her to connect, not to get something. Make it about showing love, not about getting something in return.
+
+### 4. Notice What She Likes
+
+Pay attention to:
+- What kind of touch does she respond to?
+- When does she seem to enjoy it?
+- What makes her pull away?
+
+## Examples of Non-Sexual Physical Affection
+
+- Hugs (long, not quick)
+- Hand-holding
+- Cuddling on the couch
+- Back rubs or massages
+- Kisses (forehead, cheek, not just lips)
+- Sitting close
+- Touching her arm or back
+
+## What Makes It Meaningful
+
+- **It's not about sex:** Touch for connection, not expectation
+- **It's regular:** You do it often, not just when you want something
+- **It's about her:** What she likes, not what you want
+- **It's genuine:** You actually want to connect
+
+## Common Mistakes
+
+- **Every touch leading to sex:** That makes her avoid touch
+- **Only touching when you want something:** Touch regularly, just because
+- **Not noticing her response:** Pay attention to what she likes
+- **Making it about you:** It's about connection, not your needs
+
+## The Win
+
+You gave physical affection. She felt connected. You rebuilt physical intimacy. That's a win.`,
+  },
+  // Additional Gratitude guides
+  'send-gratitude-text': {
+    id: 30,
+    title: 'Send a Gratitude Text',
+    category: 'Gratitude',
+    difficulty: 'Easy',
+    time: '30 seconds',
+    excerpt: 'Learn how to send a quick text expressing gratitude. A simple way to brighten her day and show you\'re thinking of her.',
+    content: `## Why This Matters
+
+A quick text expressing gratitude shows you're thinking of her even when you're apart. It's a simple way to brighten her day and make her feel appreciated.
+
+## The Secret: Be Specific
+
+Generic "thanks" doesn't land. Specific gratitude shows you're paying attention.
+
+## How to Send a Gratitude Text
+
+### 1. Be Specific
+
+**Generic:** "Thanks!"
+**Specific:** "Thanks for handling that stressful situation this morning. I know that wasn't easy, and I appreciate you."
+
+### 2. Notice What She Does
+
+Pay attention to:
+- What did she handle today?
+- What did she do for you?
+- What effort did she make?
+
+### 3. Send It When You Notice It
+
+Don't wait. If you notice something, text about it.
+
+### 4. Keep It Simple
+
+You don't need a novel. A few sentences is enough.
+
+## Examples of Gratitude Texts
+
+- "Thanks for making coffee this morning. I really needed that."
+- "I appreciate you handling that. I know it was stressful."
+- "Thank you for [specific thing]. It meant a lot."
+- "I'm grateful for how you [specific thing]. You're amazing."
+
+## What Makes It Meaningful
+
+- **It's specific:** Not generic, but specific to what she did
+- **It's timely:** You send it when you notice it
+- **It's genuine:** You actually mean it
+- **It's simple:** A few sentences, not a novel
+
+## Common Mistakes
+
+- **Being generic:** "Thanks" is better than nothing, but specific is better
+- **Only texting when you want something:** Gratitude isn't transactional
+- **Not sending it:** If you notice it, say it
+- **Overthinking it:** Keep it simple
+
+## The Win
+
+You sent a gratitude text. She felt appreciated. You brightened her day. That's a win.`,
+  },
+  'morning-gratitude': {
+    id: 31,
+    title: 'Start the Day with Gratitude',
+    category: 'Gratitude',
+    difficulty: 'Easy',
+    time: '30 seconds',
+    excerpt: 'Learn how to start the day by telling your partner one thing you appreciate about them. Sets a positive tone and creates connection.',
+    content: `## Why This Matters
+
+Starting the day with gratitude sets a positive tone. It creates connection before life gets busy. It shows you're thinking about her and you appreciate her.
+
+## The Secret: Make It a Habit
+
+Don't do it once. Make it a daily habit. Same time, every day.
+
+## How to Start the Day with Gratitude
+
+### 1. Pick a Time
+
+Choose when you'll do it:
+- When you first see her in the morning
+- Over morning coffee
+- Before you leave for work
+- During breakfast
+
+### 2. Be Specific
+
+**Generic:** "I appreciate you."
+**Specific:** "I appreciate how patient you are with the kids in the mornings. That's really impressive."
+
+### 3. Make It About Her
+
+Focus on:
+- Her character
+- What she does
+- Who she is
+- What you're grateful for about her
+
+### 4. Keep It Simple
+
+You don't need a speech. One specific thing is enough.
+
+## Examples of Morning Gratitude
+
+- "I'm grateful for how you always make mornings easier for us."
+- "I appreciate you getting up early to handle [thing]. Thank you."
+- "I'm grateful for your patience. I see how you handle [situation]."
+- "Thank you for [specific thing]. It means a lot."
+
+## What Makes It Meaningful
+
+- **It's specific:** Not generic, but specific to her
+- **It's regular:** You do it daily, not just sometimes
+- **It's genuine:** You actually mean it
+- **It's timely:** You do it in the morning, when it sets the tone
+
+## Common Mistakes
+
+- **Being generic:** Specific gratitude lands better
+- **Skipping it:** Make it a habit, don't skip it
+- **Making it about you:** Focus on her, not you
+- **Overthinking it:** Keep it simple
+
+## The Win
+
+You started the day with gratitude. You set a positive tone. She felt appreciated. That's a win.`,
+  },
+  // Additional Conflict guides
+  'use-i-statements': {
+    id: 32,
+    title: 'Use "I" Statements in Conflicts',
+    category: 'Conflict Resolution',
+    difficulty: 'Medium',
+    time: 'Ongoing',
+    excerpt: 'Learn how to express yourself in conflicts using "I" statements instead of "you" statements. Prevents defensiveness and opens dialogue.',
+    content: `## Why This Matters
+
+"You" statements sound like accusations. They make her defensive. "I" statements express how you feel without blaming. They open dialogue instead of closing it.
+
+## The Secret: Express Your Feelings, Don't Blame
+
+"I" statements are about how you feel, not about what she did wrong. They express your experience without making her the problem.
+
+## How to Use "I" Statements
+
+### 1. Start with "I"
+
+"I feel [emotion] when [situation]."
+
+Not: "You make me feel..." or "You always..."
+
+### 2. Express Your Feelings
+
+Name the emotion:
+- "I feel hurt..."
+- "I feel frustrated..."
+- "I feel disconnected..."
+- "I feel overwhelmed..."
+
+### 3. Describe the Situation
+
+What happened that led to this feeling:
+- "...when we don't spend time together."
+- "...when I feel like I'm not being heard."
+- "...when we're both stressed and snapping at each other."
+
+### 4. Avoid Blame
+
+Don't make it about what she did wrong. Make it about how you feel.
+
+## Examples of "I" Statements
+
+**Instead of:** "You never listen to me."
+**Say:** "I feel unheard when I'm trying to tell you something and you're on your phone."
+
+**Instead of:** "You always make plans without asking me."
+**Say:** "I feel left out when plans are made without me being included."
+
+**Instead of:** "You're always stressed."
+**Say:** "I feel disconnected when we're both stressed and we don't have time to connect."
+
+## What Makes "I" Statements Work
+
+- **They express feelings:** Not accusations, but feelings
+- **They avoid blame:** They're about your experience, not her fault
+- **They open dialogue:** They invite conversation, not defensiveness
+- **They're specific:** They describe the situation, not vague complaints
+
+## Common Mistakes
+
+- **Starting with "you":** That's an accusation, not an "I" statement
+- **Blaming:** "I feel hurt because you..." is still blaming
+- **Being vague:** Be specific about the situation
+- **Using it to manipulate:** "I" statements are about expressing feelings, not getting your way
+
+## The Win
+
+You used "I" statements. You expressed your feelings without blame. She didn't get defensive. You opened dialogue. That's a win.`,
+  },
+  'make-amends': {
+    id: 33,
+    title: 'Make Amends After a Mistake',
+    category: 'Conflict Resolution',
+    difficulty: 'Medium',
+    time: 'Varies',
+    excerpt: 'Learn how to not just apologize, but actually make amends. Take concrete steps to repair trust and show you\'re committed to doing better.',
+    content: `## Why This Matters
+
+An apology is words. Amends are actions. Making amends shows you're not just sorry—you're committed to doing better. It repairs trust and heals hurts.
+
+## The Secret: Actions Speak Louder
+
+Don't just say you're sorry. Show you're sorry. Take concrete steps to make things right.
+
+## How to Make Amends
+
+### 1. Apologize Sincerely
+
+Start with a real apology:
+- Take responsibility
+- Acknowledge the impact
+- Don't make excuses
+
+### 2. Ask What You Can Do
+
+Ask her: "What can I do to make this right?" or "How can I repair this?"
+
+### 3. Take Concrete Steps
+
+Do something specific:
+- Change your behavior
+- Fix what you broke
+- Make up for what you did
+- Show you're committed to doing better
+
+### 4. Follow Through
+
+Don't just say you'll do it. Actually do it. And keep doing it.
+
+## Examples of Making Amends
+
+**If you forgot something important:**
+- Apologize
+- Set up systems so it doesn't happen again
+- Make it up to her in a specific way
+
+**If you hurt her feelings:**
+- Apologize
+- Understand why it hurt
+- Change your behavior
+- Show you're committed to doing better
+
+**If you broke trust:**
+- Apologize
+- Take responsibility
+- Be transparent
+- Show through actions that you're trustworthy
+
+## What Makes Amends Meaningful
+
+- **They're specific:** Not vague promises, but specific actions
+- **They address the impact:** They repair what was broken
+- **They show commitment:** You're not just sorry, you're committed to change
+- **They're ongoing:** You follow through, not just do it once
+
+## Common Mistakes
+
+- **Just apologizing:** Words aren't enough—you need actions
+- **Making vague promises:** Be specific about what you'll do
+- **Not following through:** If you say you'll do it, do it
+- **Making it about you:** It's about repairing what you broke, not about you
+
+## The Win
+
+You made amends. You took concrete steps to repair trust. She saw you're committed to doing better. That's a win.`,
+  },
+  // Additional Reconnection guides
+  'sit-close-and-talk': {
+    id: 34,
+    title: 'Sit Close and Talk',
+    category: 'Reconnection',
+    difficulty: 'Easy',
+    time: '15-30 min',
+    excerpt: 'Learn how physical proximity increases emotional connection. Sit side-by-side instead of across from each other and have a conversation.',
+    content: `## Why This Matters
+
+Physical proximity increases emotional intimacy. When you sit side-by-side instead of across from each other, conversations feel more connected. It's a simple way to rebuild the connection that got lost.
+
+## The Secret: Proximity Creates Connection
+
+Being physically close while talking creates a different kind of connection than sitting across from each other. It feels more intimate, more connected.
+
+## How to Sit Close and Talk
+
+### 1. Choose Side-by-Side
+
+Instead of sitting across from each other:
+- Sit on the same couch
+- Sit next to each other on a bench
+- Sit side-by-side at a table
+
+### 2. Be Close
+
+Don't sit at opposite ends. Sit close. Your bodies should be near each other.
+
+### 3. Actually Talk
+
+This isn't about watching TV together. It's about talking:
+- Ask questions
+- Share your day
+- Talk about your relationship
+- Have a real conversation
+
+### 4. Make It Regular
+
+Don't do it once. Make it a regular thing. Same time, same place.
+
+## What Makes It Work
+
+- **Physical proximity:** You're close, not far apart
+- **Actual conversation:** You're talking, not just being near each other
+- **Regularity:** You do it often, not just sometimes
+- **Presence:** You're actually there, not distracted
+
+## Common Mistakes
+
+- **Sitting across from each other:** That's not the same
+- **Not actually talking:** Being near each other isn't enough—you need to talk
+- **Being distracted:** Put your phone away, be present
+- **Only doing it once:** Make it a regular thing
+
+## The Win
+
+You sat close and talked. You felt more connected. Physical proximity increased emotional intimacy. That's a win.`,
+  },
+  'practice-turning-toward': {
+    id: 35,
+    title: 'Practice Turning Toward Her Bids for Connection',
+    category: 'Reconnection',
+    difficulty: 'Easy',
+    time: 'Ongoing',
+    excerpt: 'Learn to recognize when she\'s reaching out for connection and how to respond positively. Small moments build big emotional bonds.',
+    content: `## Why This Matters
+
+Research from relationship expert John Gottman shows that turning toward your partner's "bids for connection" is crucial for relationship health. When she reaches out, how you respond determines whether you connect or drift apart.
+
+## The Secret: Notice and Respond
+
+She's constantly making small bids for connection. A comment, a question, a gesture. Notice them. Respond positively. Turn toward her, not away.
+
+## How to Turn Toward Bids
+
+### 1. Notice the Bid
+
+Pay attention to:
+- Comments she makes
+- Questions she asks
+- Gestures she makes
+- Times she's trying to connect
+
+### 2. Respond Positively
+
+When she makes a bid:
+- Acknowledge it
+- Engage with it
+- Show interest
+- Be present
+
+### 3. Don't Turn Away
+
+Avoid:
+- Ignoring her
+- Giving one-word answers
+- Being distracted
+- Making it about you
+
+### 4. Make It a Habit
+
+This isn't a one-time thing. Make turning toward her a regular habit.
+
+## Examples of Bids for Connection
+
+- A comment about her day
+- A question about something
+- A gesture (touching your arm, etc.)
+- Sharing something she's thinking about
+- Asking for your attention
+
+## Examples of Turning Toward
+
+**She says:** "Look at this sunset."
+**You turn toward:** "Wow, that's beautiful. Let's watch it together."
+**You turn away:** "Yeah." (keeps looking at phone)
+
+**She asks:** "How was your day?"
+**You turn toward:** "It was good. How was yours? Tell me about it."
+**You turn away:** "Fine." (one word, no follow-up)
+
+## What Makes It Work
+
+- **You notice the bid:** You're paying attention
+- **You respond positively:** You engage, don't dismiss
+- **You're present:** You're actually there, not distracted
+- **You do it consistently:** It's a habit, not occasional
+
+## Common Mistakes
+
+- **Not noticing bids:** You miss them because you're distracted
+- **Turning away:** Ignoring, dismissing, or being distracted
+- **Making it about you:** Turning her bid into a chance to talk about yourself
+- **Only doing it sometimes:** Make it a habit, not occasional
+
+## The Win
+
+You turned toward her bid. You responded positively. You connected. Small moments built big bonds. That's a win.`,
+  },
+  // Additional Quality Time guides
+  'create-morning-ritual': {
+    id: 36,
+    title: 'Create a Morning Ritual Together',
+    category: 'Quality Time',
+    difficulty: 'Easy',
+    time: '10-30 min daily',
+    excerpt: 'Learn how to create a small daily ritual—morning coffee, walk, or check-in. Consistency builds connection and creates predictable connection points.',
+    content: `## Why This Matters
+
+Small daily rituals create predictable connection points. They give you time together before life gets busy. Consistency builds connection and prevents you from drifting apart.
+
+## The Secret: Make It Consistent
+
+The power is in consistency. Same time, every day. It becomes something you both look forward to.
+
+## How to Create a Morning Ritual
+
+### 1. Pick Something Simple
+
+Choose something that's:
+- Easy to do
+- Doesn't take long
+- You can do consistently
+- You both enjoy
+
+### 2. Pick a Time
+
+Choose when you'll do it:
+- First thing in the morning
+- After you wake up
+- Over morning coffee
+- Before you start your day
+
+### 3. Make It Consistent
+
+Do it at the same time, every day. Consistency is what makes it powerful.
+
+### 4. Keep It Simple
+
+Don't overcomplicate it. A simple ritual is better than a complicated one you can't maintain.
+
+## Examples of Morning Rituals
+
+- Morning coffee together (10-15 min)
+- A short walk together (15-20 min)
+- Breakfast together (20-30 min)
+- A morning check-in (5-10 min)
+- Sitting together before the day starts (10-15 min)
+
+## What Makes It Work
+
+- **It's consistent:** Same time, every day
+- **It's simple:** Easy to do, not complicated
+- **It's together:** You're both there, both engaged
+- **It's regular:** You do it daily, not just sometimes
+
+## Common Mistakes
+
+- **Making it complicated:** Keep it simple
+- **Not being consistent:** Do it every day, not just when you feel like it
+- **Being distracted:** Be present, not on your phone
+- **Giving up:** Stick with it, even when it's hard
+
+## The Win
+
+You created a morning ritual. You're connecting daily. You're building consistency. That's a win.`,
+  },
+  'create-evening-ritual': {
+    id: 37,
+    title: 'Create an Evening Ritual Together',
+    category: 'Quality Time',
+    difficulty: 'Easy',
+    time: '10-30 min daily',
+    excerpt: 'Learn how to create a small daily ritual at the end of the day—evening walk, bedtime check-in, or quiet time together. Consistency rebuilds connection.',
+    content: `## Why This Matters
+
+Evening rituals give you time together at the end of the day. They help you process the day together, reconnect, and end the day on a positive note.
+
+## The Secret: Make It a Wind-Down
+
+Evening rituals should help you both wind down and connect. They're about ending the day together, not adding stress.
+
+## How to Create an Evening Ritual
+
+### 1. Pick Something Relaxing
+
+Choose something that:
+- Helps you both wind down
+- Doesn't require energy
+- You can do consistently
+- Feels good
+
+### 2. Pick a Time
+
+Choose when you'll do it:
+- After dinner
+- Before bed
+- End of the day
+- When you're both home
+
+### 3. Make It Consistent
+
+Do it at the same time, every day. Consistency is what makes it powerful.
+
+### 4. Keep It Simple
+
+Don't overcomplicate it. A simple ritual is better than a complicated one.
+
+## Examples of Evening Rituals
+
+- Evening walk together (15-20 min)
+- Bedtime check-in (5-10 min)
+- Quiet time together (10-15 min)
+- Tea or hot drink together (10-15 min)
+- Sitting together and talking (15-20 min)
+
+## What Makes It Work
+
+- **It's consistent:** Same time, every day
+- **It's relaxing:** Helps you wind down, not add stress
+- **It's together:** You're both there, both engaged
+- **It's regular:** You do it daily, not just sometimes
+
+## Common Mistakes
+
+- **Making it complicated:** Keep it simple
+- **Not being consistent:** Do it every day
+- **Being distracted:** Be present, not on your phone
+- **Making it about logistics:** It's about connection, not planning
+
+## The Win
+
+You created an evening ritual. You're ending the day together. You're building consistency. That's a win.`,
+  },
+  // Additional Outdoor guides
+  'bike-ride-together': {
+    id: 38,
+    title: 'Go for a Bike Ride Together',
+    category: 'Outdoor Activities',
+    difficulty: 'Easy',
+    time: '1-2 hours',
+    excerpt: 'Learn how to plan and execute a bike ride together. Explore local trails, get exercise, and create quality time in nature.',
+    content: `## Why This Matters
+
+Bike rides combine exercise, nature, and quality time. You're moving together, exploring together, and creating shared experiences. It's a simple way to connect and get outside.
+
+## The Secret: Match Her Pace
+
+Don't make it about speed or distance. Make it about being together. Match her pace. Enjoy the ride.
+
+## How to Go for a Bike Ride Together
+
+### 1. Pick a Route
+
+Choose something that:
+- Matches both your skill levels
+- Is safe and enjoyable
+- Has nice scenery
+- Isn't too long or challenging
+
+### 2. Check Your Bikes
+
+Make sure:
+- Tires are inflated
+- Brakes work
+- Everything is in good shape
+- You have water and snacks
+
+### 3. Match Her Pace
+
+Don't race ahead. Ride together. Match her pace. Enjoy being together.
+
+### 4. Make It About Connection
+
+This isn't about speed or distance. It's about:
+- Spending time together
+- Getting outside
+- Moving together
+- Having fun
+
+## What Makes It Work
+
+- **You ride together:** Not racing, but together
+- **You match her pace:** It's about connection, not competition
+- **You enjoy it:** It's fun, not stressful
+- **You're present:** You're there together, not just on bikes
+
+## Common Mistakes
+
+- **Racing ahead:** That's not together, that's you leaving her behind
+- **Making it about speed:** It's about connection, not competition
+- **Not checking bikes:** Broken bike ruins the ride
+- **Making it too long:** Start shorter, build up
+
+## The Win
+
+You went for a bike ride together. You got outside, moved together, and connected. That's a win.`,
+  },
+  'evening-stroll-together': {
+    id: 39,
+    title: 'Take an Evening Stroll Together',
+    category: 'Outdoor Activities',
+    difficulty: 'Easy',
+    time: '20-30 min',
+    excerpt: 'Learn how to make evening walks a regular thing. Use this time to connect, process the day, and unwind together.',
+    content: `## Why This Matters
+
+Evening walks are perfect for processing the day. You're moving, you're outside, and you have time to talk. It's a simple way to connect and unwind together.
+
+## The Secret: Make It a Habit
+
+Don't do it once. Make it a regular thing. Same time, every day. It becomes something you both look forward to.
+
+## How to Take an Evening Stroll
+
+### 1. Pick a Time
+
+Choose when you'll go:
+- After dinner
+- Before bed
+- End of the day
+- When you're both home
+
+### 2. Pick a Route
+
+Choose something:
+- Safe and enjoyable
+- Nice to walk
+- Not too long
+- You can do regularly
+
+### 3. Leave Your Phones
+
+Put your phones away. This is about being together, not being distracted.
+
+### 4. Talk
+
+Use this time to:
+- Process the day
+- Check in with each other
+- Talk about what's on your mind
+- Just be together
+
+## What Makes It Work
+
+- **It's consistent:** You do it regularly, not just sometimes
+- **You're present:** Phones away, actually together
+- **You talk:** You use the time to connect
+- **You enjoy it:** It's relaxing, not stressful
+
+## Common Mistakes
+
+- **Being on your phone:** That defeats the purpose
+- **Not talking:** Use the time to connect
+- **Making it too long:** Start shorter, build up
+- **Skipping it:** Make it a habit, don't skip it
+
+## The Win
+
+You took an evening stroll. You processed the day together. You connected and unwound. That's a win.`,
+  },
+  // Additional Active guides
+  'swim-together': {
+    id: 40,
+    title: 'Go Swimming Together',
+    category: 'Active Together',
+    difficulty: 'Easy',
+    time: '1-2 hours',
+    excerpt: 'Learn how to make swimming a fun activity you do together. Pool, lake, or beach—water activities are naturally playful and bonding.',
+    content: `## Why This Matters
+
+Swimming together is naturally playful and fun. Water activities create a relaxed, playful environment. You're moving together, having fun, and creating shared experiences.
+
+## The Secret: Make It Playful
+
+This isn't about laps or competition. It's about having fun together in the water.
+
+## How to Go Swimming Together
+
+### 1. Pick a Place
+
+Choose somewhere:
+- You both enjoy
+- Is safe
+- You can actually swim
+- Is fun
+
+### 2. Make It About Fun
+
+This isn't about:
+- Speed
+- Distance
+- Competition
+
+It's about:
+- Having fun
+- Being together
+- Playing in the water
+- Enjoying each other
+
+### 3. Be Present
+
+Put your phone away. Be in the water together. Actually be there.
+
+### 4. Enjoy It
+
+Relax. Have fun. Play. Enjoy being together in the water.
+
+## What Makes It Work
+
+- **It's fun:** You're enjoying it, not stressing about it
+- **You're together:** You're in the water together, not separately
+- **You're present:** You're actually there, not distracted
+- **You enjoy it:** It's playful, not competitive
+
+## Common Mistakes
+
+- **Making it competitive:** That's not fun, that's stressful
+- **Being on your phone:** Be in the water, not on your phone
+- **Not being together:** You're swimming together, not separately
+- **Making it about exercise:** It's about fun and connection
+
+## The Win
+
+You went swimming together. You had fun in the water. You played and connected. That's a win.`,
+  },
+  'disc-golf-together': {
+    id: 41,
+    title: 'Play Disc Golf Together',
+    category: 'Active Together',
+    difficulty: 'Easy',
+    time: '1-2 hours',
+    excerpt: 'Learn how to make disc golf a fun activity you do together. Casual, fun, and gets you moving outside while having a good time.',
+    content: `## Why This Matters
+
+Disc golf is casual, fun, and gets you moving. It's not competitive or stressful—it's just a good time together outside. Perfect for couples who want to be active without the pressure.
+
+## The Secret: Keep It Casual
+
+This isn't about scores or competition. It's about having fun together outside.
+
+## How to Play Disc Golf Together
+
+### 1. Find a Course
+
+Look for:
+- A local course
+- Something beginner-friendly
+- Nice setting
+- Not too crowded
+
+### 2. Get Some Discs
+
+You don't need fancy equipment:
+- A few discs (driver, mid-range, putter)
+- Can rent or buy cheap starter sets
+- Don't need a lot to start
+
+### 3. Keep It Fun
+
+This isn't about:
+- Scores
+- Competition
+- Being good
+
+It's about:
+- Having fun
+- Being outside
+- Moving together
+- Enjoying each other
+
+### 4. Be Patient
+
+If one of you is better, be patient. Help each other. Make it fun, not competitive.
+
+## What Makes It Work
+
+- **It's casual:** No pressure, just fun
+- **You're together:** You're playing together, not competing
+- **You're outside:** Getting fresh air and movement
+- **You enjoy it:** It's fun, not stressful
+
+## Common Mistakes
+
+- **Making it competitive:** That takes the fun out
+- **Getting frustrated:** Keep it light and fun
+- **Not being patient:** Help each other, don't get competitive
+- **Making it about scores:** It's about fun, not scores
+
+## The Win
+
+You played disc golf together. You had fun outside. You moved together and connected. That's a win.`,
   },
 };
 
