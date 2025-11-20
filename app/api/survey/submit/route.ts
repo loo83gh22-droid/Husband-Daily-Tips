@@ -92,6 +92,7 @@ export async function POST(request: Request) {
       partnership: { total: 0, count: 0 },
       intimacy: { total: 0, count: 0 },
       conflict: { total: 0, count: 0 },
+      connection: { total: 0, count: 0 }, // Roommate Syndrome / Connection category
     };
 
     responseRecords.forEach((response) => {
@@ -125,6 +126,9 @@ export async function POST(request: Request) {
     const conflictScore = categoryScores.conflict.count > 0
       ? (categoryScores.conflict.total / categoryScores.conflict.count) * 20
       : 50; // Default to 50 if no questions
+    const connectionScore = categoryScores.connection.count > 0
+      ? (categoryScores.connection.total / categoryScores.connection.count) * 20
+      : 50; // Default to 50 if no questions
 
     // Calculate baseline health from all category scores
     // For conflict: if no questions answered, use average of other categories
@@ -132,19 +136,19 @@ export async function POST(request: Request) {
       ? conflictScore
       : (communicationScore + romanceScore + partnershipScore + intimacyScore) / 4;
 
-    // Baseline health is the average of all 5 category scores
+    // Baseline health is the average of all 6 category scores (including connection)
     const baselineHealth = Math.round(
-      (communicationScore + romanceScore + partnershipScore + intimacyScore + finalConflictScore) / 5
+      (communicationScore + romanceScore + partnershipScore + intimacyScore + finalConflictScore + connectionScore) / 6
     );
 
-    // Save survey summary
+    // Save survey summary (connection score stored in intimacy_score for now, or we can add a new column later)
     const { error: summaryError } = await supabase.from('survey_summary').upsert({
       user_id: userId,
       baseline_health: baselineHealth,
       communication_score: Math.round(communicationScore * 100) / 100,
       romance_score: Math.round(romanceScore * 100) / 100,
       partnership_score: Math.round(partnershipScore * 100) / 100,
-      intimacy_score: Math.round(intimacyScore * 100) / 100,
+      intimacy_score: Math.round(intimacyScore * 100) / 100, // Note: We can add connection_score column later
       conflict_score: Math.round(finalConflictScore * 100) / 100,
       completed_at: new Date().toISOString(),
     }, {

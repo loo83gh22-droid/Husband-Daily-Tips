@@ -71,6 +71,7 @@ export async function checkAndAwardBadges(
           else if (badgeName.includes('gratitude')) targetCategory = 'Gratitude';
           else if (badgeName.includes('partnership')) targetCategory = 'Partnership';
           else if (badgeName.includes('intimacy')) targetCategory = 'Intimacy';
+          else if (badgeName.includes('roommate') || badgeName.includes('connection') || badgeName.includes('recovery')) targetCategory = 'Roommate Syndrome Recovery';
           else if (badgeName.includes('outdoor') || badgeName.includes('nature') || badgeName.includes('hiking') || badgeName.includes('walk') || badgeName.includes('camping')) targetCategory = 'Outdoor Activities';
           else if (badgeName.includes('adventure') || badgeName.includes('explore') || badgeName.includes('explorer')) targetCategory = 'Adventure';
           else if (badgeName.includes('active') || badgeName.includes('fitness') || badgeName.includes('sport')) targetCategory = 'Active Together';
@@ -125,6 +126,31 @@ export async function checkAndAwardBadges(
           if (count >= (badge.requirement_value || 0)) {
             earned = true;
           }
+        }
+        break;
+
+      case 'challenge_joined':
+        // Check if user has joined challenges
+        const { data: userChallenges } = await supabase
+          .from('user_challenges')
+          .select('id')
+          .eq('user_id', userId);
+        
+        if (userChallenges && userChallenges.length >= (badge.requirement_value || 0)) {
+          earned = true;
+        }
+        break;
+
+      case 'challenge_completed':
+        // Check if user has completed challenges
+        const { data: completedChallenges } = await supabase
+          .from('user_challenges')
+          .select('id')
+          .eq('user_id', userId)
+          .eq('completed', true);
+        
+        if (completedChallenges && completedChallenges.length >= (badge.requirement_value || 0)) {
+          earned = true;
         }
         break;
 
