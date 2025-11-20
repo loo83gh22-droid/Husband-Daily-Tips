@@ -63,27 +63,38 @@ export default async function ActionsByThemePage({
   const auth0Id = session.user.sub;
   const { actions, completedMap, userId } = await getActionsByTheme(auth0Id, params.theme);
 
-  const themeName =
-    params.theme.charAt(0).toUpperCase() + params.theme.slice(1).replace(/_/g, ' ');
+  // Format theme name - handle special cases
+  let themeName = params.theme.charAt(0).toUpperCase() + params.theme.slice(1).replace(/_/g, ' ');
+  if (params.theme === 'outdoor') {
+    themeName = 'Outdoor Activities';
+  } else if (params.theme === 'active') {
+    themeName = 'Active Together';
+  } else if (params.theme === 'quality_time') {
+    themeName = 'Quality Time';
+  }
 
   const themeIcon =
     params.theme === 'communication'
       ? '💬'
-      : params.theme === 'romance'
-        ? '💕'
-        : params.theme === 'gratitude'
-          ? '🙏'
-          : params.theme === 'partnership'
-            ? '🤝'
-            : params.theme === 'intimacy'
-              ? '💝'
+      : params.theme === 'intimacy'
+        ? '💝'
+        : params.theme === 'partnership'
+          ? '🤝'
+          : params.theme === 'romance'
+            ? '💕'
+            : params.theme === 'gratitude'
+              ? '🙏'
               : params.theme === 'conflict'
                 ? '⚖️'
                 : params.theme === 'reconnection'
                   ? '🔗'
                   : params.theme === 'quality_time'
                     ? '⏰'
-                    : '📋';
+                    : params.theme === 'outdoor'
+                      ? '🌲'
+                      : params.theme === 'active'
+                        ? '💪'
+                        : '📋';
 
   return (
     <div className="min-h-screen bg-slate-950">

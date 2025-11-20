@@ -15,10 +15,11 @@ async function getActions(auth0Id: string) {
   if (!user) return { actions: [], completedMap: new Map(), favoritedActions: [] };
 
   // Get all actions - use distinct to avoid duplicates
+  // Order by display_order (marriage importance), then by name
   const { data: actions } = await supabase
     .from('actions')
     .select('*')
-    .order('category', { ascending: true })
+    .order('display_order', { ascending: true, nullsFirst: false })
     .order('name', { ascending: true });
 
   // Remove any duplicates by ID (in case database has duplicates)
@@ -102,7 +103,23 @@ export default async function ActionsPage() {
   const actionsByTheme: Record<string, Array<typeof actions[0]>> = {};
   const seenActionIds = new Set<string>();
   
+  // Define theme display order (by marriage importance)
+  const themeOrder = [
+    'communication',    // 1. Most foundational
+    'intimacy',         // 2. Deepest connection
+    'partnership',      // 3. Working together
+    'romance',          // 4. Keeping spark alive
+    'gratitude',        // 5. Appreciation
+    'conflict',         // 6. Handling disagreements
+    'reconnection',     // 7. Addressing disconnection
+    'quality_time',     // 8. Spending time together
+    'outdoor',          // 9. Outdoor activities (combined outdoor + adventure)
+    'active',           // 10. Active together (fitness)
+  ];
+  
   // Double-check for duplicates and group by theme (only non-favorited actions)
+  const themeDisplayOrder: Record<string, number> = {};
+  
   nonFavoritedActions.forEach((action) => {
     // Skip if we've already seen this action ID
     if (seenActionIds.has(action.id)) {
@@ -111,11 +128,47 @@ export default async function ActionsPage() {
     }
     seenActionIds.add(action.id);
     
-    const theme = action.theme || action.category.toLowerCase();
+    // Normalize theme - use theme field if available, otherwise derive from category
+    let theme = action.theme;
+    if (!theme || theme.trim() === '') {
+      // Fallback to category, normalize it
+      theme = action.category.toLowerCase().replace(/\s+/g, '_');
+    }
+    // Normalize theme value (lowercase, no spaces)
+    theme = theme.toLowerCase().trim();
+    
     if (!actionsByTheme[theme]) {
       actionsByTheme[theme] = [];
     }
     actionsByTheme[theme].push(action);
+    
+    // Store the display_order for this theme (use the first action's display_order)
+    if (action.display_order !== null && action.display_order !== undefined) {
+      if (themeDisplayOrder[theme] === undefined || action.display_order < themeDisplayOrder[theme]) {
+        themeDisplayOrder[theme] = action.display_order;
+      }
+    }
+  });
+  
+  // Sort themes by display_order from database, fallback to hardcoded order
+  const sortedThemes = Object.keys(actionsByTheme).sort((a, b) => {
+    // First try to use display_order from database
+    const aOrder = themeDisplayOrder[a];
+    const bOrder = themeDisplayOrder[b];
+    
+    if (aOrder !== undefined && bOrder !== undefined) {
+      return aOrder - bOrder;
+    }
+    if (aOrder !== undefined) return -1;
+    if (bOrder !== undefined) return 1;
+    
+    // Fallback to hardcoded order
+    const aIndex = themeOrder.indexOf(a);
+    const bIndex = themeOrder.indexOf(b);
+    if (aIndex !== -1 && bIndex !== -1) return aIndex - bIndex;
+    if (aIndex !== -1) return -1;
+    if (bIndex !== -1) return 1;
+    return a.localeCompare(b);
   });
   
   // Note: Each theme section renders its own ActionsList component
@@ -169,9 +222,17 @@ export default async function ActionsPage() {
           )}
 
           <div className="space-y-8">
-            {Object.entries(actionsByTheme).map(([theme, themeActions]) => {
-              const themeName =
-                theme.charAt(0).toUpperCase() + theme.slice(1).replace(/_/g, ' ');
+            {sortedThemes.map((theme) => {
+              const themeActions = actionsByTheme[theme];
+              // Format theme name - handle special cases
+              let themeName = theme.charAt(0).toUpperCase() + theme.slice(1).replace(/_/g, ' ');
+              if (theme === 'outdoor') {
+                themeName = 'Outdoor Activities';
+              } else if (theme === 'active') {
+                themeName = 'Active Together';
+              } else if (theme === 'quality_time') {
+                themeName = 'Quality Time';
+              }
 
               return (
                 <section
@@ -183,21 +244,25 @@ export default async function ActionsPage() {
                       <span>
                         {theme === 'communication'
                           ? '💬'
-                          : theme === 'romance'
-                            ? '💕'
-                            : theme === 'gratitude'
-                              ? '🙏'
-                              : theme === 'partnership'
-                                ? '🤝'
-                                : theme === 'intimacy'
-                                  ? '💝'
+                          : theme === 'intimacy'
+                            ? '💝'
+                            : theme === 'partnership'
+                              ? '🤝'
+                              : theme === 'romance'
+                                ? '💕'
+                                : theme === 'gratitude'
+                                  ? '🙏'
                                   : theme === 'conflict'
                                     ? '⚖️'
                                     : theme === 'reconnection'
                                       ? '🔗'
                                       : theme === 'quality_time'
                                         ? '⏰'
-                                        : '📋'}
+                                        : theme === 'outdoor'
+                                          ? '🌲'
+                                          : theme === 'active'
+                                            ? '💪'
+                                            : '📋'}
                       </span>
                       {themeName}
                     </h2>
