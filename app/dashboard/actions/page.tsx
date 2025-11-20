@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import DashboardNav from '@/components/DashboardNav';
 import ActionsList from '@/components/ActionsList';
+import Link from 'next/link';
 
 async function getActions(auth0Id: string) {
   const { data: user } = await supabase
@@ -192,17 +193,48 @@ export default async function ActionsPage() {
                                   ? '💝'
                                   : theme === 'conflict'
                                     ? '⚖️'
-                                    : '📋'}
+                                    : theme === 'reconnection'
+                                      ? '🔗'
+                                      : theme === 'quality_time'
+                                        ? '⏰'
+                                        : '📋'}
                       </span>
                       {themeName}
                     </h2>
                   </div>
 
                   <ActionsList
-                    actions={themeActions}
+                    actions={themeActions.slice(0, 4)}
                     completedMap={completedMap}
                     userId={userId}
                   />
+
+                  {themeActions.length > 4 && (
+                    <div className="mt-6 text-center">
+                      <Link
+                        href={`/dashboard/actions/${theme}`}
+                        className="inline-flex items-center gap-2 px-6 py-2 bg-primary-500/10 border border-primary-500/30 text-primary-300 rounded-lg hover:bg-primary-500/20 transition-colors text-sm font-medium"
+                      >
+                        See More {themeName} Actions
+                        <span className="text-xs text-slate-400">
+                          ({themeActions.length - 4} more)
+                        </span>
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M9 5l7 7-7 7"
+                          />
+                        </svg>
+                      </Link>
+                    </div>
+                  )}
                 </section>
               );
             })}
