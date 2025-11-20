@@ -27,7 +27,7 @@ export default function AccountMenu() {
   }, [isOpen]);
 
   const menuItems = [
-    { href: '/dashboard/subscription', label: 'Subscription & Pricing', icon: '💳' },
+    { href: '/dashboard/subscription', label: 'Subscription & Pricing', icon: '💳', description: '7-day free trial, then Free or Paid' },
     { href: '/dashboard/account', label: 'Account Settings', icon: '⚙️' },
     { href: '/dashboard/payments', label: 'Payment Methods', icon: '💵' },
     { href: '/dashboard/billing', label: 'Billing History', icon: '📄' },
@@ -71,10 +71,15 @@ export default function AccountMenu() {
                 key={item.href}
                 href={item.href}
                 onClick={() => setIsOpen(false)}
-                className="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-300 hover:bg-slate-800 transition-colors"
+                className="flex items-start gap-3 px-4 py-2.5 text-sm text-slate-300 hover:bg-slate-800 transition-colors"
               >
-                <span className="text-lg">{item.icon}</span>
-                <span>{item.label}</span>
+                <span className="text-lg mt-0.5">{item.icon}</span>
+                <div className="flex-1">
+                  <div className="font-medium">{item.label}</div>
+                  {item.description && (
+                    <div className="text-xs text-slate-500 mt-0.5">{item.description}</div>
+                  )}
+                </div>
               </Link>
             ))}
           </div>
