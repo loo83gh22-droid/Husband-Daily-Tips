@@ -370,7 +370,7 @@ export default async function Dashboard() {
             </div>
 
             {todayAction ? (
-              <DailyTipCard tip={todayAction} />
+              <DailyTipCard tip={todayAction} subscriptionTier={user.subscription_tier || 'free'} />
             ) : (
               <div className="bg-slate-900/80 rounded-xl shadow-lg p-8 text-center border border-slate-800">
                 <p className="text-slate-300">

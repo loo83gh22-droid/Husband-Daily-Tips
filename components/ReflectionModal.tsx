@@ -1,6 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useUser } from '@auth0/nextjs-auth0/client';
+import Link from 'next/link';
 
 interface ReflectionModalProps {
   isOpen: boolean;
@@ -8,6 +10,7 @@ interface ReflectionModalProps {
   tipId: string;
   tipTitle: string;
   onSuccess: () => void;
+  subscriptionTier?: string;
 }
 
 export default function ReflectionModal({
@@ -16,11 +19,13 @@ export default function ReflectionModal({
   tipId,
   tipTitle,
   onSuccess,
+  subscriptionTier = 'free',
 }: ReflectionModalProps) {
   const [reflection, setReflection] = useState('');
   const [shareToForum, setShareToForum] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const isFree = subscriptionTier === 'free';
 
   if (!isOpen) return null;
 
@@ -90,22 +95,38 @@ export default function ReflectionModal({
             disabled={isSubmitting}
           />
 
-          <div className="mt-4 flex items-start gap-3">
-            <input
-              type="checkbox"
-              id="shareToForum"
-              checked={shareToForum}
-              onChange={(e) => setShareToForum(e.target.checked)}
-              className="mt-1 w-4 h-4 text-primary-600 bg-slate-800 border-slate-700 rounded focus:ring-primary-500"
-              disabled={isSubmitting}
-            />
-            <label htmlFor="shareToForum" className="text-sm text-slate-300 cursor-pointer">
-              <span className="font-medium">Share to Team Wins</span>
-              <span className="block text-xs text-slate-500 mt-1">
-                Other members can see this (anonymously) and comment. Help others learn from your
-                experience.
-              </span>
-            </label>
+          <div className="mt-4">
+            {isFree ? (
+              <div className="bg-primary-500/10 border border-primary-500/30 rounded-lg p-4">
+                <p className="text-sm text-slate-300 mb-2">
+                  <span className="font-medium">Share to Team Wins</span> — Upgrade to Paid to share your wins
+                </p>
+                <Link
+                  href="/dashboard/subscription"
+                  className="text-xs text-primary-400 hover:text-primary-300 underline"
+                >
+                  Upgrade now →
+                </Link>
+              </div>
+            ) : (
+              <div className="flex items-start gap-3">
+                <input
+                  type="checkbox"
+                  id="shareToForum"
+                  checked={shareToForum}
+                  onChange={(e) => setShareToForum(e.target.checked)}
+                  className="mt-1 w-4 h-4 text-primary-600 bg-slate-800 border-slate-700 rounded focus:ring-primary-500"
+                  disabled={isSubmitting}
+                />
+                <label htmlFor="shareToForum" className="text-sm text-slate-300 cursor-pointer">
+                  <span className="font-medium">Share to Team Wins</span>
+                  <span className="block text-xs text-slate-500 mt-1">
+                    Other members can see this (anonymously) and comment. Help others learn from your
+                    experience.
+                  </span>
+                </label>
+              </div>
+            )}
           </div>
 
           {error && (

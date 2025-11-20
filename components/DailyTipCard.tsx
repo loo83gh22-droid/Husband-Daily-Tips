@@ -24,9 +24,10 @@ interface Tip {
 
 interface DailyTipCardProps {
   tip: Tip;
+  subscriptionTier?: string;
 }
 
-export default function DailyTipCard({ tip }: DailyTipCardProps) {
+export default function DailyTipCard({ tip, subscriptionTier = 'free' }: DailyTipCardProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isCompleted, setIsCompleted] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -274,6 +275,7 @@ export default function DailyTipCard({ tip }: DailyTipCardProps) {
           // Refresh page to show updated stats
           window.location.reload();
         }}
+        subscriptionTier={subscriptionTier}
       />
     </div>
   );
