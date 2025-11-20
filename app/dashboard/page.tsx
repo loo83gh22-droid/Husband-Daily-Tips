@@ -339,17 +339,6 @@ export default async function Dashboard() {
             </div>
 
             <BadgesDisplay userId={user.id} />
-
-            <div className="bg-slate-900/70 border border-slate-800 rounded-xl p-4">
-              <p className="text-xs text-slate-300 mb-1 font-medium">
-                How your health works
-              </p>
-              <p className="text-[11px] text-slate-400 leading-relaxed">
-                Your bar climbs when you follow through on daily actions and make intentional
-                &quot;big husband&quot; moves. It slowly drains when you disappear. It&apos;s not a score
-                for your wife—it&apos;s an honest dashboard for you.
-              </p>
-            </div>
           </div>
         </div>
       </main>
