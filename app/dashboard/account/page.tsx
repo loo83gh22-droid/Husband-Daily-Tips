@@ -1,6 +1,32 @@
 import { getSession } from '@auth0/nextjs-auth0';
 import { redirect } from 'next/navigation';
+import { supabase } from '@/lib/supabase';
 import DashboardNav from '@/components/DashboardNav';
+import AccountProfileForm from '@/components/AccountProfileForm';
+
+async function getUserProfile(auth0Id: string) {
+  const { data: user, error } = await supabase
+    .from('users')
+    .select('username, years_married, post_anonymously, name')
+    .eq('auth0_id', auth0Id)
+    .single();
+
+  if (error || !user) {
+    return {
+      username: null,
+      years_married: null,
+      post_anonymously: false,
+      name: null,
+    };
+  }
+
+  return {
+    username: user.username,
+    years_married: user.years_married,
+    post_anonymously: user.post_anonymously || false,
+    name: user.name,
+  };
+}
 
 export default async function AccountPage() {
   const session = await getSession();
@@ -8,6 +34,9 @@ export default async function AccountPage() {
   if (!session?.user) {
     redirect('/api/auth/login');
   }
+
+  const auth0Id = session.user.sub;
+  const profile = await getUserProfile(auth0Id);
 
   return (
     <div className="min-h-screen bg-slate-950">
@@ -25,31 +54,10 @@ export default async function AccountPage() {
           </div>
 
           <div className="bg-slate-900/80 border border-slate-800 rounded-xl p-8">
-            <div className="space-y-6">
-              <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">
-                  Email
-                </label>
-                <p className="text-slate-200">{session.user.email}</p>
-                <p className="text-xs text-slate-500 mt-1">
-                  Managed by Auth0. Update your email in your Auth0 account settings.
-                </p>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">
-                  Name
-                </label>
-                <p className="text-slate-200">{session.user.name || 'Not set'}</p>
-              </div>
-
-              <div className="pt-4 border-t border-slate-800">
-                <h3 className="text-sm font-semibold text-slate-200 mb-4">Preferences</h3>
-                <p className="text-sm text-slate-400">
-                  More account settings coming soon.
-                </p>
-              </div>
-            </div>
+            <AccountProfileForm
+              initialProfile={profile}
+              email={session.user.email || ''}
+            />
           </div>
         </div>
       </main>

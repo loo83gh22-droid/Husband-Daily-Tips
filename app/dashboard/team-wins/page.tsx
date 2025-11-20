@@ -20,10 +20,10 @@ async function getTeamWins() {
     .from('deep_thoughts')
     .select(`
       *,
-      users:user_id (name, email),
+      users:user_id (name, username, years_married, post_anonymously),
       deep_thoughts_comments (
         *,
-        users:user_id (name, email)
+        users:user_id (name, username, post_anonymously)
       )
     `)
     .order('created_at', { ascending: false })
