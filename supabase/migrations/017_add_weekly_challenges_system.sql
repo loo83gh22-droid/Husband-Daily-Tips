@@ -190,13 +190,16 @@ END $$;
 -- ADD CHALLENGE COMPLETION BADGES
 -- ============================================================================
 
-INSERT INTO badges (name, description, icon, requirement_type, requirement_value, health_bonus, category) VALUES
-('Challenge Starter', 'Joined your first weekly challenge', '🎯', 'challenge_joined', 1, 5, 'Challenges'),
-('Communication Champion', 'Completed the 7-Day Communication Challenge', '💬', 'challenge_completed', 1, 15, 'Challenges'),
-('Connection Restorer', 'Completed the 7-Day Roommate Syndrome Recovery Challenge', '🔗', 'challenge_completed', 1, 15, 'Challenges'),
-('Romance Reviver', 'Completed the 7-Day Romance Challenge', '💕', 'challenge_completed', 1, 15, 'Challenges'),
-('Challenge Master', 'Completed 3 weekly challenges', '🏆', 'challenge_completed', 3, 25, 'Challenges'),
-('Challenge Legend', 'Completed 5 weekly challenges', '👑', 'challenge_completed', 5, 50, 'Challenges');
+-- Add category column to badges table if it doesn't exist
+ALTER TABLE badges ADD COLUMN IF NOT EXISTS category TEXT;
+
+INSERT INTO badges (name, description, icon, badge_type, requirement_type, requirement_value, health_bonus, category) VALUES
+('Challenge Starter', 'Joined your first weekly challenge', '🎯', 'consistency', 'challenge_joined', 1, 5, 'Challenges'),
+('Communication Champion', 'Completed the 7-Day Communication Challenge', '💬', 'consistency', 'challenge_completed', 1, 15, 'Challenges'),
+('Connection Restorer', 'Completed the 7-Day Roommate Syndrome Recovery Challenge', '🔗', 'consistency', 'challenge_completed', 1, 15, 'Challenges'),
+('Romance Reviver', 'Completed the 7-Day Romance Challenge', '💕', 'consistency', 'challenge_completed', 1, 15, 'Challenges'),
+('Challenge Master', 'Completed 3 weekly challenges', '🏆', 'consistency', 'challenge_completed', 3, 25, 'Challenges'),
+('Challenge Legend', 'Completed 5 weekly challenges', '👑', 'consistency', 'challenge_completed', 5, 50, 'Challenges');
 
 -- ============================================================================
 -- UPDATE FUNCTION FOR UPDATED_AT

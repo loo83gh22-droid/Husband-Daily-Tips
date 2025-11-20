@@ -60,11 +60,14 @@ INSERT INTO actions (name, description, category, theme, requirement_type, icon,
 -- ADD BADGES FOR ROOMMATE SYNDROME RECOVERY
 -- ============================================================================
 
+-- Add category column to badges table if it doesn't exist
+ALTER TABLE badges ADD COLUMN IF NOT EXISTS category TEXT;
+
 -- Roommate Syndrome Recovery Badges
-INSERT INTO badges (name, description, icon, requirement_type, requirement_value, health_bonus, category) VALUES
-('Connection Builder', 'Completed 5 reconnection actions', '🔗', 'category_count', 5, 5, 'Roommate Syndrome Recovery'),
-('Communication Rebuilder', 'Completed 5 communication rebuilders', '💬', 'category_count', 5, 5, 'Roommate Syndrome Recovery'),
-('Intimacy Restorer', 'Completed 5 emotional intimacy builders', '💕', 'category_count', 5, 5, 'Roommate Syndrome Recovery'),
-('Roommate Syndrome Survivor', 'Completed 10 Roommate Syndrome Recovery actions', '🏆', 'category_count', 10, 10, 'Roommate Syndrome Recovery'),
-('Connection Champion', 'Completed 15 Roommate Syndrome Recovery actions', '👑', 'category_count', 15, 15, 'Roommate Syndrome Recovery');
+INSERT INTO badges (name, description, icon, badge_type, requirement_type, requirement_value, health_bonus, category) VALUES
+('Connection Builder', 'Completed 5 reconnection actions', '🔗', 'consistency', 'category_count', 5, 5, 'Roommate Syndrome Recovery'),
+('Communication Rebuilder', 'Completed 5 communication rebuilders', '💬', 'consistency', 'category_count', 5, 5, 'Roommate Syndrome Recovery'),
+('Intimacy Restorer', 'Completed 5 emotional intimacy builders', '💕', 'consistency', 'category_count', 5, 5, 'Roommate Syndrome Recovery'),
+('Roommate Syndrome Survivor', 'Completed 10 Roommate Syndrome Recovery actions', '🏆', 'consistency', 'category_count', 10, 10, 'Roommate Syndrome Recovery'),
+('Connection Champion', 'Completed 15 Roommate Syndrome Recovery actions', '👑', 'consistency', 'category_count', 15, 15, 'Roommate Syndrome Recovery');
 
