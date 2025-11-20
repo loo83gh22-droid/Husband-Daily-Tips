@@ -128,37 +128,102 @@ export default async function BadgesPage() {
   const auth0Id = session.user.sub;
   const { badges } = await getUserBadges(auth0Id);
 
-  // Group badges by action theme/category
-  const badgeThemes = {
-    Communication: badges.filter((b) =>
-      b.name.toLowerCase().includes('communication') ||
-      b.name.toLowerCase().includes('listener') ||
-      b.name.toLowerCase().includes('apology') ||
-      b.name.toLowerCase().includes('conflict') ||
-      b.name.toLowerCase().includes('peacemaker')
-    ),
-    Romance: badges.filter((b) =>
-      b.name.toLowerCase().includes('romance') ||
-      b.name.toLowerCase().includes('date night') ||
-      b.name.toLowerCase().includes('surprise')
-    ),
-    Gratitude: badges.filter((b) =>
-      b.name.toLowerCase().includes('gratitude')
-    ),
-    Partnership: badges.filter((b) =>
-      b.name.toLowerCase().includes('partnership') ||
-      b.name.toLowerCase().includes('support system') ||
-      b.name.toLowerCase().includes('relationship architect')
-    ),
-    Intimacy: badges.filter((b) =>
-      b.name.toLowerCase().includes('intimacy') ||
-      b.name.toLowerCase().includes('love language')
-    ),
-    Conflict: badges.filter((b) =>
-      b.name.toLowerCase().includes('conflict') ||
-      b.name.toLowerCase().includes('peacemaker')
-    ),
-    Consistency: badges.filter((b) => b.badge_type === 'consistency'),
+  // Group badges by action theme/category (ordered by marriage importance)
+  // First, collect all badges that match specific themes
+  const communicationBadges = badges.filter((b) =>
+    b.name.toLowerCase().includes('communication') ||
+    b.name.toLowerCase().includes('listener') ||
+    b.name.toLowerCase().includes('apology') ||
+    (b.name.toLowerCase().includes('conflict') && !b.name.toLowerCase().includes('peacemaker')) ||
+    (b.category && b.category.toLowerCase().includes('communication'))
+  );
+  
+  const intimacyBadges = badges.filter((b) =>
+    b.name.toLowerCase().includes('intimacy') ||
+    b.name.toLowerCase().includes('love language') ||
+    (b.category && b.category.toLowerCase().includes('intimacy'))
+  );
+  
+  const partnershipBadges = badges.filter((b) =>
+    b.name.toLowerCase().includes('partnership') ||
+    b.name.toLowerCase().includes('support system') ||
+    b.name.toLowerCase().includes('relationship architect') ||
+    (b.category && b.category.toLowerCase().includes('partnership'))
+  );
+  
+  const romanceBadges = badges.filter((b) =>
+    b.name.toLowerCase().includes('romance') ||
+    b.name.toLowerCase().includes('date night') ||
+    b.name.toLowerCase().includes('surprise') ||
+    (b.category && b.category.toLowerCase().includes('romance'))
+  );
+  
+  const gratitudeBadges = badges.filter((b) =>
+    b.name.toLowerCase().includes('gratitude') ||
+    (b.category && b.category.toLowerCase().includes('gratitude'))
+  );
+  
+  const conflictBadges = badges.filter((b) =>
+    (b.name.toLowerCase().includes('conflict') ||
+    b.name.toLowerCase().includes('peacemaker')) &&
+    !communicationBadges.includes(b)
+  );
+  
+  const reconnectionBadges = badges.filter((b) =>
+    b.name.toLowerCase().includes('reconnection') ||
+    b.name.toLowerCase().includes('roommate') ||
+    (b.name.toLowerCase().includes('connection') && !b.name.toLowerCase().includes('communication')) ||
+    (b.category && (b.category.toLowerCase().includes('reconnection') || 
+                    b.category.toLowerCase().includes('roommate')))
+  );
+  
+  const outdoorBadges = badges.filter((b) =>
+    b.name.toLowerCase().includes('outdoor') ||
+    b.name.toLowerCase().includes('adventure') ||
+    b.name.toLowerCase().includes('nature') ||
+    b.name.toLowerCase().includes('hiking') ||
+    b.name.toLowerCase().includes('trail') ||
+    (b.category && (b.category.toLowerCase().includes('outdoor') || 
+                    b.category.toLowerCase().includes('adventure')))
+  );
+  
+  const activeBadges = badges.filter((b) =>
+    b.name.toLowerCase().includes('active') ||
+    b.name.toLowerCase().includes('fitness') ||
+    b.name.toLowerCase().includes('run') ||
+    b.name.toLowerCase().includes('sport') ||
+    (b.category && b.category.toLowerCase().includes('active'))
+  );
+  
+  // Get all categorized badges
+  const categorizedBadgeIds = new Set([
+    ...communicationBadges,
+    ...intimacyBadges,
+    ...partnershipBadges,
+    ...romanceBadges,
+    ...gratitudeBadges,
+    ...conflictBadges,
+    ...reconnectionBadges,
+    ...outdoorBadges,
+    ...activeBadges,
+  ].map(b => b.id));
+  
+  // Consistency badges are those that don't fit other categories
+  const consistencyBadges = badges.filter((b) => 
+    b.badge_type === 'consistency' && !categorizedBadgeIds.has(b.id)
+  );
+  
+  const badgeThemes: Record<string, typeof badges> = {
+    Communication: communicationBadges,
+    Intimacy: intimacyBadges,
+    Partnership: partnershipBadges,
+    Romance: romanceBadges,
+    Gratitude: gratitudeBadges,
+    Conflict: conflictBadges,
+    Reconnection: reconnectionBadges,
+    Outdoor: outdoorBadges,
+    Active: activeBadges,
+    Consistency: consistencyBadges,
   };
 
   const earnedCount = badges.filter((b) => b.earned_at).length;
@@ -199,11 +264,14 @@ export default async function BadgesPage() {
                   <h2 className="text-xl md:text-2xl font-semibold text-slate-50 mb-6 flex items-center gap-2">
                     <span>
                       {theme === 'Communication' ? '💬' : 
-                       theme === 'Romance' ? '💕' : 
                        theme === 'Intimacy' ? '💝' : 
                        theme === 'Partnership' ? '🤝' : 
-                       theme === 'Gratitude' ? '🙌' :
+                       theme === 'Romance' ? '💕' : 
+                       theme === 'Gratitude' ? '🙏' :
                        theme === 'Conflict' ? '⚖️' :
+                       theme === 'Reconnection' ? '🔗' :
+                       theme === 'Outdoor' ? '🌲' :
+                       theme === 'Active' ? '💪' :
                        '🔥'}
                     </span>
                     {theme}
