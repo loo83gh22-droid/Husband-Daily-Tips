@@ -34,7 +34,8 @@ export default async function SubscriptionPage() {
         'Account access',
         'No health bar tracking',
         'No badges',
-        'No journal or Team Wins',
+        'No journal',
+        'View Team Wins (read-only, cannot post)',
       ],
     },
     {

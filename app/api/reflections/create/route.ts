@@ -19,15 +19,23 @@ export async function POST(request: Request) {
 
     const supabase = getSupabaseAdmin();
 
-    // Get user
+    // Get user and subscription tier
     const { data: user, error: userError } = await supabase
       .from('users')
-      .select('id')
+      .select('id, subscription_tier')
       .eq('auth0_id', auth0Id)
       .single();
 
     if (userError || !user) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
+    }
+
+    // Check if free user is trying to share to forum
+    if (shareToForum && user.subscription_tier === 'free') {
+      return NextResponse.json(
+        { error: 'Upgrade to Paid to share your wins to Team Wins' },
+        { status: 403 }
+      );
     }
 
     // Get today's user_tip record
