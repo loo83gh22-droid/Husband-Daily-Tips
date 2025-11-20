@@ -14,9 +14,10 @@ interface Question {
 interface SurveyFormProps {
   userId: string;
   questions: Question[];
+  isPublic?: boolean;
 }
 
-export default function SurveyForm({ userId, questions }: SurveyFormProps) {
+export default function SurveyForm({ userId, questions, isPublic = false }: SurveyFormProps) {
   const router = useRouter();
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [responses, setResponses] = useState<Record<number, number>>({});
@@ -47,6 +48,53 @@ export default function SurveyForm({ userId, questions }: SurveyFormProps) {
     }
   };
 
+  const [showResults, setShowResults] = useState(false);
+  const [calculatedScore, setCalculatedScore] = useState<number | null>(null);
+
+  const calculatePublicResults = () => {
+    // Calculate category scores
+    const categoryScores: Record<string, { total: number; count: number }> = {
+      communication: { total: 0, count: 0 },
+      romance: { total: 0, count: 0 },
+      partnership: { total: 0, count: 0 },
+      intimacy: { total: 0, count: 0 },
+      conflict: { total: 0, count: 0 },
+    };
+
+    questions.forEach((question) => {
+      const responseValue = responses[question.id];
+      if (responseValue !== undefined) {
+        const category = question.category.toLowerCase();
+        if (categoryScores[category]) {
+          categoryScores[category].total += responseValue;
+          categoryScores[category].count += 1;
+        }
+      }
+    });
+
+    // Calculate scores (scale to 0-100)
+    const communicationScore = categoryScores.communication.count > 0
+      ? (categoryScores.communication.total / categoryScores.communication.count) * 20
+      : 50;
+    const romanceScore = categoryScores.romance.count > 0
+      ? (categoryScores.romance.total / categoryScores.romance.count) * 20
+      : 50;
+    const partnershipScore = categoryScores.partnership.count > 0
+      ? (categoryScores.partnership.total / categoryScores.partnership.count) * 20
+      : 50;
+    const intimacyScore = categoryScores.intimacy.count > 0
+      ? (categoryScores.intimacy.total / categoryScores.intimacy.count) * 20
+      : 50;
+    const conflictScore = (communicationScore + romanceScore + partnershipScore + intimacyScore) / 4;
+
+    // Baseline health is average of all 5 categories
+    const baselineHealth = Math.round(
+      (communicationScore + romanceScore + partnershipScore + intimacyScore + conflictScore) / 5
+    );
+
+    return baselineHealth;
+  };
+
   const handleSubmit = async () => {
     if (Object.keys(responses).length !== questions.length) {
       setError('Please answer all questions before submitting.');
@@ -56,6 +104,16 @@ export default function SurveyForm({ userId, questions }: SurveyFormProps) {
     setIsSubmitting(true);
     setError(null);
 
+    // If public survey, calculate results client-side and show signup prompt
+    if (isPublic) {
+      const score = calculatePublicResults();
+      setCalculatedScore(score);
+      setShowResults(true);
+      setIsSubmitting(false);
+      return;
+    }
+
+    // If logged in user, submit to server
     try {
       const response = await fetch('/api/survey/submit', {
         method: 'POST',
@@ -86,6 +144,71 @@ export default function SurveyForm({ userId, questions }: SurveyFormProps) {
     return (
       <div className="bg-slate-900/80 border border-slate-800 rounded-xl p-8 text-center">
         <p className="text-slate-300">No survey questions available. Please contact support.</p>
+      </div>
+    );
+  }
+
+  // Show results for public survey
+  if (showResults && calculatedScore !== null) {
+    const getScoreColor = (score: number) => {
+      if (score >= 80) return 'text-emerald-400';
+      if (score >= 60) return 'text-yellow-400';
+      return 'text-red-400';
+    };
+
+    const getScoreLabel = (score: number) => {
+      if (score >= 80) return 'Strong';
+      if (score >= 60) return 'Good';
+      if (score >= 40) return 'Needs Work';
+      return 'Needs Attention';
+    };
+
+    return (
+      <div className="bg-slate-900/80 border border-slate-800 rounded-xl p-8 md:p-10 text-center">
+        <div className="mb-6">
+          <h2 className="text-3xl font-bold text-slate-50 mb-2">Your Husband Score</h2>
+          <div className={`text-6xl font-bold mb-2 ${getScoreColor(calculatedScore)}`}>
+            {calculatedScore}
+          </div>
+          <p className={`text-xl font-semibold ${getScoreColor(calculatedScore)}`}>
+            {getScoreLabel(calculatedScore)}
+          </p>
+        </div>
+
+        <div className="mb-8 p-6 bg-slate-800/50 rounded-lg border border-slate-700">
+          <p className="text-slate-300 mb-4">
+            Great! You've completed the survey. Now sign up to:
+          </p>
+          <ul className="text-left space-y-2 text-slate-300 mb-6">
+            <li className="flex items-center gap-2">
+              <span className="text-primary-400">✓</span>
+              Save your baseline score and track improvements
+            </li>
+            <li className="flex items-center gap-2">
+              <span className="text-primary-400">✓</span>
+              Get personalized daily actions based on your results
+            </li>
+            <li className="flex items-center gap-2">
+              <span className="text-primary-400">✓</span>
+              Access your health bar and track your progress
+            </li>
+          </ul>
+        </div>
+
+        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <a
+            href="/api/auth/login"
+            className="inline-flex items-center justify-center px-7 py-3.5 rounded-lg bg-primary-500 text-slate-950 text-sm font-semibold shadow-lg shadow-primary-500/20 hover:bg-primary-400 transition-colors"
+          >
+            Sign Up Free →
+          </a>
+          <a
+            href="/"
+            className="inline-flex items-center justify-center px-7 py-3.5 rounded-lg border border-slate-700 text-sm font-semibold text-slate-100 hover:bg-slate-900 transition-colors"
+          >
+            Learn More
+          </a>
+        </div>
       </div>
     );
   }

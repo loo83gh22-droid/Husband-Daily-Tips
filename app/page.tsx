@@ -30,12 +30,26 @@ export default async function Home() {
             >
               How it works
             </Link>
-            <Link
-              href="/api/auth/login"
-              className="px-4 py-2 text-sm font-medium border border-slate-700 text-slate-100 rounded-lg hover:bg-slate-800 transition-colors"
-            >
-              Sign in
-            </Link>
+            <div className="flex items-center gap-3">
+              <Link
+                href="/survey"
+                className="hidden md:inline-flex px-4 py-2 text-sm font-medium text-slate-300 hover:text-white transition-colors"
+              >
+                Take Survey
+              </Link>
+              <Link
+                href="/api/auth/login"
+                className="px-4 py-2 text-sm font-medium text-slate-300 hover:text-white transition-colors"
+              >
+                Sign In
+              </Link>
+              <Link
+                href="/api/auth/login"
+                className="px-4 py-2 text-sm font-semibold bg-primary-500 text-slate-950 rounded-lg hover:bg-primary-400 transition-colors"
+              >
+                Sign Up
+              </Link>
+            </div>
           </div>
         </div>
       </nav>
@@ -58,16 +72,16 @@ export default async function Home() {
 
             <div className="flex flex-col sm:flex-row gap-4 mb-6">
               <Link
-                href="/api/auth/login"
+                href="/survey"
                 className="inline-flex items-center justify-center px-7 py-3.5 rounded-lg bg-primary-500 text-slate-950 text-sm font-semibold shadow-lg shadow-primary-500/20 hover:bg-primary-400 transition-colors"
               >
-                Start with today&apos;s action
+                Get Your Husband Score →
               </Link>
               <Link
-                href="#how-to-guides"
+                href="/api/auth/login"
                 className="inline-flex items-center justify-center px-7 py-3.5 rounded-lg border border-slate-700 text-sm font-semibold text-slate-100 hover:bg-slate-900 transition-colors"
               >
-                Check out the guides
+                Sign Up / Sign In
               </Link>
             </div>
 
