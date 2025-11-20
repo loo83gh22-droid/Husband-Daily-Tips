@@ -25,9 +25,14 @@ interface JournalEntryProps {
 export default function JournalEntry({ reflection }: JournalEntryProps) {
   const [isFavorited, setIsFavorited] = useState(reflection.favorited || false);
   const [isTogglingFavorite, setIsTogglingFavorite] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedContent, setEditedContent] = useState(reflection.content);
+  const [isSaving, setIsSaving] = useState(false);
+  const [isShared, setIsShared] = useState(reflection.shared_to_forum || false);
+  const [isTogglingShare, setIsTogglingShare] = useState(false);
+  const [currentContent, setCurrentContent] = useState(reflection.content);
 
   const tip = reflection.user_tips?.tips;
-  const isShared = reflection.shared_to_forum;
   const action = reflection.action;
 
   const handleToggleFavorite = async () => {
@@ -52,6 +57,82 @@ export default function JournalEntry({ reflection }: JournalEntryProps) {
       alert('Failed to update favorite. Please try again.');
     } finally {
       setIsTogglingFavorite(false);
+    }
+  };
+
+  const handleSaveEdit = async () => {
+    if (!editedContent.trim()) {
+      alert('Content cannot be empty');
+      return;
+    }
+
+    setIsSaving(true);
+    try {
+      const response = await fetch('/api/reflections/update', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          reflectionId: reflection.id,
+          content: editedContent.trim(),
+        }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to update reflection');
+      }
+
+      const data = await response.json();
+      setCurrentContent(data.reflection.content);
+      setIsEditing(false);
+    } catch (error: any) {
+      console.error('Error updating reflection:', error);
+      alert(error.message || 'Failed to update reflection. Please try again.');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setEditedContent(currentContent);
+    setIsEditing(false);
+  };
+
+  const handleToggleShare = async () => {
+    setIsTogglingShare(true);
+    try {
+      const response = await fetch('/api/reflections/share', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          reflectionId: reflection.id,
+          shared: !isShared,
+        }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        if (response.status === 403) {
+          alert(error.error || 'Upgrade to Paid to share your wins to Team Wins');
+        } else {
+          throw new Error(error.error || 'Failed to update share status');
+        }
+        return;
+      }
+
+      const data = await response.json();
+      setIsShared(data.shared_to_forum);
+    } catch (error: any) {
+      console.error('Error toggling share:', error);
+      if (!error.message.includes('Upgrade')) {
+        alert(error.message || 'Failed to update share status. Please try again.');
+      }
+    } finally {
+      setIsTogglingShare(false);
     }
   };
 
@@ -96,6 +177,28 @@ export default function JournalEntry({ reflection }: JournalEntryProps) {
           </time>
         </div>
         <div className="flex items-center gap-2 ml-4">
+          {!isEditing && (
+            <button
+              onClick={() => setIsEditing(true)}
+              className="p-2 rounded-lg text-slate-400 hover:bg-slate-800 transition-colors"
+              aria-label="Edit entry"
+              title="Edit this entry"
+            >
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                />
+              </svg>
+            </button>
+          )}
           <button
             onClick={handleToggleFavorite}
             disabled={isTogglingFavorite}
@@ -109,7 +212,46 @@ export default function JournalEntry({ reflection }: JournalEntryProps) {
           >
             <span className="text-lg">{isFavorite ? '⭐' : '☆'}</span>
           </button>
-          {isShared && (
+          <button
+            onClick={handleToggleShare}
+            disabled={isTogglingShare || isEditing}
+            className={`p-2 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-default ${
+              isShared
+                ? 'bg-primary-500/10 text-primary-300 hover:bg-primary-500/20'
+                : 'text-slate-400 hover:bg-slate-800'
+            }`}
+            aria-label={isShared ? 'Remove from Team Wins' : 'Share to Team Wins'}
+            title={isShared ? 'Remove from Team Wins' : 'Share to Team Wins'}
+          >
+            {isShared ? (
+              <svg
+                className="w-4 h-4"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            ) : (
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"
+                />
+              </svg>
+            )}
+          </button>
+          {isShared && !isEditing && (
             <span className="text-xs px-2 py-1 bg-primary-500/20 text-primary-300 rounded-full border border-primary-500/30">
               Shared to Team Wins
             </span>
@@ -118,9 +260,36 @@ export default function JournalEntry({ reflection }: JournalEntryProps) {
       </div>
 
       <div className="prose prose-invert max-w-none">
-        <p className="text-slate-200 leading-relaxed whitespace-pre-line">
-          {reflection.content}
-        </p>
+        {isEditing ? (
+          <div className="space-y-4">
+            <textarea
+              value={editedContent}
+              onChange={(e) => setEditedContent(e.target.value)}
+              className="w-full min-h-[200px] p-4 bg-slate-800/50 border border-slate-700 rounded-lg text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500/50 resize-y"
+              placeholder="Write your reflection..."
+            />
+            <div className="flex items-center gap-3">
+              <button
+                onClick={handleSaveEdit}
+                disabled={isSaving || !editedContent.trim()}
+                className="px-4 py-2 bg-primary-500 text-slate-950 rounded-lg hover:bg-primary-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-medium text-sm"
+              >
+                {isSaving ? 'Saving...' : 'Save'}
+              </button>
+              <button
+                onClick={handleCancelEdit}
+                disabled={isSaving}
+                className="px-4 py-2 bg-slate-700 text-slate-200 rounded-lg hover:bg-slate-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-medium text-sm"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        ) : (
+          <p className="text-slate-200 leading-relaxed whitespace-pre-line">
+            {currentContent}
+          </p>
+        )}
       </div>
     </article>
   );
