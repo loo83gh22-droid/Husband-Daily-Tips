@@ -19,12 +19,6 @@ export default async function Home() {
 
           <div className="flex items-center gap-3">
             <Link
-              href="#how-to-guides"
-              className="hidden md:inline-flex text-sm text-slate-300 hover:text-white transition-colors"
-            >
-              How To Guides
-            </Link>
-            <Link
               href="#how-it-works"
               className="hidden md:inline-flex text-sm text-slate-300 hover:text-white transition-colors"
             >
@@ -59,7 +53,7 @@ export default async function Home() {
         <div className="max-w-5xl mx-auto grid md:grid-cols-[3fr,2fr] gap-12 items-start">
           <div>
             <p className="text-xs font-bold tracking-[0.2em] text-primary-400 uppercase mb-4">
-              STOP WINGING IT. START WINNING.
+              STOP WINGING IT. START WINNING IT.
             </p>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-slate-50 tracking-tight mb-6">
               Level up your marriage game,
@@ -67,16 +61,18 @@ export default async function Home() {
             </h1>
             <p className="text-base md:text-lg text-slate-300 leading-relaxed mb-8 max-w-2xl">
               No fluff. No BS. Just real, actionable steps from dudes who figured it out. 
-              One daily action. One clear win. Build the marriage you actually want.
+              One daily action. One clear win. Become the husband you and your partner deserve.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-4 mb-6">
+            <div className="mb-8">
               <Link
                 href="/survey"
-                className="inline-flex items-center justify-center px-7 py-3.5 rounded-lg bg-primary-500 text-slate-950 text-sm font-semibold shadow-lg shadow-primary-500/20 hover:bg-primary-400 transition-colors"
+                className="inline-flex items-center justify-center px-10 py-5 rounded-xl bg-primary-500 text-slate-950 text-lg font-bold shadow-2xl shadow-primary-500/30 hover:bg-primary-400 transition-all transform hover:scale-105"
               >
                 Get Your Husband Score →
               </Link>
+            </div>
+            <div className="flex flex-col sm:flex-row gap-4 mb-6">
               <Link
                 href="/api/auth/login"
                 className="inline-flex items-center justify-center px-7 py-3.5 rounded-lg border border-slate-700 text-sm font-semibold text-slate-100 hover:bg-slate-900 transition-colors"
@@ -188,90 +184,153 @@ export default async function Home() {
 
               <div className="bg-slate-900/60 border border-slate-800 rounded-xl p-6">
                 <p className="text-xs font-semibold text-primary-300 mb-2 uppercase tracking-[0.2em]">
-                  03. How To Guides
+                  03. Track & Reflect
                 </p>
                 <h3 className="text-lg font-semibold text-slate-50 mb-2">
-                  Get shit done around the house
+                  Journal your journey, share your wins
                 </h3>
                 <p className="text-sm text-slate-300">
-                  Practical guides to fix, build, and handle things. Show competence. Build confidence. 
-                  Actually impress your wife with skills.
+                  Keep a private journal of your reflections and optionally share wins with the community. 
+                  See your growth over time and learn from other husbands doing the work.
                 </p>
               </div>
             </div>
           </div>
         </section>
 
-        {/* How To Guides Section (Free) */}
-        <section
-          id="how-to-guides"
-          className="mt-24 border-t border-slate-800 pt-12 pb-8"
-        >
+        {/* Actions & Badges Section */}
+        <section className="mt-24 border-t border-slate-800 pt-12">
           <div className="max-w-5xl mx-auto">
-            <div className="flex items-center justify-between mb-6">
-              <div>
-                <h2 className="text-2xl md:text-3xl font-bold text-slate-50 mb-1">
-                  How To Guides: Get Shit Done
-                </h2>
-                <p className="text-sm text-slate-400">
-                  Practical guides to fix, build, and handle things around the house. Show competence. Build confidence.
+            <div className="flex items-baseline justify-between mb-8">
+              <h2 className="text-2xl md:text-3xl font-semibold text-slate-50">
+                Actions & Badges
+              </h2>
+              <p className="text-xs text-slate-400 uppercase tracking-[0.2em]">
+                GAMIFIED GROWTH
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-8 mb-12">
+              <div className="bg-slate-900/60 border border-slate-800 rounded-xl p-6">
+                <div className="flex items-center gap-3 mb-4">
+                  <span className="text-3xl">🎯</span>
+                  <h3 className="text-xl font-semibold text-slate-50">
+                    Daily Actions
+                  </h3>
+                </div>
+                <p className="text-sm text-slate-300 mb-4">
+                  Get one personalized action every day. Each action is specific, actionable, and takes less than 5 minutes. Complete actions to build your health bar and earn badges.
                 </p>
+                <div className="space-y-2 text-xs text-slate-400">
+                  <div className="flex items-center gap-2">
+                    <span className="text-primary-400">✓</span>
+                    <span>60+ actions across Communication, Romance, Partnership, Intimacy</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-primary-400">✓</span>
+                    <span>Personalized based on your relationship needs</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-primary-400">✓</span>
+                    <span>Track your progress and see your consistency</span>
+                  </div>
+                </div>
               </div>
-              <span className="hidden md:inline-flex rounded-full bg-emerald-500/10 border border-emerald-500/40 px-3 py-1 text-xs font-medium text-emerald-300">
-                Always free
-              </span>
+
+              <div className="bg-slate-900/60 border border-slate-800 rounded-xl p-6">
+                <div className="flex items-center gap-3 mb-4">
+                  <span className="text-3xl">🏆</span>
+                  <h3 className="text-xl font-semibold text-slate-50">
+                    Achievement Badges
+                  </h3>
+                </div>
+                <p className="text-sm text-slate-300 mb-4">
+                  Earn badges as you complete actions and build consistency. Badges recognize your progress in different relationship areas and motivate you to keep going.
+                </p>
+                <div className="space-y-2 text-xs text-slate-400">
+                  <div className="flex items-center gap-2">
+                    <span className="text-primary-400">✓</span>
+                    <span>Consistency badges for daily streaks</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-primary-400">✓</span>
+                    <span>Category badges for Communication, Romance, Partnership</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-primary-400">✓</span>
+                    <span>Visual progress tracking and milestones</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Journal & Team Wins Section */}
+        <section className="mt-24 border-t border-slate-800 pt-12">
+          <div className="max-w-5xl mx-auto">
+            <div className="flex items-baseline justify-between mb-8">
+              <h2 className="text-2xl md:text-3xl font-semibold text-slate-50">
+                Journal & Team Wins
+              </h2>
+              <p className="text-xs text-slate-400 uppercase tracking-[0.2em]">
+                REFLECT & CONNECT
+              </p>
             </div>
 
-            <div className="grid md:grid-cols-3 gap-6">
-              <article className="bg-slate-900/70 border border-slate-800 rounded-xl p-5 flex flex-col hover:border-primary-500/50 transition-colors">
-                <p className="text-[11px] font-bold text-emerald-300 uppercase tracking-[0.2em] mb-2">
-                  HOME REPAIR
+            <div className="grid md:grid-cols-2 gap-8">
+              <div className="bg-slate-900/60 border border-slate-800 rounded-xl p-6">
+                <div className="flex items-center gap-3 mb-4">
+                  <span className="text-3xl">📔</span>
+                  <h3 className="text-xl font-semibold text-slate-50">
+                    Private Journal
+                  </h3>
+                </div>
+                <p className="text-sm text-slate-300 mb-4">
+                  After completing each action, reflect on what happened. Your private journal helps you track your growth, notice patterns, and celebrate your wins. Mark favorites to revisit your best moments.
                 </p>
-                <h3 className="text-sm font-bold text-slate-50 mb-2">
-                  Fix a Leaky Faucet
-                </h3>
-                <p className="text-xs text-slate-300 mb-3 flex-1">
-                  Stop that annoying drip-drip-drip. This step-by-step guide will have you fixing faucets in under 20 minutes. Your wife will notice.
-                </p>
-                <p className="text-[11px] text-slate-500">
-                  Easy • 20 min
-                </p>
-              </article>
+                <div className="space-y-2 text-xs text-slate-400">
+                  <div className="flex items-center gap-2">
+                    <span className="text-primary-400">✓</span>
+                    <span>Private reflections on every action</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-primary-400">✓</span>
+                    <span>Favorite your best entries</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-primary-400">✓</span>
+                    <span>Track your journey over time</span>
+                  </div>
+                </div>
+              </div>
 
-              <article className="bg-slate-900/70 border border-slate-800 rounded-xl p-5 flex flex-col hover:border-primary-500/50 transition-colors">
-                <p className="text-[11px] font-bold text-sky-300 uppercase tracking-[0.2em] mb-2">
-                  ORGANIZATION
+              <div className="bg-slate-900/60 border border-slate-800 rounded-xl p-6">
+                <div className="flex items-center gap-3 mb-4">
+                  <span className="text-3xl">💪</span>
+                  <h3 className="text-xl font-semibold text-slate-50">
+                    Team Wins
+                  </h3>
+                </div>
+                <p className="text-sm text-slate-300 mb-4">
+                  Share your wins with other husbands who are on the same journey. See real victories, learn from breakthroughs, and build momentum together. It&apos;s a community of dudes actually doing the work.
                 </p>
-                <h3 className="text-sm font-bold text-slate-50 mb-2">
-                  Organize the Garage
-                </h3>
-                <p className="text-xs text-slate-300 mb-3 flex-1">
-                  Transform that disaster zone into a functional space. Learn the system that actually works and keeps things organized long-term.
-                </p>
-                <p className="text-[11px] text-slate-500">
-                  Medium • 2-3 hours
-                </p>
-              </article>
-
-              <article className="bg-slate-900/70 border border-slate-800 rounded-xl p-5 flex flex-col hover:border-primary-500/50 transition-colors">
-                <p className="text-[11px] font-bold text-amber-300 uppercase tracking-[0.2em] mb-2">
-                  OUTDOOR
-                </p>
-                <h3 className="text-sm font-bold text-slate-50 mb-2">
-                  Build a Raised Garden Bed
-                </h3>
-                <p className="text-xs text-slate-300 mb-3 flex-1">
-                  Show off your skills and give your wife fresh herbs or veggies. This project looks impressive but is surprisingly straightforward.
-                </p>
-                <p className="text-[11px] text-slate-500">
-                  Medium • 3-4 hours
-                </p>
-              </article>
+                <div className="space-y-2 text-xs text-slate-400">
+                  <div className="flex items-center gap-2">
+                    <span className="text-primary-400">✓</span>
+                    <span>Share your wins (optional, always private by default)</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-primary-400">✓</span>
+                    <span>See real victories from other husbands</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-primary-400">✓</span>
+                    <span>Build momentum and learn from the community</span>
+                  </div>
+                </div>
+              </div>
             </div>
-
-            <p className="mt-6 text-xs text-slate-500">
-              More guides coming soon. Share your own wins in Team Wins.
-            </p>
           </div>
         </section>
 
