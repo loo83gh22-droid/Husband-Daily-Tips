@@ -296,6 +296,12 @@ export default async function Dashboard() {
               </div>
             )}
 
+            {/* Calendar Prompts - Left Side */}
+            <div className="mt-6 space-y-4">
+              <AutoCalendarToggle />
+              <CalendarExport />
+            </div>
+
             {/* Previous Tips Link */}
             <div className="mt-6 text-center">
               <Link
@@ -333,10 +339,6 @@ export default async function Dashboard() {
             </div>
 
             <BadgesDisplay userId={user.id} />
-
-            <AutoCalendarToggle />
-
-            <CalendarExport />
 
             <div className="bg-slate-900/70 border border-slate-800 rounded-xl p-4">
               <p className="text-xs text-slate-300 mb-1 font-medium">

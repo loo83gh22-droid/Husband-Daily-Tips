@@ -126,64 +126,88 @@ export default function HealthBar({ value }: HealthBarProps) {
   else if (clamped >= 45) label = 'Needs attention';
   else label = 'At risk';
 
+  // Dynamic label color based on health
+  const getLabelColor = () => {
+    if (clamped >= 85) return 'text-emerald-400';
+    if (clamped >= 65) return 'text-green-400';
+    if (clamped >= 45) return 'text-yellow-400';
+    return 'text-rose-400';
+  };
+
   return (
     <>
-      <div className="bg-slate-900/70 border border-slate-800 rounded-2xl p-5 md:p-6 shadow-lg">
-        <div className="flex items-center justify-between mb-3">
-          <div>
-            <p className="text-[11px] font-semibold text-slate-400 uppercase tracking-[0.2em]">
-              Relationship health
-            </p>
-            <p className="mt-1 text-xs text-slate-300">
-              A simple mirror of how consistently you&apos;re showing up.
-            </p>
+      <div className="bg-gradient-to-br from-slate-900/90 via-slate-900/80 to-slate-900/90 border border-slate-700/50 rounded-2xl p-6 md:p-7 shadow-2xl backdrop-blur-sm relative overflow-hidden">
+        {/* Subtle glow effect */}
+        <div className="absolute inset-0 bg-gradient-to-r from-primary-500/5 via-transparent to-emerald-500/5 pointer-events-none" />
+        
+        <div className="relative z-10">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                Relationship Health
+              </p>
+              <p className="mt-1.5 text-xs text-slate-300 leading-relaxed">
+                A simple mirror of how consistently you&apos;re showing up.
+              </p>
+            </div>
+            <div className="text-right">
+              <p className={`text-base font-bold ${getLabelColor()} drop-shadow-lg`}>{label}</p>
+              <p className="text-sm font-semibold text-slate-200 mt-0.5">{clamped.toFixed(1)}%</p>
+            </div>
           </div>
-          <div className="text-right">
-            <p className="text-sm font-semibold text-slate-100">{label}</p>
-            <p className="text-xs text-slate-500">{clamped}%</p>
-          </div>
-        </div>
 
-        <div className="h-4 w-full rounded-full bg-slate-800 overflow-hidden border border-slate-700 mb-2 relative">
-          <div
-            className="h-full bg-gradient-to-r from-emerald-400 via-yellow-400 to-red-500 transition-all duration-500 ease-out"
-            style={{ width: `${clamped}%` }}
-          />
-          {/* Milestone markers */}
-          {MILESTONES.map((milestone) => (
+          <div className="h-6 w-full rounded-full bg-slate-800/80 overflow-hidden border-2 border-slate-700/60 mb-3 relative shadow-inner">
+            {/* Animated glow effect on the progress bar */}
             <div
-              key={milestone}
-              className={`absolute top-0 bottom-0 w-0.5 ${
-                clamped >= milestone
-                  ? milestone === 100
-                    ? 'bg-emerald-400'
-                    : milestone === 90
-                      ? 'bg-pink-400'
-                      : milestone === 80
-                        ? 'bg-red-400'
-                        : milestone === 70
-                          ? 'bg-orange-400'
-                          : milestone === 60
-                            ? 'bg-amber-400'
-                            : 'bg-yellow-400'
-                  : 'bg-slate-600'
-              } transition-colors`}
-              style={{ left: `${milestone}%` }}
-              title={`${milestone}% milestone`}
-            />
-          ))}
-        </div>
+              className="h-full bg-gradient-to-r from-red-500 via-yellow-500 via-green-400 to-emerald-400 transition-all duration-700 ease-out relative overflow-hidden"
+              style={{ width: `${clamped}%` }}
+            >
+              {/* Shimmer effect */}
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shimmer" />
+              
+              {/* Subtle inner glow */}
+              <div className="absolute inset-0 bg-gradient-to-b from-white/10 to-transparent" />
+            </div>
+            
+            {/* Milestone markers - more prominent */}
+            {MILESTONES.map((milestone) => (
+              <div
+                key={milestone}
+                className={`absolute top-0 bottom-0 w-1 ${
+                  clamped >= milestone
+                    ? milestone === 100
+                      ? 'bg-emerald-300 shadow-lg shadow-emerald-400/50'
+                      : milestone === 90
+                        ? 'bg-pink-300 shadow-lg shadow-pink-400/50'
+                        : milestone === 80
+                          ? 'bg-red-300 shadow-lg shadow-red-400/50'
+                          : milestone === 70
+                            ? 'bg-orange-300 shadow-lg shadow-orange-400/50'
+                            : milestone === 60
+                              ? 'bg-amber-300 shadow-lg shadow-amber-400/50'
+                              : 'bg-yellow-300 shadow-lg shadow-yellow-400/50'
+                    : 'bg-slate-600/40'
+                } transition-all duration-300`}
+                style={{ left: `calc(${milestone}% - 2px)` }}
+                title={`${milestone}% milestone`}
+              />
+            ))}
+            
+            {/* Additional visual depth with inner border */}
+            <div className="absolute inset-0 rounded-full border border-white/5 pointer-events-none" />
+          </div>
 
-        <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-1">
-          <p className="text-[11px] text-slate-400">
-            • Completing today&apos;s action nudges this up.
-          </p>
-          <p className="text-[11px] text-slate-400">
-            • Missing days in a row slowly drains it.
-          </p>
-          <p className="text-[11px] text-slate-400">
-            • Big husband moves give visible boosts.
-          </p>
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-1.5 mt-2">
+            <p className="text-[11px] text-slate-400 font-medium">
+              • Completing today&apos;s action nudges this up.
+            </p>
+            <p className="text-[11px] text-slate-400 font-medium">
+              • Missing days in a row slowly drains it.
+            </p>
+            <p className="text-[11px] text-slate-400 font-medium">
+              • Big husband moves give visible boosts.
+            </p>
+          </div>
         </div>
       </div>
 
