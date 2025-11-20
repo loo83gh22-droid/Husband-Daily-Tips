@@ -385,7 +385,7 @@ export default async function Dashboard() {
               <CalendarExport />
             </div>
 
-            {/* Previous Tips Link */}
+            {/* Previous Actions Link */}
             <div className="mt-6 text-center">
               <Link
                 href="/dashboard/tips"

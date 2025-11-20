@@ -43,12 +43,12 @@ export default async function TipsPage() {
 
       <main className="container mx-auto px-4 py-8 md:py-10">
         <div className="max-w-4xl mx-auto">
-          <h1 className="text-3xl md:text-4xl font-semibold text-slate-50 mb-8">Your Tips History</h1>
+          <h1 className="text-3xl md:text-4xl font-semibold text-slate-50 mb-8">Your Actions History</h1>
 
           {tips.length === 0 ? (
             <div className="bg-slate-900/80 border border-slate-800 rounded-xl p-8 text-center">
               <p className="text-slate-300">
-                You haven't received any tips yet. Check back tomorrow!
+                You haven't completed any actions yet. Check back tomorrow!
               </p>
             </div>
           ) : (

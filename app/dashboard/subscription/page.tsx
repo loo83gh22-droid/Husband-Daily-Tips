@@ -29,35 +29,27 @@ export default async function SubscriptionPage() {
       price: 0,
       tier: 'free',
       features: [
-        '1 tip per week',
-        'Basic tips library',
+        '1 action per week',
+        'Basic action library',
         'Account access',
+        'No health bar tracking',
+        'No badges',
+        'No journal or Team Wins',
       ],
     },
     {
-      name: 'Premium',
+      name: 'Paid',
       price: 19.99,
       tier: 'premium',
       features: [
-        'Daily personalized tips',
-        'Progress tracking',
+        'Daily personalized actions',
+        'Full health bar tracking',
         'Achievement badges',
+        'Private journal & Team Wins',
+        'All features unlocked',
         'Expert relationship advice',
-        'Tip favorites',
       ],
       popular: true,
-    },
-    {
-      name: 'Pro',
-      price: 29.99,
-      tier: 'pro',
-      features: [
-        'Everything in Premium',
-        'Weekly coaching resources',
-        'Priority support',
-        'Advanced analytics',
-        'Relationship check-ins',
-      ],
     },
   ];
 
@@ -70,11 +62,17 @@ export default async function SubscriptionPage() {
           <h1 className="text-3xl md:text-4xl font-semibold text-slate-50 mb-4 text-center">
             Choose Your Plan
           </h1>
+          <div className="bg-primary-500/10 border border-primary-500/30 rounded-xl p-6 mb-8 max-w-2xl mx-auto text-center">
+            <p className="text-primary-300 font-semibold mb-2">✨ 7-Day Free Trial</p>
+            <p className="text-sm text-slate-300">
+              Try everything free for 7 days. No credit card required. After the trial, choose Free or Paid.
+            </p>
+          </div>
           <p className="text-center text-slate-400 mb-12 max-w-2xl mx-auto">
-            Select the plan that works best for you. You can upgrade or downgrade at any time.
+            You can upgrade or downgrade at any time. Cancel anytime.
           </p>
 
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
           {plans.map((plan) => {
             const isCurrent = plan.tier === currentTier;
             const isPopular = plan.popular;
@@ -98,11 +96,22 @@ export default async function SubscriptionPage() {
                     CURRENT PLAN
                   </div>
                 )}
+                {plan.price === 0 && (
+                  <div className="bg-emerald-500/10 border border-emerald-500/40 px-3 py-1 rounded-full inline-block mb-4 text-xs font-medium text-emerald-300">
+                    7-DAY FREE TRIAL
+                  </div>
+                )}
+                {plan.popular && (
+                  <div className="bg-primary-500/20 border border-primary-500/40 px-3 py-1 rounded-full inline-block mb-4 text-xs font-medium text-primary-300">
+                    7-DAY FREE TRIAL
+                  </div>
+                )}
                 <h3 className="text-2xl font-bold text-slate-50 mb-2">{plan.name}</h3>
-                <div className="text-4xl font-bold text-slate-50 mb-4">
+                <div className="text-4xl font-bold text-slate-50 mb-2">
                   ${plan.price}
                   <span className="text-lg text-slate-400">/month</span>
                 </div>
+                <p className="text-xs text-slate-400 mb-4">After 7-day trial</p>
                 <ul className="space-y-3 mb-6">
                   {plan.features.map((feature, index) => (
                     <li key={index} className="flex items-center text-slate-300">
