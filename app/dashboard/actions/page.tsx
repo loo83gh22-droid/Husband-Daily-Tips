@@ -11,7 +11,7 @@ async function getActions(auth0Id: string) {
     .eq('auth0_id', auth0Id)
     .single();
 
-  if (!user) return { actions: [], completedMap: new Map() };
+  if (!user) return { actions: [], completedMap: new Map(), favoritedActions: [] };
 
   // Get all actions - use distinct to avoid duplicates
   const { data: actions } = await supabase
@@ -48,10 +48,37 @@ async function getActions(auth0Id: string) {
     });
   });
 
+  // Get favorited actions
+  const { data: favoritedActionsData } = await supabase
+    .from('user_daily_actions')
+    .select('*, actions(*)')
+    .eq('user_id', user.id)
+    .eq('favorited', true)
+    .order('date', { ascending: false });
+
+  // Extract unique favorited actions (by action_id)
+  const favoritedActionIds = new Set<string>();
+  const favoritedActions = favoritedActionsData
+    ? favoritedActionsData
+        .filter((fad) => {
+          const actionId = fad.actions?.id;
+          if (!actionId || favoritedActionIds.has(actionId)) return false;
+          favoritedActionIds.add(actionId);
+          return true;
+        })
+        .map((fad) => ({
+          ...fad.actions,
+          favorited: true,
+          favoritedDate: fad.date,
+        }))
+        .filter((action) => action !== null)
+    : [];
+
   return {
     actions: uniqueActions,
     completedMap,
     userId: user.id,
+    favoritedActions,
   };
 }
 
@@ -63,15 +90,19 @@ export default async function ActionsPage() {
   }
 
   const auth0Id = session.user.sub;
-  const { actions, completedMap, userId } = await getActions(auth0Id);
+  const { actions, completedMap, userId, favoritedActions } = await getActions(auth0Id);
+
+  // Filter out favorited actions from main actions list (they'll be shown separately)
+  const favoritedActionIds = new Set(favoritedActions.map((fa: any) => fa.id));
+  const nonFavoritedActions = actions.filter((action) => !favoritedActionIds.has(action.id));
 
   // Group actions by theme/category (ensure each action appears only once)
   // Use a Map to ensure uniqueness by ID
   const actionsByTheme: Record<string, Array<typeof actions[0]>> = {};
   const seenActionIds = new Set<string>();
   
-  // Double-check for duplicates and group by theme
-  actions.forEach((action) => {
+  // Double-check for duplicates and group by theme (only non-favorited actions)
+  nonFavoritedActions.forEach((action) => {
     // Skip if we've already seen this action ID
     if (seenActionIds.has(action.id)) {
       console.warn(`Duplicate action detected: ${action.name} (${action.id})`);
@@ -126,6 +157,26 @@ export default async function ActionsPage() {
               </span>
             </div>
           </div>
+
+          {/* Favorited Actions Section */}
+          {favoritedActions && favoritedActions.length > 0 && (
+            <section className="mb-8 bg-yellow-500/10 border border-yellow-500/30 rounded-xl p-6 md:p-8">
+              <div className="flex items-center gap-2 mb-6">
+                <span className="text-2xl">⭐</span>
+                <h2 className="text-xl md:text-2xl font-semibold text-slate-50">
+                  Favorites
+                </h2>
+                <span className="text-sm text-slate-400">
+                  ({favoritedActions.length} action{favoritedActions.length !== 1 ? 's' : ''})
+                </span>
+              </div>
+              <ActionsList
+                actions={favoritedActions}
+                completedMap={completedMap}
+                userId={userId}
+              />
+            </section>
+          )}
 
           <div className="space-y-8">
             {Object.entries(actionsByTheme).map(([theme, themeActions]) => {
