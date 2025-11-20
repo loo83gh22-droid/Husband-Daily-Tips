@@ -119,17 +119,6 @@ export default async function ActionsPage() {
   
   // Note: Each theme section renders its own ActionsList component
 
-  // Calculate progress for each theme
-  const themeProgress: Record<string, { completed: number; total: number }> = {};
-  Object.keys(actionsByTheme).forEach((theme) => {
-    const themeActions = actionsByTheme[theme];
-    const completed = themeActions.filter((a) => completedMap.has(a.id)).length;
-    themeProgress[theme] = {
-      completed,
-      total: themeActions.length,
-    };
-  });
-
   return (
     <div className="min-h-screen bg-slate-950">
       <DashboardNav />
@@ -180,7 +169,6 @@ export default async function ActionsPage() {
 
           <div className="space-y-8">
             {Object.entries(actionsByTheme).map(([theme, themeActions]) => {
-              const progress = themeProgress[theme];
               const themeName =
                 theme.charAt(0).toUpperCase() + theme.slice(1).replace(/_/g, ' ');
 
@@ -208,21 +196,6 @@ export default async function ActionsPage() {
                       </span>
                       {themeName}
                     </h2>
-                    <div className="text-sm text-slate-400">
-                      <span className="text-primary-300 font-semibold">{progress.completed}</span> /{' '}
-                      {progress.total} completed
-                    </div>
-                  </div>
-
-                  <div className="mb-4">
-                    <div className="w-full bg-slate-800 rounded-full h-2">
-                      <div
-                        className="bg-primary-500 h-2 rounded-full transition-all"
-                        style={{
-                          width: `${(progress.completed / progress.total) * 100}%`,
-                        }}
-                      />
-                    </div>
                   </div>
 
                   <ActionsList
