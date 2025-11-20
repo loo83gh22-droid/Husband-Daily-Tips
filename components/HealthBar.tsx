@@ -208,6 +208,18 @@ export default function HealthBar({ value }: HealthBarProps) {
               • Big husband moves give visible boosts.
             </p>
           </div>
+
+          {/* How your health works section */}
+          <div className="mt-4 pt-4 border-t border-slate-700/50">
+            <p className="text-xs text-slate-300 mb-2 font-semibold">
+              How your health works
+            </p>
+            <p className="text-[11px] text-slate-400 leading-relaxed">
+              Your bar climbs when you follow through on daily actions and make intentional
+              &quot;big husband&quot; moves. It slowly drains when you disappear. It&apos;s not a score
+              for your wife—it&apos;s an honest dashboard for you.
+            </p>
+          </div>
         </div>
       </div>
 
