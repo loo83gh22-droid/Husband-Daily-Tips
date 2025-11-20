@@ -53,7 +53,21 @@ export default function BadgesDisplay({ userId }: BadgesDisplayProps) {
   }
 
   const earnedBadges = badges.filter((b) => b.earned_at);
-  const pendingBadges = badges.filter((b) => !b.earned_at);
+  
+  // Filter in-progress badges: badges that have officially started (progress > 0%) but not completed (< 100%)
+  const inProgressBadges = badges
+    .filter((b) => {
+      if (b.earned_at) return false; // Already earned
+      const progress = b.progress;
+      return progress && progress.percentage > 0 && progress.percentage < 100;
+    })
+    .sort((a, b) => {
+      // Sort by completion percentage (descending - closest to completion first)
+      const aPercent = a.progress?.percentage || 0;
+      const bPercent = b.progress?.percentage || 0;
+      return bPercent - aPercent;
+    })
+    .slice(0, 10); // Limit to 10 badges
 
   return (
     <div className="bg-slate-900/70 border border-slate-800 rounded-xl p-4 md:p-6">
@@ -84,13 +98,14 @@ export default function BadgesDisplay({ userId }: BadgesDisplayProps) {
         </div>
       )}
 
-      {pendingBadges.length > 0 && (
+      {inProgressBadges.length > 0 && (
         <div>
-          <p className="text-xs text-slate-400 mb-3 uppercase tracking-wide">In Progress</p>
+          <p className="text-xs text-slate-400 mb-3 uppercase tracking-wide">
+            In Progress ({inProgressBadges.length})
+          </p>
           <div className="space-y-3">
-            {pendingBadges.slice(0, 6).map((badge) => {
-              const progress = badge.progress;
-              const showProgress = progress && progress.target > 0;
+            {inProgressBadges.map((badge) => {
+              const progress = badge.progress!; // We know it exists from filter
 
               return (
                 <div
@@ -104,38 +119,28 @@ export default function BadgesDisplay({ userId }: BadgesDisplayProps) {
                       <p className="text-xs font-medium text-slate-300 leading-tight mb-1">
                         {badge.name}
                       </p>
-                      {showProgress && (
-                        <div className="flex items-center gap-2">
-                          <div className="flex-1 bg-slate-700/50 rounded-full h-1.5 overflow-hidden">
-                            <div
-                              className="bg-primary-500 h-full rounded-full transition-all"
-                              style={{ width: `${progress.percentage}%` }}
-                            />
-                          </div>
-                          <span className="text-[10px] text-slate-400 font-medium whitespace-nowrap">
-                            {progress.current}/{progress.target}
-                          </span>
+                      <div className="flex items-center gap-2">
+                        <div className="flex-1 bg-slate-700/50 rounded-full h-1.5 overflow-hidden">
+                          <div
+                            className="bg-primary-500 h-full rounded-full transition-all"
+                            style={{ width: `${progress.percentage}%` }}
+                          />
                         </div>
-                      )}
-                      {!showProgress && (
-                        <p className="text-[10px] text-slate-500">Not started</p>
-                      )}
+                        <span className="text-[10px] text-slate-400 font-medium whitespace-nowrap">
+                          {progress.current}/{progress.target} ({progress.percentage}%)
+                        </span>
+                      </div>
                     </div>
                   </div>
                 </div>
               );
             })}
           </div>
-          {pendingBadges.length > 6 && (
-            <p className="text-xs text-slate-500 mt-3 text-center">
-              +{pendingBadges.length - 6} more to unlock
-            </p>
-          )}
         </div>
       )}
 
-      {badges.length === 0 && (
-        <p className="text-sm text-slate-400 text-center py-4">No badges available yet.</p>
+      {inProgressBadges.length === 0 && earnedBadges.length === 0 && (
+        <p className="text-sm text-slate-400 text-center py-4">No badges in progress yet.</p>
       )}
     </div>
   );
