@@ -60,7 +60,7 @@ export default async function SurveyPage() {
             </p>
           </div>
 
-          <SurveyForm userId={user?.id || ''} questions={questions} />
+          <SurveyForm userId={user?.id || ''} questions={questions} isPublic={false} />
         </div>
       </main>
     </div>

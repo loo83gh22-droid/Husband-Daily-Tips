@@ -9,6 +9,7 @@ import BadgesDisplay from '@/components/BadgesDisplay';
 import DashboardNav from '@/components/DashboardNav';
 import CalendarExport from '@/components/CalendarExport';
 import AutoCalendarToggle from '@/components/AutoCalendarToggle';
+import OnboardingSurvey from '@/components/OnboardingSurvey';
 import Link from 'next/link';
 
 async function getUserData(auth0Id: string) {
@@ -246,7 +247,7 @@ async function getUserStats(userId: string | null) {
   const totalBadgeBonuses =
     userBadges?.reduce((sum: number, ub: any) => sum + (ub.badges?.health_bonus || 0), 0) || 0;
 
-  // Calculate health with decay using the new formula (capped at 6 points per day)
+  // Calculate health improvements from actions (this is improvement points, not total health)
   const { calculateHealthScore } = await import('@/lib/health');
   const calculatedHealth = calculateHealthScore(
     {
@@ -260,11 +261,16 @@ async function getUserStats(userId: string | null) {
     totalBadgeBonuses, // Now 0 (badges are reference only)
   );
 
-  // If user has baseline health, add it to calculated health (but don't go above 100)
-  // Baseline represents their starting point, and they can build from there
-  // If no actions yet, use baseline; otherwise baseline + calculated improvements
+  // If user has baseline health, start from baseline and add improvements (capped at 100)
+  // Baseline represents their starting relationship health from the survey
+  // As they complete actions, health improves from baseline
+  // Formula: health = min(100, baseline + improvements)
+  // Improvements are scaled so they don't add too much (cap improvements at 40 points max)
+  const maxImprovementPoints = 40; // Maximum improvement from actions
+  const improvementPoints = Math.min(calculatedHealth, maxImprovementPoints);
+  
   const healthScore = baselineHealth !== null
-    ? Math.min(100, baselineHealth + calculatedHealth)
+    ? Math.min(100, baselineHealth + improvementPoints)
     : calculatedHealth;
 
   // Extract category scores for personalization
