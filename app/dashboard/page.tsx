@@ -10,6 +10,7 @@ import DashboardNav from '@/components/DashboardNav';
 import CalendarExport from '@/components/CalendarExport';
 import AutoCalendarToggle from '@/components/AutoCalendarToggle';
 import OnboardingSurvey from '@/components/OnboardingSurvey';
+import ActiveChallenges from '@/components/ActiveChallenges';
 import Link from 'next/link';
 
 async function getUserData(auth0Id: string) {
@@ -83,15 +84,20 @@ async function getTodayAction(userId: string | null, subscriptionTier: string, c
       'partnership': 'Partnership',
       'intimacy': 'Intimacy',
       'conflict': 'Communication', // Conflict is handled through Communication
+      'connection': 'Roommate Syndrome Recovery', // Connection issues → Roommate Syndrome Recovery
     };
 
     // Find lowest scoring category (where they need most improvement)
+    // Note: connection score might be in intimacy_score if we haven't added connection_score column yet
+    const connectionScore = categoryScores.connection_score || categoryScores.intimacy_score || 50;
+    
     const scores = [
       { category: 'communication', score: categoryScores.communication_score || 50 },
       { category: 'romance', score: categoryScores.romance_score || 50 },
       { category: 'partnership', score: categoryScores.partnership_score || 50 },
       { category: 'intimacy', score: categoryScores.intimacy_score || 50 },
       { category: 'conflict', score: categoryScores.conflict_score || 50 },
+      { category: 'connection', score: connectionScore },
     ];
     
     scores.sort((a, b) => a.score - b.score);
@@ -424,6 +430,9 @@ export default async function Dashboard() {
             <BadgesDisplay userId={user.id} />
           </div>
         </div>
+
+        {/* Weekly Challenges Section */}
+        <ActiveChallenges />
       </main>
     </div>
   );
