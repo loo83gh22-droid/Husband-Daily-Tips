@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import ChallengeJoinSuccessModal from './ChallengeJoinSuccessModal';
+import ChallengeErrorModal from './ChallengeErrorModal';
 
 interface Challenge {
   id: string;
@@ -48,6 +49,8 @@ export default function ChallengeCard({ challenge, userChallenge, userId, onJoin
   const [isJoining, setIsJoining] = useState(false);
   const [isJoined, setIsJoined] = useState(!!userChallenge);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [showErrorModal, setShowErrorModal] = useState(false);
+  const [errorChallengeName, setErrorChallengeName] = useState('');
 
   const startDate = new Date(challenge.start_date);
   const endDate = new Date(challenge.end_date);
@@ -86,8 +89,20 @@ export default function ChallengeCard({ challenge, userChallenge, userId, onJoin
         // Handle error response
         const errorData = await response.json().catch(() => ({}));
         const errorMessage = errorData.message || errorData.error || 'Failed to join challenge';
-        // Show a more user-friendly alert
-        alert(errorMessage);
+        
+        // If it's a "one challenge at a time" error, extract challenge name and show nice modal
+        if (errorMessage.includes('currently participating')) {
+          // Extract challenge name from message
+          const match = errorMessage.match(/"([^"]+)"/);
+          if (match) {
+            setErrorChallengeName(match[1]);
+            setShowErrorModal(true);
+          } else {
+            alert(errorMessage);
+          }
+        } else {
+          alert(errorMessage);
+        }
         // Don't set isJoined if there was an error
       }
     } catch (error) {
