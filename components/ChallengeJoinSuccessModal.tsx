@@ -90,21 +90,24 @@ export default function ChallengeJoinSuccessModal({
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
       <div className="bg-slate-900 border-2 border-primary-500 rounded-2xl p-8 max-w-md w-full mx-4 shadow-2xl">
         <div className="text-center mb-6">
-          <div className="text-6xl mb-4">🎉</div>
+          <div className="text-6xl mb-4">🎯</div>
           <h2 className="text-2xl font-bold text-slate-50 mb-2">
-            Challenge Joined!
+            Boom. You&apos;re In.
           </h2>
-          <p className="text-slate-300">
-            You've successfully joined the <strong className="text-primary-400">{challengeName}</strong> challenge!
+          <p className="text-slate-300 text-lg">
+            7 days. 7 chances to level up. Your wife notices in 3... 2... 1...
+          </p>
+          <p className="text-slate-400 text-sm mt-2">
+            Welcome to <strong className="text-primary-400">{challengeName}</strong>
           </p>
         </div>
 
         <div className="bg-slate-800/50 rounded-lg p-4 mb-6">
-          <p className="text-sm text-slate-300 mb-4">
-            <strong className="text-primary-400">🎯 7 days of personalized actions</strong> have been assigned to your account!
+          <p className="text-sm text-slate-300 mb-2">
+            <strong className="text-primary-400">Here&apos;s the deal:</strong> We&apos;ve locked in 7 personalized actions, one for each day. These aren&apos;t random—they&apos;re tailored to you.
           </p>
           <p className="text-xs text-slate-400">
-            Download them to your calendar to plan ahead and lock in your commitment. Pre-assigned actions take precedence over the daily algorithm.
+            Want to be extra smart? Add them to your calendar now. Planning ahead = actually doing it. Pre-assigned actions take priority over the daily algorithm, so you&apos;re locked and loaded.
           </p>
         </div>
 

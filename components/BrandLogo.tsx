@@ -36,7 +36,7 @@ export default function BrandLogo({ variant = 'nav', showTagline = true }: Brand
               isHero ? 'text-sm md:text-base mt-1' : 'text-[11px]'
             }`}
           >
-            Level up your marriage game.
+            Your daily mission, delivered.
           </p>
         )}
       </div>
