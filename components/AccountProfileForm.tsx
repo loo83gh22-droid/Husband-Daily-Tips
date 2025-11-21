@@ -7,6 +7,7 @@ interface UserProfile {
   wedding_date: string | null;
   post_anonymously: boolean;
   name: string | null;
+  timezone: string | null;
 }
 
 interface AccountProfileFormProps {
@@ -21,9 +22,11 @@ export default function AccountProfileForm({ initialProfile, email }: AccountPro
     wedding_date: null,
     post_anonymously: false,
     name: null,
+    timezone: null,
   };
 
   const [username, setUsername] = useState(safeProfile.username || '');
+  const [timezone, setTimezone] = useState(safeProfile.timezone || Intl.DateTimeFormat().resolvedOptions().timeZone);
   // Format wedding_date for date input (YYYY-MM-DD format)
   const formatDateForInput = (date: string | null | undefined): string => {
     if (!date) return '';
@@ -97,6 +100,7 @@ export default function AccountProfileForm({ initialProfile, email }: AccountPro
           username: username.trim() || null,
           wedding_date: weddingDateValue,
           post_anonymously: postAnonymously,
+          timezone: timezone || null,
         }),
       });
 
@@ -180,6 +184,35 @@ export default function AccountProfileForm({ initialProfile, email }: AccountPro
             />
             <p className="text-xs text-slate-500 mt-1">
               Your years married will be automatically calculated and shown on your Team Wins posts to help others relate to your experience.
+            </p>
+          </div>
+
+          {/* Timezone */}
+          <div>
+            <label htmlFor="timezone" className="block text-sm font-medium text-slate-300 mb-2">
+              Timezone
+            </label>
+            <select
+              id="timezone"
+              value={timezone}
+              onChange={(e) => setTimezone(e.target.value)}
+              className="w-full px-4 py-2 bg-slate-800/50 border border-slate-700 rounded-lg text-slate-200 focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500/50"
+            >
+              <option value="America/New_York">Eastern Time (ET)</option>
+              <option value="America/Chicago">Central Time (CT)</option>
+              <option value="America/Denver">Mountain Time (MT)</option>
+              <option value="America/Los_Angeles">Pacific Time (PT)</option>
+              <option value="America/Anchorage">Alaska Time (AKT)</option>
+              <option value="Pacific/Honolulu">Hawaii Time (HST)</option>
+              <option value="Europe/London">London (GMT/BST)</option>
+              <option value="Europe/Paris">Paris (CET/CEST)</option>
+              <option value="Europe/Berlin">Berlin (CET/CEST)</option>
+              <option value="Asia/Tokyo">Tokyo (JST)</option>
+              <option value="Asia/Shanghai">Shanghai (CST)</option>
+              <option value="Australia/Sydney">Sydney (AEDT/AEST)</option>
+            </select>
+            <p className="text-xs text-slate-500 mt-1">
+              Your daily action email will be sent at 7pm in your timezone.
             </p>
           </div>
 

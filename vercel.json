@@ -6,8 +6,8 @@
   "regions": ["iad1"],
   "crons": [
     {
-      "path": "/api/cron/send-tomorrow-tips",
-      "schedule": "0 12 * * *"
+      "path": "/api/cron/send-daily-emails",
+      "schedule": "0 * * * *"
     }
   ]
 }

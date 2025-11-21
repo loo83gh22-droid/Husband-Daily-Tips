@@ -9,7 +9,7 @@ async function getUserProfile(auth0Id: string) {
     // Try to get wedding_date first (if migration has been run)
     const { data: user, error } = await supabase
       .from('users')
-      .select('username, wedding_date, post_anonymously, name')
+      .select('username, wedding_date, post_anonymously, name, timezone')
       .eq('auth0_id', auth0Id)
       .single();
 
@@ -28,6 +28,7 @@ async function getUserProfile(auth0Id: string) {
             wedding_date: null,
             post_anonymously: false,
             name: null,
+            timezone: 'America/New_York',
           };
         }
 
@@ -36,6 +37,7 @@ async function getUserProfile(auth0Id: string) {
           wedding_date: null, // Migration not run yet
           post_anonymously: userFallback.post_anonymously || false,
           name: userFallback.name,
+          timezone: 'America/New_York',
         };
       }
 
@@ -44,6 +46,7 @@ async function getUserProfile(auth0Id: string) {
         wedding_date: null,
         post_anonymously: false,
         name: null,
+        timezone: 'America/New_York',
       };
     }
 
@@ -53,6 +56,7 @@ async function getUserProfile(auth0Id: string) {
         wedding_date: null,
         post_anonymously: false,
         name: null,
+        timezone: 'America/New_York',
       };
     }
 
@@ -61,6 +65,7 @@ async function getUserProfile(auth0Id: string) {
       wedding_date: user.wedding_date,
       post_anonymously: user.post_anonymously || false,
       name: user.name,
+      timezone: user.timezone || 'America/New_York',
     };
   } catch (err) {
     console.error('Error fetching user profile:', err);
@@ -69,6 +74,7 @@ async function getUserProfile(auth0Id: string) {
       wedding_date: null,
       post_anonymously: false,
       name: null,
+      timezone: 'America/New_York',
     };
   }
 }
