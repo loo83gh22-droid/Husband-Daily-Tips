@@ -69,7 +69,9 @@ export async function POST(request: Request) {
       return NextResponse.json(
         { 
           error: 'You can only join one challenge at a time',
-          message: `You're currently participating in "${challengeName}". Complete it before joining a new challenge.`
+          message: `You're currently participating in "${challengeName}". Complete it before joining a new challenge.`,
+          challengeName: challengeName,
+          challenge_name: challengeName
         },
         { status: 400 }
       );

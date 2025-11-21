@@ -87,21 +87,29 @@ export default function ChallengeCard({ challenge, userChallenge, userId, onJoin
         }
       } else {
         // Handle error response
-        const errorData = await response.json().catch(() => ({}));
-        const errorMessage = errorData.message || errorData.error || 'Failed to join challenge';
-        
-        // If it's a "one challenge at a time" error, extract challenge name and show nice modal
-        if (errorMessage.includes('currently participating')) {
-          // Extract challenge name from message
-          const match = errorMessage.match(/"([^"]+)"/);
-          if (match) {
-            setErrorChallengeName(match[1]);
-            setShowErrorModal(true);
+        try {
+          const errorData = await response.json();
+          const errorMessage = errorData.message || errorData.error || 'Failed to join challenge';
+          
+          // If it's a "one challenge at a time" error, extract challenge name and show nice modal
+          if (errorMessage.includes('currently participating') || errorData.error === 'You can only join one challenge at a time') {
+            // Extract challenge name from message
+            const match = errorMessage.match(/"([^"]+)"/);
+            if (match) {
+              setErrorChallengeName(match[1]);
+              setShowErrorModal(true);
+            } else {
+              // Fallback: try to get challenge name from error data
+              const challengeNameFromData = errorData.challengeName || errorData.challenge_name || 'a challenge';
+              setErrorChallengeName(challengeNameFromData);
+              setShowErrorModal(true);
+            }
           } else {
             alert(errorMessage);
           }
-        } else {
-          alert(errorMessage);
+        } catch (parseError) {
+          // If we can't parse JSON, show generic error
+          alert('Failed to join challenge. Please try again.');
         }
         // Don't set isJoined if there was an error
       }
@@ -225,7 +233,7 @@ export default function ChallengeCard({ challenge, userChallenge, userId, onJoin
           </button>
         ) : (
           <Link
-            href="/dashboard/challenges"
+            href="/dashboard"
             className="flex-1 px-4 py-2 bg-slate-800 text-slate-200 text-sm font-semibold rounded-lg hover:bg-slate-700 transition-colors text-center"
           >
             View Progress
