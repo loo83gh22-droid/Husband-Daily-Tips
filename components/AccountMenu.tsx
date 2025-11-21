@@ -17,19 +17,24 @@ export default function AccountMenu() {
         const response = await fetch('/api/user/display-name');
         if (response.ok) {
           const data = await response.json();
-          setDisplayName(data.displayName);
+          if (data.displayName) {
+            setDisplayName(data.displayName);
+            return;
+          }
         }
       } catch (error) {
         console.error('Error fetching display name:', error);
-        // Fallback to Auth0 user data
-        if (user?.name) {
-          setDisplayName(user.name.split(' ')[0]);
-        } else if (user?.email) {
-          setDisplayName(user.email);
-        }
+      }
+      // Fallback to Auth0 user data if API fails
+      if (user?.name) {
+        setDisplayName(user.name.split(' ')[0]);
+      } else if (user?.email) {
+        setDisplayName(user.email);
       }
     }
-    fetchDisplayName();
+    if (user) {
+      fetchDisplayName();
+    }
   }, [user]);
 
   // Close menu when clicking outside
