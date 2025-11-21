@@ -45,11 +45,16 @@ export default function ActiveChallenges() {
 
   const fetchChallenges = async () => {
     try {
-      const response = await fetch('/api/challenges/active');
-      const data = await response.json();
-      setChallenges(data.challenges || []);
+      const response = await fetch('/api/challenges/active', {
+        credentials: 'include',
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setChallenges(data.challenges || []);
+      }
     } catch (error) {
-      console.error('Error fetching challenges:', error);
+      // Silently handle errors
+      setChallenges([]);
     } finally {
       setLoading(false);
     }
@@ -57,11 +62,19 @@ export default function ActiveChallenges() {
 
   const fetchUserChallenges = async () => {
     try {
-      const response = await fetch('/api/challenges/user');
-      const data = await response.json();
-      setUserChallenges(data.challenges || []);
+      const response = await fetch('/api/challenges/user', {
+        credentials: 'include',
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setUserChallenges(data.challenges || []);
+      } else if (response.status === 401) {
+        // Silently handle auth errors
+        setUserChallenges([]);
+      }
     } catch (error) {
-      console.error('Error fetching user challenges:', error);
+      // Silently handle errors
+      setUserChallenges([]);
     }
   };
 

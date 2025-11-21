@@ -27,13 +27,19 @@ export default function BadgesDisplay({ userId }: BadgesDisplayProps) {
   useEffect(() => {
     async function fetchBadges() {
       try {
-        const response = await fetch(`/api/badges?userId=${userId}`);
+        const response = await fetch(`/api/badges?userId=${userId}`, {
+          credentials: 'include',
+        });
         if (response.ok) {
           const data = await response.json();
           setBadges(data.badges || []);
+        } else if (response.status === 401) {
+          // Silently handle auth errors - user might not be logged in yet
+          setBadges([]);
         }
       } catch (error) {
-        console.error('Error fetching badges:', error);
+        // Silently handle errors
+        setBadges([]);
       } finally {
         setLoading(false);
       }

@@ -9,14 +9,24 @@ export default function AutoCalendarToggle() {
 
   useEffect(() => {
     // Fetch current preferences
-    fetch('/api/user/preferences')
-      .then((res) => res.json())
+    fetch('/api/user/preferences', {
+      credentials: 'include',
+    })
+      .then((res) => {
+        if (res.ok) {
+          return res.json();
+        } else if (res.status === 401) {
+          // Silently handle auth errors
+          return { preferences: {} };
+        }
+        throw new Error('Failed to fetch');
+      })
       .then((data) => {
         setAutoAdd(data.preferences?.auto_add_to_calendar || false);
         setIsLoading(false);
       })
       .catch((error) => {
-        console.error('Error fetching preferences:', error);
+        // Silently handle errors
         setIsLoading(false);
       });
   }, []);
@@ -29,6 +39,7 @@ export default function AutoCalendarToggle() {
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include',
         body: JSON.stringify({
           auto_add_to_calendar: checked,
         }),
