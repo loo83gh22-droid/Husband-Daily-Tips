@@ -25,13 +25,14 @@ export default function AccountMenu() {
           }
         }
       } catch (error) {
-        console.error('Error fetching display name:', error);
+        // Silently fail - just use 'User' as default
       }
-      // Keep default 'User' if fetch fails
     }
     
-    fetchDisplayName();
-  }, []);
+    if (mounted) {
+      fetchDisplayName();
+    }
+  }, [mounted]);
 
   // Close menu when clicking outside
   useEffect(() => {
@@ -85,11 +86,11 @@ export default function AccountMenu() {
         </svg>
       </button>
 
-      {isOpen && (
+      {isOpen && mounted && (
         <div className="absolute right-0 mt-2 w-56 bg-slate-900 border border-slate-800 rounded-lg shadow-xl z-50 overflow-hidden">
           <div className="p-3 border-b border-slate-800">
             <p className="text-xs text-slate-500 mb-1">Signed in as</p>
-            <p className="text-sm font-medium text-slate-200 truncate">
+            <p className="text-sm font-medium text-slate-200 truncate" suppressHydrationWarning>
               {displayName}
             </p>
           </div>
