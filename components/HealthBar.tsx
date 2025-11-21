@@ -146,9 +146,21 @@ export default function HealthBar({ value }: HealthBarProps) {
     return 'text-rose-400';
   };
 
+  // Don't render until initialized to avoid hydration issues
+  if (!isInitialized) {
+    return (
+      <div className="bg-gradient-to-br from-slate-900/90 via-slate-900/80 to-slate-900/90 border border-slate-700/50 rounded-2xl p-6 md:p-7 shadow-2xl backdrop-blur-sm relative overflow-hidden" suppressHydrationWarning>
+        <div className="animate-pulse">
+          <div className="h-6 bg-slate-800 rounded mb-4"></div>
+          <div className="h-6 bg-slate-800 rounded"></div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <>
-      <div className="bg-gradient-to-br from-slate-900/90 via-slate-900/80 to-slate-900/90 border border-slate-700/50 rounded-2xl p-6 md:p-7 shadow-2xl backdrop-blur-sm relative overflow-hidden">
+      <div className="bg-gradient-to-br from-slate-900/90 via-slate-900/80 to-slate-900/90 border border-slate-700/50 rounded-2xl p-6 md:p-7 shadow-2xl backdrop-blur-sm relative overflow-hidden" suppressHydrationWarning>
         {/* Subtle glow effect */}
         <div className="absolute inset-0 bg-gradient-to-r from-primary-500/5 via-transparent to-emerald-500/5 pointer-events-none" />
         
