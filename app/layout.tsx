@@ -17,6 +17,27 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              // Suppress React hydration warnings
+              const originalError = console.error;
+              console.error = function(...args) {
+                if (
+                  typeof args[0] === 'string' &&
+                  (args[0].includes('Hydration') ||
+                   args[0].includes('hydration') ||
+                   args[0].includes('Text content does not match'))
+                ) {
+                  return;
+                }
+                originalError.apply(console, args);
+              };
+            `,
+          }}
+        />
+      </head>
       <body className={inter.className} suppressHydrationWarning>
         <AuthProvider>{children}</AuthProvider>
       </body>

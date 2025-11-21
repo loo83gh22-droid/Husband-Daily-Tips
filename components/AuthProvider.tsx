@@ -8,7 +8,6 @@ const UserProvider = dynamic(
   () => import('@auth0/nextjs-auth0/client').then((mod) => mod.UserProvider),
   { 
     ssr: false,
-    loading: () => <div suppressHydrationWarning>{null}</div>
   }
 );
 
@@ -19,15 +18,19 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
     setMounted(true);
   }, []);
 
-  // Don't render anything until mounted to avoid hydration mismatch
+  // Show loading state until mounted
   if (!mounted) {
-    return <div suppressHydrationWarning style={{ display: 'contents' }}>{children}</div>;
+    return (
+      <div suppressHydrationWarning style={{ minHeight: '100vh' }}>
+        {children}
+      </div>
+    );
   }
 
   return (
-    <div suppressHydrationWarning>
-      <UserProvider>{children}</UserProvider>
-    </div>
+    <UserProvider>
+      {children}
+    </UserProvider>
   );
 }
 
