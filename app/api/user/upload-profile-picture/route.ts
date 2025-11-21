@@ -33,14 +33,28 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'No file provided' }, { status: 400 });
     }
 
-    // Validate file type
-    if (!file.type.startsWith('image/')) {
-      return NextResponse.json({ error: 'File must be an image' }, { status: 400 });
+    // Validate file type - only allow safe image formats (no SVG for security)
+    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+    const fileExtension = '.' + file.name.split('.').pop()?.toLowerCase();
+    const allowedExtensions = ['.jpg', '.jpeg', '.png', '.webp'];
+    
+    const isValidType = allowedTypes.includes(file.type.toLowerCase()) || 
+                        allowedExtensions.includes(fileExtension);
+    
+    if (!isValidType) {
+      return NextResponse.json(
+        { error: 'File must be a JPG, PNG, or WebP image. SVG and other formats are not allowed for security reasons.' },
+        { status: 400 }
+      );
     }
 
-    // Validate file size (max 5MB)
-    if (file.size > 5 * 1024 * 1024) {
-      return NextResponse.json({ error: 'File must be less than 5MB' }, { status: 400 });
+    // Validate file size (max 2MB - profile pictures don't need to be huge)
+    const maxSize = 2 * 1024 * 1024; // 2MB
+    if (file.size > maxSize) {
+      return NextResponse.json(
+        { error: 'File must be less than 2MB. Try compressing your image or using a smaller file.' },
+        { status: 400 }
+      );
     }
 
     // Convert file to buffer

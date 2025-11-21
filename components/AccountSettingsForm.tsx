@@ -50,14 +50,20 @@ export default function AccountSettingsForm({ initialData }: AccountSettingsForm
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      // Validate file type
-      if (!file.type.startsWith('image/')) {
-        setError('Please upload an image file');
+      // Validate file type - only allow safe image formats
+      const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+      const allowedExtensions = ['.jpg', '.jpeg', '.png', '.webp'];
+      const fileExtension = '.' + file.name.split('.').pop()?.toLowerCase();
+      
+      if (!allowedTypes.includes(file.type.toLowerCase()) && !allowedExtensions.includes(fileExtension)) {
+        setError('Please upload a JPG, PNG, or WebP image file');
         return;
       }
-      // Validate file size (max 5MB)
-      if (file.size > 5 * 1024 * 1024) {
-        setError('Image must be less than 5MB');
+      
+      // Validate file size (max 2MB - profile pictures don't need to be huge)
+      const maxSize = 2 * 1024 * 1024; // 2MB
+      if (file.size > maxSize) {
+        setError('Image must be less than 2MB. Try compressing your image or using a smaller file.');
         return;
       }
       setProfilePicture(file);
@@ -180,7 +186,7 @@ export default function AccountSettingsForm({ initialData }: AccountSettingsForm
             <input
               type="file"
               id="profile-picture"
-              accept="image/*"
+              accept="image/jpeg,image/jpg,image/png,image/webp"
               onChange={handleFileChange}
               className="hidden"
             />
@@ -191,7 +197,7 @@ export default function AccountSettingsForm({ initialData }: AccountSettingsForm
               {profilePictureUrl ? 'Change Picture' : 'Upload Picture'}
             </label>
             <p className="mt-1 text-xs text-slate-500">
-              Upload your favorite picture of you and your partner (max 5MB)
+              Upload your favorite picture of you and your partner (JPG, PNG, or WebP, max 2MB)
             </p>
           </div>
         </div>
