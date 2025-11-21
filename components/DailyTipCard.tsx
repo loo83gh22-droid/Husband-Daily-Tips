@@ -2,8 +2,10 @@
 
 import { useState, useEffect } from 'react';
 import { format } from 'date-fns';
+import Link from 'next/link';
 import ReflectionModal from './ReflectionModal';
 import SocialShare from './SocialShare';
+import { getGuideSlugForAction } from '@/lib/action-guide-mapping';
 
 interface Tip {
   id: string;
@@ -13,6 +15,7 @@ interface Tip {
   description?: string; // For actions
   benefit?: string; // For actions - why it's valuable
   category: string;
+  theme?: string; // For actions - theme/category
   tier?: string;
   created_at: string;
   favorited?: boolean;
@@ -203,6 +206,18 @@ export default function DailyTipCard({ tip, subscriptionTier = 'free' }: DailyTi
           >
             Save for later
           </button>
+          {tip.isAction && (() => {
+            const guideSlug = getGuideSlugForAction(tip.name || '', tip.theme);
+            return guideSlug ? (
+              <Link
+                href={`/dashboard/how-to-guides/${guideSlug}`}
+                className="px-4 py-2 border border-emerald-500/50 text-emerald-300 text-sm font-medium rounded-lg hover:bg-emerald-500/10 transition-colors flex items-center gap-2"
+              >
+                <span>📚</span>
+                <span>How-To Guide</span>
+              </Link>
+            ) : null;
+          })()}
           <button
             onClick={handleExportToCalendar}
             disabled={isExportingCalendar}
