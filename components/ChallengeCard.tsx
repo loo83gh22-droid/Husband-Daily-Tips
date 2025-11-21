@@ -11,6 +11,8 @@ interface Challenge {
   theme: string;
   start_date: string;
   end_date: string;
+  userCompletionCount?: number;
+  duration_days?: number;
   challenge_actions?: Array<{
     day_number: number;
     actions: {
@@ -71,7 +73,11 @@ export default function ChallengeCard({ challenge, userChallenge, userId, onJoin
         if (onJoin) onJoin(challenge.id);
         
         // Show success modal for 7-day challenges
-        if (challenge.challenge_actions && challenge.challenge_actions.length === 7 && userId) {
+        // All challenges are 7 days, so show modal if we have userId
+        // Check challenge_actions length if available, otherwise assume 7-day
+        const challengeActions = challenge.challenge_actions || [];
+        const is7DayChallenge = challengeActions.length >= 7 || challengeActions.length === 0 || challenge.duration_days === 7 || !challenge.duration_days;
+        if (is7DayChallenge && userId) {
           setShowSuccessModal(true);
         }
       } else {

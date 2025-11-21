@@ -58,15 +58,14 @@ export async function POST(request: Request) {
     }
 
     // Check if user already has an active (incomplete) challenge
-    const { data: activeChallenge } = await supabase
+    const { data: activeChallenges, error: activeError } = await supabase
       .from('user_challenges')
       .select('id, challenges(name)')
       .eq('user_id', user.id)
-      .eq('completed', false)
-      .single();
+      .eq('completed', false);
 
-    if (activeChallenge) {
-      const challengeName = (activeChallenge.challenges as any)?.name || 'another challenge';
+    if (activeChallenges && activeChallenges.length > 0) {
+      const challengeName = (activeChallenges[0].challenges as any)?.name || 'another challenge';
       return NextResponse.json(
         { 
           error: 'You can only join one challenge at a time',
