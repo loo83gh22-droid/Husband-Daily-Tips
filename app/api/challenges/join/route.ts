@@ -181,8 +181,8 @@ export async function POST(request: Request) {
       }
     }
 
-    // Send email with 7 days of actions if this is a 7-day challenge
-    if (challenge && userWithEmail) {
+    // Send email with all challenge actions (all challenges are 7-day challenges)
+    if (challenge && userWithEmail && userChallenge) {
       try {
         // Get all challenge actions for the email
         const { data: challengeActionsData } = await supabase
@@ -199,7 +199,11 @@ export async function POST(request: Request) {
           .order('day_number', { ascending: true });
 
         const challengeActions = challengeActionsData || [];
-        await sendChallengeEmail(userWithEmail, challenge, challengeActions, userChallenge);
+        
+        // Only send email if we have challenge actions
+        if (challengeActions.length > 0) {
+          await sendChallengeEmail(userWithEmail, challenge, challengeActions, userChallenge);
+        }
       } catch (emailError) {
         // Don't fail challenge join if email fails
         console.error('Error sending challenge email:', emailError);
