@@ -2,8 +2,13 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import AccountMenu from './AccountMenu';
+import dynamic from 'next/dynamic';
 import BrandLogo from './BrandLogo';
+
+// Import AccountMenu with no SSR to prevent hydration errors
+const AccountMenu = dynamic(() => import('./AccountMenu'), {
+  ssr: false,
+});
 
 export default function DashboardNav() {
   const pathname = usePathname();
