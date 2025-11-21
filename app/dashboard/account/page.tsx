@@ -7,14 +7,14 @@ import AccountProfileForm from '@/components/AccountProfileForm';
 async function getUserProfile(auth0Id: string) {
   const { data: user, error } = await supabase
     .from('users')
-    .select('username, years_married, post_anonymously, name')
+    .select('username, wedding_date, post_anonymously, name')
     .eq('auth0_id', auth0Id)
     .single();
 
   if (error || !user) {
     return {
       username: null,
-      years_married: null,
+      wedding_date: null,
       post_anonymously: false,
       name: null,
     };
@@ -22,7 +22,7 @@ async function getUserProfile(auth0Id: string) {
 
   return {
     username: user.username,
-    years_married: user.years_married,
+    wedding_date: user.wedding_date,
     post_anonymously: user.post_anonymously || false,
     name: user.name,
   };

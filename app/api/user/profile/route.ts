@@ -3,7 +3,7 @@ import { getSession } from '@auth0/nextjs-auth0';
 import { supabase } from '@/lib/supabase';
 
 /**
- * Update user profile (username, years_married, post_anonymously)
+ * Update user profile (username, wedding_date, post_anonymously)
  */
 export async function POST(request: Request) {
   try {
@@ -14,7 +14,7 @@ export async function POST(request: Request) {
     }
 
     const auth0Id = session.user.sub;
-    const { username, years_married, post_anonymously } = await request.json();
+    const { username, wedding_date, post_anonymously } = await request.json();
 
     // Get user
     const { data: user, error: userError } = await supabase
@@ -52,12 +52,19 @@ export async function POST(request: Request) {
       }
     }
 
-    // Validate years_married if provided
-    if (years_married !== null && years_married !== undefined) {
-      const years = parseInt(years_married);
-      if (isNaN(years) || years < 0 || years > 100) {
+    // Validate wedding_date if provided
+    if (wedding_date !== null && wedding_date !== undefined && wedding_date !== '') {
+      const date = new Date(wedding_date);
+      if (isNaN(date.getTime())) {
         return NextResponse.json(
-          { error: 'Years married must be a number between 0 and 100' },
+          { error: 'Please enter a valid wedding date' },
+          { status: 400 }
+        );
+      }
+      // Check that date is not in the future
+      if (date > new Date()) {
+        return NextResponse.json(
+          { error: 'Wedding date cannot be in the future' },
           { status: 400 }
         );
       }
@@ -68,8 +75,8 @@ export async function POST(request: Request) {
     if (username !== undefined) {
       updateData.username = username?.trim() || null;
     }
-    if (years_married !== undefined) {
-      updateData.years_married = years_married !== null ? parseInt(years_married) : null;
+    if (wedding_date !== undefined) {
+      updateData.wedding_date = wedding_date && wedding_date.trim() ? wedding_date.trim() : null;
     }
     if (post_anonymously !== undefined) {
       updateData.post_anonymously = post_anonymously;
@@ -107,7 +114,7 @@ export async function GET() {
 
     const { data: user, error: userError } = await supabase
       .from('users')
-      .select('username, years_married, post_anonymously, name')
+      .select('username, wedding_date, post_anonymously, name')
       .eq('auth0_id', auth0Id)
       .single();
 
@@ -117,7 +124,7 @@ export async function GET() {
 
     return NextResponse.json({
       username: user.username,
-      years_married: user.years_married,
+      wedding_date: user.wedding_date,
       post_anonymously: user.post_anonymously || false,
       name: user.name,
     });

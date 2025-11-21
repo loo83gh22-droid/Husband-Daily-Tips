@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 
 interface UserProfile {
   username: string | null;
-  years_married: number | null;
+  wedding_date: string | null;
   post_anonymously: boolean;
   name: string | null;
 }
@@ -16,7 +16,7 @@ interface AccountProfileFormProps {
 
 export default function AccountProfileForm({ initialProfile, email }: AccountProfileFormProps) {
   const [username, setUsername] = useState(initialProfile.username || '');
-  const [yearsMarried, setYearsMarried] = useState(initialProfile.years_married?.toString() || '');
+  const [weddingDate, setWeddingDate] = useState(initialProfile.wedding_date || '');
   const [postAnonymously, setPostAnonymously] = useState(initialProfile.post_anonymously || false);
   const [isSaving, setIsSaving] = useState(false);
   const [saveMessage, setSaveMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
@@ -38,12 +38,30 @@ export default function AccountProfileForm({ initialProfile, email }: AccountPro
         return false;
       }
 
-      // Validate years married if provided
-      const years = yearsMarried.trim() ? parseInt(yearsMarried) : null;
-      if (years !== null && (years < 0 || years > 100)) {
-        setSaveMessage({ type: 'error', text: 'Years married must be between 0 and 100' });
-        setIsSaving(false);
-        return false;
+      // Validate wedding date if provided
+      let weddingDateValue: string | null = null;
+      if (weddingDate.trim()) {
+        const date = new Date(weddingDate);
+        if (isNaN(date.getTime())) {
+          setSaveMessage({ type: 'error', text: 'Please enter a valid wedding date' });
+          setIsSaving(false);
+          return false;
+        }
+        // Check that date is not in the future
+        if (date > new Date()) {
+          setSaveMessage({ type: 'error', text: 'Wedding date cannot be in the future' });
+          setIsSaving(false);
+          return false;
+        }
+        // Check that date is not too far in the past (reasonable limit: 100 years)
+        const hundredYearsAgo = new Date();
+        hundredYearsAgo.setFullYear(hundredYearsAgo.getFullYear() - 100);
+        if (date < hundredYearsAgo) {
+          setSaveMessage({ type: 'error', text: 'Please enter a valid wedding date' });
+          setIsSaving(false);
+          return false;
+        }
+        weddingDateValue = weddingDate.trim();
       }
 
       const response = await fetch('/api/user/profile', {
@@ -53,7 +71,7 @@ export default function AccountProfileForm({ initialProfile, email }: AccountPro
         },
         body: JSON.stringify({
           username: username.trim() || null,
-          years_married: years,
+          wedding_date: weddingDateValue,
           post_anonymously: postAnonymously,
         }),
       });
@@ -123,23 +141,21 @@ export default function AccountProfileForm({ initialProfile, email }: AccountPro
             </p>
           </div>
 
-          {/* Years Married */}
+          {/* Wedding Date */}
           <div>
-            <label htmlFor="years_married" className="block text-sm font-medium text-slate-300 mb-2">
-              Years Married
+            <label htmlFor="wedding_date" className="block text-sm font-medium text-slate-300 mb-2">
+              Wedding Date
             </label>
             <input
-              type="number"
-              id="years_married"
-              value={yearsMarried}
-              onChange={(e) => setYearsMarried(e.target.value)}
-              placeholder="e.g., 5"
-              min="0"
-              max="100"
+              type="date"
+              id="wedding_date"
+              value={weddingDate}
+              onChange={(e) => setWeddingDate(e.target.value)}
+              max={new Date().toISOString().split('T')[0]}
               className="w-full px-4 py-2 bg-slate-800/50 border border-slate-700 rounded-lg text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500/50"
             />
             <p className="text-xs text-slate-500 mt-1">
-              This can be shown on your Team Wins posts to help others relate to your experience.
+              Your years married will be automatically calculated and shown on your Team Wins posts to help others relate to your experience.
             </p>
           </div>
 
@@ -158,7 +174,7 @@ export default function AccountProfileForm({ initialProfile, email }: AccountPro
               </label>
               <p className="text-xs text-slate-500">
                 When enabled, your Team Wins posts will show as &quot;Anonymous&quot; instead of your name or username.
-                Your years married will also be hidden.
+                Your wedding date and years married will also be hidden.
               </p>
             </div>
           </div>
