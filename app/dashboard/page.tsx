@@ -344,8 +344,116 @@ export default async function Dashboard() {
   // Get stats first to get category scores for personalization
   const stats = await getUserStats(user.id);
   
-  // Remove tier restrictions - all tips accessible to all users during testing
-  const tomorrowAction = await getTomorrowAction(user.id, user.subscription_tier || 'free', stats.categoryScores);
+  // Check if user has an active challenge - if so, show challenge action instead of tomorrow's action
+  const { data: activeChallengeData } = await supabase
+    .from('user_challenges')
+    .select(`
+      *,
+      challenges (
+        *,
+        challenge_actions (
+          day_number,
+          actions (
+            id,
+            name,
+            description,
+            icon,
+            benefit,
+            category
+          )
+        )
+      )
+    `)
+    .eq('user_id', user.id)
+    .eq('completed', false)
+    .order('joined_date', { ascending: false })
+    .limit(1)
+    .single();
+
+  let displayAction = null;
+  let isChallengeAction = false;
+  let activeChallenge = null;
+
+  if (activeChallengeData && activeChallengeData.challenges) {
+    // User has an active challenge - show challenge action
+    isChallengeAction = true;
+    activeChallenge = activeChallengeData;
+    const challenge = activeChallengeData.challenges;
+    const challengeActions = challenge?.challenge_actions || [];
+    
+    // Calculate which day of the challenge (1-7)
+    const today = new Date();
+    const joinedDate = new Date(activeChallengeData.joined_date + 'T00:00:00');
+    const daysSinceJoined = Math.floor((today.getTime() - joinedDate.getTime()) / (1000 * 60 * 60 * 24));
+    const currentDay = Math.min(Math.max(daysSinceJoined + 1, 1), 7); // Cap at day 1-7
+
+    // Get action for current day
+    const todayAction = challengeActions.find(
+      (ca: any) => ca.day_number === currentDay
+    );
+
+    if (todayAction && todayAction.actions) {
+      const action = todayAction.actions;
+      const todayStr = today.toISOString().split('T')[0];
+      
+      // Check if user already has this action assigned for today
+      const { data: existingAction } = await supabase
+        .from('user_daily_actions')
+        .select('*, actions(*)')
+        .eq('user_id', user.id)
+        .eq('date', todayStr)
+        .single();
+
+      if (existingAction && existingAction.actions) {
+        displayAction = {
+          ...existingAction.actions,
+          favorited: existingAction.favorited || false,
+          userActionId: existingAction.id,
+          isAction: true,
+          isChallengeAction: true,
+          challengeDay: currentDay,
+          challengeName: challenge.name,
+        };
+      } else {
+        // Assign challenge action for today
+        const { data: newAction } = await supabase
+          .from('user_daily_actions')
+          .insert({
+            user_id: user.id,
+            action_id: action.id,
+            date: todayStr,
+          })
+          .select('*, actions(*)')
+          .single();
+
+        if (newAction && newAction.actions) {
+          displayAction = {
+            ...newAction.actions,
+            favorited: false,
+            userActionId: newAction.id,
+            isAction: true,
+            isChallengeAction: true,
+            challengeDay: currentDay,
+            challengeName: challenge.name,
+          };
+        } else {
+          // Fallback: just return the action data
+          displayAction = {
+            ...action,
+            isAction: true,
+            isChallengeAction: true,
+            challengeDay: currentDay,
+            challengeName: challenge.name,
+          };
+        }
+      }
+    }
+  }
+
+  // If no active challenge action, get tomorrow's action
+  if (!displayAction) {
+    displayAction = await getTomorrowAction(user.id, user.subscription_tier || 'free', stats.categoryScores);
+  }
 
   return (
     <div className="min-h-screen bg-slate-950">
@@ -363,11 +471,27 @@ export default async function Dashboard() {
             <div className="flex items-center justify-between mb-4">
               <div>
                 <h2 className="text-2xl md:text-3xl font-semibold text-slate-50">
-                  Tomorrow&apos;s Action
+                  {displayAction?.isChallengeAction ? (
+                    <>
+                      Challenge Action - Day {displayAction.challengeDay}
+                    </>
+                  ) : (
+                    <>
+                      Tomorrow&apos;s Action
+                    </>
+                  )}
                 </h2>
-                    <p className="text-xs text-slate-400 mt-1">
+                <p className="text-xs text-slate-400 mt-1">
+                  {displayAction?.isChallengeAction ? (
+                    <>
+                      <span className="font-semibold text-primary-400">{displayAction.challengeName}</span> - One concrete step to level up your marriage game.
+                    </>
+                  ) : (
+                    <>
                       One concrete step to level up your marriage game.
-                    </p>
+                    </>
+                  )}
+                </p>
               </div>
               <div className="hidden md:flex flex-col items-end text-xs text-slate-400">
                 <span>Logged in as</span>
@@ -377,8 +501,8 @@ export default async function Dashboard() {
               </div>
             </div>
 
-            {tomorrowAction ? (
-              <DailyTipCard tip={tomorrowAction} subscriptionTier={user.subscription_tier || 'free'} />
+            {displayAction ? (
+              <DailyTipCard tip={displayAction} subscriptionTier={user.subscription_tier || 'free'} />
             ) : (
               <div className="bg-slate-900/80 rounded-xl shadow-lg p-8 text-center border border-slate-800">
                 <p className="text-slate-300">

@@ -95,7 +95,9 @@ export default function ActiveChallenges() {
   };
 
   const handleJoin = (challengeId: string) => {
-    fetchUserChallenges(); // Refresh user challenges after joining
+    // Refresh both challenges and user challenges after joining
+    fetchChallenges();
+    fetchUserChallenges();
   };
 
   if (loading) {
