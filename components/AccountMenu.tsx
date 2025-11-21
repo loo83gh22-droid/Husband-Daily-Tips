@@ -7,10 +7,18 @@ import { useUser } from '@auth0/nextjs-auth0/client';
 export default function AccountMenu() {
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
-  const { user } = useUser();
+  const { user, isLoading } = useUser();
+  const [mounted, setMounted] = useState(false);
+
+  // Only render after mount to avoid hydration issues
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Get display name directly from Auth0 user (no API calls to avoid hydration issues)
-  const displayName = user?.name?.split(' ')[0] || user?.email || 'User';
+  const displayName = mounted && !isLoading && user
+    ? (user.name?.split(' ')[0] || user.email || 'User')
+    : 'User';
 
   // Close menu when clicking outside
   useEffect(() => {
