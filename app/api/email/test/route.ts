@@ -16,7 +16,25 @@ export async function POST(request: Request) {
   try {
     // Verify this is called with proper auth (use same secret as other email endpoints)
     const authHeader = request.headers.get('authorization');
-    if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+    const expectedAuth = `Bearer ${process.env.CRON_SECRET}`;
+    
+    // Debug logging (remove after testing)
+    if (!process.env.CRON_SECRET) {
+      console.error('CRON_SECRET is not set in environment variables');
+      return NextResponse.json({ 
+        error: 'Server configuration error',
+        details: 'CRON_SECRET not configured'
+      }, { status: 500 });
+    }
+    
+    if (authHeader !== expectedAuth) {
+      console.error('Auth mismatch:', {
+        received: authHeader ? authHeader.substring(0, 20) + '...' : 'null',
+        expectedLength: expectedAuth.length,
+        receivedLength: authHeader?.length || 0,
+        secretSet: !!process.env.CRON_SECRET,
+        secretLength: process.env.CRON_SECRET?.length || 0
+      });
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
