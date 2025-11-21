@@ -105,6 +105,74 @@ export function getGuideSlugForAction(actionName: string, actionTheme?: string):
     'outdoor workout': 'outdoor-workout',
     'swim together': 'swim-together',
     'disc golf': 'disc-golf-together',
+
+    // Cooking Together
+    'cook a meal together': 'cook-together',
+    'cook together': 'cook-together',
+    'cooking together': 'cook-together',
+    'cook her favorite meal': 'cook-her-favorite-meal',
+    'make her favorite meal': 'cook-her-favorite-meal',
+    'try a new recipe together': 'cook-together',
+    'cooking date night': 'cook-together',
+
+    // Financial Communication
+    'have a complete financial conversation': 'talk-about-finances',
+    'financial conversation': 'talk-about-finances',
+    'talk about finances': 'talk-about-finances',
+    'review budget together': 'talk-about-finances',
+    'set financial goals together': 'talk-about-finances',
+    'discuss money values': 'talk-about-finances',
+
+    // Cleaning
+    'do a deep clean together': 'clean-together',
+    'deep clean together': 'clean-together',
+    'clean together': 'clean-together',
+    'cleaning together': 'clean-together',
+    'tackle a cleaning project': 'clean-together',
+    'organize a cluttered space': 'clean-together',
+
+    // Pet Responsibility
+    'take full pet responsibility': 'pet-responsibility',
+    'pet responsibility': 'pet-responsibility',
+    'handle pet poop patrol': 'pet-responsibility',
+    'poop patrol': 'pet-responsibility',
+    'research pet care': 'pet-responsibility',
+    'create pet care plan': 'pet-responsibility',
+
+    // Family Actions for Mom
+    'make mom breakfast in bed': 'breakfast-in-bed-for-mom',
+    'breakfast in bed for mom': 'breakfast-in-bed-for-mom',
+    'breakfast in bed': 'breakfast-in-bed-for-mom',
+    'write and read a poem about her': 'poem-for-mom',
+    'poem for mom': 'poem-for-mom',
+    'write poem about mom': 'poem-for-mom',
+    'take the kids out so mom gets a break': 'give-mom-a-break',
+    'give mom a break': 'give-mom-a-break',
+    'mom gets a break': 'give-mom-a-break',
+    'plan family activity for mom': 'give-mom-a-break',
+    'mom appreciation day': 'give-mom-a-break',
+    'handle bedtime routine': 'give-mom-a-break',
+
+    // Relationship Games
+    'play relationship games': 'relationship-games',
+    'relationship games': 'relationship-games',
+    'we\'re not really strangers': 'relationship-games',
+    'gottman card decks': 'relationship-games',
+    'tabletopics for couples': 'relationship-games',
+    'adventure challenge couples': 'relationship-games',
+    'intimacy building games': 'relationship-games',
+
+    // Intimacy
+    'initiate physical intimacy without pressure': 'initiate-intimacy',
+    'initiate intimacy': 'initiate-intimacy',
+    'initiate without pressure': 'initiate-intimacy',
+    'focus on her pleasure': 'focus-on-her-pleasure',
+    'her pleasure': 'focus-on-her-pleasure',
+    'make it about her pleasure': 'focus-on-her-pleasure',
+    'have conversation about intimacy': 'initiate-intimacy',
+    'create intimacy without sex': 'initiate-intimacy',
+    'plan romantic evening': 'initiate-intimacy',
+    'learn about her body': 'focus-on-her-pleasure',
   };
 
   // Check direct matches first
@@ -189,6 +257,39 @@ export function getGuideSlugForAction(actionName: string, actionTheme?: string):
     { keywords: ['workout', 'exercise'], slug: 'outdoor-workout' },
     { keywords: ['swim', 'swimming'], slug: 'swim-together' },
     { keywords: ['disc golf', 'frisbee'], slug: 'disc-golf-together' },
+
+    // Cooking Together
+    { keywords: ['cook', 'cooking', 'meal together'], slug: 'cook-together' },
+    { keywords: ['favorite meal', 'her favorite'], slug: 'cook-her-favorite-meal' },
+    { keywords: ['recipe together', 'new recipe'], slug: 'cook-together' },
+
+    // Financial Communication
+    { keywords: ['financial', 'finances', 'money', 'budget'], slug: 'talk-about-finances' },
+    { keywords: ['financial goals', 'money goals'], slug: 'talk-about-finances' },
+    { keywords: ['money values', 'spending habits'], slug: 'talk-about-finances' },
+
+    // Cleaning
+    { keywords: ['clean together', 'cleaning together', 'deep clean'], slug: 'clean-together' },
+    { keywords: ['cleaning project', 'organize', 'cluttered'], slug: 'clean-together' },
+
+    // Pet Responsibility
+    { keywords: ['pet responsibility', 'pet care', 'poop patrol'], slug: 'pet-responsibility' },
+    { keywords: ['pet', 'dog', 'cat', 'pet waste'], slug: 'pet-responsibility' },
+
+    // Family Actions for Mom
+    { keywords: ['breakfast in bed', 'mom breakfast'], slug: 'breakfast-in-bed-for-mom' },
+    { keywords: ['poem for mom', 'poem about her'], slug: 'poem-for-mom' },
+    { keywords: ['mom break', 'give mom a break', 'kids out'], slug: 'give-mom-a-break' },
+    { keywords: ['mom appreciation', 'family activity for mom'], slug: 'give-mom-a-break' },
+
+    // Relationship Games
+    { keywords: ['relationship game', 'couples game', 'intimacy game'], slug: 'relationship-games' },
+    { keywords: ['we\'re not really strangers', 'gottman', 'tabletopics'], slug: 'relationship-games' },
+
+    // Intimacy
+    { keywords: ['initiate intimacy', 'initiate physical'], slug: 'initiate-intimacy' },
+    { keywords: ['her pleasure', 'focus on pleasure'], slug: 'focus-on-her-pleasure' },
+    { keywords: ['intimacy conversation', 'talk about intimacy'], slug: 'initiate-intimacy' },
   ];
 
   // Check keyword matches
