@@ -2,23 +2,36 @@
 
 import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
-import { useUser } from '@auth0/nextjs-auth0/client';
 
 export default function AccountMenu() {
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
-  const { user, isLoading } = useUser();
+  const [displayName, setDisplayName] = useState('User');
   const [mounted, setMounted] = useState(false);
 
-  // Only render after mount to avoid hydration issues
+  // Only fetch display name after mount to avoid hydration issues
   useEffect(() => {
     setMounted(true);
+    
+    // Fetch display name client-side only
+    async function fetchDisplayName() {
+      try {
+        const response = await fetch('/api/user/display-name');
+        if (response.ok) {
+          const data = await response.json();
+          if (data.displayName) {
+            setDisplayName(data.displayName);
+            return;
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching display name:', error);
+      }
+      // Keep default 'User' if fetch fails
+    }
+    
+    fetchDisplayName();
   }, []);
-
-  // Get display name directly from Auth0 user (no API calls to avoid hydration issues)
-  const displayName = mounted && !isLoading && user
-    ? (user.name?.split(' ')[0] || user.email || 'User')
-    : 'User';
 
   // Close menu when clicking outside
   useEffect(() => {
