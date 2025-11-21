@@ -73,6 +73,34 @@ export default function AccountMenu() {
     { href: '/dashboard/billing', label: 'Billing History', icon: '📄' },
   ];
 
+  // Don't render until mounted to avoid hydration issues
+  if (!mounted) {
+    return (
+      <div className="relative">
+        <button
+          type="button"
+          className="p-2 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-900 transition-colors"
+          aria-label="Account menu"
+          disabled
+        >
+          <svg
+            className="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M4 6h16M4 12h16M4 18h16"
+            />
+          </svg>
+        </button>
+      </div>
+    );
+  }
+
   return (
     <div className="relative" ref={menuRef}>
       <button
@@ -106,7 +134,7 @@ export default function AccountMenu() {
           <div className="p-3 border-b border-slate-800">
             <p className="text-xs text-slate-500 mb-1">Signed in as</p>
             <p className="text-sm font-medium text-slate-200 truncate">
-              {mounted ? displayName : 'User'}
+              {displayName}
             </p>
           </div>
           
