@@ -15,9 +15,33 @@ interface AccountProfileFormProps {
 }
 
 export default function AccountProfileForm({ initialProfile, email }: AccountProfileFormProps) {
-  const [username, setUsername] = useState(initialProfile.username || '');
-  const [weddingDate, setWeddingDate] = useState(initialProfile.wedding_date || '');
-  const [postAnonymously, setPostAnonymously] = useState(initialProfile.post_anonymously || false);
+  // Safely handle initialProfile - ensure it's not null/undefined
+  const safeProfile = initialProfile || {
+    username: null,
+    wedding_date: null,
+    post_anonymously: false,
+    name: null,
+  };
+
+  const [username, setUsername] = useState(safeProfile.username || '');
+  // Format wedding_date for date input (YYYY-MM-DD format)
+  const formatDateForInput = (date: string | null | undefined): string => {
+    if (!date) return '';
+    try {
+      // If it's already in YYYY-MM-DD format, return as is
+      if (date.match(/^\d{4}-\d{2}-\d{2}$/)) {
+        return date;
+      }
+      // Otherwise, try to parse and format
+      const d = new Date(date);
+      if (isNaN(d.getTime())) return '';
+      return d.toISOString().split('T')[0];
+    } catch {
+      return '';
+    }
+  };
+  const [weddingDate, setWeddingDate] = useState(formatDateForInput(safeProfile.wedding_date));
+  const [postAnonymously, setPostAnonymously] = useState(safeProfile.post_anonymously || false);
   const [isSaving, setIsSaving] = useState(false);
   const [saveMessage, setSaveMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
