@@ -2,12 +2,14 @@
 
 import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useUser } from '@auth0/nextjs-auth0/client';
 
 export default function AccountMenu() {
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const { user } = useUser();
+  const router = useRouter();
 
   // Close menu when clicking outside
   useEffect(() => {
@@ -67,11 +69,13 @@ export default function AccountMenu() {
           
           <div className="py-1">
             {menuItems.map((item) => (
-              <Link
+              <button
                 key={item.href}
-                href={item.href}
-                onClick={() => setIsOpen(false)}
-                className="flex items-start gap-3 px-4 py-2.5 text-sm text-slate-300 hover:bg-slate-800 transition-colors"
+                onClick={() => {
+                  setIsOpen(false);
+                  router.push(item.href);
+                }}
+                className="w-full flex items-start gap-3 px-4 py-2.5 text-sm text-slate-300 hover:bg-slate-800 transition-colors text-left"
               >
                 <span className="text-lg mt-0.5">{item.icon}</span>
                 <div className="flex-1">
@@ -80,7 +84,7 @@ export default function AccountMenu() {
                     <div className="text-xs text-slate-500 mt-0.5">{item.description}</div>
                   )}
                 </div>
-              </Link>
+              </button>
             ))}
           </div>
 
