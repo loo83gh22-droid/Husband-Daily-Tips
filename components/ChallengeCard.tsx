@@ -139,14 +139,14 @@ export default function ChallengeCard({ challenge, userChallenge, userId, onJoin
   const emoji = themeEmojis[challenge.theme] || '🎯';
   const color = themeColors[challenge.theme] || 'primary';
 
-  // Map challenge to badge ID for linking
-  const getChallengeBadgeId = (challenge: Challenge): string => {
+  // Map challenge name to badge slug for linking
+  const getChallengeBadgeSlug = (challengeName: string): string => {
     const badgeMap: Record<string, string> = {
       '7-Day Communication Challenge': 'communication-champion',
       '7-Day Roommate Syndrome Recovery': 'connection-restorer',
       '7-Day Romance Challenge': 'romance-reviver',
     };
-    return badgeMap[challenge.name] || 'challenges';
+    return badgeMap[challengeName] || '';
   };
 
   return (
@@ -245,7 +245,7 @@ export default function ChallengeCard({ challenge, userChallenge, userId, onJoin
           </button>
         ) : (
           <Link
-            href={`/dashboard/badges#${getChallengeBadgeId(challenge.name)}`}
+            href={`/dashboard/badges#${getChallengeBadgeSlug(challenge.name)}`}
             className="flex-1 px-4 py-2 bg-slate-800 text-slate-200 text-sm font-semibold rounded-lg hover:bg-slate-700 transition-colors text-center"
           >
             View Progress
