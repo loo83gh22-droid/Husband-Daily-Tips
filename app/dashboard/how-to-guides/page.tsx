@@ -5,21 +5,31 @@ import DashboardNav from '@/components/DashboardNav';
 import { supabase } from '@/lib/supabase';
 
 async function getGuideVisitCounts() {
-  // Get visit counts for all guides
-  const { data: visits } = await supabase
-    .from('guide_visits')
-    .select('guide_slug');
+  try {
+    // Get visit counts for all guides
+    const { data: visits, error } = await supabase
+      .from('guide_visits')
+      .select('guide_slug');
 
-  if (!visits) return new Map<string, number>();
+    // If table doesn't exist or query fails, return empty map
+    if (error || !visits) {
+      console.warn('Guide visits table not available yet:', error?.message);
+      return new Map<string, number>();
+    }
 
-  // Count visits per guide slug
-  const visitCounts = new Map<string, number>();
-  visits.forEach((visit) => {
-    const count = visitCounts.get(visit.guide_slug) || 0;
-    visitCounts.set(visit.guide_slug, count + 1);
-  });
+    // Count visits per guide slug
+    const visitCounts = new Map<string, number>();
+    visits.forEach((visit) => {
+      const count = visitCounts.get(visit.guide_slug) || 0;
+      visitCounts.set(visit.guide_slug, count + 1);
+    });
 
-  return visitCounts;
+    return visitCounts;
+  } catch (error) {
+    // Handle any unexpected errors gracefully
+    console.warn('Error fetching guide visit counts:', error);
+    return new Map<string, number>();
+  }
 }
 
 export default async function HowToGuidesPage() {
