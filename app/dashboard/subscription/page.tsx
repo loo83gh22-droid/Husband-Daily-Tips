@@ -51,7 +51,7 @@ export default async function SubscriptionPage() {
     },
     {
       name: 'Paid',
-      price: 19.99,
+      price: 7,
       tier: 'premium',
       features: [
         'Daily personalized actions',
@@ -123,7 +123,14 @@ export default async function SubscriptionPage() {
                   ${plan.price}
                   <span className="text-lg text-slate-400">/month</span>
                 </div>
-                <p className="text-xs text-slate-400 mb-4">After 7-day trial</p>
+                {plan.price > 0 && (
+                  <p className="text-xs text-slate-400 mb-4">
+                    Less than a quarter a day! After 7-day trial
+                  </p>
+                )}
+                {plan.price === 0 && (
+                  <p className="text-xs text-slate-400 mb-4">Free forever</p>
+                )}
                 <ul className="space-y-3 mb-6">
                   {plan.features.map((feature, index) => (
                     <li key={index} className="flex items-center text-slate-300">
