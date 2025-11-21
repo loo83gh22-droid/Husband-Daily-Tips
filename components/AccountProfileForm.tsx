@@ -121,7 +121,7 @@ export default function AccountProfileForm({ initialProfile, email }: AccountPro
           Control how your name appears when you share wins to Team Wins. Your email is never shown.
         </p>
 
-        <form onSubmit={(e) => { e.preventDefault(); handleSave(e); return false; }} className="space-y-6" noValidate>
+        <div className="space-y-6">
           {/* Username */}
           <div>
             <label htmlFor="username" className="block text-sm font-medium text-slate-300 mb-2">
@@ -201,7 +201,7 @@ export default function AccountProfileForm({ initialProfile, email }: AccountPro
           >
             {isSaving ? 'Saving...' : 'Save Profile'}
           </button>
-        </form>
+        </div>
       </div>
     </div>
   );
