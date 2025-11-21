@@ -8,6 +8,30 @@ import BrandLogo from './BrandLogo';
 // Import AccountMenu with no SSR to prevent hydration errors
 const AccountMenu = dynamic(() => import('./AccountMenu'), {
   ssr: false,
+  loading: () => (
+    <div className="relative">
+      <button
+        type="button"
+        className="p-2 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-900 transition-colors"
+        aria-label="Account menu"
+        disabled
+      >
+        <svg
+          className="w-6 h-6"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M4 6h16M4 12h16M4 18h16"
+          />
+        </svg>
+      </button>
+    </div>
+  ),
 });
 
 export default function DashboardNav() {
