@@ -9,16 +9,16 @@ export default function AccountMenu() {
   const menuRef = useRef<HTMLDivElement>(null);
   const { user } = useUser();
   const [displayName, setDisplayName] = useState<string>('User');
-  const [isClient, setIsClient] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
-  // Only run on client to avoid hydration issues
+  // Only render after mount to avoid hydration issues
   useEffect(() => {
-    setIsClient(true);
+    setMounted(true);
   }, []);
 
-  // Fetch display name from API (only on client)
+  // Fetch display name from API (only after mount)
   useEffect(() => {
-    if (!isClient || !user) return;
+    if (!mounted) return;
 
     async function fetchDisplayName() {
       try {
@@ -40,8 +40,14 @@ export default function AccountMenu() {
         setDisplayName(user.email);
       }
     }
-    fetchDisplayName();
-  }, [user, isClient]);
+    
+    if (user) {
+      fetchDisplayName();
+    } else if (mounted) {
+      // If no user, set a default
+      setDisplayName('User');
+    }
+  }, [user, mounted]);
 
   // Close menu when clicking outside
   useEffect(() => {
@@ -100,7 +106,7 @@ export default function AccountMenu() {
           <div className="p-3 border-b border-slate-800">
             <p className="text-xs text-slate-500 mb-1">Signed in as</p>
             <p className="text-sm font-medium text-slate-200 truncate">
-              {isClient ? displayName : (user?.name?.split(' ')[0] || user?.email || 'User')}
+              {mounted ? displayName : 'User'}
             </p>
           </div>
           
