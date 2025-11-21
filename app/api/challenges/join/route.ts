@@ -45,7 +45,7 @@ export async function POST(request: Request) {
 
     const today = new Date().toISOString().split('T')[0];
 
-    // Check if user already joined
+    // Check if user already joined this specific challenge
     const { data: existing } = await supabase
       .from('user_challenges')
       .select('id')
@@ -55,6 +55,25 @@ export async function POST(request: Request) {
 
     if (existing) {
       return NextResponse.json({ success: true, message: 'Already joined challenge' });
+    }
+
+    // Check if user already has an active (incomplete) challenge
+    const { data: activeChallenge } = await supabase
+      .from('user_challenges')
+      .select('id, challenges(name)')
+      .eq('user_id', user.id)
+      .eq('completed', false)
+      .single();
+
+    if (activeChallenge) {
+      const challengeName = (activeChallenge.challenges as any)?.name || 'another challenge';
+      return NextResponse.json(
+        { 
+          error: 'You can only join one challenge at a time',
+          message: `You're currently participating in "${challengeName}". Complete it before joining a new challenge.`
+        },
+        { status: 400 }
+      );
     }
 
     // Join challenge
@@ -124,6 +143,13 @@ export async function POST(request: Request) {
       }
     }
 
+    // Get user email for sending challenge email
+    const { data: userWithEmail } = await supabase
+      .from('users')
+      .select('id, email, name, username')
+      .eq('id', user.id)
+      .single();
+
     // Check if this is their first challenge (for badge)
     const { data: allChallenges } = await supabase
       .from('user_challenges')
@@ -144,6 +170,16 @@ export async function POST(request: Request) {
           badge_id: badge.id,
           earned_at: new Date().toISOString(),
         });
+      }
+    }
+
+    // Send email with 7 days of actions if this is a 7-day challenge
+    if (challenge && challenge.duration_days === 7 && userWithEmail) {
+      try {
+        await sendChallengeEmail(userWithEmail, challenge.name);
+      } catch (emailError) {
+        // Don't fail challenge join if email fails
+        console.error('Error sending challenge email:', emailError);
       }
     }
 
@@ -242,5 +278,96 @@ async function generateActionForDate(
   });
 
   return randomAction;
+}
+
+async function sendChallengeEmail(user: any, challengeName: string) {
+  try {
+    const { Resend } = await import('resend');
+    const resend = new Resend(process.env.RESEND_API_KEY);
+
+    if (!resend || !process.env.RESEND_API_KEY) {
+      console.log('Resend not configured, skipping challenge email');
+      return;
+    }
+
+    const displayName = user.username || (user.name ? user.name.split(' ')[0] : 'there');
+    const baseUrl = process.env.AUTH0_BASE_URL || 'https://besthusbandever.com';
+
+    const { data, error } = await resend.emails.send({
+      from: process.env.RESEND_FROM_EMAIL || 'Best Husband Ever - Tomorrow\'s Action! <action@besthusbandever.com>',
+      to: user.email,
+      subject: `🎯 Challenge Started: ${challengeName} - Your 7 Days of Actions`,
+      html: `
+        <!DOCTYPE html>
+        <html>
+          <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          </head>
+          <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f5f5f5;">
+            <div style="background-color: #0f172a; padding: 30px; border-radius: 8px; margin-bottom: 20px;">
+              <h1 style="color: #fbbf24; margin: 0; font-size: 24px;">Best Husband Ever</h1>
+              <p style="color: #cbd5e1; margin: 5px 0 0 0; font-size: 14px;">Level up your marriage game</p>
+            </div>
+            
+            <div style="background-color: #ffffff; padding: 30px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+              <div style="text-align: center; margin-bottom: 25px;">
+                <div style="font-size: 48px; margin-bottom: 15px;">🎯</div>
+                <h2 style="color: #1e293b; margin-top: 0; font-size: 24px;">Challenge Started!</h2>
+                <p style="color: #64748b; font-size: 16px; margin: 10px 0;">
+                  Congratulations on joining <strong style="color: #fbbf24;">${challengeName}</strong>
+                </p>
+              </div>
+              
+              <div style="background-color: #f8fafc; border-left: 4px solid #fbbf24; padding: 20px; margin: 20px 0; border-radius: 4px;">
+                <p style="color: #475569; font-size: 15px; margin: 0 0 10px 0;">
+                  <strong style="color: #1e293b;">Hi ${displayName},</strong>
+                </p>
+                <p style="color: #475569; font-size: 15px; margin: 0;">
+                  We've assigned <strong style="color: #fbbf24;">7 personalized actions</strong> to your account, one for each day of your challenge. These actions are locked in and will appear on your dashboard each day.
+                </p>
+              </div>
+              
+              <div style="background-color: #fef3c7; border-left: 4px solid #fbbf24; padding: 15px; margin: 20px 0; border-radius: 4px;">
+                <p style="margin: 0; color: #92400e; font-size: 13px; font-weight: 600;">💡 PRO TIP</p>
+                <p style="margin: 5px 0 0 0; color: #78350f; font-size: 14px;">
+                  Download these actions to your calendar now to plan ahead and commit to completing them. Pre-assigned actions take precedence over the daily algorithm!
+                </p>
+              </div>
+              
+              <div style="margin-top: 25px; display: flex; flex-direction: column; gap: 10px;">
+                <a href="${baseUrl}/api/calendar/actions/download?days=7&userId=${user.id}" 
+                   style="display: inline-block; background-color: #0f172a; color: #fbbf24; padding: 14px 24px; text-decoration: none; border-radius: 6px; font-weight: 600; text-align: center; border: 2px solid #fbbf24; font-size: 15px;">
+                  📅 Download 7 Days of Actions to Calendar
+                </a>
+                
+                <a href="${baseUrl}/dashboard" 
+                   style="display: inline-block; background-color: #fbbf24; color: #0f172a; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: 600; text-align: center; margin-top: 10px;">
+                  View Challenge in Dashboard →
+                </a>
+              </div>
+              
+              <p style="color: #94a3b8; font-size: 13px; margin-top: 30px; padding-top: 20px; border-top: 1px solid #e2e8f0;">
+                These actions have been personalized based on your relationship survey. Complete them daily to make the most of your challenge!
+              </p>
+            </div>
+            
+            <div style="text-align: center; margin-top: 20px; color: #94a3b8; font-size: 12px;">
+              <p>You're receiving this because you joined a 7-day challenge on Best Husband Ever.</p>
+              <p><a href="${baseUrl}/dashboard/account" style="color: #64748b;">Manage email preferences</a></p>
+            </div>
+          </body>
+        </html>
+      `,
+    });
+
+    if (error) {
+      console.error('Resend error sending challenge email:', error);
+    } else {
+      console.log(`Challenge email sent to ${user.email}`);
+    }
+  } catch (error) {
+    console.error('Error sending challenge email:', error);
+  }
 }
 

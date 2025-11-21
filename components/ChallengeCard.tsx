@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import ChallengeJoinSuccessModal from './ChallengeJoinSuccessModal';
 
 interface Challenge {
   id: string;
@@ -36,12 +37,14 @@ interface UserChallenge {
 interface ChallengeCardProps {
   challenge: Challenge;
   userChallenge?: UserChallenge;
+  userId?: string;
   onJoin?: (challengeId: string) => void;
 }
 
-export default function ChallengeCard({ challenge, userChallenge, onJoin }: ChallengeCardProps) {
+export default function ChallengeCard({ challenge, userChallenge, userId, onJoin }: ChallengeCardProps) {
   const [isJoining, setIsJoining] = useState(false);
   const [isJoined, setIsJoined] = useState(!!userChallenge);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const startDate = new Date(challenge.start_date);
   const endDate = new Date(challenge.end_date);
@@ -62,8 +65,14 @@ export default function ChallengeCard({ challenge, userChallenge, onJoin }: Chal
       });
 
       if (response.ok) {
+        const data = await response.json();
         setIsJoined(true);
         if (onJoin) onJoin(challenge.id);
+        
+        // Show success modal for 7-day challenges
+        if (challenge.challenge_actions && challenge.challenge_actions.length === 7 && userId) {
+          setShowSuccessModal(true);
+        }
       }
     } catch (error) {
       console.error('Error joining challenge:', error);
@@ -175,6 +184,15 @@ export default function ChallengeCard({ challenge, userChallenge, onJoin }: Chal
           </Link>
         )}
       </div>
+
+      {showSuccessModal && userId && (
+        <ChallengeJoinSuccessModal
+          challengeName={challenge.name}
+          userId={userId}
+          isOpen={showSuccessModal}
+          onClose={() => setShowSuccessModal(false)}
+        />
+      )}
     </div>
   );
 }
