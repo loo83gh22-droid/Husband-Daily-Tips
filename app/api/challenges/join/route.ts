@@ -75,6 +75,15 @@ export async function POST(request: Request) {
       );
     }
 
+    // When joining a new challenge, mark any other active challenges as inactive
+    // Only one challenge should be active at a time
+    await supabase
+      .from('user_challenges')
+      .update({ completed: true })
+      .eq('user_id', user.id)
+      .eq('completed', false)
+      .neq('challenge_id', challengeId);
+
     // Join challenge
     const { data: userChallenge, error: joinError } = await supabase
       .from('user_challenges')
