@@ -7,11 +7,19 @@ import { useUser } from '@auth0/nextjs-auth0/client';
 export default function AccountMenu() {
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
-  const { user } = useUser();
+  const { user, isLoading } = useUser();
   const [displayName, setDisplayName] = useState<string>('User');
+  const [mounted, setMounted] = useState(false);
 
-  // Fetch display name from API
+  // Set mounted flag
   useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Fetch display name from API (only after mount and user is loaded)
+  useEffect(() => {
+    if (!mounted || isLoading) return;
+
     async function fetchDisplayName() {
       try {
         const response = await fetch('/api/user/display-name');
@@ -36,7 +44,7 @@ export default function AccountMenu() {
     if (user) {
       fetchDisplayName();
     }
-  }, [user]);
+  }, [user, mounted, isLoading]);
 
   // Close menu when clicking outside
   useEffect(() => {
