@@ -35,7 +35,18 @@ export async function POST(request: Request) {
         secretSet: !!process.env.CRON_SECRET,
         secretLength: process.env.CRON_SECRET?.length || 0
       });
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      
+      // Return more details for debugging (remove in production)
+      return NextResponse.json({ 
+        error: 'Unauthorized',
+        debug: {
+          receivedLength: authHeader?.length || 0,
+          expectedLength: expectedAuth.length,
+          secretConfigured: !!process.env.CRON_SECRET,
+          secretLength: process.env.CRON_SECRET?.length || 0,
+          receivedPrefix: authHeader ? authHeader.substring(0, 20) : 'null'
+        }
+      }, { status: 401 });
     }
 
     const { username } = await request.json();
