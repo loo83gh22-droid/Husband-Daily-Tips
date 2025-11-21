@@ -11,6 +11,8 @@ export interface EmailTip {
   title: string;
   content: string;
   category: string;
+  actionId?: string; // Added for calendar links
+  userId?: string; // Added for calendar links
 }
 
 export async function sendTomorrowTipEmail(
@@ -23,6 +25,8 @@ export async function sendTomorrowTipEmail(
     console.error('RESEND_API_KEY not configured');
     return false;
   }
+
+  const baseUrl = process.env.AUTH0_BASE_URL || 'https://besthusbandever.com';
 
   try {
     const { data, error } = await resend.emails.send({
@@ -68,22 +72,28 @@ export async function sendTomorrowTipEmail(
               </div>
               
               <div style="text-align: center; padding-top: 20px; border-top: 1px solid #e5e7eb;">
-                <div style="margin: 15px 0; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
-                  <a href="${process.env.AUTH0_BASE_URL}/api/calendar/actions/download?days=1" 
-                     style="display: inline-block; background-color: #0f172a; color: #0ea5e9; padding: 10px 18px; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 13px; border: 2px solid #0ea5e9;">
-                    📅 Download Tomorrow's Action
-                  </a>
-                  <a href="${process.env.AUTH0_BASE_URL}/api/calendar/actions/download?days=7" 
-                     style="display: inline-block; background-color: #0f172a; color: #0ea5e9; padding: 10px 18px; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 13px; border: 2px solid #0ea5e9;">
-                    📅 Download 7 Days
-                  </a>
-                </div>
+                <a href="${baseUrl}/dashboard" 
+                   style="display: inline-block; background-color: #0ea5e9; color: #ffffff; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: 600; margin-bottom: 10px;">
+                  View in Dashboard →
+                </a>
+                ${tip.actionId && tip.userId ? `
+                  <div style="margin: 15px 0; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+                    <a href="${baseUrl}/api/calendar/actions/download?days=1&userId=${tip.userId}" 
+                       style="display: inline-block; background-color: #0f172a; color: #0ea5e9; padding: 10px 18px; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 13px; border: 2px solid #0ea5e9;">
+                      📅 Download Tomorrow's Action
+                    </a>
+                    <a href="${baseUrl}/api/calendar/actions/download?days=7&userId=${tip.userId}" 
+                       style="display: inline-block; background-color: #0f172a; color: #0ea5e9; padding: 10px 18px; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 13px; border: 2px solid #0ea5e9;">
+                      📅 Download 7 Days
+                    </a>
+                  </div>
+                ` : ''}
                 <p style="color: #6b7280; font-size: 12px; margin: 15px 0 0 0;">
                   You&apos;re getting this because you signed up for Best Husband Ever. Your daily mission, delivered.
                 </p>
                 <p style="color: #9ca3af; font-size: 11px; margin: 10px 0 0 0;">
-                  <a href="${process.env.AUTH0_BASE_URL}/dashboard" style="color: #0ea5e9; text-decoration: none;">View Dashboard</a> | 
-                  <a href="${process.env.AUTH0_BASE_URL}/dashboard/account" style="color: #0ea5e9; text-decoration: none;">Manage Preferences</a>
+                  <a href="${baseUrl}/dashboard" style="color: #0ea5e9; text-decoration: none;">View Dashboard</a> | 
+                  <a href="${baseUrl}/dashboard/account" style="color: #0ea5e9; text-decoration: none;">Manage Preferences</a>
                 </p>
               </div>
             </div>
