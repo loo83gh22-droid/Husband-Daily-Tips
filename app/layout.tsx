@@ -22,16 +22,18 @@ export default function RootLayout({
         <script
           dangerouslySetInnerHTML={{
             __html: `
-              // Suppress React hydration warnings and CORS errors for logout
+              // Suppress React hydration warnings and CORS/logout errors
               const originalError = console.error;
               console.error = function(...args) {
+                const errorMsg = typeof args[0] === 'string' ? args[0] : '';
                 if (
-                  typeof args[0] === 'string' &&
-                  (args[0].includes('Hydration') ||
-                   args[0].includes('hydration') ||
-                   args[0].includes('Text content does not match') ||
-                   args[0].includes('Failed to fetch RSC payload') ||
-                   args[0].includes('CORS policy'))
+                  errorMsg.includes('Hydration') ||
+                  errorMsg.includes('hydration') ||
+                  errorMsg.includes('Text content does not match') ||
+                  errorMsg.includes('Failed to fetch RSC payload') ||
+                  errorMsg.includes('CORS policy') ||
+                  errorMsg.includes('api/auth/logout') ||
+                  errorMsg.includes('auth/logout')
                 ) {
                   return;
                 }
