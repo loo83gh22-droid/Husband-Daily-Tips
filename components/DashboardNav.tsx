@@ -42,6 +42,7 @@ export default function DashboardNav() {
             })}
             <Link
               href="/api/auth/logout"
+              prefetch={false}
               className="px-3 py-2 text-xs md:text-sm font-medium rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-900 transition-colors"
             >
               <span className="hidden md:inline mr-1.5">🚪</span>
