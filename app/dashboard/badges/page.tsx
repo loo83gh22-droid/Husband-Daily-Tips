@@ -296,10 +296,7 @@ export default async function BadgesPage() {
                         return bProgress - aProgress; // Descending order
                       });
                       
-                      // Take top 2 badges
-                      const topBadges = sortedBadges.slice(0, 2);
-                      
-                      return topBadges.map((badge) => {
+                      return sortedBadges.map((badge) => {
                       const isEarned = !!badge.earned_at;
                       const progress = badge.progress;
                       const showProgress = !isEarned && progress && progress.target > 0;
@@ -373,32 +370,6 @@ export default async function BadgesPage() {
                       );
                     })})()}
                   </div>
-                  {themeBadges.length > 2 && (
-                    <div className="mt-6 text-center">
-                      <Link
-                        href={`/dashboard/badges?category=${theme.toLowerCase()}`}
-                        className="inline-flex items-center gap-2 px-6 py-2 bg-primary-500/10 border border-primary-500/30 text-primary-300 rounded-lg hover:bg-primary-500/20 transition-colors text-sm font-medium"
-                      >
-                        See All {theme} Badges
-                        <span className="text-xs text-slate-400">
-                          ({themeBadges.length - 2} more)
-                        </span>
-                        <svg
-                          className="w-4 h-4"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M9 5l7 7-7 7"
-                          />
-                        </svg>
-                      </Link>
-                    </div>
-                  )}
                 </section>
               );
             })}
