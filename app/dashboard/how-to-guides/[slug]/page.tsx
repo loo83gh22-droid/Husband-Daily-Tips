@@ -3684,16 +3684,23 @@ export default async function GuidePage({ params }: { params: { slug: string } }
 
   if (user) {
     // Record visit (fire and forget - don't block page render)
-    supabase
-      .from('guide_visits')
-      .insert({
-        guide_slug: params.slug,
-        user_id: user.id,
-      })
-      .catch((error) => {
+    // Use void to explicitly ignore the promise
+    void (async () => {
+      try {
+        await supabase
+          .from('guide_visits')
+          .insert({
+            guide_slug: params.slug,
+            user_id: user.id,
+          });
+      } catch (error: any) {
         // Silently fail - don't block page render if tracking fails
-        console.error('Failed to track guide visit:', error);
-      });
+        // Table might not exist yet if migration hasn't been run
+        if (error?.code !== '42P01') { // Only log if it's not a "table doesn't exist" error
+          console.error('Failed to track guide visit:', error);
+        }
+      }
+    })();
   }
 
   return (
