@@ -261,6 +261,14 @@ export default function ChallengeCard({ challenge, userChallenge, userId, onJoin
           onClose={() => setShowSuccessModal(false)}
         />
       )}
+      
+      {showErrorModal && (
+        <ChallengeErrorModal
+          challengeName={errorChallengeName}
+          isOpen={showErrorModal}
+          onClose={() => setShowErrorModal(false)}
+        />
+      )}
     </div>
   );
 }
