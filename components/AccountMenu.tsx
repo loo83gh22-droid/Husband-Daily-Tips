@@ -9,17 +9,9 @@ export default function AccountMenu() {
   const menuRef = useRef<HTMLDivElement>(null);
   const { user } = useUser();
   const [displayName, setDisplayName] = useState<string>('User');
-  const [mounted, setMounted] = useState(false);
 
-  // Only render after mount to avoid hydration issues
+  // Fetch display name from API
   useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  // Fetch display name from API (only after mount)
-  useEffect(() => {
-    if (!mounted) return;
-
     async function fetchDisplayName() {
       try {
         const response = await fetch('/api/user/display-name');
@@ -43,11 +35,8 @@ export default function AccountMenu() {
     
     if (user) {
       fetchDisplayName();
-    } else if (mounted) {
-      // If no user, set a default
-      setDisplayName('User');
     }
-  }, [user, mounted]);
+  }, [user]);
 
   // Close menu when clicking outside
   useEffect(() => {
@@ -72,34 +61,6 @@ export default function AccountMenu() {
     { href: '/dashboard/payments', label: 'Payment Methods', icon: '💵' },
     { href: '/dashboard/billing', label: 'Billing History', icon: '📄' },
   ];
-
-  // Don't render until mounted to avoid hydration issues
-  if (!mounted) {
-    return (
-      <div className="relative">
-        <button
-          type="button"
-          className="p-2 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-900 transition-colors"
-          aria-label="Account menu"
-          disabled
-        >
-          <svg
-            className="w-6 h-6"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M4 6h16M4 12h16M4 18h16"
-            />
-          </svg>
-        </button>
-      </div>
-    );
-  }
 
   return (
     <div className="relative" ref={menuRef}>
