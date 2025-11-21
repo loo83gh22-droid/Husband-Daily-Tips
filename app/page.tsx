@@ -56,7 +56,7 @@ export default async function Home() {
               STOP WINGING IT. START WINNING IT.
             </p>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-slate-50 tracking-tight mb-6">
-              Level up your marriage game,
+              Your daily mission, delivered.
               <span className="block text-primary-400">one action at a time.</span>
             </h1>
             <p className="text-base md:text-lg text-slate-300 leading-relaxed mb-8 max-w-2xl">

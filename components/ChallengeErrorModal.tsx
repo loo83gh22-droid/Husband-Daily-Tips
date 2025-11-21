@@ -19,25 +19,25 @@ export default function ChallengeErrorModal({
         <div className="text-center mb-6">
           <div className="text-5xl mb-4">🎯</div>
           <h2 className="text-2xl font-bold text-slate-50 mb-2">
-            Challenge Already Active
+            Hold Up, Champ.
           </h2>
           <p className="text-slate-300 text-lg mb-1">
-            You're currently participating in
+            You&apos;re already crushing
           </p>
           <p className="text-primary-400 font-semibold text-xl mb-4">
             "{challengeName}"
           </p>
           <p className="text-slate-400 text-sm">
-            Complete your current challenge before joining a new one. This helps you stay focused and get the most out of each challenge!
+            Finish strong. One challenge at a time. It&apos;s not about speed—it&apos;s about actually doing it right. Dominate this one first, then we&apos;ll talk about the next.
           </p>
         </div>
 
         <div className="bg-amber-500/10 border border-amber-500/30 rounded-lg p-4 mb-6">
           <p className="text-sm text-amber-300 mb-2">
-            <strong>💡 Why one challenge at a time?</strong>
+            <strong>💡 Here&apos;s why:</strong>
           </p>
           <p className="text-xs text-amber-200/80">
-            Focusing on one challenge ensures you can fully commit to all 7 days of actions and see real results. Complete this challenge first, then start a new one!
+            One challenge = full focus. Two challenges = half effort. You&apos;re better than half effort. Finish this mission, then we&apos;ll launch the next one. Winners finish what they start.
           </p>
         </div>
 
@@ -45,7 +45,7 @@ export default function ChallengeErrorModal({
           onClick={onClose}
           className="w-full bg-primary-500 hover:bg-primary-400 text-slate-950 font-semibold py-3 px-4 rounded-lg transition-colors"
         >
-          Got It
+          Got It. Let&apos;s Finish Strong.
         </button>
 
         <button

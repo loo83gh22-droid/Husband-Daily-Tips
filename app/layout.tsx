@@ -6,8 +6,8 @@ import AuthProvider from '@/components/AuthProvider';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'Best Husband Ever - Level Up Your Marriage Game',
-  description: 'Daily tips, actions, and guidance to help you become the best husband ever',
+  title: 'Best Husband Ever - Your Daily Mission, Delivered',
+  description: 'Daily actions to level up your marriage game. One move today. One wife smile tomorrow. You got this.',
 };
 
 export default function RootLayout({

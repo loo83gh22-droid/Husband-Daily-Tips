@@ -120,7 +120,7 @@ export default function ActiveChallenges() {
             Weekly Challenges
           </h2>
           <p className="text-xs text-slate-400 mt-1">
-            Join time-bound challenges to focus on specific relationship areas
+            7 days. 7 chances to level up. One challenge at a time.
           </p>
         </div>
       </div>

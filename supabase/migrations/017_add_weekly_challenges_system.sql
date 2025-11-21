@@ -61,21 +61,21 @@ CREATE INDEX IF NOT EXISTS idx_challenge_actions_day ON challenge_actions(challe
 
 -- Challenge 1: Communication Week (starts next Monday)
 INSERT INTO challenges (name, description, theme, start_date, end_date, is_active) VALUES
-('7-Day Communication Challenge', 'Focus on rebuilding communication and connection. Each day includes a specific action to improve how you talk and listen to each other.', 'communication', 
+('7-Day Communication Challenge', '7 days. 7 chances to stop talking AT her and start talking WITH her. Real conversations, not surface-level stuff. The guy who listens? That''s the guy who wins. Let''s upgrade your conversation game.', 'communication', 
   CURRENT_DATE + (8 - EXTRACT(DOW FROM CURRENT_DATE)::INT) % 7, -- Next Monday
   CURRENT_DATE + (8 - EXTRACT(DOW FROM CURRENT_DATE)::INT) % 7 + 6, -- Next Sunday
   TRUE);
 
 -- Challenge 2: Roommate Syndrome Recovery (starts the Monday after)
 INSERT INTO challenges (name, description, theme, start_date, end_date, is_active) VALUES
-('7-Day Roommate Syndrome Recovery', 'Escape roommate syndrome and rebuild your romantic connection. Daily actions to move from roommates back to partners.', 'roommate_syndrome',
+('7-Day Roommate Syndrome Recovery', 'Newsflash: You''re not roommates. You''re partners. But somewhere along the way, that got blurry. 7 days to rediscover what you two actually are. Daily actions to move from "Hey, did you pay the electric bill?" back to "Hey, I actually missed you today."', 'roommate_syndrome',
   CURRENT_DATE + (8 - EXTRACT(DOW FROM CURRENT_DATE)::INT) % 7 + 7, -- Monday after next
   CURRENT_DATE + (8 - EXTRACT(DOW FROM CURRENT_DATE)::INT) % 7 + 13, -- Sunday after next
   TRUE);
 
 -- Challenge 3: Romance Week (starts 2 weeks from now)
 INSERT INTO challenges (name, description, theme, start_date, end_date, is_active) VALUES
-('7-Day Romance Challenge', 'Rekindle the romance with daily gestures of love and affection. Small actions that make a big difference.', 'romance',
+('7-Day Romance Challenge', 'Remember when you used to actually try? Yeah, her too. 7 days of small moves that make big impressions. Romance isn''t dead—it just needs a daily dose of intentional action. Let''s bring the spark back, one gesture at a time.', 'romance',
   CURRENT_DATE + (8 - EXTRACT(DOW FROM CURRENT_DATE)::INT) % 7 + 14, -- 2 weeks from Monday
   CURRENT_DATE + (8 - EXTRACT(DOW FROM CURRENT_DATE)::INT) % 7 + 20, -- Sunday 2 weeks out
   TRUE);

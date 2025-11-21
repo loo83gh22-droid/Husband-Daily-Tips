@@ -28,7 +28,7 @@ export async function sendTomorrowTipEmail(
     const { data, error } = await resend.emails.send({
       from: process.env.RESEND_FROM_EMAIL || 'Best Husband Ever - Tomorrow\'s Action! <action@besthusbandever.com>',
       to: email,
-      subject: `Tomorrow's Action: ${tip.title}`,
+      subject: `Tomorrow: Make Her Smile (Here's How)`,
       html: `
         <!DOCTYPE html>
         <html>
@@ -41,7 +41,7 @@ export async function sendTomorrowTipEmail(
             <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 40px 20px;">
               <div style="text-align: center; margin-bottom: 30px;">
                 <h1 style="color: #0ea5e9; font-size: 24px; margin: 0;">Best Husband Ever</h1>
-                <p style="color: #6b7280; font-size: 14px; margin: 5px 0 0 0;">Level up your marriage game.</p>
+                <p style="color: #6b7280; font-size: 14px; margin: 5px 0 0 0;">Your daily mission, delivered.</p>
               </div>
               
               <div style="background-color: #0f172a; border-radius: 8px; padding: 30px; margin-bottom: 30px; border-left: 4px solid #0ea5e9;">
@@ -60,10 +60,10 @@ export async function sendTomorrowTipEmail(
               
               <div style="background-color: #f3f4f6; border-radius: 8px; padding: 20px; margin-bottom: 30px;">
                 <p style="color: #374151; font-size: 14px; margin: 0 0 10px 0; font-weight: 600;">
-                  Why you're seeing this now:
+                  Here&apos;s the deal:
                 </p>
                 <p style="color: #6b7280; font-size: 14px; margin: 0; line-height: 1.6;">
-                  We're sending tomorrow's action today at 12pm so you have time to plan. No pressure—just a heads up so you can think about how to make it happen.
+                  Tomorrow&apos;s action arrives today at 12pm. Why? Because winners plan ahead, and that&apos;s what you&apos;re becoming. Plus, it gives you time to actually make it happen—no scrambling, no forgetting, just execution. You got this.
                 </p>
               </div>
               
@@ -79,7 +79,7 @@ export async function sendTomorrowTipEmail(
                   </a>
                 </div>
                 <p style="color: #6b7280; font-size: 12px; margin: 15px 0 0 0;">
-                  You're receiving this because you signed up for Best Husband Ever.
+                  You&apos;re getting this because you signed up for Best Husband Ever. Your daily mission, delivered.
                 </p>
                 <p style="color: #9ca3af; font-size: 11px; margin: 10px 0 0 0;">
                   <a href="${process.env.AUTH0_BASE_URL}/dashboard" style="color: #0ea5e9; text-decoration: none;">View Dashboard</a> | 

@@ -471,7 +471,7 @@ export default async function Dashboard() {
             <div className="flex items-center justify-between mb-4">
               <div>
                 <h2 className="text-2xl md:text-3xl font-semibold text-slate-50">
-                  Tomorrow&apos;s Action
+                  Tomorrow&apos;s Mission
                 </h2>
                 <p className="text-xs text-slate-400 mt-1">
                   {displayAction?.isChallengeAction ? (
@@ -480,7 +480,7 @@ export default async function Dashboard() {
                     </>
                   ) : (
                     <>
-                      One concrete step to level up your marriage game.
+                      One move today. One wife smile tomorrow. You got this.
                     </>
                   )}
                 </p>
