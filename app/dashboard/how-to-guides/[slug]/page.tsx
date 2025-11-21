@@ -1615,6 +1615,8 @@ You affirmed her. She felt seen and valued. You spoke her love language. That's 
 
 People express and receive love in different ways. Understanding how your partner feels most loved—her "love language"—helps you show love in ways that actually land. When you speak her language, she feels deeply understood and cared for.
 
+*Note: The concept of "love languages" was popularized by relationship counselor Gary Chapman in his book "The 5 Love Languages." This guide adapts those concepts into practical, actionable steps for husbands.*
+
 ## The Secret: It's About How She Feels Loved
 
 This isn't about what you think shows love. It's about what actually makes her feel loved. Pay attention to what she responds to, what she asks for, and what makes her light up.
@@ -2866,6 +2868,795 @@ If one of you is better, be patient. Help each other. Make it fun, not competiti
 ## The Win
 
 You played disc golf together. You had fun outside. You moved together and connected. That's a win.`,
+  },
+  // Cooking Together Guides
+  'cook-together': {
+    id: 42,
+    title: 'Cook a Meal Together',
+    category: 'Quality Time',
+    difficulty: 'Easy',
+    time: '1-2 hours',
+    excerpt: 'Learn how to turn cooking into quality time. Work as a team in the kitchen and create something together.',
+    content: `## Why This Matters
+
+Cooking together transforms a necessary task into quality time. You're working as a team, creating something together, and spending focused time without distractions. It builds teamwork and creates shared accomplishment.
+
+## The Secret: Make It a Team Effort
+
+This isn't about one person cooking while the other watches. It's about working together, dividing tasks, and creating something as a team.
+
+## How to Cook Together
+
+### 1. Plan Together
+
+Before you start:
+- Pick a recipe you both want to try
+- Make sure you have all ingredients
+- Divide tasks fairly
+- Set aside enough time
+
+### 2. Divide Tasks
+
+Work together:
+- One chops, one preps
+- One cooks, one assists
+- One cleans as you go, one focuses on cooking
+- Switch roles so it's fair
+
+### 3. Be Patient
+
+Cooking together requires:
+- Patience with each other
+- Not taking over
+- Letting each person do their part
+- Working as a team, not competing
+
+### 4. Enjoy the Process
+
+This isn't just about the food:
+- Talk while you cook
+- Laugh at mistakes
+- Enjoy working together
+- Make it fun, not stressful
+
+## What Makes It Work
+
+- **You're both involved:** It's a team effort, not a solo task
+- **You're patient:** You work together, not against each other
+- **You enjoy it:** It's fun, not stressful
+- **You create something:** You're making something together
+
+## Common Mistakes
+
+- **One person taking over:** That defeats the purpose
+- **Making it competitive:** It's teamwork, not competition
+- **Rushing through it:** Take your time, enjoy the process
+- **Not planning:** Have everything ready before you start
+
+## The Win
+
+You cooked together. You worked as a team. You created something together and spent quality time. That's a win.`,
+  },
+  'cook-her-favorite-meal': {
+    id: 43,
+    title: 'Cook Her Favorite Meal',
+    category: 'Romance',
+    difficulty: 'Medium',
+    time: '2-3 hours',
+    excerpt: 'Learn how to make her favorite dish from scratch. Put thought and effort into making it special and showing you care.',
+    content: `## Why This Matters
+
+Making her favorite meal shows you pay attention to what she likes. The effort demonstrates care and thoughtfulness. It's a tangible way to show love through action.
+
+## The Secret: Put in Real Effort
+
+This isn't about ordering her favorite takeout. It's about making it yourself, putting in the time and effort to create something special for her.
+
+## How to Cook Her Favorite Meal
+
+### 1. Find Out What It Is
+
+If you don't know:
+- Pay attention to what she orders
+- Ask her what her favorite meal is
+- Notice what she gets excited about
+- Remember what she's mentioned
+
+### 2. Get the Recipe Right
+
+Don't guess:
+- Find a good recipe
+- Read reviews
+- Make sure you understand the steps
+- Have all ingredients ready
+
+### 3. Put in the Effort
+
+This is about showing you care:
+- Don't take shortcuts
+- Follow the recipe
+- Make it from scratch
+- Put thought into presentation
+
+### 4. Make It Special
+
+Go the extra mile:
+- Set the table nicely
+- Light candles
+- Put on music she likes
+- Make it feel like a special occasion
+
+## What Makes It Special
+
+- **You paid attention:** You know what she likes
+- **You put in effort:** You made it yourself
+- **You made it special:** You went beyond just cooking
+- **You showed you care:** The effort demonstrates love
+
+## Common Mistakes
+
+- **Taking shortcuts:** That shows you didn't care enough
+- **Not asking what she likes:** Make sure it's actually her favorite
+- **Making it about you:** This is about her, not your cooking skills
+- **Rushing it:** Take your time, do it right
+
+## The Win
+
+You made her favorite meal. You put in real effort. She felt seen and cared for. That's a win.`,
+  },
+  // Financial Communication Guides
+  'talk-about-finances': {
+    id: 44,
+    title: 'Have a Complete Financial Conversation',
+    category: 'Partnership',
+    difficulty: 'Medium',
+    time: '1-2 hours',
+    excerpt: 'Learn how to have open, honest conversations about money. Financial transparency builds trust and prevents conflicts.',
+    content: `## Why This Matters
+
+Money is one of the biggest sources of conflict in relationships. Financial transparency builds trust and prevents money-related fights. When you're on the same page financially, you're true partners.
+
+## The Secret: Complete Transparency
+
+This isn't about sharing some things. It's about sharing everything: income, expenses, debts, savings, goals, and concerns. No secrets, no surprises.
+
+## How to Have a Financial Conversation
+
+### 1. Set Aside Time
+
+Don't rush this:
+- Pick a time when you're both calm
+- No distractions (phones away)
+- Enough time to cover everything
+- Private space where you can talk
+
+### 2. Come Prepared
+
+Before you talk:
+- Gather all financial documents
+- Know your numbers (income, expenses, debts)
+- Be ready to be completely honest
+- Come with an open mind
+
+### 3. Share Everything
+
+Be completely transparent:
+- All income sources
+- All expenses
+- All debts
+- All savings and investments
+- Financial goals and concerns
+
+### 4. Listen Without Judgment
+
+When she shares:
+- Don't judge her spending
+- Don't get defensive
+- Listen to understand
+- Ask questions to clarify
+
+### 5. Make a Plan Together
+
+After sharing:
+- Discuss what's working
+- Identify what needs to change
+- Set financial goals together
+- Create a plan you both agree on
+
+## What to Cover
+
+- **Income:** All sources of income
+- **Expenses:** Where money is going
+- **Debts:** All debts and payment plans
+- **Savings:** Current savings and goals
+- **Financial goals:** Short-term and long-term
+- **Concerns:** What worries each of you
+
+## Common Mistakes
+
+- **Hiding things:** Secrets destroy trust
+- **Being judgmental:** Different money mindsets are normal
+- **Making it one-sided:** Both people need to share
+- **Not following up:** Make it a regular conversation
+- **Getting defensive:** Listen and understand, don't defend
+
+## The Win
+
+You had a complete financial conversation. You're both on the same page. You're true financial partners. That's a win.`,
+  },
+  // Cleaning Guides
+  'clean-together': {
+    id: 45,
+    title: 'Do a Deep Clean Together',
+    category: 'Partnership',
+    difficulty: 'Easy',
+    time: '2-4 hours',
+    excerpt: 'Learn how to transform cleaning from a chore into quality time. Work as a team and make it fun.',
+    content: `## Why This Matters
+
+Cleaning together transforms a chore into quality time. When you work as a team, the work goes faster, it's more enjoyable, and you both benefit from the result. It's practical partnership in action.
+
+## The Secret: Make It a Team Effort
+
+This isn't about one person cleaning while the other watches. It's about working together, dividing tasks, and getting it done as a team.
+
+## How to Clean Together
+
+### 1. Pick a Space
+
+Choose something:
+- That needs deep cleaning
+- You can finish in one session
+- You both care about
+- That will make a real difference
+
+### 2. Divide Tasks Fairly
+
+Work together:
+- One person takes one area, the other takes another
+- Or work on the same area together
+- Switch tasks so it's fair
+- Help each other when needed
+
+### 3. Make It Fun
+
+It doesn't have to be miserable:
+- Put on music you both like
+- Take breaks together
+- Laugh at the mess
+- Make it a game
+
+### 4. Finish It Completely
+
+Don't half-do it:
+- Complete the whole space
+- Put everything away
+- Clean up your supplies
+- Admire the result together
+
+## What Makes It Work
+
+- **You're both involved:** It's teamwork, not a solo task
+- **You divide fairly:** No one person does everything
+- **You make it fun:** It's enjoyable, not miserable
+- **You finish it:** You complete it together
+
+## Common Mistakes
+
+- **One person doing everything:** That's not cleaning together
+- **Making it competitive:** It's teamwork, not a race
+- **Not finishing:** Complete the whole space
+- **Complaining the whole time:** Make it fun, not miserable
+
+## The Win
+
+You cleaned together. You worked as a team. You have a clean space and you spent quality time together. That's a win.`,
+  },
+  // Pet Responsibility Guides
+  'pet-responsibility': {
+    id: 46,
+    title: 'Take Full Pet Responsibility',
+    category: 'Partnership',
+    difficulty: 'Easy',
+    time: 'Ongoing',
+    excerpt: 'Learn how to take complete responsibility for pet care. Give her a real break and show you understand the mental load.',
+    content: `## Why This Matters
+
+Pet care is often one person's responsibility, even when you both agreed to get the pet. Taking full responsibility for a period shows you understand the mental load and gives her a real break. It's true partnership.
+
+## The Secret: Complete Responsibility
+
+This isn't about helping with pet care. It's about taking it over completely: feeding, walking, cleaning, vet appointments, everything. She doesn't have to think about it at all.
+
+## How to Take Full Pet Responsibility
+
+### 1. Take Over Everything
+
+Handle 100% of:
+- Feeding (all meals, on time)
+- Walking/exercise
+- Cleaning (litter box, waste, grooming)
+- Vet appointments
+- Medication if needed
+- Training/exercise
+
+### 2. Do It Without Being Asked
+
+The whole point is:
+- She doesn't have to remind you
+- She doesn't have to think about it
+- You just do it
+- You handle it completely
+
+### 3. Do It Well
+
+Don't half-do it:
+- Feed on time, every time
+- Clean thoroughly, not just quickly
+- Exercise properly
+- Handle everything, not just the easy parts
+
+### 4. Do It Consistently
+
+This isn't a one-time thing:
+- Do it every day
+- Don't skip days
+- Don't ask her to help
+- Just handle it
+
+## What "Full Responsibility" Means
+
+- **You handle everything:** All pet care tasks
+- **You do it without being asked:** No reminders needed
+- **You do it well:** Not half-done
+- **You do it consistently:** Every day, not just sometimes
+
+## Common Mistakes
+
+- **Asking her to help:** That's not full responsibility
+- **Doing it poorly:** Do it right, not just quickly
+- **Skipping days:** Consistency matters
+- **Making her manage you:** Don't ask what to do—just do it
+
+## The Win
+
+You took full pet responsibility. She got a real break. You showed you understand partnership. That's a win.`,
+  },
+  // Family Actions for Mom Guides
+  'breakfast-in-bed-for-mom': {
+    id: 47,
+    title: 'Make Mom Breakfast in Bed',
+    category: 'Partnership',
+    difficulty: 'Easy',
+    time: '30-60 min',
+    excerpt: 'You and the kids prepare breakfast together and serve it to Mom in bed. Let her relax and be served for once.',
+    content: `## Why This Matters
+
+Moms rarely get to be served. They're usually the ones serving everyone else. Breakfast in bed makes Mom feel special and appreciated. It's a simple way to show love and give her a break from morning responsibilities.
+
+## The Secret: Let Her Be Served
+
+This isn't about making breakfast and then asking her to help. It's about you and the kids doing everything so she can just relax and be served.
+
+## How to Make Breakfast in Bed for Mom
+
+### 1. Plan It
+
+Before you start:
+- Pick a day (weekend works best)
+- Decide what to make
+- Get all ingredients ready
+- Make sure kids are involved
+
+### 2. Do It Together (You and Kids)
+
+Work as a team:
+- Kids can help with simple tasks
+- You handle the cooking
+- Kids can help set up the tray
+- Make it a family effort
+
+### 3. Make It Special
+
+Go the extra mile:
+- Use a nice tray
+- Add a flower or note
+- Make her favorite things
+- Present it nicely
+
+### 4. Let Her Enjoy It
+
+When you serve it:
+- Don't rush her
+- Don't ask her to help clean up
+- Let her eat in peace
+- Handle everything else
+
+## What Makes It Special
+
+- **She doesn't have to do anything:** You handle everything
+- **It's from the whole family:** Kids are involved
+- **It's thoughtful:** You made her favorite things
+- **She gets to relax:** No morning responsibilities
+
+## Common Mistakes
+
+- **Asking her to help:** That defeats the purpose
+- **Making it about you:** This is about her
+- **Rushing her:** Let her enjoy it
+- **Not involving kids:** They should be part of it
+
+## The Win
+
+You made Mom breakfast in bed. She felt special and appreciated. The whole family showed love. That's a win.`,
+  },
+  'poem-for-mom': {
+    id: 48,
+    title: 'Write and Read a Poem About Her',
+    category: 'Romance',
+    difficulty: 'Medium',
+    time: '30-60 min',
+    excerpt: 'Write a poem (or have the kids help) about Mom and read it to her. Make it personal and heartfelt.',
+    content: `## Why This Matters
+
+A personal poem shows thoughtfulness and effort. It's a unique way to express appreciation and make her feel deeply loved. When kids are involved, it becomes even more meaningful.
+
+## The Secret: Make It Personal
+
+This isn't about writing a generic poem. It's about writing something specific to her, about her, that shows you see and appreciate who she is.
+
+## How to Write a Poem for Mom
+
+### 1. Think About Her
+
+Before you write:
+- What do you appreciate about her?
+- What makes her special?
+- What does she do that you're grateful for?
+- What do you love about who she is?
+
+### 2. Keep It Simple
+
+You don't have to be Shakespeare:
+- Simple, heartfelt words work best
+- Focus on being genuine, not fancy
+- Write from the heart
+- It doesn't have to rhyme perfectly
+
+### 3. Involve the Kids
+
+If you have kids:
+- Ask them what they love about Mom
+- Have them help write parts
+- Let them add their own lines
+- Make it a family poem
+
+### 4. Read It to Her
+
+When you share it:
+- Read it with feeling
+- Look at her while you read
+- Don't rush through it
+- Let her feel the words
+
+## What Makes It Meaningful
+
+- **It's personal:** It's about her, specifically
+- **It's from the heart:** Genuine, not generic
+- **It shows effort:** You took time to write it
+- **It's unique:** Not something you can buy
+
+## Common Mistakes
+
+- **Making it generic:** Make it specific to her
+- **Not putting in effort:** Actually write it, don't copy something
+- **Rushing through reading it:** Read it with feeling
+- **Making it about you:** Focus on her
+
+## The Win
+
+You wrote a poem for Mom. It was personal and heartfelt. She felt deeply loved and appreciated. That's a win.`,
+  },
+  'give-mom-a-break': {
+    id: 49,
+    title: 'Take the Kids Out So Mom Gets a Break',
+    category: 'Partnership',
+    difficulty: 'Easy',
+    time: '2-4 hours',
+    excerpt: 'Take the kids out for several hours so Mom can have uninterrupted time alone. Handle everything—no calls or texts unless emergency.',
+    content: `## Why This Matters
+
+Moms rarely get uninterrupted alone time. Giving Mom real alone time is a gift. When you take the kids out completely, she can actually relax, recharge, and have time to herself without worrying about anything.
+
+## The Secret: Complete Break
+
+This isn't about taking the kids to the park for 30 minutes. It's about taking them out for several hours, handling everything, and not bothering her unless it's a real emergency.
+
+## How to Give Mom a Break
+
+### 1. Plan It Ahead
+
+Before you go:
+- Tell her when you're leaving
+- Tell her when you'll be back
+- Make sure she knows she has time
+- Plan something the kids will enjoy
+
+### 2. Take Everything You Need
+
+Don't make her pack:
+- Pack snacks and drinks
+- Pack diapers/wipes if needed
+- Pack extra clothes
+- Pack activities/toys
+- Handle everything yourself
+
+### 3. Don't Call or Text
+
+Unless it's a real emergency:
+- Don't call to ask questions
+- Don't text for permission
+- Don't check in constantly
+- Let her have real alone time
+
+### 4. Handle Everything
+
+While you're out:
+- Handle all kid needs
+- Deal with any issues
+- Don't come back early
+- Give her the full time
+
+## What Makes It a Real Break
+
+- **She has time alone:** Uninterrupted, no kids
+- **You handle everything:** She doesn't have to think about anything
+- **You don't bother her:** No calls or texts
+- **It's long enough:** Several hours, not 30 minutes
+
+## Common Mistakes
+
+- **Calling or texting constantly:** That's not a break
+- **Coming back early:** Give her the full time
+- **Asking her to pack things:** Handle it yourself
+- **Making it too short:** She needs real time
+
+## The Win
+
+You took the kids out. Mom got real alone time. She relaxed and recharged. That's a win.`,
+  },
+  // Relationship Games Guides
+  'relationship-games': {
+    id: 50,
+    title: 'Play Relationship Games Together',
+    category: 'Intimacy',
+    difficulty: 'Easy',
+    time: '30-60 min',
+    excerpt: 'Learn how relationship games can deepen connection and add playfulness. Try games designed to facilitate meaningful conversations.',
+    content: `## Why This Matters
+
+Relationship games create structured opportunities for deep connection. They facilitate conversations you might not have otherwise and add playfulness to your relationship. They're fun and meaningful.
+
+## The Secret: Be Open and Vulnerable
+
+These games only work if you're willing to be honest and vulnerable. They create safe spaces for conversations, but you have to actually engage.
+
+## Popular Relationship Games
+
+### 1. "We're Not Really Strangers"
+
+- Card game with deep questions
+- Three levels of intimacy
+- Encourages vulnerability
+- Great for meaningful conversations
+
+### 2. "The Gottman Card Decks" App
+
+- Research-based questions
+- Created by relationship experts
+- Multiple card decks (love, intimacy, etc.)
+- Free app available
+
+### 3. "TableTopics for Couples"
+
+- Conversation starter cards
+- Designed specifically for couples
+- Fun and thought-provoking
+- Easy to play anywhere
+
+### 4. "The Adventure Challenge: Couples Edition"
+
+- Scratch-off adventures
+- Fun activities to do together
+- Adds spontaneity
+- Creates shared experiences
+
+## How to Play Relationship Games
+
+### 1. Pick a Game
+
+Choose something:
+- You're both interested in
+- That matches your comfort level
+- You can commit to playing
+- That sounds fun to both of you
+
+### 2. Set the Mood
+
+Create the right environment:
+- No distractions (phones away)
+- Comfortable setting
+- Enough time to play
+- Relaxed atmosphere
+
+### 3. Be Honest
+
+When playing:
+- Answer questions honestly
+- Don't hold back
+- Listen to her answers
+- Be vulnerable
+
+### 4. Have Fun
+
+Remember:
+- It's supposed to be fun
+- Don't take it too seriously
+- Laugh together
+- Enjoy the connection
+
+## What Makes It Work
+
+- **You're both engaged:** Both people participate fully
+- **You're honest:** You answer questions truthfully
+- **You listen:** You pay attention to her answers
+- **You have fun:** It's enjoyable, not stressful
+
+## Common Mistakes
+
+- **Not being honest:** These games only work if you're real
+- **Taking it too seriously:** Have fun with it
+- **Not listening:** Pay attention to her answers
+- **Rushing through it:** Take your time, enjoy it
+
+## The Win
+
+You played a relationship game. You had meaningful conversations. You connected and had fun. That's a win.`,
+  },
+  // Intimacy Guides
+  'initiate-intimacy': {
+    id: 51,
+    title: 'Initiate Physical Intimacy Without Pressure',
+    category: 'Intimacy',
+    difficulty: 'Medium',
+    time: 'Varies',
+    excerpt: 'Learn how to initiate physical intimacy in a way that feels loving and pressure-free. Focus on connection, not just the end goal.',
+    content: `## Why This Matters
+
+Pressure-free initiation makes intimacy feel safe and enjoyable. When she feels no pressure, she's more likely to want to connect. Focus on connection and pleasure, not just sex.
+
+## The Secret: Remove All Pressure
+
+This isn't about getting her to say yes. It's about creating an environment where she feels safe, desired, and free to say yes or no without consequences.
+
+## How to Initiate Without Pressure
+
+### 1. Start with Non-Sexual Touch
+
+Build connection first:
+- Cuddle and hold her
+- Give her a back rub
+- Touch her affectionately
+- Build physical connection gradually
+
+### 2. Pay Attention to Her Response
+
+Watch for:
+- Does she seem relaxed?
+- Is she responding positively?
+- Does she seem into it?
+- Or does she seem tense or checked out?
+
+### 3. Make It About Her Pleasure
+
+Focus on:
+- What feels good to her
+- Her pleasure, not yours
+- Making her feel desired
+- Connection, not just sex
+
+### 4. Accept "No" Gracefully
+
+If she says no:
+- Don't get upset
+- Don't pressure her
+- Don't make her feel guilty
+- Just accept it and continue being affectionate
+
+## What Makes It Pressure-Free
+
+- **No expectations:** You're not assuming it will lead to sex
+- **Her pleasure matters:** You focus on what feels good to her
+- **She can say no:** Without consequences or guilt
+- **It's about connection:** Not just the end goal
+
+## Common Mistakes
+
+- **Having expectations:** Don't assume it will lead to sex
+- **Ignoring her response:** Pay attention to how she's reacting
+- **Making it about you:** Focus on her pleasure
+- **Getting upset if she says no:** That creates pressure
+
+## The Win
+
+You initiated intimacy without pressure. She felt safe and desired. You connected physically and emotionally. That's a win.`,
+  },
+  'focus-on-her-pleasure': {
+    id: 52,
+    title: 'Focus on Her Pleasure',
+    category: 'Intimacy',
+    difficulty: 'Medium',
+    time: 'Varies',
+    excerpt: 'Make an intimate encounter entirely about her pleasure. Ask what she wants and follow through without expecting anything in return.',
+    content: `## Why This Matters
+
+Focusing on her pleasure shows you care about her satisfaction. Selfless giving in intimacy strengthens emotional and physical connection. When she feels truly pleasured, your intimacy improves for both of you.
+
+## The Secret: It's All About Her
+
+This isn't about you getting something. It's about making her feel amazing, asking what she wants, and following through without expecting anything in return.
+
+## How to Focus on Her Pleasure
+
+### 1. Ask What She Wants
+
+Don't assume:
+- "What feels good?"
+- "What do you want?"
+- "How do you like to be touched?"
+- "What would make you feel amazing?"
+
+### 2. Listen and Follow Through
+
+When she tells you:
+- Actually do what she says
+- Pay attention to her response
+- Adjust based on her feedback
+- Keep checking in
+
+### 3. Don't Rush
+
+Take your time:
+- Don't rush to the "main event"
+- Enjoy the whole process
+- Focus on her pleasure throughout
+- There's no timeline
+
+### 4. No Expectations
+
+This is about her:
+- Don't expect anything in return
+- Don't make it transactional
+- Just focus on making her feel amazing
+- Her pleasure is the goal
+
+## What Makes It About Her
+
+- **You ask what she wants:** You don't assume
+- **You listen:** You actually follow through
+- **You take your time:** You don't rush
+- **You have no expectations:** It's about her, not you
+
+## Common Mistakes
+
+- **Assuming you know what she wants:** Ask, don't assume
+- **Rushing through it:** Take your time
+- **Having expectations:** This is about her, not you
+- **Not listening:** Actually do what she says
+
+## The Win
+
+You focused entirely on her pleasure. She felt amazing. You connected deeply. That's a win.`,
   },
 };
 

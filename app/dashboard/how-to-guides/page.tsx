@@ -153,6 +153,22 @@ export default async function HowToGuidesPage() {
           difficulty: 'Easy',
           time: '30 seconds',
         },
+        {
+          slug: 'initiate-intimacy',
+          title: 'Initiate Physical Intimacy Without Pressure',
+          excerpt:
+            'Learn how to initiate physical intimacy in a way that feels loving and pressure-free. Focus on connection, not just the end goal.',
+          difficulty: 'Medium',
+          time: 'Varies',
+        },
+        {
+          slug: 'focus-on-her-pleasure',
+          title: 'Focus on Her Pleasure',
+          excerpt:
+            'Make an intimate encounter entirely about her pleasure. Ask what she wants and follow through without expecting anything in return.',
+          difficulty: 'Medium',
+          time: 'Varies',
+        },
       ],
     },
     'partnership': {
@@ -231,6 +247,54 @@ export default async function HowToGuidesPage() {
             'Notice what needs to be done and do it. Don\'t wait to be told. Don\'t wait for her to do it. Just notice and do it.',
           difficulty: 'Easy',
           time: 'Ongoing',
+        },
+        {
+          slug: 'talk-about-finances',
+          title: 'Have a Complete Financial Conversation',
+          excerpt:
+            'Learn how to have open, honest conversations about money. Financial transparency builds trust and prevents conflicts.',
+          difficulty: 'Medium',
+          time: '1-2 hours',
+        },
+        {
+          slug: 'clean-together',
+          title: 'Do a Deep Clean Together',
+          excerpt:
+            'Learn how to transform cleaning from a chore into quality time. Work as a team and make it fun.',
+          difficulty: 'Easy',
+          time: '2-4 hours',
+        },
+        {
+          slug: 'pet-responsibility',
+          title: 'Take Full Pet Responsibility',
+          excerpt:
+            'Learn how to take complete responsibility for pet care. Give her a real break and show you understand the mental load.',
+          difficulty: 'Easy',
+          time: 'Ongoing',
+        },
+        {
+          slug: 'breakfast-in-bed-for-mom',
+          title: 'Make Mom Breakfast in Bed',
+          excerpt:
+            'You and the kids prepare breakfast together and serve it to Mom in bed. Let her relax and be served for once.',
+          difficulty: 'Easy',
+          time: '30-60 min',
+        },
+        {
+          slug: 'poem-for-mom',
+          title: 'Write and Read a Poem About Her',
+          excerpt:
+            'Write a poem (or have the kids help) about Mom and read it to her. Make it personal and heartfelt.',
+          difficulty: 'Medium',
+          time: '30-60 min',
+        },
+        {
+          slug: 'give-mom-a-break',
+          title: 'Take the Kids Out So Mom Gets a Break',
+          excerpt:
+            'Take the kids out for several hours so Mom can have uninterrupted time alone. Handle everything—no calls or texts unless emergency.',
+          difficulty: 'Easy',
+          time: '2-4 hours',
         },
       ],
     },
@@ -461,6 +525,14 @@ export default async function HowToGuidesPage() {
           time: '15-30 min',
         },
         {
+          slug: 'relationship-games',
+          title: 'Play Relationship Games Together',
+          excerpt:
+            'Learn how relationship games can deepen connection and add playfulness. Try games designed to facilitate meaningful conversations.',
+          difficulty: 'Easy',
+          time: '30-60 min',
+        },
+        {
           slug: 'practice-turning-toward',
           title: 'Practice Turning Toward Her Bids for Connection',
           excerpt:
@@ -514,6 +586,22 @@ export default async function HowToGuidesPage() {
             'Learn how to create a small daily ritual at the end of the day—evening walk, bedtime check-in, or quiet time together.',
           difficulty: 'Easy',
           time: '10-30 min daily',
+        },
+        {
+          slug: 'cook-together',
+          title: 'Cook a Meal Together',
+          excerpt:
+            'Learn how to turn cooking into quality time. Work as a team in the kitchen and create something together.',
+          difficulty: 'Easy',
+          time: '1-2 hours',
+        },
+        {
+          slug: 'cook-her-favorite-meal',
+          title: 'Cook Her Favorite Meal',
+          excerpt:
+            'Learn how to make her favorite dish from scratch. Put thought and effort into making it special and showing you care.',
+          difficulty: 'Medium',
+          time: '2-3 hours',
         },
       ],
     },
