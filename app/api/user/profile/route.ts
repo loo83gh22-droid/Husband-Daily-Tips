@@ -3,9 +3,10 @@ import { getSession } from '@auth0/nextjs-auth0';
 import { supabase } from '@/lib/supabase';
 
 /**
- * Update user profile (username, wedding_date, post_anonymously)
+ * Update user profile (username, wedding_date, post_anonymously, timezone, profile_picture)
+ * Supports both PUT and POST for backwards compatibility
  */
-export async function POST(request: Request) {
+async function updateProfile(request: Request) {
   try {
     const session = await getSession();
 
@@ -14,7 +15,7 @@ export async function POST(request: Request) {
     }
 
     const auth0Id = session.user.sub;
-    const { username, wedding_date, post_anonymously, timezone } = await request.json();
+    const { username, wedding_date, post_anonymously, timezone, profile_picture } = await request.json();
 
     // Get user
     const { data: user, error: userError } = await supabase
@@ -84,6 +85,9 @@ export async function POST(request: Request) {
     if (timezone !== undefined) {
       updateData.timezone = timezone || 'America/New_York';
     }
+    if (profile_picture !== undefined) {
+      updateData.profile_picture = profile_picture || null;
+    }
 
     const { error: updateError } = await supabase
       .from('users')
@@ -102,6 +106,14 @@ export async function POST(request: Request) {
   }
 }
 
+export async function PUT(request: Request) {
+  return updateProfile(request);
+}
+
+export async function POST(request: Request) {
+  return updateProfile(request);
+}
+
 /**
  * Get user profile
  */
@@ -117,7 +129,7 @@ export async function GET() {
 
         const { data: user, error: userError } = await supabase
           .from('users')
-          .select('username, wedding_date, post_anonymously, name, timezone')
+          .select('username, wedding_date, post_anonymously, name, timezone, profile_picture')
           .eq('auth0_id', auth0Id)
           .single();
 
@@ -131,6 +143,7 @@ export async function GET() {
           post_anonymously: user.post_anonymously || false,
           name: user.name,
           timezone: user.timezone || 'America/New_York',
+          profile_picture: user.profile_picture,
         });
   } catch (error) {
     console.error('Unexpected error fetching profile:', error);
