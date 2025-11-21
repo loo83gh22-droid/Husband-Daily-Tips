@@ -6,41 +6,60 @@ import AccountProfileForm from '@/components/AccountProfileForm';
 
 async function getUserProfile(auth0Id: string) {
   try {
-    // Try to get wedding_date first (if migration has been run)
-    const { data: user, error } = await supabase
+    // Try to get all fields including timezone (if migration has been run)
+    let { data: user, error } = await supabase
       .from('users')
       .select('username, wedding_date, post_anonymously, name, timezone')
       .eq('auth0_id', auth0Id)
       .single();
 
-    if (error) {
-      // If error is about column not existing, try with years_married as fallback
-      if (error.message?.includes('wedding_date') || error.code === '42703') {
-        const { data: userFallback, error: fallbackError } = await supabase
-          .from('users')
-          .select('username, years_married, post_anonymously, name')
-          .eq('auth0_id', auth0Id)
-          .single();
+    // If error is about timezone column not existing, try without it
+    if (error && (error.message?.includes('timezone') || error.code === '42703')) {
+      const { data: userWithoutTimezone, error: errorWithoutTimezone } = await supabase
+        .from('users')
+        .select('username, wedding_date, post_anonymously, name')
+        .eq('auth0_id', auth0Id)
+        .single();
 
-        if (fallbackError || !userFallback) {
-          return {
-            username: null,
-            wedding_date: null,
-            post_anonymously: false,
-            name: null,
-            timezone: 'America/New_York',
-          };
-        }
-
+      if (!errorWithoutTimezone && userWithoutTimezone) {
         return {
-          username: userFallback.username,
-          wedding_date: null, // Migration not run yet
-          post_anonymously: userFallback.post_anonymously || false,
-          name: userFallback.name,
+          username: userWithoutTimezone.username,
+          wedding_date: userWithoutTimezone.wedding_date,
+          post_anonymously: userWithoutTimezone.post_anonymously || false,
+          name: userWithoutTimezone.name,
+          timezone: 'America/New_York', // Default timezone
+        };
+      }
+    }
+
+    // If error is about wedding_date column not existing, try with years_married as fallback
+    if (error && (error.message?.includes('wedding_date') || error.code === '42703')) {
+      const { data: userFallback, error: fallbackError } = await supabase
+        .from('users')
+        .select('username, years_married, post_anonymously, name')
+        .eq('auth0_id', auth0Id)
+        .single();
+
+      if (fallbackError || !userFallback) {
+        return {
+          username: null,
+          wedding_date: null,
+          post_anonymously: false,
+          name: null,
           timezone: 'America/New_York',
         };
       }
 
+      return {
+        username: userFallback.username,
+        wedding_date: null, // Migration not run yet
+        post_anonymously: userFallback.post_anonymously || false,
+        name: userFallback.name,
+        timezone: 'America/New_York',
+      };
+    }
+
+    if (error) {
       return {
         username: null,
         wedding_date: null,
