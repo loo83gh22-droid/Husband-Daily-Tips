@@ -15,7 +15,10 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 export async function POST(request: Request) {
   try {
     // Verify this is called with proper auth (use same secret as other email endpoints)
-    const authHeader = request.headers.get('authorization');
+    // Try multiple header name formats (case-insensitive)
+    const authHeader = request.headers.get('authorization') || 
+                       request.headers.get('Authorization') ||
+                       request.headers.get('AUTHORIZATION');
     const expectedAuth = `Bearer ${process.env.CRON_SECRET}`;
     
     // Debug logging (remove after testing)
