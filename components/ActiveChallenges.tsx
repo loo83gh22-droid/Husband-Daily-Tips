@@ -37,11 +37,27 @@ export default function ActiveChallenges() {
   const [challenges, setChallenges] = useState<Challenge[]>([]);
   const [userChallenges, setUserChallenges] = useState<UserChallenge[]>([]);
   const [loading, setLoading] = useState(true);
+  const [userId, setUserId] = useState<string | null>(null);
 
   useEffect(() => {
+    fetchUserId();
     fetchChallenges();
     fetchUserChallenges();
   }, []);
+
+  const fetchUserId = async () => {
+    try {
+      const response = await fetch('/api/user/me', {
+        credentials: 'include',
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setUserId(data.user?.id || null);
+      }
+    } catch (error) {
+      // Silently handle errors
+    }
+  };
 
   const fetchChallenges = async () => {
     try {
@@ -117,6 +133,7 @@ export default function ActiveChallenges() {
               key={challenge.id}
               challenge={challenge}
               userChallenge={userChallenge}
+              userId={userId || undefined}
               onJoin={handleJoin}
             />
           );
