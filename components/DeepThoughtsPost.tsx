@@ -8,6 +8,26 @@ interface DeepThoughtsPostProps {
   thought: any;
 }
 
+// Helper function to calculate years married from wedding date
+function calculateYearsMarried(weddingDate: string | null): number | null {
+  if (!weddingDate) return null;
+  
+  const wedding = new Date(weddingDate);
+  const today = new Date();
+  
+  if (isNaN(wedding.getTime())) return null;
+  
+  let years = today.getFullYear() - wedding.getFullYear();
+  const monthDiff = today.getMonth() - wedding.getMonth();
+  
+  // Adjust if birthday hasn't occurred this year
+  if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < wedding.getDate())) {
+    years--;
+  }
+  
+  return Math.max(0, years);
+}
+
 // Helper function to get display name and info
 function getDisplayInfo(user: any) {
   if (!user) {
@@ -19,15 +39,18 @@ function getDisplayInfo(user: any) {
     return { displayName: 'Anonymous', yearsMarried: null };
   }
 
+  // Calculate years married from wedding date
+  const yearsMarried = calculateYearsMarried(user.wedding_date);
+
   // Prefer username if set
   if (user.username) {
-    return { displayName: user.username, yearsMarried: user.years_married };
+    return { displayName: user.username, yearsMarried };
   }
 
   // Otherwise, extract first name from full name
   if (user.name) {
     const firstName = user.name.split(' ')[0];
-    return { displayName: firstName, yearsMarried: user.years_married };
+    return { displayName: firstName, yearsMarried };
   }
 
   // Fallback to Anonymous
