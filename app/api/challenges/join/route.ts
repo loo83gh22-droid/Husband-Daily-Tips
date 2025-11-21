@@ -182,9 +182,24 @@ export async function POST(request: Request) {
     }
 
     // Send email with 7 days of actions if this is a 7-day challenge
-    if (challenge && challenge.duration_days === 7 && userWithEmail) {
+    if (challenge && userWithEmail) {
       try {
-        await sendChallengeEmail(userWithEmail, challenge.name);
+        // Get all challenge actions for the email
+        const { data: challengeActionsData } = await supabase
+          .from('challenge_actions')
+          .select(`
+            day_number,
+            actions (
+              id,
+              name,
+              description
+            )
+          `)
+          .eq('challenge_id', challengeId)
+          .order('day_number', { ascending: true });
+
+        const challengeActions = challengeActionsData || [];
+        await sendChallengeEmail(userWithEmail, challenge, challengeActions, userChallenge);
       } catch (emailError) {
         // Don't fail challenge join if email fails
         console.error('Error sending challenge email:', emailError);
@@ -288,7 +303,14 @@ async function generateActionForDate(
   return randomAction;
 }
 
-async function sendChallengeEmail(user: any, challengeName: string) {
+async function sendChallengeEmail(
+  user: any,
+  challenge: any,
+  challengeActions: any[],
+  userChallenge: any
+) {
+  const challengeName = challenge.name;
+  const joinedDate = userChallenge?.joined_date || new Date().toISOString().split('T')[0];
   try {
     const { Resend } = await import('resend');
     const resend = new Resend(process.env.RESEND_API_KEY);
@@ -331,15 +353,51 @@ async function sendChallengeEmail(user: any, challengeName: string) {
                 <p style="color: #475569; font-size: 15px; margin: 0 0 10px 0;">
                   <strong style="color: #1e293b;">Hi ${displayName},</strong>
                 </p>
-                <p style="color: #475569; font-size: 15px; margin: 0;">
+                <p style="color: #475569; font-size: 15px; margin: 0 0 15px 0;">
                   We've assigned <strong style="color: #fbbf24;">7 personalized actions</strong> to your account, one for each day of your challenge. These actions are locked in and will appear on your dashboard each day.
                 </p>
+                <p style="color: #475569; font-size: 15px; margin: 0;">
+                  Here's your complete 7-day action plan:
+                </p>
               </div>
+              
+              ${challengeActions.length > 0 ? `
+                <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; margin: 20px 0;">
+                  <h3 style="color: #1e293b; font-size: 18px; margin: 0 0 15px 0; font-weight: 600;">Your 7-Day Action Plan</h3>
+                  ${challengeActions.map((ca: any, index: number) => {
+                    const action = ca.actions;
+                    const eventDate = new Date(joinedDate);
+                    eventDate.setDate(new Date(joinedDate).getDate() + (ca.day_number - 1));
+                    const dateStr = eventDate.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+                    
+                    return `
+                      <div style="background-color: #ffffff; border-left: 3px solid #fbbf24; padding: 15px; margin-bottom: 12px; border-radius: 4px;">
+                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px;">
+                          <span style="background-color: #fbbf24; color: #0f172a; font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 12px;">
+                            Day ${ca.day_number}
+                          </span>
+                          <span style="color: #64748b; font-size: 12px; font-weight: 500;">
+                            ${dateStr}
+                          </span>
+                        </div>
+                        <h4 style="color: #1e293b; font-size: 16px; font-weight: 600; margin: 8px 0; line-height: 1.4;">
+                          ${action?.name || 'Action'}
+                        </h4>
+                        ${action?.description ? `
+                          <p style="color: #475569; font-size: 14px; margin: 0; line-height: 1.5;">
+                            ${action.description}
+                          </p>
+                        ` : ''}
+                      </div>
+                    `;
+                  }).join('')}
+                </div>
+              ` : ''}
               
               <div style="background-color: #fef3c7; border-left: 4px solid #fbbf24; padding: 15px; margin: 20px 0; border-radius: 4px;">
                 <p style="margin: 0; color: #92400e; font-size: 13px; font-weight: 600;">💡 PRO TIP</p>
                 <p style="margin: 5px 0 0 0; color: #78350f; font-size: 14px;">
-                  Download these actions to your calendar now to plan ahead and commit to completing them. Pre-assigned actions take precedence over the daily algorithm!
+                  Add these actions to your calendar now to plan ahead and commit to completing them. Pre-assigned actions take precedence over the daily algorithm!
                 </p>
               </div>
               

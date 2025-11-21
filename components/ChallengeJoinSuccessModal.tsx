@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 interface ChallengeJoinSuccessModalProps {
   challengeName: string;
@@ -15,28 +15,76 @@ export default function ChallengeJoinSuccessModal({
   isOpen,
   onClose,
 }: ChallengeJoinSuccessModalProps) {
-  const [isDownloading, setIsDownloading] = useState(false);
+  const [isAdding, setIsAdding] = useState(false);
+  const [calendarLinks, setCalendarLinks] = useState<{
+    googleCalendar?: string;
+    outlookCalendar?: string;
+    icalDownload?: string;
+  }>({});
 
-  if (!isOpen) return null;
+  // Automatically fetch calendar links when modal opens
+  useEffect(() => {
+    if (isOpen && userId) {
+      fetchCalendarLinks();
+    }
+  }, [isOpen, userId]);
 
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || window.location.origin;
-
-  const handleDownloadCalendar = async (days: number) => {
-    setIsDownloading(true);
+  const fetchCalendarLinks = async () => {
     try {
-      const url = `${baseUrl}/api/calendar/actions/download?days=${days}&userId=${userId}`;
-      window.location.href = url;
-      // Close modal after a short delay
+      const baseUrl = process.env.NEXT_PUBLIC_APP_URL || window.location.origin;
+      const response = await fetch(`${baseUrl}/api/calendar/add-to-calendar?userId=${userId}&days=7`, {
+        credentials: 'include',
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setCalendarLinks(data);
+      }
+    } catch (error) {
+      console.error('Error fetching calendar links:', error);
+    }
+  };
+
+  const handleAddToCalendar = async (provider: 'google' | 'outlook') => {
+    setIsAdding(true);
+    try {
+      // If we don't have links yet, fetch them
+      if (!calendarLinks.googleCalendar && !calendarLinks.outlookCalendar) {
+        await fetchCalendarLinks();
+      }
+
+      const url = provider === 'google' 
+        ? calendarLinks.googleCalendar 
+        : calendarLinks.outlookCalendar;
+
+      if (url) {
+        // Open calendar in new window
+        window.open(url, '_blank');
+        // Close modal after a short delay
+        setTimeout(() => {
+          onClose();
+        }, 500);
+      } else {
+        alert('Calendar link not available. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error adding to calendar:', error);
+      alert('Failed to add to calendar. Please try again.');
+    } finally {
+      setIsAdding(false);
+    }
+  };
+
+  const handleDownloadiCal = () => {
+    if (calendarLinks.icalDownload) {
+      window.location.href = calendarLinks.icalDownload;
       setTimeout(() => {
         onClose();
       }, 1000);
-    } catch (error) {
-      console.error('Error downloading calendar:', error);
-      alert('Failed to download calendar. Please try again.');
-    } finally {
-      setIsDownloading(false);
     }
   };
+
+  if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
@@ -61,21 +109,55 @@ export default function ChallengeJoinSuccessModal({
         </div>
 
         <div className="space-y-3">
+          <div className="text-sm text-slate-300 mb-2 text-center">
+            Add all 7 days to your calendar automatically:
+          </div>
+          
           <button
-            onClick={() => handleDownloadCalendar(7)}
-            disabled={isDownloading}
-            className="w-full bg-primary-500 hover:bg-primary-400 text-slate-950 font-semibold py-3 px-4 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            onClick={() => handleAddToCalendar('google')}
+            disabled={isAdding}
+            className="w-full bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3 px-4 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
           >
-            {isDownloading ? (
+            {isAdding ? (
               <>
                 <span className="animate-spin">⏳</span>
-                Downloading...
+                Adding...
               </>
             ) : (
               <>
-                📅 Download 7 Days to Calendar
+                📅 Add to Google Calendar
               </>
             )}
+          </button>
+
+          <button
+            onClick={() => handleAddToCalendar('outlook')}
+            disabled={isAdding}
+            className="w-full bg-blue-500 hover:bg-blue-400 text-white font-semibold py-3 px-4 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+          >
+            {isAdding ? (
+              <>
+                <span className="animate-spin">⏳</span>
+                Adding...
+              </>
+            ) : (
+              <>
+                📅 Add to Outlook Calendar
+              </>
+            )}
+          </button>
+
+          <div className="relative flex items-center">
+            <div className="flex-grow border-t border-slate-700"></div>
+            <span className="px-3 text-xs text-slate-500">OR</span>
+            <div className="flex-grow border-t border-slate-700"></div>
+          </div>
+
+          <button
+            onClick={handleDownloadiCal}
+            className="w-full bg-slate-700 hover:bg-slate-600 text-slate-200 font-medium py-2 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
+          >
+            📥 Download iCal File (for Apple Calendar)
           </button>
 
           <button
