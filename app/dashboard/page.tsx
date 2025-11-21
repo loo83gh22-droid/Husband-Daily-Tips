@@ -471,20 +471,12 @@ export default async function Dashboard() {
             <div className="flex items-center justify-between mb-4">
               <div>
                 <h2 className="text-2xl md:text-3xl font-semibold text-slate-50">
-                  {displayAction?.isChallengeAction ? (
-                    <>
-                      Challenge Action - Day {displayAction.challengeDay}
-                    </>
-                  ) : (
-                    <>
-                      Tomorrow&apos;s Action
-                    </>
-                  )}
+                  Tomorrow&apos;s Action
                 </h2>
                 <p className="text-xs text-slate-400 mt-1">
                   {displayAction?.isChallengeAction ? (
                     <>
-                      <span className="font-semibold text-primary-400">{displayAction.challengeName}</span> - One concrete step to level up your marriage game.
+                      <span className="font-semibold text-primary-400">{displayAction.challengeName}</span> - Day {displayAction.challengeDay} of 7
                     </>
                   ) : (
                     <>
