@@ -18,29 +18,35 @@ export default function HealthBar({ value }: HealthBarProps) {
   const [previousHealth, setPreviousHealth] = useState<number | null>(null);
   const [celebratedMilestones, setCelebratedMilestones] = useState<Set<Milestone>>(new Set());
   const [currentMilestone, setCurrentMilestone] = useState<Milestone | null>(null);
+  const [isInitialized, setIsInitialized] = useState(false);
 
   const clamped = Math.max(0, Math.min(100, value));
 
-  // Load previous health from localStorage on mount
+  // Load previous health and celebrated milestones from localStorage on mount
   useEffect(() => {
     const stored = localStorage.getItem('previous_health');
-    if (stored) {
-      setPreviousHealth(parseFloat(stored));
-    }
+    const storedHealth = stored ? parseFloat(stored) : null;
 
     // Load previously celebrated milestones
     const celebrated = localStorage.getItem('celebrated_milestones');
+    let storedCelebrated = new Set<Milestone>();
     if (celebrated) {
       try {
-        setCelebratedMilestones(new Set(JSON.parse(celebrated)));
+        storedCelebrated = new Set(JSON.parse(celebrated));
       } catch {
         // Ignore parse errors
       }
     }
+
+    setPreviousHealth(storedHealth);
+    setCelebratedMilestones(storedCelebrated);
+    setIsInitialized(true);
   }, []);
 
-  // Check for milestone crossings
+  // Check for milestone crossings - only after initialization
   useEffect(() => {
+    if (!isInitialized) return;
+
     // Handle first load - treat as if crossing from 0
     const effectivePreviousHealth = previousHealth === null ? 0 : previousHealth;
 
@@ -120,7 +126,7 @@ export default function HealthBar({ value }: HealthBarProps) {
       localStorage.setItem('previous_health', clamped.toString());
       setPreviousHealth(clamped);
     }
-  }, [clamped, previousHealth, celebratedMilestones]);
+  }, [clamped, previousHealth, celebratedMilestones, isInitialized]);
 
   const handleCloseModal = () => {
     setCurrentMilestone(null);

@@ -61,8 +61,13 @@ export default function AccountProfileForm({ initialProfile, email }: AccountPro
         throw new Error(error.error || 'Failed to save profile');
       }
 
+      const result = await response.json();
+      
+      // Update local state to reflect saved values
       setSaveMessage({ type: 'success', text: 'Profile updated successfully!' });
       setTimeout(() => setSaveMessage(null), 3000);
+      
+      // Don't navigate - stay on the page
     } catch (error: any) {
       console.error('Error saving profile:', error);
       setSaveMessage({ type: 'error', text: error.message || 'Failed to save profile. Please try again.' });
@@ -95,7 +100,7 @@ export default function AccountProfileForm({ initialProfile, email }: AccountPro
           Control how your name appears when you share wins to Team Wins. Your email is never shown.
         </p>
 
-        <form onSubmit={handleSave} className="space-y-6">
+        <form onSubmit={handleSave} action="#" method="post" className="space-y-6">
           {/* Username */}
           <div>
             <label htmlFor="username" className="block text-sm font-medium text-slate-300 mb-2">

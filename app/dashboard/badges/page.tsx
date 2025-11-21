@@ -131,9 +131,9 @@ export default async function BadgesPage() {
   // Group badges by action theme/category (ordered by marriage importance)
   // First, collect all badges that match specific themes
   const communicationBadges = badges.filter((b) =>
-    b.name.toLowerCase().includes('communication') ||
-    b.name.toLowerCase().includes('listener') ||
-    b.name.toLowerCase().includes('apology') ||
+      b.name.toLowerCase().includes('communication') ||
+      b.name.toLowerCase().includes('listener') ||
+      b.name.toLowerCase().includes('apology') ||
     (b.name.toLowerCase().includes('conflict') && !b.name.toLowerCase().includes('peacemaker')) ||
     (b.category && b.category.toLowerCase().includes('communication'))
   );
@@ -152,8 +152,8 @@ export default async function BadgesPage() {
   );
   
   const romanceBadges = badges.filter((b) =>
-    b.name.toLowerCase().includes('romance') ||
-    b.name.toLowerCase().includes('date night') ||
+      b.name.toLowerCase().includes('romance') ||
+      b.name.toLowerCase().includes('date night') ||
     b.name.toLowerCase().includes('surprise') ||
     (b.category && b.category.toLowerCase().includes('romance'))
   );
