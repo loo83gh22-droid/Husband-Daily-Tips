@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { format } from 'date-fns';
 import ReflectionModal from './ReflectionModal';
 import SocialShare from './SocialShare';
@@ -38,6 +38,14 @@ export default function DailyTipCard({ tip, subscriptionTier = 'free' }: DailyTi
   const [isExportingCalendar, setIsExportingCalendar] = useState(false);
   const [isFavorited, setIsFavorited] = useState(tip.favorited || false);
   const [isTogglingFavorite, setIsTogglingFavorite] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const [displayDate, setDisplayDate] = useState('');
+
+  // Only set date after mount to avoid hydration mismatch
+  useEffect(() => {
+    setMounted(true);
+    setDisplayDate(format(new Date(), 'MMM d, yyyy'));
+  }, []);
 
   const handleMarkDone = async () => {
     if (isSubmitting || isCompleted) return;
@@ -163,8 +171,8 @@ export default function DailyTipCard({ tip, subscriptionTier = 'free' }: DailyTi
             {tip.title || tip.name}
           </h3>
         </div>
-        <div className="text-xs text-slate-500 text-right">
-          {typeof window !== 'undefined' ? format(new Date(), 'MMM d, yyyy') : ''}
+        <div className="text-xs text-slate-500 text-right" suppressHydrationWarning>
+          {mounted ? displayDate : ''}
         </div>
       </div>
       
