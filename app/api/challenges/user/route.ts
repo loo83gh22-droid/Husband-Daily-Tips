@@ -28,7 +28,7 @@ export async function GET() {
 
     const today = new Date().toISOString().split('T')[0];
 
-    // Get user's active challenges
+    // Get user's active challenges (incomplete ones)
     const { data: userChallenges, error } = await supabase
       .from('user_challenges')
       .select(`
@@ -51,10 +51,24 @@ export async function GET() {
       .eq('completed', false)
       .order('joined_date', { ascending: false });
 
+    // Also get completed challenges to get completion counts
+    const { data: completedChallenges } = await supabase
+      .from('user_challenges')
+      .select('challenge_id, completion_count')
+      .eq('user_id', user.id)
+      .eq('completed', true);
+
     if (error) {
       console.error('Error fetching user challenges:', error);
       return NextResponse.json({ error: 'Failed to fetch challenges' }, { status: 500 });
     }
+
+    // Create map of completion counts by challenge_id
+    const completionCounts = new Map<string, number>();
+    (completedChallenges || []).forEach((cc: any) => {
+      const currentCount = completionCounts.get(cc.challenge_id) || 0;
+      completionCounts.set(cc.challenge_id, currentCount + (cc.completion_count || 0));
+    });
 
     // Calculate progress for each challenge
     const challengesWithProgress = (userChallenges || []).map((uc: any) => {
@@ -62,12 +76,14 @@ export async function GET() {
       const totalDays = challenge?.challenge_actions?.length || 7;
       const completedDays = uc.completed_days || 0;
       const progress = (completedDays / totalDays) * 100;
+      const completionCount = completionCounts.get(challenge.id) || 0;
 
       return {
         ...uc,
         progress,
         totalDays,
         remainingDays: totalDays - completedDays,
+        completionCount,
       };
     });
 

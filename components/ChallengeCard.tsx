@@ -32,6 +32,7 @@ interface UserChallenge {
   progress: number;
   totalDays: number;
   remainingDays: number;
+  completionCount?: number;
 }
 
 interface ChallengeCardProps {
@@ -73,6 +74,13 @@ export default function ChallengeCard({ challenge, userChallenge, userId, onJoin
         if (challenge.challenge_actions && challenge.challenge_actions.length === 7 && userId) {
           setShowSuccessModal(true);
         }
+      } else {
+        // Handle error response
+        const errorData = await response.json().catch(() => ({}));
+        const errorMessage = errorData.message || errorData.error || 'Failed to join challenge';
+        // Show a more user-friendly alert
+        alert(errorMessage);
+        // Don't set isJoined if there was an error
       }
     } catch (error) {
       console.error('Error joining challenge:', error);
@@ -104,13 +112,25 @@ export default function ChallengeCard({ challenge, userChallenge, userId, onJoin
         <div className="flex items-center gap-3">
           <span className="text-3xl">{emoji}</span>
           <div>
-            <h3 className="text-lg font-semibold text-slate-50">{challenge.name}</h3>
+            <div className="flex items-center gap-2 flex-wrap">
+              <h3 className="text-lg font-semibold text-slate-50">{challenge.name}</h3>
+              {isJoined && (
+                <span className="px-2 py-0.5 bg-primary-500/20 text-primary-400 text-xs font-semibold rounded-full border border-primary-500/30 whitespace-nowrap">
+                  🎯 Active
+                </span>
+              )}
+              {(challenge.userCompletionCount || 0) > 0 && (
+                <span className="px-2 py-0.5 bg-amber-500/20 text-amber-400 text-xs font-semibold rounded-full whitespace-nowrap">
+                  ✓ Completed {challenge.userCompletionCount}x
+                </span>
+              )}
+            </div>
             <p className="text-sm text-slate-400 mt-1">{challenge.description}</p>
           </div>
         </div>
-        {isActive && (
+        {isActive && !isJoined && (
           <span className="px-3 py-1 bg-green-500/20 text-green-400 text-xs font-semibold rounded-full">
-            Active
+            Available
           </span>
         )}
         {isUpcoming && (
