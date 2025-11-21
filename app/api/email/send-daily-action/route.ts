@@ -108,7 +108,7 @@ export async function POST(request: Request) {
 
     // Send email
     const { data: emailData, error: emailError } = await resend.emails.send({
-      from: 'Best Husband Ever <onboarding@resend.dev>', // Using Resend test domain - works immediately, no DNS setup needed
+      from: process.env.RESEND_FROM_EMAIL || 'Best Husband Ever - Tomorrow\'s Action! <action@besthusbandever.com>',
       to: user.email,
       subject: `Tomorrow's Action: ${action.name}`,
       html: `
@@ -144,13 +144,29 @@ export async function POST(request: Request) {
                 ` : ''}
               </div>
               
-              <a href="${process.env.AUTH0_BASE_URL || 'https://besthusbandever.com'}/dashboard" 
-                 style="display: inline-block; background-color: #fbbf24; color: #0f172a; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: 600; margin-top: 20px;">
-                View in Dashboard →
-              </a>
+              <div style="margin-top: 25px; display: flex; flex-direction: column; gap: 10px;">
+                <a href="${process.env.AUTH0_BASE_URL || 'https://besthusbandever.com'}/dashboard" 
+                   style="display: inline-block; background-color: #fbbf24; color: #0f172a; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: 600; text-align: center;">
+                  View in Dashboard →
+                </a>
+                
+                <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-top: 10px;">
+                  <a href="${process.env.AUTH0_BASE_URL || 'https://besthusbandever.com'}/api/calendar/actions/download?days=1&userId=${user.id}" 
+                     style="display: inline-block; background-color: #0f172a; color: #fbbf24; padding: 10px 20px; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 14px; border: 2px solid #fbbf24;">
+                    📅 Download Tomorrow's Action
+                  </a>
+                  <a href="${process.env.AUTH0_BASE_URL || 'https://besthusbandever.com'}/api/calendar/actions/download?days=7&userId=${user.id}" 
+                     style="display: inline-block; background-color: #0f172a; color: #fbbf24; padding: 10px 20px; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 14px; border: 2px solid #fbbf24;">
+                    📅 Download 7 Days of Actions
+                  </a>
+                </div>
+              </div>
               
               <p style="color: #94a3b8; font-size: 13px; margin-top: 30px; padding-top: 20px; border-top: 1px solid #e2e8f0;">
                 Completing this action boosts your relationship health bar. Consistency is what moves the needle.
+              </p>
+              <p style="color: #64748b; font-size: 12px; margin-top: 10px;">
+                <strong>Tip:</strong> Download actions to your calendar to plan ahead and lock in your commitment! Pre-assigned actions take precedence over the daily algorithm.
               </p>
             </div>
             
