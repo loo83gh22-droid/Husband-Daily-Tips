@@ -81,6 +81,9 @@ export async function POST(request: Request) {
     if (post_anonymously !== undefined) {
       updateData.post_anonymously = post_anonymously;
     }
+    if (timezone !== undefined) {
+      updateData.timezone = timezone || 'America/New_York';
+    }
 
     const { error: updateError } = await supabase
       .from('users')
@@ -112,22 +115,23 @@ export async function GET() {
 
     const auth0Id = session.user.sub;
 
-    const { data: user, error: userError } = await supabase
-      .from('users')
-      .select('username, wedding_date, post_anonymously, name')
-      .eq('auth0_id', auth0Id)
-      .single();
+        const { data: user, error: userError } = await supabase
+          .from('users')
+          .select('username, wedding_date, post_anonymously, name, timezone')
+          .eq('auth0_id', auth0Id)
+          .single();
 
     if (userError || !user) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
-    return NextResponse.json({
-      username: user.username,
-      wedding_date: user.wedding_date,
-      post_anonymously: user.post_anonymously || false,
-      name: user.name,
-    });
+        return NextResponse.json({
+          username: user.username,
+          wedding_date: user.wedding_date,
+          post_anonymously: user.post_anonymously || false,
+          name: user.name,
+          timezone: user.timezone || 'America/New_York',
+        });
   } catch (error) {
     console.error('Unexpected error fetching profile:', error);
     return NextResponse.json({ error: 'Unexpected error' }, { status: 500 });

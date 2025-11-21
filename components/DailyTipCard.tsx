@@ -235,7 +235,7 @@ export default function DailyTipCard({ tip, subscriptionTier = 'free' }: DailyTi
               </p>
           <SocialShare
             title={tip.title || tip.name || ''}
-            text={`Today's action: ${tip.title || tip.name} - ${(tip.content || tip.description || '').substring(0, 100)}...`}
+            text={`Tomorrow's Action: ${tip.title || tip.name} - ${(tip.content || tip.description || '').substring(0, 100)}...`}
           />
         </div>
       </div>

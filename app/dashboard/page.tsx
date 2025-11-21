@@ -16,7 +16,7 @@ import Link from 'next/link';
 async function getUserData(auth0Id: string) {
   const { data: user, error } = await supabase
     .from('users')
-    .select('*, subscription_tier')
+    .select('*, subscription_tier, username, name, email')
     .eq('auth0_id', auth0Id)
     .single();
 
@@ -27,18 +27,20 @@ async function getUserData(auth0Id: string) {
   return user;
 }
 
-async function getTodayAction(userId: string | null, subscriptionTier: string, categoryScores?: any) {
+async function getTomorrowAction(userId: string | null, subscriptionTier: string, categoryScores?: any) {
   if (!userId) return null;
 
-  // Get today's date in YYYY-MM-DD format
-  const today = new Date().toISOString().split('T')[0];
+  // Get tomorrow's date in YYYY-MM-DD format
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  const tomorrowStr = tomorrow.toISOString().split('T')[0];
 
-  // Check if user has already seen today's action
+  // Check if user has already seen tomorrow's action
   const { data: existingAction } = await supabase
     .from('user_daily_actions')
     .select('*, actions(*)')
     .eq('user_id', userId)
-    .eq('date', today)
+    .eq('date', tomorrowStr)
     .single();
 
   if (existingAction) {
@@ -129,7 +131,7 @@ async function getTodayAction(userId: string | null, subscriptionTier: string, c
     await supabase.from('user_daily_actions').insert({
       user_id: userId,
       action_id: randomAction.id,
-      date: today,
+      date: tomorrowStr,
     });
 
     return {
@@ -145,7 +147,7 @@ async function getTodayAction(userId: string | null, subscriptionTier: string, c
     await supabase.from('user_daily_actions').insert({
       user_id: userId,
       action_id: randomAction.id,
-      date: today,
+      date: tomorrowStr,
     });
   }
 
@@ -343,7 +345,7 @@ export default async function Dashboard() {
   const stats = await getUserStats(user.id);
   
   // Remove tier restrictions - all tips accessible to all users during testing
-  const todayAction = await getTodayAction(user.id, user.subscription_tier || 'free', stats.categoryScores);
+  const tomorrowAction = await getTomorrowAction(user.id, user.subscription_tier || 'free', stats.categoryScores);
 
   return (
     <div className="min-h-screen bg-slate-950">
@@ -361,7 +363,7 @@ export default async function Dashboard() {
             <div className="flex items-center justify-between mb-4">
               <div>
                 <h2 className="text-2xl md:text-3xl font-semibold text-slate-50">
-                  Today&apos;s action
+                  Tomorrow&apos;s Action
                 </h2>
                     <p className="text-xs text-slate-400 mt-1">
                       One concrete step to level up your marriage game.
@@ -370,13 +372,13 @@ export default async function Dashboard() {
               <div className="hidden md:flex flex-col items-end text-xs text-slate-400">
                 <span>Logged in as</span>
                 <span className="text-slate-200 font-medium truncate max-w-[160px]">
-                  {user.email}
+                  {user.username || (user.name ? user.name.split(' ')[0] : user.email)}
                 </span>
               </div>
             </div>
 
-            {todayAction ? (
-              <DailyTipCard tip={todayAction} subscriptionTier={user.subscription_tier || 'free'} />
+            {tomorrowAction ? (
+              <DailyTipCard tip={tomorrowAction} subscriptionTier={user.subscription_tier || 'free'} />
             ) : (
               <div className="bg-slate-900/80 rounded-xl shadow-lg p-8 text-center border border-slate-800">
                 <p className="text-slate-300">

@@ -8,6 +8,29 @@ export default function AccountMenu() {
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const { user } = useUser();
+  const [displayName, setDisplayName] = useState<string>('User');
+
+  // Fetch display name from API
+  useEffect(() => {
+    async function fetchDisplayName() {
+      try {
+        const response = await fetch('/api/user/display-name');
+        if (response.ok) {
+          const data = await response.json();
+          setDisplayName(data.displayName);
+        }
+      } catch (error) {
+        console.error('Error fetching display name:', error);
+        // Fallback to Auth0 user data
+        if (user?.name) {
+          setDisplayName(user.name.split(' ')[0]);
+        } else if (user?.email) {
+          setDisplayName(user.email);
+        }
+      }
+    }
+    fetchDisplayName();
+  }, [user]);
 
   // Close menu when clicking outside
   useEffect(() => {
@@ -61,7 +84,7 @@ export default function AccountMenu() {
           <div className="p-3 border-b border-slate-800">
             <p className="text-xs text-slate-500 mb-1">Signed in as</p>
             <p className="text-sm font-medium text-slate-200 truncate">
-              {user?.name || user?.email || 'User'}
+              {displayName}
             </p>
           </div>
           
