@@ -21,9 +21,11 @@ export default function AccountProfileForm({ initialProfile, email }: AccountPro
   const [isSaving, setIsSaving] = useState(false);
   const [saveMessage, setSaveMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
-  const handleSave = async (e: React.FormEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
+  const handleSave = async (e?: React.MouseEvent | React.FormEvent) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
     
     setIsSaving(true);
     setSaveMessage(null);
@@ -33,7 +35,7 @@ export default function AccountProfileForm({ initialProfile, email }: AccountPro
       if (username.trim() && (username.length < 3 || username.length > 20)) {
         setSaveMessage({ type: 'error', text: 'Username must be between 3 and 20 characters' });
         setIsSaving(false);
-        return;
+        return false;
       }
 
       // Validate years married if provided
@@ -41,7 +43,7 @@ export default function AccountProfileForm({ initialProfile, email }: AccountPro
       if (years !== null && (years < 0 || years > 100)) {
         setSaveMessage({ type: 'error', text: 'Years married must be between 0 and 100' });
         setIsSaving(false);
-        return;
+        return false;
       }
 
       const response = await fetch('/api/user/profile', {
@@ -67,10 +69,11 @@ export default function AccountProfileForm({ initialProfile, email }: AccountPro
       setSaveMessage({ type: 'success', text: 'Profile updated successfully!' });
       setTimeout(() => setSaveMessage(null), 3000);
       
-      // Don't navigate - stay on the page
+      return false; // Prevent any navigation
     } catch (error: any) {
       console.error('Error saving profile:', error);
       setSaveMessage({ type: 'error', text: error.message || 'Failed to save profile. Please try again.' });
+      return false;
     } finally {
       setIsSaving(false);
     }
@@ -100,7 +103,7 @@ export default function AccountProfileForm({ initialProfile, email }: AccountPro
           Control how your name appears when you share wins to Team Wins. Your email is never shown.
         </p>
 
-        <form onSubmit={handleSave} action="#" method="post" className="space-y-6">
+        <form onSubmit={(e) => { e.preventDefault(); handleSave(e); return false; }} className="space-y-6" noValidate>
           {/* Username */}
           <div>
             <label htmlFor="username" className="block text-sm font-medium text-slate-300 mb-2">
@@ -175,7 +178,8 @@ export default function AccountProfileForm({ initialProfile, email }: AccountPro
 
           {/* Save Button */}
           <button
-            type="submit"
+            type="button"
+            onClick={handleSave}
             disabled={isSaving}
             className="px-6 py-2 bg-primary-500 text-slate-950 rounded-lg hover:bg-primary-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-medium"
           >
