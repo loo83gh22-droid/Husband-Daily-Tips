@@ -24,6 +24,9 @@ export function getGuideSlugForAction(actionName: string, actionTheme?: string):
     // Intimacy
     'speak her love language': 'practice-love-languages',
     'practice love languages': 'practice-love-languages',
+    'practice love language': 'practice-love-languages',
+    'love language practice': 'practice-love-languages',
+    'love languages': 'practice-love-languages',
     'build your love map': 'create-love-map',
     'create love map': 'create-love-map',
     'turn toward her bids': 'practice-turning-toward',
@@ -122,7 +125,7 @@ export function getGuideSlugForAction(actionName: string, actionTheme?: string):
     { keywords: ['present', 'attention', 'focus'], slug: 'be-present-quality-time' },
 
     // Intimacy
-    { keywords: ['love language'], slug: 'practice-love-languages' },
+    { keywords: ['love language', 'love languages'], slug: 'practice-love-languages' },
     { keywords: ['love map', 'know her'], slug: 'create-love-map' },
     { keywords: ['turn toward', 'bids', 'connection'], slug: 'practice-turning-toward' },
     { keywords: ['physical touch', 'hug', 'cuddle', 'affection'], slug: 'non-sexual-physical-touch' },

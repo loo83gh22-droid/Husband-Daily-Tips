@@ -1604,6 +1604,188 @@ Don't wait for special occasions. Say it when you notice it. Make it a habit.
 
 You affirmed her. She felt seen and valued. You spoke her love language. That's a win.`,
   },
+  'practice-love-languages': {
+    id: 29,
+    title: 'Speak Her Love Language (Actually)',
+    category: 'Intimacy',
+    difficulty: 'Medium',
+    time: 'Ongoing',
+    excerpt: 'Learn how to identify and practice her love language in ways that feel genuine, not forced. Make her feel deeply loved in the way she needs.',
+    content: `## Why This Matters
+
+People express and receive love in different ways. Understanding how your partner feels most loved—her "love language"—helps you show love in ways that actually land. When you speak her language, she feels deeply understood and cared for.
+
+## The Secret: It's About How She Feels Loved
+
+This isn't about what you think shows love. It's about what actually makes her feel loved. Pay attention to what she responds to, what she asks for, and what makes her light up.
+
+## The Five Ways People Feel Loved
+
+While everyone is unique, relationship research has identified five common ways people express and receive love. Most people have one or two primary ways they feel most loved:
+
+### 1. Words of Affirmation
+
+**What it is:** Feeling loved through spoken or written words of appreciation, encouragement, and affection.
+
+**Signs it's her language:**
+- She lights up when you compliment her
+- She asks "do you love me?" or "what do you like about me?"
+- She values verbal appreciation
+- She remembers things you've said
+
+**How to practice it:**
+- Give specific, genuine compliments regularly
+- Tell her what you appreciate about her character
+- Write notes or texts expressing your feelings
+- Verbally acknowledge her efforts and qualities
+- Say "I love you" and mean it
+
+**Examples:**
+- "I'm so proud of how you handled that situation."
+- "You're such a thoughtful person. I love that about you."
+- "Thank you for being so patient with me."
+
+### 2. Acts of Service
+
+**What it is:** Feeling loved when someone does things for you that make your life easier or better.
+
+**Signs it's her language:**
+- She appreciates when you help without being asked
+- She notices and values when you take care of things
+- She gets frustrated when you don't help
+- She does things for you as her way of showing love
+
+**How to practice it:**
+- Notice what needs doing and do it
+- Take over tasks she usually handles
+- Do things that give her a break
+- Help without being asked
+- Complete tasks fully and well
+
+**Examples:**
+- Handle the morning routine so she can sleep in
+- Clean something without being asked
+- Take care of something stressful for her
+- Do a chore she usually does
+
+### 3. Receiving Gifts
+
+**What it is:** Feeling loved through thoughtful gifts that show you were thinking of her.
+
+**Signs it's her language:**
+- She treasures small gifts and mementos
+- She remembers gifts you've given her
+- She gives thoughtful gifts herself
+- She appreciates the thought behind gifts more than the cost
+
+**How to practice it:**
+- Give small, thoughtful gifts regularly (not just holidays)
+- Pick up something you know she'd like
+- Give gifts that show you know her interests
+- Leave little surprises for her to find
+- Remember that it's the thought, not the price
+
+**Examples:**
+- Her favorite snack when you're at the store
+- A book by an author she likes
+- A small item related to her hobby
+- Flowers "just because"
+
+### 4. Quality Time
+
+**What it is:** Feeling loved through focused, undivided attention and time spent together.
+
+**Signs it's her language:**
+- She wants to spend time together without distractions
+- She gets frustrated when you're on your phone during time together
+- She values deep conversations
+- She asks for your attention and time
+
+**How to practice it:**
+- Put your phone away when you're together
+- Have regular date nights or time together
+- Listen actively when she's talking
+- Do activities together that you both enjoy
+- Create rituals and routines together
+
+**Examples:**
+- Weekly date night with phones put away
+- Morning coffee together
+- Evening walks
+- Tech-free quality time
+
+### 5. Physical Touch
+
+**What it is:** Feeling loved through physical affection—hugs, hand-holding, cuddling, and physical closeness.
+
+**Signs it's her language:**
+- She initiates physical contact
+- She appreciates hugs, hand-holding, cuddling
+- She feels disconnected when there's no physical touch
+- She uses touch to show affection
+
+**How to practice it:**
+- Give hugs and kisses regularly
+- Hold hands when you're together
+- Cuddle on the couch
+- Give non-sexual physical affection
+- Sit close to her
+
+**Examples:**
+- Hug her when you get home
+- Hold her hand when walking together
+- Cuddle while watching TV
+- Give her a back rub
+- Sit close on the couch
+
+## How to Identify Her Love Language
+
+### 1. Pay Attention
+
+Notice:
+- What makes her light up?
+- What does she ask for?
+- What does she complain about not getting?
+- How does she show love to you?
+
+### 2. Ask Her
+
+Have a conversation:
+- "What makes you feel most loved?"
+- "When do you feel most connected to me?"
+- "What do you wish I did more of?"
+
+### 3. Try Different Things
+
+Experiment with all five. See what she responds to most.
+
+### 4. Notice Patterns
+
+Most people have one or two primary languages. Notice which ones she responds to most.
+
+## The Key: It's About Her, Not You
+
+Your love language might be different from hers. That's okay. The goal is to speak her language, not yours. Show love in the way she receives it, not the way you would want to receive it.
+
+## Common Mistakes
+
+- **Assuming her language is the same as yours:** It probably isn't. Pay attention.
+- **Only speaking your language:** Show love in the way she receives it.
+- **Not being consistent:** Speak her language regularly, not just sometimes.
+- **Forcing it:** Make it genuine. Don't just go through the motions.
+
+## Putting It Into Practice
+
+1. **Identify her primary love language** (or languages)
+2. **Make a plan** to practice it regularly
+3. **Start small** and build the habit
+4. **Notice her response** and adjust
+5. **Keep at it**—consistency matters
+
+## The Win
+
+You identified her love language. You're speaking it regularly. She feels deeply loved in the way she needs. That's a win.`,
+  },
   // Additional Partnership guides
   'take-over-chore-completely': {
     id: 26,
