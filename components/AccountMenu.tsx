@@ -9,9 +9,17 @@ export default function AccountMenu() {
   const menuRef = useRef<HTMLDivElement>(null);
   const { user } = useUser();
   const [displayName, setDisplayName] = useState<string>('User');
+  const [isClient, setIsClient] = useState(false);
 
-  // Fetch display name from API
+  // Only run on client to avoid hydration issues
   useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  // Fetch display name from API (only on client)
+  useEffect(() => {
+    if (!isClient || !user) return;
+
     async function fetchDisplayName() {
       try {
         const response = await fetch('/api/user/display-name');
@@ -32,10 +40,8 @@ export default function AccountMenu() {
         setDisplayName(user.email);
       }
     }
-    if (user) {
-      fetchDisplayName();
-    }
-  }, [user]);
+    fetchDisplayName();
+  }, [user, isClient]);
 
   // Close menu when clicking outside
   useEffect(() => {
@@ -64,7 +70,12 @@ export default function AccountMenu() {
   return (
     <div className="relative" ref={menuRef}>
       <button
-        onClick={() => setIsOpen(!isOpen)}
+        type="button"
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          setIsOpen(!isOpen);
+        }}
         className="p-2 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-900 transition-colors"
         aria-label="Account menu"
         aria-expanded={isOpen}
@@ -89,7 +100,7 @@ export default function AccountMenu() {
           <div className="p-3 border-b border-slate-800">
             <p className="text-xs text-slate-500 mb-1">Signed in as</p>
             <p className="text-sm font-medium text-slate-200 truncate">
-              {displayName}
+              {isClient ? displayName : (user?.name?.split(' ')[0] || user?.email || 'User')}
             </p>
           </div>
           
