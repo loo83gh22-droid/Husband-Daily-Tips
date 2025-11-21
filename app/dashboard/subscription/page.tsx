@@ -4,13 +4,23 @@ import { supabase } from '@/lib/supabase';
 import DashboardNav from '@/components/DashboardNav';
 
 async function getUserSubscription(auth0Id: string) {
-  const { data: user } = await supabase
-    .from('users')
-    .select('subscription_tier')
-    .eq('auth0_id', auth0Id)
-    .single();
+  try {
+    const { data: user, error } = await supabase
+      .from('users')
+      .select('subscription_tier')
+      .eq('auth0_id', auth0Id)
+      .single();
 
-  return user?.subscription_tier || 'free';
+    if (error) {
+      console.error('Error fetching subscription tier:', error);
+      return 'free'; // Default to free on error
+    }
+
+    return user?.subscription_tier || 'free';
+  } catch (err) {
+    console.error('Unexpected error fetching subscription:', err);
+    return 'free'; // Default to free on error
+  }
 }
 
 export default async function SubscriptionPage() {
@@ -20,8 +30,9 @@ export default async function SubscriptionPage() {
     redirect('/api/auth/login');
   }
 
-  const auth0Id = session.user.sub;
-  const currentTier = await getUserSubscription(auth0Id);
+  try {
+    const auth0Id = session.user.sub;
+    const currentTier = await getUserSubscription(auth0Id);
 
   const plans = [
     {
@@ -170,7 +181,34 @@ export default async function SubscriptionPage() {
         </div>
       </main>
     </div>
-  );
+    );
+  } catch (error: any) {
+    // Re-throw NEXT_REDIRECT errors so Next.js can handle them
+    if (error?.digest === 'NEXT_REDIRECT' || error?.message === 'NEXT_REDIRECT') {
+      throw error;
+    }
+    
+    console.error('Error rendering subscription page:', error);
+    // Return error UI for other errors
+    return (
+      <div className="min-h-screen bg-slate-950">
+        <DashboardNav />
+        <main className="container mx-auto px-4 py-8 md:py-10">
+          <div className="max-w-4xl mx-auto">
+            <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-8">
+              <h1 className="text-2xl font-semibold text-red-300 mb-4">Error Loading Subscription Page</h1>
+              <p className="text-slate-300">
+                There was an error loading the subscription page. Please try refreshing the page.
+              </p>
+              <p className="text-xs text-slate-500 mt-4">
+                Error: {error instanceof Error ? error.message : 'Unknown error'}
+              </p>
+            </div>
+          </div>
+        </main>
+      </div>
+    );
+  }
 }
 
 
