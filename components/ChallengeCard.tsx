@@ -87,29 +87,31 @@ export default function ChallengeCard({ challenge, userChallenge, userId, onJoin
         }
       } else {
         // Handle error response
+        console.log('Challenge join failed, status:', response.status);
         try {
           const errorData = await response.json();
+          console.log('Error data:', errorData);
           const errorMessage = errorData.message || errorData.error || 'Failed to join challenge';
           
-          // If it's a "one challenge at a time" error, extract challenge name and show nice modal
-          if (errorMessage.includes('currently participating') || errorData.error === 'You can only join one challenge at a time') {
+          // Always show modal for 400 errors (one challenge at a time)
+          if (response.status === 400 || errorMessage.includes('currently participating') || errorData.error === 'You can only join one challenge at a time') {
             // Extract challenge name from message
             const match = errorMessage.match(/"([^"]+)"/);
-            if (match) {
-              setErrorChallengeName(match[1]);
-              setShowErrorModal(true);
-            } else {
-              // Fallback: try to get challenge name from error data
-              const challengeNameFromData = errorData.challengeName || errorData.challenge_name || 'a challenge';
-              setErrorChallengeName(challengeNameFromData);
-              setShowErrorModal(true);
-            }
+            const challengeNameFromMatch = match ? match[1] : null;
+            const challengeNameFromData = errorData.challengeName || errorData.challenge_name || challengeNameFromMatch || 'a challenge';
+            
+            console.log('Setting error modal with challenge name:', challengeNameFromData);
+            setErrorChallengeName(challengeNameFromData);
+            setShowErrorModal(true);
           } else {
+            console.log('Showing alert for error:', errorMessage);
             alert(errorMessage);
           }
         } catch (parseError) {
-          // If we can't parse JSON, show generic error
-          alert('Failed to join challenge. Please try again.');
+          console.error('Error parsing response:', parseError);
+          // If we can't parse JSON, show generic error modal
+          setErrorChallengeName('a challenge');
+          setShowErrorModal(true);
         }
         // Don't set isJoined if there was an error
       }
@@ -136,6 +138,16 @@ export default function ChallengeCard({ challenge, userChallenge, userId, onJoin
 
   const emoji = themeEmojis[challenge.theme] || '🎯';
   const color = themeColors[challenge.theme] || 'primary';
+
+  // Map challenge to badge ID for linking
+  const getChallengeBadgeId = (challenge: Challenge): string => {
+    const badgeMap: Record<string, string> = {
+      '7-Day Communication Challenge': 'communication-champion',
+      '7-Day Roommate Syndrome Recovery': 'connection-restorer',
+      '7-Day Romance Challenge': 'romance-reviver',
+    };
+    return badgeMap[challenge.name] || 'challenges';
+  };
 
   return (
     <div className="bg-slate-900/80 border border-slate-800 rounded-xl p-6">
@@ -233,7 +245,7 @@ export default function ChallengeCard({ challenge, userChallenge, userId, onJoin
           </button>
         ) : (
           <Link
-            href="/dashboard"
+            href={`/dashboard/badges#${getChallengeBadgeId(challenge.name)}`}
             className="flex-1 px-4 py-2 bg-slate-800 text-slate-200 text-sm font-semibold rounded-lg hover:bg-slate-700 transition-colors text-center"
           >
             View Progress

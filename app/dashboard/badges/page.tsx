@@ -301,10 +301,16 @@ export default async function BadgesPage() {
                       const progress = badge.progress;
                       const showProgress = !isEarned && progress && progress.target > 0;
 
+                      // Create slug from badge name for anchor linking
+                      const badgeSlug = badge.name.toLowerCase()
+                        .replace(/[^a-z0-9]+/g, '-')
+                        .replace(/(^-|-$)/g, '');
+                      
                       return (
                         <div
+                          id={badgeSlug}
                           key={badge.id}
-                          className={`p-4 rounded-lg border transition-all ${
+                          className={`p-4 rounded-lg border transition-all scroll-mt-20 ${
                             isEarned
                               ? 'bg-primary-500/10 border-primary-500/30'
                               : 'bg-slate-800/30 border-slate-700/50 opacity-60'
