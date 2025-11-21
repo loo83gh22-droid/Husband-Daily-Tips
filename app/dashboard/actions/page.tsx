@@ -269,12 +269,16 @@ export default async function ActionsPage() {
                   </div>
 
                   <ActionsList
-                    actions={themeActions.slice(0, 4)}
+                    actions={(() => {
+                      // Randomly select 2 actions from this category
+                      const shuffled = [...themeActions].sort(() => Math.random() - 0.5);
+                      return shuffled.slice(0, 2);
+                    })()}
                     completedMap={completedMap}
                     userId={userId}
                   />
 
-                  {themeActions.length > 4 && (
+                  {themeActions.length > 2 && (
                     <div className="mt-6 text-center">
                       <Link
                         href={`/dashboard/actions/${theme}`}
@@ -282,7 +286,7 @@ export default async function ActionsPage() {
                       >
                         See More {themeName} Actions
                         <span className="text-xs text-slate-400">
-                          ({themeActions.length - 4} more)
+                          ({themeActions.length - 2} more)
                         </span>
                         <svg
                           className="w-4 h-4"
