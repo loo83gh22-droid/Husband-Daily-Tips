@@ -74,13 +74,13 @@ async function getUserProfile(auth0Id: string) {
 }
 
 export default async function AccountPage() {
+  const session = await getSession();
+
+  if (!session?.user) {
+    redirect('/api/auth/login');
+  }
+
   try {
-    const session = await getSession();
-
-    if (!session?.user) {
-      redirect('/api/auth/login');
-    }
-
     const auth0Id = session.user.sub;
     const profile = await getUserProfile(auth0Id);
 
@@ -109,9 +109,14 @@ export default async function AccountPage() {
         </main>
       </div>
     );
-  } catch (error) {
+  } catch (error: any) {
+    // Re-throw NEXT_REDIRECT errors so Next.js can handle them
+    if (error?.digest === 'NEXT_REDIRECT' || error?.message === 'NEXT_REDIRECT') {
+      throw error;
+    }
+    
     console.error('Error rendering account page:', error);
-    // Return error UI instead of redirecting
+    // Return error UI for other errors
     return (
       <div className="min-h-screen bg-slate-950">
         <DashboardNav />
