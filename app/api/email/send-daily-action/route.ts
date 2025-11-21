@@ -108,7 +108,7 @@ export async function POST(request: Request) {
 
     // Send email
     const { data: emailData, error: emailError } = await resend.emails.send({
-      from: 'Best Husband Ever <noreply@besthusbandever.com>', // Update with your verified domain
+      from: 'Best Husband Ever <onboarding@resend.dev>', // TODO: Update to your verified domain once SPF records are configured
       to: user.email,
       subject: `Tomorrow's Action: ${action.name}`,
       html: `
