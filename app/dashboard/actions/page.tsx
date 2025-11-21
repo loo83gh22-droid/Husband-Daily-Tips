@@ -248,10 +248,10 @@ export default async function ActionsPage() {
                             ? '💝'
                             : theme === 'partnership'
                               ? '🤝'
-                              : theme === 'romance'
-                                ? '💕'
-                                : theme === 'gratitude'
-                                  ? '🙏'
+                          : theme === 'romance'
+                            ? '💕'
+                            : theme === 'gratitude'
+                              ? '🙏'
                                   : theme === 'conflict'
                                     ? '⚖️'
                                     : theme === 'reconnection'
@@ -262,7 +262,7 @@ export default async function ActionsPage() {
                                           ? '🌲'
                                           : theme === 'active'
                                             ? '💪'
-                                            : '📋'}
+                                    : '📋'}
                       </span>
                       {themeName}
                     </h2>
