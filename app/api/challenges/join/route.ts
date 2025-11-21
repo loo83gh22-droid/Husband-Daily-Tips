@@ -421,29 +421,13 @@ async function sendChallengeEmail(
                   Add to Your Calendar:
                 </p>
                 <div style="display: flex; flex-direction: column; gap: 10px;">
-                  <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(challengeName)}&dates=${(() => {
-                    const start = new Date(joinedDate);
-                    start.setHours(9, 0, 0);
-                    const startStr = start.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
-                    const end = new Date(start);
-                    end.setHours(end.getHours() + 1);
-                    const endStr = end.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
-                    return `${startStr}/${endStr}`;
-                  })()}&details=${encodeURIComponent('7 days of personalized relationship actions')}" 
+                  <a href="${googleCalendarUrl}" 
                      target="_blank"
                      style="display: inline-block; background-color: #4285f4; color: #ffffff; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: 600; text-align: center; font-size: 14px;">
                     📅 Add to Google Calendar
                   </a>
                   
-                  <a href="https://outlook.live.com/calendar/0/deeplink/compose?subject=${encodeURIComponent(challengeName)}&startdt=${(() => {
-                    const start = new Date(joinedDate);
-                    start.setHours(9, 0, 0);
-                    return start.toISOString();
-                  })()}&enddt=${(() => {
-                    const start = new Date(joinedDate);
-                    start.setHours(10, 0, 0);
-                    return start.toISOString();
-                  })()}&body=${encodeURIComponent('7 days of personalized relationship actions')}" 
+                  <a href="${outlookCalendarUrl}" 
                      target="_blank"
                      style="display: inline-block; background-color: #0078d4; color: #ffffff; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: 600; text-align: center; font-size: 14px;">
                     📅 Add to Outlook Calendar
