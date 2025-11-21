@@ -47,13 +47,16 @@ export default function HealthBar({ value }: HealthBarProps) {
     if (previousHealth === null) {
       // First load - check if we should celebrate any milestones they've reached
       // Find the highest milestone they're at or above that hasn't been celebrated
+      // Only show if they're currently at/above the milestone (not if they've dropped below)
       let highestMilestoneToCelebrate: Milestone | null = null;
       
       for (const milestone of MILESTONES) {
         const crossedUpward = effectivePreviousHealth < milestone && clamped >= milestone;
         const notYetCelebrated = !celebratedMilestones.has(milestone);
+        const currentlyAtOrAbove = clamped >= milestone;
         
-        if (crossedUpward && notYetCelebrated) {
+        // Only celebrate if they crossed upward AND are currently at/above the milestone AND haven't celebrated it
+        if (crossedUpward && notYetCelebrated && currentlyAtOrAbove) {
           highestMilestoneToCelebrate = milestone;
         }
       }
@@ -93,11 +96,14 @@ export default function HealthBar({ value }: HealthBarProps) {
 
     // Check for upward milestone crossings only
     // Only celebrate when crossing FROM BELOW a milestone TO at/above that milestone
+    // AND only if they're currently still at/above that milestone (not if they've dropped)
     for (const milestone of MILESTONES) {
       const crossedUpward = previousHealth < milestone && clamped >= milestone;
       const notYetCelebrated = !updatedCelebrated.has(milestone);
+      const currentlyAtOrAbove = clamped >= milestone;
 
-      if (crossedUpward && notYetCelebrated) {
+      // Only celebrate if they crossed upward AND are currently at/above AND haven't celebrated
+      if (crossedUpward && notYetCelebrated && currentlyAtOrAbove) {
         // Show celebration for crossing upward!
         setCurrentMilestone(milestone);
         const newCelebrated = new Set(updatedCelebrated);

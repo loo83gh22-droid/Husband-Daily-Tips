@@ -21,7 +21,10 @@ export default function AccountProfileForm({ initialProfile, email }: AccountPro
   const [isSaving, setIsSaving] = useState(false);
   const [saveMessage, setSaveMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
-  const handleSave = async () => {
+  const handleSave = async (e: React.FormEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
     setIsSaving(true);
     setSaveMessage(null);
 
@@ -92,7 +95,7 @@ export default function AccountProfileForm({ initialProfile, email }: AccountPro
           Control how your name appears when you share wins to Team Wins. Your email is never shown.
         </p>
 
-        <div className="space-y-6">
+        <form onSubmit={handleSave} className="space-y-6">
           {/* Username */}
           <div>
             <label htmlFor="username" className="block text-sm font-medium text-slate-300 mb-2">
@@ -167,13 +170,13 @@ export default function AccountProfileForm({ initialProfile, email }: AccountPro
 
           {/* Save Button */}
           <button
-            onClick={handleSave}
+            type="submit"
             disabled={isSaving}
             className="px-6 py-2 bg-primary-500 text-slate-950 rounded-lg hover:bg-primary-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-medium"
           >
             {isSaving ? 'Saving...' : 'Save Profile'}
           </button>
-        </div>
+        </form>
       </div>
     </div>
   );
