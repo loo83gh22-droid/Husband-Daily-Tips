@@ -14,7 +14,7 @@ export async function POST(request: Request) {
     }
 
     const auth0Id = session.user.sub;
-    const { username, wedding_date, post_anonymously } = await request.json();
+    const { username, wedding_date, post_anonymously, timezone } = await request.json();
 
     // Get user
     const { data: user, error: userError } = await supabase
