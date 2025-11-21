@@ -2,7 +2,9 @@
 
 import { useState } from 'react';
 import { format } from 'date-fns';
+import Link from 'next/link';
 import ActionCompletionModal from './ActionCompletionModal';
+import { getGuideSlugForAction } from '@/lib/action-guide-mapping';
 
 interface Action {
   id: string;
@@ -166,6 +168,18 @@ export default function ActionsList({
                   <p className="text-xs text-slate-400 leading-relaxed mb-2">
                     {action.description}
                   </p>
+                  {(() => {
+                    const guideSlug = getGuideSlugForAction(action.name, action.theme);
+                    return guideSlug ? (
+                      <Link
+                        href={`/dashboard/how-to-guides/${guideSlug}`}
+                        className="inline-flex items-center gap-1 text-[10px] text-emerald-400 hover:text-emerald-300 font-medium mb-2 transition-colors"
+                      >
+                        <span>📚</span>
+                        <span>How-To Guide</span>
+                      </Link>
+                    ) : null;
+                  })()}
                   {completionCount > 0 && (
                     <div className="space-y-1">
                       <p className="text-[10px] text-primary-300 font-medium">
