@@ -327,6 +327,17 @@ async function sendChallengeEmail(
     const displayName = user.username || (user.name ? user.name.split(' ')[0] : 'there');
     const baseUrl = process.env.AUTH0_BASE_URL || 'https://besthusbandever.com';
 
+    // Generate calendar links
+    const firstDate = new Date(joinedDate);
+    firstDate.setHours(9, 0, 0);
+    const startDateStr = firstDate.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+    const endDate = new Date(firstDate);
+    endDate.setHours(endDate.getHours() + 1);
+    const endDateStr = endDate.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+    
+    const googleCalendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(challengeName)}&dates=${startDateStr}/${endDateStr}&details=${encodeURIComponent('7 days of personalized relationship actions')}`;
+    const outlookCalendarUrl = `https://outlook.live.com/calendar/0/deeplink/compose?subject=${encodeURIComponent(challengeName)}&startdt=${firstDate.toISOString()}&enddt=${endDate.toISOString()}&body=${encodeURIComponent('7 days of personalized relationship actions')}`;
+
     const { data, error } = await resend.emails.send({
       from: process.env.RESEND_FROM_EMAIL || 'Best Husband Ever - Tomorrow\'s Action! <action@besthusbandever.com>',
       to: user.email,
@@ -405,16 +416,49 @@ async function sendChallengeEmail(
                 </p>
               </div>
               
-              <div style="margin-top: 25px; display: flex; flex-direction: column; gap: 10px;">
-                <a href="${baseUrl}/api/calendar/actions/download?days=7&userId=${user.id}" 
-                   style="display: inline-block; background-color: #0f172a; color: #fbbf24; padding: 14px 24px; text-decoration: none; border-radius: 6px; font-weight: 600; text-align: center; border: 2px solid #fbbf24; font-size: 15px;">
-                  📅 Download 7 Days of Actions to Calendar
-                </a>
-                
-                <a href="${baseUrl}/dashboard" 
-                   style="display: inline-block; background-color: #fbbf24; color: #0f172a; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: 600; text-align: center; margin-top: 10px;">
-                  View Challenge in Dashboard →
-                </a>
+              <div style="margin-top: 25px;">
+                <p style="color: #64748b; font-size: 14px; margin: 0 0 15px 0; text-align: center; font-weight: 600;">
+                  Add to Your Calendar:
+                </p>
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                  <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(challengeName)}&dates=${(() => {
+                    const start = new Date(joinedDate);
+                    start.setHours(9, 0, 0);
+                    const startStr = start.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+                    const end = new Date(start);
+                    end.setHours(end.getHours() + 1);
+                    const endStr = end.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+                    return `${startStr}/${endStr}`;
+                  })()}&details=${encodeURIComponent('7 days of personalized relationship actions')}" 
+                     target="_blank"
+                     style="display: inline-block; background-color: #4285f4; color: #ffffff; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: 600; text-align: center; font-size: 14px;">
+                    📅 Add to Google Calendar
+                  </a>
+                  
+                  <a href="https://outlook.live.com/calendar/0/deeplink/compose?subject=${encodeURIComponent(challengeName)}&startdt=${(() => {
+                    const start = new Date(joinedDate);
+                    start.setHours(9, 0, 0);
+                    return start.toISOString();
+                  })()}&enddt=${(() => {
+                    const start = new Date(joinedDate);
+                    start.setHours(10, 0, 0);
+                    return start.toISOString();
+                  })()}&body=${encodeURIComponent('7 days of personalized relationship actions')}" 
+                     target="_blank"
+                     style="display: inline-block; background-color: #0078d4; color: #ffffff; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: 600; text-align: center; font-size: 14px;">
+                    📅 Add to Outlook Calendar
+                  </a>
+                  
+                  <a href="${baseUrl}/api/calendar/actions/download?days=7&userId=${user.id}" 
+                     style="display: inline-block; background-color: #0f172a; color: #fbbf24; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: 600; text-align: center; border: 2px solid #fbbf24; font-size: 14px;">
+                    📥 Download iCal File (Apple Calendar)
+                  </a>
+                  
+                  <a href="${baseUrl}/dashboard" 
+                     style="display: inline-block; background-color: #fbbf24; color: #0f172a; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: 600; text-align: center; margin-top: 10px; font-size: 14px;">
+                    View Challenge in Dashboard →
+                  </a>
+                </div>
               </div>
               
               <p style="color: #94a3b8; font-size: 13px; margin-top: 30px; padding-top: 20px; border-top: 1px solid #e2e8f0;">
