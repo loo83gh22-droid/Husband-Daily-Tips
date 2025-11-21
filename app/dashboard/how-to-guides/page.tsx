@@ -2,6 +2,25 @@ import { getSession } from '@auth0/nextjs-auth0';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import DashboardNav from '@/components/DashboardNav';
+import { supabase } from '@/lib/supabase';
+
+async function getGuideVisitCounts() {
+  // Get visit counts for all guides
+  const { data: visits } = await supabase
+    .from('guide_visits')
+    .select('guide_slug');
+
+  if (!visits) return new Map<string, number>();
+
+  // Count visits per guide slug
+  const visitCounts = new Map<string, number>();
+  visits.forEach((visit) => {
+    const count = visitCounts.get(visit.guide_slug) || 0;
+    visitCounts.set(visit.guide_slug, count + 1);
+  });
+
+  return visitCounts;
+}
 
 export default async function HowToGuidesPage() {
   const session = await getSession();
@@ -9,6 +28,9 @@ export default async function HowToGuidesPage() {
   if (!session?.user) {
     redirect('/api/auth/login');
   }
+
+  // Get visit counts for all guides
+  const visitCounts = await getGuideVisitCounts();
 
   // Guide data organized by category (ordered by marriage importance - matching action categories)
   // Order: Communication, Intimacy, Partnership, Romance, Gratitude, Conflict, Reconnection, Quality Time, Outdoor, Active
@@ -736,44 +758,80 @@ export default async function HowToGuidesPage() {
                 </div>
 
                 <div className="grid md:grid-cols-2 gap-4">
-                  {category.guides.map((guide) => (
-                    <Link
-                      key={guide.slug}
-                      href={`/dashboard/how-to-guides/${guide.slug}`}
-                      className="block"
-                    >
-                      <article className="bg-slate-900/80 border border-slate-800 rounded-xl p-5 hover:border-primary-500/50 hover:bg-slate-900 transition-all cursor-pointer h-full">
-                        <div className="flex items-start justify-between mb-3">
-                          <div className="flex-1">
-                            <div className="flex items-center gap-2 mb-2">
-                              <span className="text-xs text-slate-500">
-                                {guide.difficulty} • {guide.time}
-                              </span>
-                            </div>
-                            <h3 className="text-lg font-bold text-slate-50 mb-2">
-                              {guide.title}
-                            </h3>
-                          </div>
-                          <svg
-                            className="w-4 h-4 text-slate-500 flex-shrink-0 ml-3 mt-1"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M9 5l7 7-7 7"
-                            />
-                          </svg>
-                        </div>
+                  {(() => {
+                    // Sort guides by visit count (most visited first) and take top 2
+                    const sortedGuides = [...category.guides].sort((a, b) => {
+                      const aVisits = visitCounts.get(a.slug) || 0;
+                      const bVisits = visitCounts.get(b.slug) || 0;
+                      return bVisits - aVisits; // Descending order
+                    });
+                    const topGuides = sortedGuides.slice(0, 2);
 
-                        <p className="text-sm text-slate-300 leading-relaxed">{guide.excerpt}</p>
-                      </article>
-                    </Link>
-                  ))}
+                    return topGuides.map((guide) => (
+                      <Link
+                        key={guide.slug}
+                        href={`/dashboard/how-to-guides/${guide.slug}`}
+                        className="block"
+                      >
+                        <article className="bg-slate-900/80 border border-slate-800 rounded-xl p-5 hover:border-primary-500/50 hover:bg-slate-900 transition-all cursor-pointer h-full">
+                          <div className="flex items-start justify-between mb-3">
+                            <div className="flex-1">
+                              <div className="flex items-center gap-2 mb-2">
+                                <span className="text-xs text-slate-500">
+                                  {guide.difficulty} • {guide.time}
+                                </span>
+                              </div>
+                              <h3 className="text-lg font-bold text-slate-50 mb-2">
+                                {guide.title}
+                              </h3>
+                            </div>
+                            <svg
+                              className="w-4 h-4 text-slate-500 flex-shrink-0 ml-3 mt-1"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M9 5l7 7-7 7"
+                              />
+                            </svg>
+                          </div>
+
+                          <p className="text-sm text-slate-300 leading-relaxed">{guide.excerpt}</p>
+                        </article>
+                      </Link>
+                    ));
+                  })()}
                 </div>
+                {category.guides.length > 2 && (
+                  <div className="mt-4 text-center">
+                    <Link
+                      href={`/dashboard/how-to-guides?category=${categoryKey}`}
+                      className="inline-flex items-center gap-2 px-6 py-2 bg-primary-500/10 border border-primary-500/30 text-primary-300 rounded-lg hover:bg-primary-500/20 transition-colors text-sm font-medium"
+                    >
+                      See All {category.name} Guides
+                      <span className="text-xs text-slate-400">
+                        ({category.guides.length - 2} more)
+                      </span>
+                      <svg
+                        className="w-4 h-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M9 5l7 7-7 7"
+                        />
+                      </svg>
+                    </Link>
+                  </div>
+                )}
               </section>
             ))}
           </div>

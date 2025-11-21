@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import DashboardNav from '@/components/DashboardNav';
 import { calculateBadgeProgress } from '@/lib/badges';
+import Link from 'next/link';
 
 async function getUserStats(userId: string) {
   // Get tips for stats
@@ -277,7 +278,28 @@ export default async function BadgesPage() {
                     {theme}
                   </h2>
                   <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                    {themeBadges.map((badge) => {
+                    {(() => {
+                      // Sort badges by completion percentage (highest first)
+                      // Earned badges first, then by progress percentage
+                      const sortedBadges = [...themeBadges].sort((a, b) => {
+                        const aEarned = !!a.earned_at;
+                        const bEarned = !!b.earned_at;
+                        
+                        // Earned badges come first
+                        if (aEarned && !bEarned) return -1;
+                        if (!aEarned && bEarned) return 1;
+                        
+                        // If both earned or both not earned, sort by progress percentage
+                        const aProgress = a.progress?.percentage || 0;
+                        const bProgress = b.progress?.percentage || 0;
+                        
+                        return bProgress - aProgress; // Descending order
+                      });
+                      
+                      // Take top 2 badges
+                      const topBadges = sortedBadges.slice(0, 2);
+                      
+                      return topBadges.map((badge) => {
                       const isEarned = !!badge.earned_at;
                       const progress = badge.progress;
                       const showProgress = !isEarned && progress && progress.target > 0;
@@ -349,8 +371,34 @@ export default async function BadgesPage() {
                           </div>
                         </div>
                       );
-                    })}
+                    })})()}
                   </div>
+                  {themeBadges.length > 2 && (
+                    <div className="mt-6 text-center">
+                      <Link
+                        href={`/dashboard/badges?category=${theme.toLowerCase()}`}
+                        className="inline-flex items-center gap-2 px-6 py-2 bg-primary-500/10 border border-primary-500/30 text-primary-300 rounded-lg hover:bg-primary-500/20 transition-colors text-sm font-medium"
+                      >
+                        See All {theme} Badges
+                        <span className="text-xs text-slate-400">
+                          ({themeBadges.length - 2} more)
+                        </span>
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M9 5l7 7-7 7"
+                          />
+                        </svg>
+                      </Link>
+                    </div>
+                  )}
                 </section>
               );
             })}

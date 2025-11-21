@@ -2,6 +2,7 @@ import { getSession } from '@auth0/nextjs-auth0';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import DashboardNav from '@/components/DashboardNav';
+import { supabase } from '@/lib/supabase';
 
 // Guide data - in the future this could come from a database
 const guides: Record<string, any> = {
@@ -3671,6 +3672,28 @@ export default async function GuidePage({ params }: { params: { slug: string } }
 
   if (!guide) {
     redirect('/dashboard/how-to-guides');
+  }
+
+  // Track visit to this guide
+  const auth0Id = session.user.sub;
+  const { data: user } = await supabase
+    .from('users')
+    .select('id')
+    .eq('auth0_id', auth0Id)
+    .single();
+
+  if (user) {
+    // Record visit (fire and forget - don't block page render)
+    supabase
+      .from('guide_visits')
+      .insert({
+        guide_slug: params.slug,
+        user_id: user.id,
+      })
+      .catch((error) => {
+        // Silently fail - don't block page render if tracking fails
+        console.error('Failed to track guide visit:', error);
+      });
   }
 
   return (
