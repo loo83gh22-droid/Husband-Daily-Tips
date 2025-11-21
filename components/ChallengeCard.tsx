@@ -55,6 +55,8 @@ export default function ChallengeCard({ challenge, userChallenge, userId, onJoin
   const isActive = today >= startDate && today <= endDate;
   const isUpcoming = today < startDate;
   const isPast = today > endDate;
+  // A challenge is "in progress" if user has joined it and it's not completed
+  const isInProgress = isJoined && userChallenge && !userChallenge.completed;
 
   const handleJoin = async () => {
     if (isJoined || isJoining) return;
@@ -120,12 +122,17 @@ export default function ChallengeCard({ challenge, userChallenge, userId, onJoin
           <div>
             <div className="flex items-center gap-2 flex-wrap">
               <h3 className="text-lg font-semibold text-slate-50">{challenge.name}</h3>
-              {isJoined && (
+              {isInProgress && (
                 <span className="px-2 py-0.5 bg-primary-500/20 text-primary-400 text-xs font-semibold rounded-full border border-primary-500/30 whitespace-nowrap">
                   🎯 Active
                 </span>
               )}
-              {(challenge.userCompletionCount || 0) > 0 && (
+              {isJoined && userChallenge?.completed && (
+                <span className="px-2 py-0.5 bg-green-500/20 text-green-400 text-xs font-semibold rounded-full whitespace-nowrap">
+                  ✓ Completed
+                </span>
+              )}
+              {(challenge.userCompletionCount || 0) > 0 && !isInProgress && (
                 <span className="px-2 py-0.5 bg-amber-500/20 text-amber-400 text-xs font-semibold rounded-full whitespace-nowrap">
                   ✓ Completed {challenge.userCompletionCount}x
                 </span>

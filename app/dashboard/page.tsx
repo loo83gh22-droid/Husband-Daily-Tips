@@ -368,7 +368,7 @@ export default async function Dashboard() {
     .eq('completed', false)
     .order('joined_date', { ascending: false })
     .limit(1)
-    .single();
+    .maybeSingle();
 
   let displayAction = null;
   let isChallengeAction = false;
