@@ -70,10 +70,7 @@ export default function AccountMenu() {
               <Link
                 key={item.href}
                 href={item.href}
-                onClick={(e) => {
-                  setIsOpen(false);
-                  // Let Link handle navigation naturally
-                }}
+                onClick={() => setIsOpen(false)}
                 className="flex items-start gap-3 px-4 py-2.5 text-sm text-slate-300 hover:bg-slate-800 transition-colors"
               >
                 <span className="text-lg mt-0.5">{item.icon}</span>
