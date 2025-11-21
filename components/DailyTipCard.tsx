@@ -164,7 +164,7 @@ export default function DailyTipCard({ tip, subscriptionTier = 'free' }: DailyTi
           </h3>
         </div>
         <div className="text-xs text-slate-500 text-right">
-          {format(new Date(), 'MMM d, yyyy')}
+          {typeof window !== 'undefined' ? format(new Date(), 'MMM d, yyyy') : ''}
         </div>
       </div>
       
