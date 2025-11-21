@@ -87,10 +87,8 @@ export default function ChallengeCard({ challenge, userChallenge, userId, onJoin
         }
       } else {
         // Handle error response
-        console.log('Challenge join failed, status:', response.status);
         try {
           const errorData = await response.json();
-          console.log('Error data:', errorData);
           const errorMessage = errorData.message || errorData.error || 'Failed to join challenge';
           
           // Always show modal for 400 errors (one challenge at a time)
@@ -100,16 +98,14 @@ export default function ChallengeCard({ challenge, userChallenge, userId, onJoin
             const challengeNameFromMatch = match ? match[1] : null;
             const challengeNameFromData = errorData.challengeName || errorData.challenge_name || challengeNameFromMatch || 'a challenge';
             
-            console.log('Setting error modal with challenge name:', challengeNameFromData);
             setErrorChallengeName(challengeNameFromData);
             setShowErrorModal(true);
           } else {
-            console.log('Showing alert for error:', errorMessage);
             alert(errorMessage);
           }
         } catch (parseError) {
-          console.error('Error parsing response:', parseError);
           // If we can't parse JSON, show generic error modal
+          console.error('Error parsing challenge join response:', parseError);
           setErrorChallengeName('a challenge');
           setShowErrorModal(true);
         }
