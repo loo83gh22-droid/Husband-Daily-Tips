@@ -27,7 +27,6 @@ export async function POST(request: Request) {
     const expectedAuth = `Bearer ${process.env.CRON_SECRET}`;
     
     if (!process.env.CRON_SECRET) {
-      console.error('CRON_SECRET is not set in environment variables');
       return NextResponse.json({ 
         error: 'Server configuration error',
         details: 'CRON_SECRET not configured'
