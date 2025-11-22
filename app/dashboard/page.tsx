@@ -11,6 +11,7 @@ import OnboardingSurvey from '@/components/OnboardingSurvey';
 import ActiveChallenges from '@/components/ActiveChallenges';
 import OutstandingActions from '@/components/OutstandingActions';
 import AutoCalendarToggle from '@/components/AutoCalendarToggle';
+import OnboardingTour, { TourButton } from '@/components/OnboardingTour';
 import Link from 'next/link';
 
 async function getUserData(auth0Id: string) {
@@ -504,6 +505,8 @@ export default async function Dashboard() {
 
   return (
     <div className="min-h-screen bg-slate-950">
+      <OnboardingTour />
+      <TourButton />
       <DashboardNav />
 
       <main className="container mx-auto px-4 py-8 md:py-10">
@@ -515,7 +518,7 @@ export default async function Dashboard() {
         <div className="grid lg:grid-cols-[1.4fr,1fr] gap-8 md:gap-10 items-start">
           {/* Left column: Daily tip + health bar */}
           <div className="max-w-3xl">
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center justify-between mb-4" data-tour="mission-header">
               <div>
                 <h2 className="text-2xl md:text-3xl font-semibold text-slate-50">
                   Tomorrow&apos;s Mission
@@ -535,7 +538,9 @@ export default async function Dashboard() {
             </div>
 
             {displayAction ? (
-              <DailyTipCard tip={displayAction} subscriptionTier={user.subscription_tier || 'free'} />
+              <div data-tour="mission">
+                <DailyTipCard tip={displayAction} subscriptionTier={user.subscription_tier || 'free'} />
+              </div>
             ) : (
               <div className="bg-slate-900/80 rounded-xl shadow-lg p-8 text-center border border-slate-800">
                 <p className="text-slate-300">
@@ -545,7 +550,7 @@ export default async function Dashboard() {
             )}
 
             {/* Auto-add to Calendar Toggle */}
-            <div className="mt-6">
+            <div className="mt-6" data-tour="calendar">
               <AutoCalendarToggle />
             </div>
 
@@ -567,9 +572,11 @@ export default async function Dashboard() {
 
           {/* Right column: Health bar + stats */}
           <div className="space-y-5">
-            <HealthBar value={stats.healthScore} />
+            <div data-tour="hit-points">
+              <HealthBar value={stats.healthScore} />
+            </div>
 
-            <div className="grid md:grid-cols-3 gap-4">
+            <div className="grid md:grid-cols-3 gap-4" data-tour="stats">
               <StatsCard
                 title="Current streak"
                 value={stats.currentStreak}
@@ -590,7 +597,9 @@ export default async function Dashboard() {
               />
             </div>
 
-            <BadgesDisplay userId={user.id} />
+            <div data-tour="badges">
+              <BadgesDisplay userId={user.id} />
+            </div>
           </div>
         </div>
 
