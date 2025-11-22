@@ -3,17 +3,17 @@
 
 -- Update "Practice the 5:1 Ratio" benefit
 UPDATE actions 
-SET benefit = 'Healthy relationships need way more positive moments than negative ones. This ratio works. Try it.' 
+SET benefit = 'Relationship researcher John Gottman found that healthy relationships need 5 positive interactions for every negative one. This ratio works. Try it.' 
 WHERE name = 'Practice the 5:1 Ratio';
 
 -- Update "Create a Love Map" benefit
 UPDATE actions 
-SET benefit = 'Knowing your partner''s inner world—what they care about, what stresses them, what makes them happy—is the foundation of real connection. Ask the questions. Get to know her.' 
+SET benefit = 'John Gottman''s research shows that knowing your partner''s inner world—what they care about, what stresses them, what makes them happy—is the foundation of real connection. Ask the questions. Get to know her.' 
 WHERE name = 'Create a Love Map';
 
 -- Update "Practice Turning Toward" benefit
 UPDATE actions 
-SET benefit = 'When she reaches out, how you respond is everything. Turn toward her, and you connect. Turn away, and you drift apart. Small responses, big impact.' 
+SET benefit = 'John Gottman calls these "bids for connection." When she reaches out, how you respond is everything. Turn toward her, and you connect. Turn away, and you drift apart. Small responses, big impact.' 
 WHERE name = 'Practice Turning Toward';
 
 -- Update "Try The Gottman Card Decks App" benefit

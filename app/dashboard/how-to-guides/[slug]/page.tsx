@@ -1400,7 +1400,7 @@ You expressed genuine gratitude. She felt seen and appreciated. You strengthened
     excerpt: 'Healthy relationships need way more positive moments than negative ones. Learn how to build this ratio and rebuild connection.',
     content: `## Why This Matters
 
-Here's the thing: if you're criticizing, complaining, or being negative more than you're being positive, you're slowly killing your connection. Healthy relationships need way more positive interactions than negative ones. Think 5 to 1. That's the ratio that works.
+Here's the thing: if you're criticizing, complaining, or being negative more than you're being positive, you're slowly killing your connection. Relationship researcher John Gottman found that healthy relationships need way more positive interactions than negative ones. Think 5 to 1. That's the ratio that actually works.
 
 ## The Secret: Focus on What's Working
 
@@ -1616,6 +1616,7 @@ You affirmed her. She felt seen and valued. You spoke her love language. That's 
 
 People express and receive love in different ways. Understanding how your partner feels most loved—her "love language"—helps you show love in ways that actually land. When you speak her language, she feels deeply understood and cared for.
 
+*Note: The "love languages" concept comes from Gary Chapman's book "The 5 Love Languages." We're just using his idea here because it works.*
 
 ## The Secret: It's About How She Feels Loved
 
@@ -2404,6 +2405,8 @@ You sat close and talked. You felt more connected. Physical proximity increased 
     content: `## Why This Matters
 
 When she reaches out—a comment, a question, a look—how you respond determines everything. Turn toward her, and you connect. Turn away, and you drift apart. It's that simple, and it's that important.
+
+Relationship researcher John Gottman calls these moments "bids for connection." His research shows that how couples respond to these bids is one of the biggest predictors of relationship success. We're just passing along what he found.
 
 ## The Secret: Notice and Respond
 
@@ -3452,9 +3455,10 @@ These games only work if you're willing to be honest and vulnerable. They create
 
 ### 2. "The Gottman Card Decks" App
 
-- Good conversation starters
+- Good conversation starters from the Gottman Institute
 - Multiple card decks (love, intimacy, etc.)
 - Free app available
+- *Note: This is made by the Gottman Institute, not us. We just think it's useful.*
 
 ### 3. "TableTopics for Couples"
 
