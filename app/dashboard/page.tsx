@@ -661,6 +661,11 @@ export default async function Dashboard() {
             <div data-tour="badges">
               <BadgesDisplay userId={user.id} />
             </div>
+
+            {/* Movie Suggestions */}
+            <div className="mt-5">
+              <MovieSuggestions />
+            </div>
           </div>
         </div>
 
