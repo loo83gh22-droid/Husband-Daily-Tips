@@ -33,6 +33,7 @@ export default function HamburgerMenu() {
     { href: '/dashboard/subscription', label: 'Pricing & Subscriptions', icon: '💰' },
     { href: '/dashboard/payments', label: 'Payments', icon: '💳' },
     { href: '/dashboard/account', label: 'Profile & Account Settings', icon: '⚙️' },
+    { href: '/dashboard/feedback', label: 'Share Your Thoughts', icon: '💬', highlight: true },
   ];
 
   return (
@@ -79,6 +80,8 @@ export default function HamburgerMenu() {
                   className={`flex items-center gap-3 px-4 py-3 text-sm transition-colors ${
                     isActive
                       ? 'bg-primary-500/20 text-primary-300 border-l-2 border-primary-500'
+                      : item.highlight
+                      ? 'text-primary-300 hover:bg-primary-500/10 hover:text-primary-200'
                       : 'text-slate-300 hover:bg-slate-800 hover:text-slate-100'
                   }`}
                 >
