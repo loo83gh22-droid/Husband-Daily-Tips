@@ -29,21 +29,7 @@ export async function GET(request: Request) {
     // Order by date ascending (oldest first) - allows users to catch up chronologically
     const { data: outstandingActions, error } = await supabase
       .from('user_daily_actions')
-      .select(`
-        id,
-        user_id,
-        action_id,
-        date,
-        completed,
-        dnc,
-        actions!inner (
-          id,
-          name,
-          description,
-          icon,
-          category
-        )
-      `)
+      .select('id, user_id, action_id, date, completed, dnc')
       .eq('user_id', userId)
       .eq('completed', false)
       .eq('dnc', false)
@@ -64,67 +50,61 @@ export async function GET(request: Request) {
       }, { status: 500 });
     }
 
-    // Format the response
-    // Handle both single object and array responses from Supabase
-    // Type the result to help TypeScript understand the structure
-    type OutstandingAction = {
-      id: string;
-      user_id: string;
-      action_id: string;
-      date: string;
-      completed: boolean;
-      dnc: boolean;
-      actions: {
-        id: string;
-        name: string;
-        description: string;
-        icon: string;
-        category: string;
-      } | {
-        id: string;
-        name: string;
-        description: string;
-        icon: string;
-        category: string;
-      }[] | null;
-    };
+    if (!outstandingActions || outstandingActions.length === 0) {
+      return NextResponse.json({ actions: [] });
+    }
+
+    // Get unique action IDs
+    const actionIds = [...new Set(outstandingActions.map(oa => oa.action_id))];
     
+    // Fetch actions separately
+    const { data: actions, error: actionsError } = await supabase
+      .from('actions')
+      .select('id, name, description, icon, category')
+      .in('id', actionIds);
+
+    if (actionsError) {
+      console.error('Error fetching actions:', actionsError);
+      return NextResponse.json({ 
+        error: 'Failed to fetch actions', 
+        details: actionsError.message
+      }, { status: 500 });
+    }
+
+    // Create a map of action_id -> action for quick lookup
+    const actionsMap = new Map(
+      (actions || []).map(action => [action.id, action])
+    );
+
+    // Format the response by joining user_daily_actions with actions
     try {
-      const actions = ((outstandingActions || []) as OutstandingAction[])
-        .filter((oa) => oa.actions != null) // Filter out any null actions
+      const formattedActions = outstandingActions
         .map((oa) => {
-          try {
-            // Supabase relation can return single object or array - handle both cases
-            const actionsData = oa.actions;
-            if (!actionsData) return null;
-            
-            const action = Array.isArray(actionsData) ? actionsData[0] : actionsData;
-            if (!action || !action.id || !action.name) {
-              console.warn('Invalid action data for user_daily_action:', oa.id, 'action_id:', oa.action_id);
-              return null;
-            }
-            
-            return {
-              id: action.id,
-              user_daily_actions_id: oa.id,
-              action_id: oa.action_id,
-              date: oa.date,
-              name: action.name || '',
-              description: action.description || '',
-              icon: action.icon || '',
-              category: action.category || '',
-            };
-          } catch (mapError: any) {
-            console.error('Error mapping action:', mapError, 'for user_daily_action:', oa.id);
+          const action = actionsMap.get(oa.action_id);
+          
+          if (!action) {
+            console.warn('Action not found for action_id:', oa.action_id, 'user_daily_action_id:', oa.id);
             return null;
           }
+          
+          return {
+            id: action.id,
+            user_daily_actions_id: oa.id,
+            action_id: oa.action_id,
+            date: oa.date,
+            name: action.name || '',
+            description: action.description || '',
+            icon: action.icon || '',
+            category: action.category || '',
+          };
         })
-        .filter((action): action is NonNullable<typeof action> => action !== null); // Remove any null entries with type guard
+        .filter((action): action is NonNullable<typeof action> => action !== null); // Remove any null entries
 
-      return NextResponse.json({ actions });
+      return NextResponse.json({ actions: formattedActions });
     } catch (mappingError: any) {
       console.error('Error in mapping outstanding actions:', mappingError);
       console.error('Outstanding actions data:', JSON.stringify(outstandingActions, null, 2));
+      console.error('Actions map size:', actionsMap.size);
       return NextResponse.json({ 
         error: 'Error processing outstanding actions', 
         details: mappingError?.message || 'Unknown mapping error'
