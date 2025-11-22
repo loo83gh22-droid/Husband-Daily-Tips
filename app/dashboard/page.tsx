@@ -1,6 +1,6 @@
 import { getSession } from '@auth0/nextjs-auth0';
 import { redirect } from 'next/navigation';
-import { supabase } from '@/lib/supabase';
+import { supabase, getSupabaseAdmin } from '@/lib/supabase';
 import DailyTipCard from '@/components/DailyTipCard';
 import StatsCard from '@/components/StatsCard';
 import SubscriptionBanner from '@/components/SubscriptionBanner';
@@ -14,7 +14,10 @@ import ActiveChallenges from '@/components/ActiveChallenges';
 import Link from 'next/link';
 
 async function getUserData(auth0Id: string) {
-  const { data: user, error } = await supabase
+  // Use admin client (service role) to bypass RLS for user lookup during login
+  // RLS policies check auth0_id context which isn't set with Auth0 authentication
+  const adminSupabase = getSupabaseAdmin();
+  const { data: user, error } = await adminSupabase
     .from('users')
     .select('*, subscription_tier, username, name, email')
     .eq('auth0_id', auth0Id)
@@ -30,13 +33,16 @@ async function getUserData(auth0Id: string) {
 async function getTomorrowAction(userId: string | null, subscriptionTier: string, categoryScores?: any) {
   if (!userId) return null;
 
+  // Use admin client to bypass RLS (Auth0 context isn't set)
+  const adminSupabase = getSupabaseAdmin();
+
   // Get tomorrow's date in YYYY-MM-DD format
   const tomorrow = new Date();
   tomorrow.setDate(tomorrow.getDate() + 1);
   const tomorrowStr = tomorrow.toISOString().split('T')[0];
 
   // Check if user has already seen tomorrow's action
-  const { data: existingAction } = await supabase
+  const { data: existingAction } = await adminSupabase
     .from('user_daily_actions')
     .select('*, actions(*)')
     .eq('user_id', userId)
@@ -58,7 +64,7 @@ async function getTomorrowAction(userId: string | null, subscriptionTier: string
   const thirtyDaysAgoStr = thirtyDaysAgo.toISOString().split('T')[0];
 
   // Get actions user has seen in the last 30 days
-  const { data: recentActions } = await supabase
+  const { data: recentActions } = await adminSupabase
     .from('user_daily_actions')
     .select('action_id')
     .eq('user_id', userId)
@@ -67,7 +73,7 @@ async function getTomorrowAction(userId: string | null, subscriptionTier: string
   const seenActionIds = recentActions?.map((ra) => ra.action_id) || [];
 
   // Get available actions - all actions are available to all tiers
-  let { data: actions, error } = await supabase
+  let { data: actions, error } = await adminSupabase
     .from('actions')
     .select('*')
     .limit(100);
@@ -118,7 +124,7 @@ async function getTomorrowAction(userId: string | null, subscriptionTier: string
 
   if (error || !actions || actions.length === 0) {
     // Fallback: if no actions available (all seen), get any action anyway
-    const { data: allActions } = await supabase
+    const { data: allActions } = await adminSupabase
       .from('actions')
       .select('*')
       .limit(100);
@@ -128,7 +134,7 @@ async function getTomorrowAction(userId: string | null, subscriptionTier: string
     }
     const randomAction = allActions[Math.floor(Math.random() * allActions.length)];
 
-    await supabase.from('user_daily_actions').insert({
+    await adminSupabase.from('user_daily_actions').insert({
       user_id: userId,
       action_id: randomAction.id,
       date: tomorrowStr,
@@ -144,7 +150,7 @@ async function getTomorrowAction(userId: string | null, subscriptionTier: string
 
   // Save to user_daily_actions
   if (userId) {
-    await supabase.from('user_daily_actions').insert({
+    await adminSupabase.from('user_daily_actions').insert({
       user_id: userId,
       action_id: randomAction.id,
       date: tomorrowStr,
@@ -168,8 +174,11 @@ async function getUserStats(userId: string | null) {
     };
   }
 
+  // Use admin client to bypass RLS (Auth0 context isn't set)
+  const adminSupabase = getSupabaseAdmin();
+
   // Get survey summary (baseline health and category scores)
-  const { data: surveySummary } = await supabase
+  const { data: surveySummary } = await adminSupabase
     .from('survey_summary')
     .select('baseline_health, communication_score, romance_score, partnership_score, intimacy_score, conflict_score')
     .eq('user_id', userId)
@@ -177,7 +186,7 @@ async function getUserStats(userId: string | null) {
   
   const baselineHealth = surveySummary?.baseline_health || null;
 
-  const { data: tips, error } = await supabase
+  const { data: tips, error } = await adminSupabase
     .from('user_tips')
     .select('date')
     .eq('user_id', userId)
@@ -218,7 +227,7 @@ async function getUserStats(userId: string | null) {
 
   // Get unique actions count (unique tips + unique actions completed)
   // Count unique tips completed
-  const { data: completedTips } = await supabase
+  const { data: completedTips } = await adminSupabase
     .from('user_tips')
     .select('tip_id')
     .eq('user_id', userId)
@@ -227,7 +236,7 @@ async function getUserStats(userId: string | null) {
   const uniqueTipIds = new Set(completedTips?.map((t) => t.tip_id) || []);
   
   // Count unique actions completed
-  const { data: completedActions } = await supabase
+  const { data: completedActions } = await adminSupabase
     .from('user_action_completions')
     .select('action_id')
     .eq('user_id', userId);
@@ -238,7 +247,7 @@ async function getUserStats(userId: string | null) {
   const uniqueActions = uniqueTipIds.size + uniqueActionIds.size;
 
   // Count total days where daily action was completed (capped at 6 points per day)
-  const { data: dailyActionCompletions } = await supabase
+  const { data: dailyActionCompletions } = await adminSupabase
     .from('user_daily_actions')
     .select('date')
     .eq('user_id', userId)
@@ -247,7 +256,7 @@ async function getUserStats(userId: string | null) {
   const totalDailyActionCompletions = dailyActionCompletions?.length || 0;
 
   // Get badge bonuses (now 0, but keeping for backward compatibility)
-  const { data: userBadges } = await supabase
+  const { data: userBadges } = await adminSupabase
     .from('user_badges')
     .select('badges(health_bonus)')
     .eq('user_id', userId);
@@ -313,13 +322,15 @@ export default async function Dashboard() {
   let user = await getUserData(auth0Id);
   
   if (!user) {
-    // Create new user
-    const { data: newUser, error } = await supabase
+    // Create new user - use admin client (service role) to bypass RLS
+    // RLS would block user creation with anon key since auth0_id context isn't set
+    const adminSupabase = getSupabaseAdmin();
+    const { data: newUser, error } = await adminSupabase
       .from('users')
       .insert({
         auth0_id: auth0Id,
-        email: session.user.email,
-        name: session.user.name || session.user.email,
+        email: session.user.email!,
+        name: session.user.name || session.user.email || null,
         subscription_tier: 'free',
         survey_completed: false,
       })
@@ -345,7 +356,9 @@ export default async function Dashboard() {
   const stats = await getUserStats(user.id);
   
   // Check if user has an active challenge - if so, show challenge action instead of tomorrow's action
-  const { data: activeChallengeData } = await supabase
+  // Use admin client to bypass RLS (Auth0 context isn't set)
+  const adminSupabase = getSupabaseAdmin();
+  const { data: activeChallengeData } = await adminSupabase
     .from('user_challenges')
     .select(`
       *,
@@ -397,7 +410,7 @@ export default async function Dashboard() {
       const todayStr = today.toISOString().split('T')[0];
       
       // Check if user already has this action assigned for today
-      const { data: existingAction } = await supabase
+      const { data: existingAction } = await adminSupabase
         .from('user_daily_actions')
         .select('*, actions(*)')
         .eq('user_id', user.id)
@@ -416,7 +429,7 @@ export default async function Dashboard() {
         };
       } else {
         // Assign challenge action for today
-        const { data: newAction } = await supabase
+        const { data: newAction } = await adminSupabase
           .from('user_daily_actions')
           .insert({
             user_id: user.id,
