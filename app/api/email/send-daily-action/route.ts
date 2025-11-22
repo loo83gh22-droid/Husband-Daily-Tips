@@ -136,7 +136,7 @@ export async function POST(request: Request) {
           output: 'xml',
         });
         calendarLink = `https://calendar.google.com/calendar/render?${params.toString()}`;
-      } else {
+      } else if (calendarType === 'outlook') {
         const params = new URLSearchParams({
           subject: action.name || 'Daily Action',
           startdt: formatDate(startDate),
@@ -145,6 +145,9 @@ export async function POST(request: Request) {
           location: '',
         });
         calendarLink = `https://outlook.live.com/calendar/0/deeplink/compose?${params.toString()}`;
+      } else if (calendarType === 'apple') {
+        // For Apple Calendar, we'll use the ICS download endpoint
+        calendarLink = `${process.env.AUTH0_BASE_URL || 'https://besthusbandever.com'}/api/calendar/actions/download?days=1&userId=${user.id}`;
       }
     }
 
@@ -195,9 +198,9 @@ export async function POST(request: Request) {
                 ${autoAddEnabled && calendarLink ? `
                   <div style="margin-top: 15px;">
                     <a href="${calendarLink}" 
-                       target="_blank"
+                       ${calendarType === 'apple' ? 'download="best-husband-action.ics"' : 'target="_blank"'}
                        style="display: inline-block; background-color: #0f172a; color: #fbbf24; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 14px; border: 2px solid #fbbf24; text-align: center; width: 100%;">
-                      📅 Add to ${calendarType === 'google' ? 'Google' : 'Outlook'} Calendar
+                      📅 Add to ${calendarType === 'google' ? 'Google' : calendarType === 'outlook' ? 'Outlook' : 'Apple'} Calendar
                     </a>
                     <p style="color: #64748b; font-size: 11px; margin-top: 8px; text-align: center;">
                       Auto-add enabled: Click to add tomorrow's action to your calendar

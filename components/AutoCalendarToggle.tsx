@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 
 export default function AutoCalendarToggle() {
   const [autoAdd, setAutoAdd] = useState(false);
-  const [calendarType, setCalendarType] = useState<'google' | 'outlook'>('google');
+  const [calendarType, setCalendarType] = useState<'google' | 'outlook' | 'apple'>('google');
   const [subscriptionTier, setSubscriptionTier] = useState<'free' | 'premium' | 'pro'>('free');
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
@@ -67,7 +67,7 @@ export default function AutoCalendarToggle() {
     }
   };
 
-  const handleCalendarTypeChange = async (type: 'google' | 'outlook') => {
+  const handleCalendarTypeChange = async (type: 'google' | 'outlook' | 'apple') => {
     setCalendarType(type);
     setIsSaving(true);
     try {
