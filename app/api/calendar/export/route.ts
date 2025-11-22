@@ -3,6 +3,9 @@ import { getSession } from '@auth0/nextjs-auth0';
 import { supabase } from '@/lib/supabase';
 import { format } from 'date-fns';
 
+// Force dynamic rendering since we use cookies for authentication
+export const dynamic = 'force-dynamic';
+
 /**
  * Generate iCal file for user's recurring tips
  * Users can import this into Google Calendar, Outlook, Apple Calendar, etc.

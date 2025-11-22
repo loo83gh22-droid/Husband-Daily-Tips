@@ -2,6 +2,9 @@ import { NextResponse } from 'next/server';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import { format } from 'date-fns';
 
+// Force dynamic rendering since we use request.url
+export const dynamic = 'force-dynamic';
+
 /**
  * Generate iCal file for 7 days of future actions
  * Can be accessed via email link with user token

@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server';
 import { getSupabaseAdmin } from '@/lib/supabase';
 
+// Force dynamic rendering since we use request.headers
+export const dynamic = 'force-dynamic';
+
 /**
  * Cron job endpoint to send daily action emails at 7pm in each user's timezone
  * 

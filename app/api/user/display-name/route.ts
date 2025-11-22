@@ -2,6 +2,9 @@ import { NextResponse } from 'next/server';
 import { getSession } from '@auth0/nextjs-auth0';
 import { getSupabaseAdmin } from '@/lib/supabase';
 
+// Force dynamic rendering since we use cookies for authentication
+export const dynamic = 'force-dynamic';
+
 /**
  * Get user display name (username, first name, or email)
  */
