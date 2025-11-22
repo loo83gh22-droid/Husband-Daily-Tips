@@ -627,6 +627,15 @@ export default async function Dashboard() {
               <HealthBar value={stats.healthScore} />
             </div>
 
+            {/* Progress Charts */}
+            <div>
+              <ProgressCharts
+                userId={user.id}
+                currentStreak={stats.currentStreak}
+                healthScore={stats.healthScore}
+              />
+            </div>
+
             <div className="grid md:grid-cols-3 gap-4" data-tour="stats">
               <StatsCard
                 title="Current streak"
@@ -650,15 +659,6 @@ export default async function Dashboard() {
 
             <div data-tour="badges">
               <BadgesDisplay userId={user.id} />
-            </div>
-
-            {/* Progress Charts */}
-            <div className="mt-5">
-              <ProgressCharts
-                userId={user.id}
-                currentStreak={stats.currentStreak}
-                healthScore={stats.healthScore}
-              />
             </div>
           </div>
         </div>
