@@ -7,7 +7,7 @@ export default function SubscriptionBanner() {
         <div className="mb-4 md:mb-0">
           <h3 className="text-2xl font-bold mb-2">Unlock All Features</h3>
           <p className="text-primary-100">
-            Get daily personalized actions, full health bar tracking, badges, journal, and Team Wins. 
+            Get daily actions that fit your situation, full health bar tracking, badges, journal, and Team Wins. 
             Try everything free for 7 days.
           </p>
         </div>

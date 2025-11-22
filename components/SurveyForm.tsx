@@ -186,7 +186,7 @@ export default function SurveyForm({ userId, questions, isPublic = false }: Surv
             </li>
             <li className="flex items-center gap-2">
               <span className="text-primary-400">✓</span>
-              Get personalized daily actions based on your results
+              Get daily actions that fit your situation based on your results
             </li>
             <li className="flex items-center gap-2">
               <span className="text-primary-400">✓</span>

@@ -118,7 +118,7 @@ export default async function HowToGuidesPage() {
           slug: 'practice-5-1-ratio',
           title: 'Practice the 5:1 Ratio',
           excerpt:
-            'Research shows healthy relationships need 5 positive interactions for every negative one. Learn how to build this ratio and rebuild connection.',
+            'Healthy relationships need way more positive moments than negative ones. Learn how to build this ratio and rebuild connection.',
           difficulty: 'Medium',
           time: 'Ongoing',
         },
@@ -252,7 +252,7 @@ export default async function HowToGuidesPage() {
           slug: 'support-her-goals',
           title: 'Support Her Goals (Actually)',
           excerpt:
-            'Learn how to be genuinely supportive of her personal and professional goals. Ask about progress, celebrate wins, and help her overcome obstacles.',
+            'Actually support her goals—personal and work stuff. Ask about progress, celebrate wins, help her when she needs it.',
           difficulty: 'Easy',
           time: 'Ongoing',
         },

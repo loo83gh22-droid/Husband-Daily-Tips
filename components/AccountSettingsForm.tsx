@@ -276,7 +276,7 @@ export default function AccountSettingsForm({ initialData }: AccountSettingsForm
             Family Information
           </p>
           <p className="text-xs text-slate-400 mb-4 leading-relaxed">
-            We use your profile information to personalize your daily actions and make them more relevant to your situation.
+            We use your profile info to give you actions that actually fit your situation. No kids? We won't give you kid stuff. Simple.
           </p>
         </div>
 

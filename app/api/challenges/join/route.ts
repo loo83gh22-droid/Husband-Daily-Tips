@@ -341,8 +341,8 @@ async function sendChallengeEmail(
     endDate.setHours(endDate.getHours() + 1);
     const endDateStr = endDate.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
     
-    const googleCalendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(challengeName)}&dates=${startDateStr}/${endDateStr}&details=${encodeURIComponent('7 days of personalized relationship actions')}`;
-    const outlookCalendarUrl = `https://outlook.live.com/calendar/0/deeplink/compose?subject=${encodeURIComponent(challengeName)}&startdt=${firstDate.toISOString()}&enddt=${endDate.toISOString()}&body=${encodeURIComponent('7 days of personalized relationship actions')}`;
+    const googleCalendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(challengeName)}&dates=${startDateStr}/${endDateStr}&details=${encodeURIComponent('7 days of relationship actions')}`;
+    const outlookCalendarUrl = `https://outlook.live.com/calendar/0/deeplink/compose?subject=${encodeURIComponent(challengeName)}&startdt=${firstDate.toISOString()}&enddt=${endDate.toISOString()}&body=${encodeURIComponent('7 days of relationship actions')}`;
 
     const { data, error } = await resend.emails.send({
       from: process.env.RESEND_FROM_EMAIL || 'Best Husband Ever - Tomorrow\'s Action! <action@besthusbandever.com>',
@@ -378,7 +378,7 @@ async function sendChallengeEmail(
                   <strong style="color: #1e293b;">Hey ${displayName},</strong>
                 </p>
                 <p style="color: #475569; font-size: 15px; margin: 0 0 15px 0;">
-                  Here&apos;s the deal: We&apos;ve locked in <strong style="color: #fbbf24;">7 personalized actions</strong>, one for each day. These aren&apos;t random—they&apos;re tailored to you based on your survey. These actions will appear on your dashboard each day and take priority over the algorithm.
+                  Here&apos;s the deal: We&apos;ve locked in <strong style="color: #fbbf24;">7 actions</strong>, one for each day. These aren&apos;t random—they&apos;re picked for you based on your survey. These actions will appear on your dashboard each day and take priority over the algorithm.
                 </p>
                 <p style="color: #475569; font-size: 15px; margin: 0;">
                   Your complete 7-day action plan (aka your roadmap to winning):
@@ -455,7 +455,7 @@ async function sendChallengeEmail(
               </div>
               
               <p style="color: #94a3b8; font-size: 13px; margin-top: 30px; padding-top: 20px; border-top: 1px solid #e2e8f0;">
-                These actions have been personalized based on your relationship survey. Complete them daily to make the most of your challenge!
+                These actions were picked for you based on your relationship survey. Complete them daily to make the most of your challenge!
               </p>
             </div>
             
