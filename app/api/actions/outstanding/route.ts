@@ -58,12 +58,38 @@ export async function GET(request: Request) {
 
     // Format the response
     // Handle both single object and array responses from Supabase
-    const actions = (outstandingActions || [])
+    // Type the result to help TypeScript understand the structure
+    type OutstandingAction = {
+      id: string;
+      user_id: string;
+      action_id: string;
+      date: string;
+      completed: boolean;
+      dnc: boolean;
+      actions: {
+        id: string;
+        name: string;
+        description: string;
+        icon: string;
+        category: string;
+      } | {
+        id: string;
+        name: string;
+        description: string;
+        icon: string;
+        category: string;
+      }[] | null;
+    };
+    
+    const actions = ((outstandingActions || []) as OutstandingAction[])
       .filter((oa) => oa.actions != null) // Filter out any null actions
-      .map((oa: any) => {
+      .map((oa) => {
         // Supabase relation can return single object or array - handle both cases
-        const action = Array.isArray(oa.actions) ? oa.actions[0] : oa.actions;
-        if (!action) return null; // Skip if action is still null/undefined
+        const actionsData = oa.actions;
+        if (!actionsData) return null;
+        
+        const action = Array.isArray(actionsData) ? actionsData[0] : actionsData;
+        if (!action) return null;
         
         return {
           id: action.id,
@@ -76,7 +102,7 @@ export async function GET(request: Request) {
           category: action.category,
         };
       })
-      .filter((action) => action !== null); // Remove any null entries
+      .filter((action): action is NonNullable<typeof action> => action !== null); // Remove any null entries with type guard
 
     return NextResponse.json({ actions });
   } catch (error) {
