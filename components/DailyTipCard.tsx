@@ -338,14 +338,14 @@ END:VCALENDAR`;
           </button>
           <button
             type="button"
-            className="px-4 py-2 border border-slate-700 text-slate-100 text-sm rounded-lg hover:bg-slate-900 transition-colors"
+            className="px-4 py-2.5 sm:py-2 border border-slate-700 text-slate-100 text-sm rounded-lg hover:bg-slate-900 active:bg-slate-800 transition-colors min-h-[44px] touch-manipulation"
           >
             Save for later
           </button>
           <button
             onClick={handleToggleFavorite}
             disabled={isTogglingFavorite}
-            className={`px-4 py-2 border text-sm font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-default flex items-center gap-2 ${
+            className={`px-4 py-2.5 sm:py-2 border text-sm font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-default flex items-center gap-2 min-h-[44px] touch-manipulation active:scale-95 ${
               isFavorited
                 ? 'border-yellow-500/50 bg-yellow-500/10 text-yellow-300 hover:bg-yellow-500/20'
                 : 'border-slate-700 text-slate-300 hover:bg-slate-900'
