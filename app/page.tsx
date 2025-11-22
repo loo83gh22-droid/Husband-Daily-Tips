@@ -141,6 +141,19 @@ export default async function Home() {
           </div>
         </div>
 
+        {/* Distraction Message Section */}
+        <section className="mt-20">
+          <div className="max-w-4xl mx-auto">
+            <div className="bg-gradient-to-r from-primary-500/10 via-slate-900/60 to-primary-500/10 border border-primary-500/20 rounded-2xl p-8 md:p-10 text-center">
+              <p className="text-lg md:text-xl text-slate-200 leading-relaxed max-w-3xl mx-auto">
+                Your phone&apos;s already full of distractions. What&apos;s one more? 
+                <span className="text-primary-400 font-semibold"> Except this one actually makes your marriage better.</span> 
+                And yeah—it&apos;s fun.
+              </p>
+            </div>
+          </div>
+        </section>
+
         {/* Features Section */}
         <section
           id="how-it-works"
