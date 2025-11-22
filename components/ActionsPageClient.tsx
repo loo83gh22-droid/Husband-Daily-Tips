@@ -72,9 +72,19 @@ export default function ActionsPageClient({
     return map;
   }, [completedMap]);
   
+  // Convert Set to Array for serialization, then back to Set in state
+  const completedActionIdsArray = useMemo(() => {
+    return Array.from(completedMapInstance.keys());
+  }, [completedMapInstance]);
+  
   const [completedActionIds, setCompletedActionIds] = useState<Set<string>>(
-    new Set(Array.from(completedMapInstance.keys()))
+    new Set(completedActionIdsArray)
   );
+  
+  // Update completedActionIds when completedMapInstance changes
+  useEffect(() => {
+    setCompletedActionIds(new Set(completedActionIdsArray));
+  }, [completedActionIdsArray]);
 
   // Get unique categories
   const categories = useMemo(() => {
