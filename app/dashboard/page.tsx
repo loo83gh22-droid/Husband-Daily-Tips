@@ -532,12 +532,6 @@ export default async function Dashboard() {
                   )}
                 </p>
               </div>
-              <div className="hidden md:flex flex-col items-end text-xs text-slate-400">
-                <span>Logged in as</span>
-                <span className="text-slate-200 font-medium truncate max-w-[160px]">
-                  {user.username || (user.name ? user.name.split(' ')[0] : user.email)}
-                </span>
-              </div>
             </div>
 
             {displayAction ? (
