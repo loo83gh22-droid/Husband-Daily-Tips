@@ -560,13 +560,15 @@ export default async function Dashboard() {
       />
       <DashboardNav />
 
-      <main className="container mx-auto px-4 py-8 md:py-10">
+      <main className="container mx-auto px-4 py-8 md:py-12">
         {/* Subscription Banner */}
         {subscriptionTier === 'free' && (
-          <SubscriptionBanner />
+          <div className="mb-8">
+            <SubscriptionBanner />
+          </div>
         )}
 
-        <div className="grid lg:grid-cols-[1.4fr,1fr] gap-8 md:gap-10 items-start">
+        <div className="grid lg:grid-cols-[1.4fr,1fr] gap-8 md:gap-12 items-start">
           {/* Left column: Daily tip + health bar */}
           <div className="max-w-3xl">
             <div className="flex items-center justify-between mb-6" data-tour="mission-header">
