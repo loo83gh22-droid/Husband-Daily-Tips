@@ -459,18 +459,6 @@ export default function HealthBar({ value, shouldPulse = false, onPulseComplete 
             </div>
           )}
 
-          {/* Next Milestone Hint */}
-          {nextMilestone && nextMilestone.pointsAway <= 10 && (
-            <div className="mb-4 p-3 bg-primary-500/10 border border-primary-500/30 rounded-lg">
-              <p className="text-xs text-primary-300 font-medium">
-                {nextMilestone.pointsAway <= 1 
-                  ? `Almost there! ${nextMilestone.pointsAway.toFixed(1)} point away from ${nextMilestone.value}%`
-                  : `${nextMilestone.pointsAway.toFixed(1)} points away from ${nextMilestone.value}% milestone`
-                }
-              </p>
-            </div>
-          )}
-
           <div className="mt-4 space-y-3">
             <div className="flex flex-wrap items-center gap-x-5 gap-y-1.5">
               <p className="text-xs text-slate-400 font-medium">
