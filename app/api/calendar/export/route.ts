@@ -47,7 +47,7 @@ export async function GET(request: Request) {
     // Generate iCal content
     let icalContent = `BEGIN:VCALENDAR
 VERSION:2.0
-PRODID:-//Husband Daily Tips//EN
+PRODID:-//Best Husband Ever//EN
 CALSCALE:GREGORIAN
 METHOD:PUBLISH
 `;
@@ -97,7 +97,7 @@ END:VEVENT
     return new NextResponse(icalContent, {
       headers: {
         'Content-Type': 'text/calendar; charset=utf-8',
-        'Content-Disposition': `attachment; filename="husband-daily-tips.ics"`,
+        'Content-Disposition': `attachment; filename="best-husband-ever.ics"`,
       },
     });
   } catch (error) {
