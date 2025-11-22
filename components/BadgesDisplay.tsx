@@ -58,10 +58,15 @@ export default function BadgesDisplay({ userId }: BadgesDisplayProps) {
     );
   }
 
-  const earnedBadges = badges.filter((b) => b.earned_at);
+  // Deduplicate badges by ID first (in case API returns duplicates)
+  const uniqueBadges = Array.from(
+    new Map(badges.map((badge) => [badge.id, badge])).values()
+  );
+
+  const earnedBadges = uniqueBadges.filter((b) => b.earned_at);
   
   // Filter in-progress badges: badges that have officially started (progress > 0%) but not completed (< 100%)
-  const inProgressBadges = badges
+  const inProgressBadges = uniqueBadges
     .filter((b) => {
       if (b.earned_at) return false; // Already earned
       const progress = b.progress;
