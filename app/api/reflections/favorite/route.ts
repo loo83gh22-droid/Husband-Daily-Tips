@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getSession } from '@auth0/nextjs-auth0';
-import { supabase } from '@/lib/supabase';
+import { getSupabaseAdmin } from '@/lib/supabase';
 
 /**
  * Toggle favorite status for a reflection
@@ -19,6 +19,9 @@ export async function POST(request: Request) {
     if (!reflectionId) {
       return NextResponse.json({ error: 'Missing reflectionId' }, { status: 400 });
     }
+
+    // Use admin client to bypass RLS (Auth0 context isn't set)
+    const supabase = getSupabaseAdmin();
 
     // Get user
     const { data: user, error: userError } = await supabase
