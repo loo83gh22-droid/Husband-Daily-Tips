@@ -182,10 +182,10 @@ export default function OutstandingActions({ userId }: OutstandingActionsProps) 
       {actions.length > 0 && (
         <div className="mt-4 pt-4 border-t border-slate-700/50">
           <Link
-            href="/dashboard/actions"
+            href="/dashboard/journal"
             className="text-xs text-primary-300 hover:text-primary-200 font-medium flex items-center gap-1"
           >
-            View All Actions →
+            View your previous actions →
           </Link>
         </div>
       )}
