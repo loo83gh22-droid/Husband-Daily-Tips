@@ -55,10 +55,13 @@ export default async function Home() {
             <p className="text-xs font-bold tracking-[0.2em] text-primary-400 uppercase mb-4">
               STOP WINGING IT. START WINNING IT.
             </p>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-slate-50 tracking-tight mb-6">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-slate-50 tracking-tight mb-4">
               Your daily mission, delivered.
               <span className="block text-primary-400">one action at a time.</span>
             </h1>
+            <p className="text-lg md:text-xl text-primary-400 font-semibold mb-6 max-w-2xl">
+              Make your marriage even better!
+            </p>
             <p className="text-base md:text-lg text-slate-300 leading-relaxed mb-8 max-w-2xl">
               Look, marriage is hard. You know it, we know it. But here&apos;s the thing—it doesn&apos;t have to be complicated. 
               One small action a day. One moment where you actually show up. No grand gestures needed. 
