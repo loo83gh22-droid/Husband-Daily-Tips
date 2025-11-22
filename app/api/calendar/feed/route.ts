@@ -3,6 +3,9 @@ import { getSupabaseAdmin } from '@/lib/supabase';
 import { format } from 'date-fns';
 import crypto from 'crypto';
 
+// Force dynamic rendering since we use request.url
+export const dynamic = 'force-dynamic';
+
 /**
  * Public calendar feed (iCal format) for users with auto-add enabled
  * GET /api/calendar/feed?userId=xxx&token=xxx

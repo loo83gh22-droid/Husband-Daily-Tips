@@ -2,6 +2,9 @@ import { NextResponse } from 'next/server';
 import { getSession } from '@auth0/nextjs-auth0';
 import { getSupabaseAdmin } from '@/lib/supabase';
 
+// Force dynamic rendering since we use cookies for authentication
+export const dynamic = 'force-dynamic';
+
 /**
  * Get the current day's action from an active challenge
  * Used to display challenge action instead of tomorrow's action when user is in a challenge

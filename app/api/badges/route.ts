@@ -3,6 +3,9 @@ import { getSession } from '@auth0/nextjs-auth0';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import { calculateBadgeProgress } from '@/lib/badges';
 
+// Force dynamic rendering since we use cookies for authentication
+export const dynamic = 'force-dynamic';
+
 async function getUserStats(userId: string, adminSupabase: ReturnType<typeof getSupabaseAdmin>) {
   // Get tips for stats
   const { data: tips } = await adminSupabase

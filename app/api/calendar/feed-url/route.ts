@@ -3,6 +3,9 @@ import { getSession } from '@auth0/nextjs-auth0';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import crypto from 'crypto';
 
+// Force dynamic rendering since we use cookies for authentication
+export const dynamic = 'force-dynamic';
+
 /**
  * Generate a secure calendar feed URL for paid users
  * This creates a token-based URL that can be subscribed to in calendar apps

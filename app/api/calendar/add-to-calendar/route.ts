@@ -2,6 +2,9 @@ import { NextResponse } from 'next/server';
 import { getSession } from '@auth0/nextjs-auth0';
 import { supabase } from '@/lib/supabase';
 
+// Force dynamic rendering since we use request.url
+export const dynamic = 'force-dynamic';
+
 /**
  * Generate calendar links for automatic calendar integration
  * Returns Google Calendar, Outlook, and iCal links for all 7 days of actions
