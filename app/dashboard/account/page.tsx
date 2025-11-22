@@ -20,6 +20,8 @@ async function getUserProfile(auth0Id: string) {
         post_anonymously: false,
         timezone: 'America/New_York',
         profile_picture: null,
+        has_kids: null,
+        kids_live_with_you: null,
       };
     }
 
@@ -29,8 +31,8 @@ async function getUserProfile(auth0Id: string) {
       post_anonymously: user?.post_anonymously || false,
       timezone: user?.timezone || 'America/New_York',
       profile_picture: user?.profile_picture || null,
-      has_kids: user?.has_kids ?? null,
-      kids_live_with_you: user?.kids_live_with_you ?? null,
+      has_kids: (user as any)?.has_kids ?? null,
+      kids_live_with_you: (user as any)?.kids_live_with_you ?? null,
     };
   } catch (err) {
     console.error('Unexpected error fetching profile:', err);

@@ -82,8 +82,8 @@ export async function GET(request: Request) {
 
            // Get user profile for filtering kid-related actions
            const userProfile = {
-             has_kids: user.has_kids,
-             kids_live_with_you: user.kids_live_with_you,
+             has_kids: (user as any).has_kids ?? null,
+             kids_live_with_you: (user as any).kids_live_with_you ?? null,
            };
 
            // Generate actions for dates that don't have them yet
