@@ -19,7 +19,7 @@ async function getUserData(auth0Id: string) {
   const adminSupabase = getSupabaseAdmin();
   const { data: user, error } = await adminSupabase
     .from('users')
-    .select('*, subscription_tier, username, name, email')
+    .select('*, subscription_tier, username, name, email, has_kids, kids_live_with_you')
     .eq('auth0_id', auth0Id)
     .single();
 
@@ -30,7 +30,7 @@ async function getUserData(auth0Id: string) {
   return user;
 }
 
-async function getTomorrowAction(userId: string | null, subscriptionTier: string, categoryScores?: any) {
+async function getTomorrowAction(userId: string | null, subscriptionTier: string, categoryScores?: any, userProfile?: { has_kids?: boolean | null; kids_live_with_you?: boolean | null }) {
   if (!userId) return null;
 
   // Use admin client to bypass RLS (Auth0 context isn't set)
@@ -81,6 +81,32 @@ async function getTomorrowAction(userId: string | null, subscriptionTier: string
   // Filter out actions seen in last 30 days
   if (actions && seenActionIds.length > 0) {
     actions = actions.filter((action) => !seenActionIds.includes(action.id));
+  }
+
+  // Filter out kid-related actions if user doesn't have kids (especially if they don't live with them)
+  if (actions && userProfile) {
+    const hasKids = userProfile.has_kids === true;
+    const kidsLiveWithYou = userProfile.kids_live_with_you === true;
+    
+    // If user explicitly said they don't have kids, or if they have kids but they don't live with them,
+    // filter out actions that are clearly kid/family-focused
+    if (!hasKids || (hasKids && !kidsLiveWithYou)) {
+      const kidKeywords = ['kid', 'child', 'children', 'family', 'parent', 'bedtime', 'school', 'homework', 'playground'];
+      actions = actions.filter((action) => {
+        const actionText = `${action.name || ''} ${action.description || ''} ${action.benefit || ''}`.toLowerCase();
+        // Check if action contains kid-related keywords
+        const isKidRelated = kidKeywords.some(keyword => actionText.includes(keyword));
+        // If user doesn't have kids at all, filter out all kid-related actions
+        // If user has kids but they don't live with them, be more lenient (only filter obvious family activities)
+        if (!hasKids) {
+          return !isKidRelated;
+        } else {
+          // If kids don't live with them, filter out actions that require daily presence (bedtime, school, etc.)
+          const requiresDailyPresence = ['bedtime', 'school', 'homework', 'playground'].some(keyword => actionText.includes(keyword));
+          return !requiresDailyPresence;
+        }
+      });
+    }
   }
 
   // Personalize action selection based on survey results (areas needing improvement)
@@ -465,7 +491,12 @@ export default async function Dashboard() {
 
   // If no active challenge action, get tomorrow's action
   if (!displayAction) {
-    displayAction = await getTomorrowAction(user.id, user.subscription_tier || 'free', stats.categoryScores);
+    displayAction = await getTomorrowAction(
+      user.id,
+      user.subscription_tier || 'free',
+      stats.categoryScores,
+      { has_kids: user.has_kids, kids_live_with_you: user.kids_live_with_you }
+    );
   }
 
   return (

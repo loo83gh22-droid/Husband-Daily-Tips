@@ -34,7 +34,7 @@ export async function GET(request: Request) {
     const adminSupabase = getSupabaseAdmin();
     const { data: user, error: userError } = await adminSupabase
       .from('users')
-      .select('id, email, name, calendar_preferences, subscription_tier')
+      .select('id, email, name, calendar_preferences, subscription_tier, has_kids, kids_live_with_you')
       .eq('id', userId)
       .single();
 
@@ -69,47 +69,53 @@ export async function GET(request: Request) {
       .lte('date', futureDateStr)
       .order('date', { ascending: true });
 
-    // Get user's survey data for generating future actions
-    const { data: surveySummary } = await adminSupabase
-      .from('survey_summary')
-      .select('communication_score, romance_score, partnership_score, intimacy_score, conflict_score')
-      .eq('user_id', userId)
-      .single();
+           // Get user's survey data for generating future actions
+           const { data: surveySummary } = await adminSupabase
+             .from('survey_summary')
+             .select('communication_score, romance_score, partnership_score, intimacy_score, conflict_score')
+             .eq('user_id', userId)
+             .single();
 
-    const categoryScores = surveySummary || {};
-    const defaultTime = prefs.default_tip_time ?? '09:00';
-    const timezone = prefs.timezone ?? 'America/New_York';
+           const categoryScores = surveySummary || {};
+           const defaultTime = prefs.default_tip_time ?? '09:00';
+           const timezone = prefs.timezone ?? 'America/New_York';
 
-    // Generate actions for dates that don't have them yet
-    const actions: any[] = [];
-    const actionMap = new Map();
-    
-    // Add existing actions
-    if (existingActions) {
-      for (const ua of existingActions) {
-        if (ua.actions) {
-          const action = Array.isArray(ua.actions) ? ua.actions[0] : ua.actions;
-          actionMap.set(ua.date, {
-            ...action,
-            date: ua.date,
-          });
-        }
-      }
-    }
+           // Get user profile for filtering kid-related actions
+           const userProfile = {
+             has_kids: user.has_kids,
+             kids_live_with_you: user.kids_live_with_you,
+           };
 
-    // Generate missing actions
-    for (let i = 0; i < 90; i++) {
-      const targetDate = new Date(today);
-      targetDate.setDate(today.getDate() + i);
-      const dateStr = targetDate.toISOString().split('T')[0];
+           // Generate actions for dates that don't have them yet
+           const actions: any[] = [];
+           const actionMap = new Map();
+           
+           // Add existing actions
+           if (existingActions) {
+             for (const ua of existingActions) {
+               if (ua.actions) {
+                 const action = Array.isArray(ua.actions) ? ua.actions[0] : ua.actions;
+                 actionMap.set(ua.date, {
+                   ...action,
+                   date: ua.date,
+                 });
+               }
+             }
+           }
 
-      if (!actionMap.has(dateStr)) {
-        const action = await generateActionForDate(userId, dateStr, categoryScores, adminSupabase);
-        if (action) {
-          actionMap.set(dateStr, { ...action, date: dateStr });
-        }
-      }
-    }
+           // Generate missing actions
+           for (let i = 0; i < 90; i++) {
+             const targetDate = new Date(today);
+             targetDate.setDate(today.getDate() + i);
+             const dateStr = targetDate.toISOString().split('T')[0];
+
+             if (!actionMap.has(dateStr)) {
+               const action = await generateActionForDate(userId, dateStr, categoryScores, adminSupabase, userProfile);
+               if (action) {
+                 actionMap.set(dateStr, { ...action, date: dateStr });
+               }
+             }
+           }
 
     // Convert map to array
     const allActions = Array.from(actionMap.values());
@@ -186,6 +192,7 @@ async function generateActionForDate(
   dateStr: string,
   categoryScores: any,
   adminSupabase: any,
+  userProfile?: { has_kids?: boolean | null; kids_live_with_you?: boolean | null },
 ): Promise<any> {
   // Get actions user hasn't seen in the last 30 days
   const thirtyDaysAgo = new Date();
@@ -209,6 +216,32 @@ async function generateActionForDate(
   // Filter out actions seen in last 30 days
   if (actions && seenActionIds.length > 0) {
     actions = actions.filter((action: any) => !seenActionIds.includes(action.id));
+  }
+
+  // Filter out kid-related actions if user doesn't have kids (especially if they don't live with them)
+  if (actions && userProfile) {
+    const hasKids = userProfile.has_kids === true;
+    const kidsLiveWithYou = userProfile.kids_live_with_you === true;
+    
+    // If user explicitly said they don't have kids, or if they have kids but they don't live with them,
+    // filter out actions that are clearly kid/family-focused
+    if (!hasKids || (hasKids && !kidsLiveWithYou)) {
+      const kidKeywords = ['kid', 'child', 'children', 'family', 'parent', 'bedtime', 'school', 'homework', 'playground'];
+      actions = actions.filter((action: any) => {
+        const actionText = `${action.name || ''} ${action.description || ''} ${action.benefit || ''}`.toLowerCase();
+        // Check if action contains kid-related keywords
+        const isKidRelated = kidKeywords.some(keyword => actionText.includes(keyword));
+        // If user doesn't have kids at all, filter out all kid-related actions
+        // If user has kids but they don't live with them, be more lenient (only filter obvious family activities)
+        if (!hasKids) {
+          return !isKidRelated;
+        } else {
+          // If kids don't live with them, filter out actions that require daily presence (bedtime, school, etc.)
+          const requiresDailyPresence = ['bedtime', 'school', 'homework', 'playground'].some(keyword => actionText.includes(keyword));
+          return !requiresDailyPresence;
+        }
+      });
+    }
   }
 
   // Personalize action selection based on survey results

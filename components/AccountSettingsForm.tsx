@@ -9,6 +9,8 @@ interface UserProfile {
   post_anonymously: boolean;
   timezone: string;
   wedding_date: string | null;
+  has_kids: boolean | null;
+  kids_live_with_you: boolean | null;
 }
 
 interface AccountSettingsFormProps {
@@ -22,6 +24,8 @@ export default function AccountSettingsForm({ initialData }: AccountSettingsForm
     post_anonymously: initialData.post_anonymously || false,
     timezone: initialData.timezone || 'America/New_York',
     wedding_date: initialData.wedding_date || '',
+    has_kids: initialData.has_kids ?? null,
+    kids_live_with_you: initialData.kids_live_with_you ?? null,
   });
   const [profilePicture, setProfilePicture] = useState<File | null>(null);
   const [profilePictureUrl, setProfilePictureUrl] = useState<string | null>(initialData.profile_picture);
@@ -116,6 +120,8 @@ export default function AccountSettingsForm({ initialData }: AccountSettingsForm
           timezone: formData.timezone,
           wedding_date: formData.wedding_date || null,
           profile_picture: pictureUrl,
+          has_kids: formData.has_kids,
+          kids_live_with_you: formData.kids_live_with_you,
         }),
       });
 
@@ -261,6 +267,101 @@ export default function AccountSettingsForm({ initialData }: AccountSettingsForm
         <p className="mt-1 text-xs text-slate-500">
           Used to calculate and display years married in Team Wins
         </p>
+      </div>
+
+      {/* Kids Questions */}
+      <div className="pt-4 border-t border-slate-800">
+        <div className="mb-4">
+          <p className="text-sm font-medium text-slate-300 mb-3">
+            Family Information
+          </p>
+          <p className="text-xs text-slate-400 mb-4 leading-relaxed">
+            We use your profile information to personalize your daily actions and make them more relevant to your situation.
+          </p>
+        </div>
+
+        <div className="space-y-4">
+          {/* Has Kids */}
+          <div>
+            <label className="block text-sm font-medium text-slate-300 mb-2">
+              Do you have kids?
+            </label>
+            <div className="flex gap-4">
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="radio"
+                  name="has_kids"
+                  value="yes"
+                  checked={formData.has_kids === true}
+                  onChange={() => {
+                    setFormData({ ...formData, has_kids: true, kids_live_with_you: null });
+                  }}
+                  className="w-4 h-4 text-primary-500 border-slate-700 bg-slate-800 focus:ring-2 focus:ring-primary-500"
+                />
+                <span className="text-slate-200">Yes</span>
+              </label>
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="radio"
+                  name="has_kids"
+                  value="no"
+                  checked={formData.has_kids === false}
+                  onChange={() => {
+                    setFormData({ ...formData, has_kids: false, kids_live_with_you: false });
+                  }}
+                  className="w-4 h-4 text-primary-500 border-slate-700 bg-slate-800 focus:ring-2 focus:ring-primary-500"
+                />
+                <span className="text-slate-200">No</span>
+              </label>
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="radio"
+                  name="has_kids"
+                  value="prefer_not_to_say"
+                  checked={formData.has_kids === null}
+                  onChange={() => {
+                    setFormData({ ...formData, has_kids: null, kids_live_with_you: null });
+                  }}
+                  className="w-4 h-4 text-primary-500 border-slate-700 bg-slate-800 focus:ring-2 focus:ring-primary-500"
+                />
+                <span className="text-slate-200">Prefer not to say</span>
+              </label>
+            </div>
+          </div>
+
+          {/* Kids Live With You */}
+          {formData.has_kids === true && (
+            <div>
+              <label className="block text-sm font-medium text-slate-300 mb-2">
+                Do they live with you?
+              </label>
+              <div className="flex gap-4">
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="kids_live_with_you"
+                    value="yes"
+                    checked={formData.kids_live_with_you === true}
+                    onChange={() => setFormData({ ...formData, kids_live_with_you: true })}
+                    className="w-4 h-4 text-primary-500 border-slate-700 bg-slate-800 focus:ring-2 focus:ring-primary-500"
+                  />
+                  <span className="text-slate-200">Yes</span>
+                </label>
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="kids_live_with_you"
+                    value="no"
+                    checked={formData.kids_live_with_you === false}
+                    onChange={() => setFormData({ ...formData, kids_live_with_you: false })}
+                    className="w-4 h-4 text-primary-500 border-slate-700 bg-slate-800 focus:ring-2 focus:ring-primary-500"
+                  />
+                  <span className="text-slate-200">No</span>
+                </label>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Submit Button */}

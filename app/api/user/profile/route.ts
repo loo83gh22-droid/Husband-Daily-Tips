@@ -15,7 +15,7 @@ async function updateProfile(request: Request) {
     }
 
     const auth0Id = session.user.sub;
-    const { username, wedding_date, post_anonymously, timezone, profile_picture } = await request.json();
+    const { username, wedding_date, post_anonymously, timezone, profile_picture, has_kids, kids_live_with_you } = await request.json();
 
     // Get user
     const { data: user, error: userError } = await supabase
@@ -88,6 +88,12 @@ async function updateProfile(request: Request) {
     if (profile_picture !== undefined) {
       updateData.profile_picture = profile_picture || null;
     }
+    if (has_kids !== undefined) {
+      updateData.has_kids = has_kids;
+    }
+    if (kids_live_with_you !== undefined) {
+      updateData.kids_live_with_you = kids_live_with_you;
+    }
 
     const { error: updateError } = await supabase
       .from('users')
@@ -129,7 +135,7 @@ export async function GET() {
 
         const { data: user, error: userError } = await supabase
           .from('users')
-          .select('username, wedding_date, post_anonymously, name, timezone, profile_picture')
+          .select('username, wedding_date, post_anonymously, name, timezone, profile_picture, has_kids, kids_live_with_you')
           .eq('auth0_id', auth0Id)
           .single();
 
@@ -144,6 +150,8 @@ export async function GET() {
           name: user.name,
           timezone: user.timezone || 'America/New_York',
           profile_picture: user.profile_picture,
+          has_kids: user.has_kids,
+          kids_live_with_you: user.kids_live_with_you,
         });
   } catch (error) {
     console.error('Unexpected error fetching profile:', error);
