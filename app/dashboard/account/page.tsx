@@ -2,11 +2,13 @@ import { getSession } from '@auth0/nextjs-auth0';
 import { redirect } from 'next/navigation';
 import DashboardNav from '@/components/DashboardNav';
 import AccountSettingsForm from '@/components/AccountSettingsForm';
-import { supabase } from '@/lib/supabase';
+import { getSupabaseAdmin } from '@/lib/supabase';
 
 async function getUserProfile(auth0Id: string) {
   try {
-    const { data: user, error } = await supabase
+    // Use admin client to bypass RLS (Auth0 context isn't set for RLS)
+    const adminSupabase = getSupabaseAdmin();
+    const { data: user, error } = await adminSupabase
       .from('users')
       .select('username, wedding_date, post_anonymously, timezone, profile_picture, has_kids, kids_live_with_you')
       .eq('auth0_id', auth0Id)
