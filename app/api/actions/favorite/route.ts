@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getSession } from '@auth0/nextjs-auth0';
-import { supabase } from '@/lib/supabase';
+import { getSupabaseAdmin } from '@/lib/supabase';
 
 /**
  * Toggle favorite status for an action
@@ -19,6 +19,9 @@ export async function POST(request: Request) {
     if (!actionId) {
       return NextResponse.json({ error: 'Missing actionId' }, { status: 400 });
     }
+
+    // Use admin client to bypass RLS (Auth0 context isn't set)
+    const supabase = getSupabaseAdmin();
 
     // Get user
     const { data: user, error: userError } = await supabase
@@ -51,7 +54,7 @@ export async function POST(request: Request) {
 
       if (updateError) {
         console.error('Error updating favorite:', updateError);
-        return NextResponse.json({ error: 'Failed to update favorite' }, { status: 500 });
+        return NextResponse.json({ error: 'Failed to update favorite. Please try again.' }, { status: 500 });
       }
 
       return NextResponse.json({
@@ -72,7 +75,7 @@ export async function POST(request: Request) {
 
       if (insertError) {
         console.error('Error creating favorite:', insertError);
-        return NextResponse.json({ error: 'Failed to create favorite' }, { status: 500 });
+        return NextResponse.json({ error: 'Failed to create favorite. Please try again.' }, { status: 500 });
       }
 
       return NextResponse.json({
