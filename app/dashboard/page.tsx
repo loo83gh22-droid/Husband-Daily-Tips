@@ -7,8 +7,6 @@ import SubscriptionBanner from '@/components/SubscriptionBanner';
 import HealthBar from '@/components/HealthBar';
 import BadgesDisplay from '@/components/BadgesDisplay';
 import DashboardNav from '@/components/DashboardNav';
-import CalendarExport from '@/components/CalendarExport';
-import AutoCalendarToggle from '@/components/AutoCalendarToggle';
 import OnboardingSurvey from '@/components/OnboardingSurvey';
 import ActiveChallenges from '@/components/ActiveChallenges';
 import OutstandingActions from '@/components/OutstandingActions';
@@ -517,11 +515,6 @@ export default async function Dashboard() {
               </div>
             )}
 
-            {/* Calendar Prompts - Left Side */}
-            <div className="mt-6 space-y-4">
-              <AutoCalendarToggle />
-              <CalendarExport />
-            </div>
 
             {/* Outstanding Actions */}
             <div className="mt-6">
