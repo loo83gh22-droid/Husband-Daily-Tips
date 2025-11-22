@@ -265,11 +265,16 @@ export default function OnboardingTour({ onComplete }: OnboardingTourProps) {
 
 // Button component to restart the tour
 export function TourButton() {
+  const [isStarting, setIsStarting] = useState(false);
+
   const handleStartTour = () => {
+    setIsStarting(true);
     // Remove the flag so tour will start on next render
     localStorage.removeItem('has_seen_onboarding_tour');
-    // Reload to trigger tour
-    window.location.reload();
+    // Small delay then reload to trigger tour
+    setTimeout(() => {
+      window.location.reload();
+    }, 200);
   };
 
   return (
