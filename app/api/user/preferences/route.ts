@@ -67,7 +67,7 @@ export async function GET(request: Request) {
     const supabaseClient = getSupabaseAdmin();
     const { data: user } = await supabaseClient
       .from('users')
-      .select('calendar_preferences')
+      .select('calendar_preferences, subscription_tier')
       .eq('auth0_id', auth0Id)
       .single();
 
@@ -77,6 +77,7 @@ export async function GET(request: Request) {
 
     return NextResponse.json({
       preferences: user.calendar_preferences || {},
+      subscriptionTier: user.subscription_tier || 'free',
     });
   } catch (error) {
     console.error('Unexpected error fetching preferences:', error);
