@@ -12,24 +12,27 @@ function getEnvVar(name: string): string {
   return value;
 }
 
-const supabaseUrl = getEnvVar('NEXT_PUBLIC_SUPABASE_URL');
-const supabaseAnonKey = getEnvVar('NEXT_PUBLIC_SUPABASE_ANON_KEY');
+// Initialize Supabase client - NEXT_PUBLIC_* vars are available at build time
+// Only validate when actually creating the client, not at module load
+function createSupabaseClient(): SupabaseClient {
+  const supabaseUrl = getEnvVar('NEXT_PUBLIC_SUPABASE_URL');
+  const supabaseAnonKey = getEnvVar('NEXT_PUBLIC_SUPABASE_ANON_KEY');
+  
+  return createClient(supabaseUrl, supabaseAnonKey, {
+    auth: {
+      persistSession: true,
+      autoRefreshToken: true,
+    },
+  });
+}
 
 // Create client-side Supabase client
-export const supabase: SupabaseClient = createClient(supabaseUrl, supabaseAnonKey, {
-  auth: {
-    persistSession: true,
-    autoRefreshToken: true,
-  },
-});
+export const supabase: SupabaseClient = createSupabaseClient();
 
 // Server-side client with service role key for admin operations
 export const getSupabaseAdmin = (): SupabaseClient => {
+  const supabaseUrl = getEnvVar('NEXT_PUBLIC_SUPABASE_URL');
   const serviceRoleKey = getEnvVar('SUPABASE_SERVICE_ROLE_KEY');
-  
-  if (!supabaseUrl) {
-    throw new Error('Supabase URL is not configured');
-  }
   
   return createClient(supabaseUrl, serviceRoleKey, {
     auth: {
