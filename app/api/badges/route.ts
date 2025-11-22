@@ -98,15 +98,21 @@ export async function GET(request: Request) {
       new Map(allBadges.map((badge) => [badge.id, badge])).values()
     );
 
-    // Get user's earned badges
+    // Get user's earned badges - deduplicate by badge_id (keep most recent earned_at)
     const { data: earnedBadges, error: earnedError } = await adminSupabase
       .from('user_badges')
       .select('badge_id, earned_at')
-      .eq('user_id', user.id);
+      .eq('user_id', user.id)
+      .order('earned_at', { ascending: false });
 
-    const earnedMap = new Map(
-      earnedBadges?.map((eb) => [eb.badge_id, eb.earned_at]) || [],
-    );
+    // Deduplicate earned badges by badge_id (in case of duplicates)
+    const earnedMap = new Map<string, string>();
+    earnedBadges?.forEach((eb) => {
+      // Only set if not already in map (keeps the first/most recent one)
+      if (!earnedMap.has(eb.badge_id)) {
+        earnedMap.set(eb.badge_id, eb.earned_at);
+      }
+    });
 
     // Calculate progress for each badge and combine with earned status
     const badgesWithProgress = await Promise.all(
