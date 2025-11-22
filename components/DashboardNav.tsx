@@ -71,10 +71,10 @@ export default function DashboardNav() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`px-3 py-2 text-xs md:text-sm font-medium rounded-lg transition-colors ${
+                  className={`px-3 py-2.5 sm:py-2 text-xs md:text-sm font-medium rounded-lg transition-colors min-h-[44px] touch-manipulation active:scale-95 ${
                     isActive
                       ? 'bg-primary-500/20 text-primary-300 border border-primary-500/30'
-                      : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900'
+                      : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900 active:bg-slate-800'
                   }`}
                 >
                   <span className="hidden md:inline mr-1.5">{link.icon}</span>
