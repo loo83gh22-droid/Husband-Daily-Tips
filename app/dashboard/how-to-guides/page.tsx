@@ -118,7 +118,7 @@ export default async function HowToGuidesPage() {
           slug: 'practice-5-1-ratio',
           title: 'Practice the 5:1 Ratio',
           excerpt:
-            'Healthy relationships need way more positive moments than negative ones. Learn how to build this ratio and rebuild connection.',
+            'Relationship researcher John Gottman found that healthy relationships need 5 positive interactions for every negative one. Learn how to build this ratio and rebuild connection.',
           difficulty: 'Medium',
           time: 'Ongoing',
         },
