@@ -230,7 +230,7 @@ export default function ProgressCharts({ userId, currentStreak, healthScore }: P
           </div>
 
           <div className="flex justify-between text-xs text-slate-500 mt-2">
-            <span>{format(subDays(new Date(), 30), 'MMM d')}</span>
+            <span>{format(subDays(new Date(), 90), 'MMM d')}</span>
             <span>Today</span>
           </div>
         </div>
