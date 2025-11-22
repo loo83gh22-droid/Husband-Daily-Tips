@@ -72,35 +72,9 @@ export default function HealthBar({ value, shouldPulse = false, onPulseComplete 
   useEffect(() => {
     if (!isInitialized) return;
 
-    // Handle first load - treat as if crossing from 0
-    const effectivePreviousHealth = previousHealth === null ? 0 : previousHealth;
-
+    // On first load, just store the current health and don't show any celebrations
+    // We only want to celebrate when health actually increases and crosses a milestone
     if (previousHealth === null) {
-      // First load - check if we should celebrate any milestones they've reached
-      // Find the highest milestone they're at or above that hasn't been celebrated
-      // Only show if they're currently at/above the milestone (not if they've dropped below)
-      let highestMilestoneToCelebrate: Milestone | null = null;
-      
-      for (const milestone of MILESTONES) {
-        const crossedUpward = effectivePreviousHealth < milestone && clamped >= milestone;
-        const notYetCelebrated = !celebratedMilestones.has(milestone);
-        const currentlyAtOrAbove = clamped >= milestone;
-        
-        // Only celebrate if they crossed upward AND are currently at/above the milestone AND haven't celebrated it
-        if (crossedUpward && notYetCelebrated && currentlyAtOrAbove) {
-          highestMilestoneToCelebrate = milestone;
-        }
-      }
-      
-      if (highestMilestoneToCelebrate !== null) {
-        // Show celebration for highest milestone reached!
-        setCurrentMilestone(highestMilestoneToCelebrate);
-        const newCelebrated = new Set(celebratedMilestones);
-        newCelebrated.add(highestMilestoneToCelebrate);
-        setCelebratedMilestones(newCelebrated);
-        localStorage.setItem('celebrated_milestones', JSON.stringify(Array.from(newCelebrated)));
-      }
-      
       // Store current health for next time
       localStorage.setItem('previous_health', clamped.toString());
       setPreviousHealth(clamped);
