@@ -12,6 +12,7 @@ import ActiveChallenges from '@/components/ActiveChallenges';
 import OutstandingActions from '@/components/OutstandingActions';
 import AutoCalendarToggle from '@/components/AutoCalendarToggle';
 import OnboardingTour, { TourButton } from '@/components/OnboardingTour';
+import QuickActions from '@/components/QuickActions';
 import Link from 'next/link';
 
 async function getUserData(auth0Id: string) {
@@ -503,10 +504,38 @@ export default async function Dashboard() {
     );
   }
 
+  // Check if today's action is completed and get outstanding count
+  const today = new Date().toISOString().split('T')[0];
+  const { data: todayAction } = await adminSupabase
+    .from('user_daily_actions')
+    .select('id, completed')
+    .eq('user_id', user.id)
+    .eq('date', today)
+    .single();
+
+  const todayActionCompleted = todayAction?.completed || false;
+  const todayActionId = displayAction?.id || null;
+
+  // Get outstanding actions count
+  const { data: outstandingActions } = await adminSupabase
+    .from('user_daily_actions')
+    .select('id')
+    .eq('user_id', user.id)
+    .eq('completed', false)
+    .eq('dnc', false)
+    .lte('date', today);
+
+  const outstandingCount = outstandingActions?.length || 0;
+
   return (
     <div className="min-h-screen bg-slate-950">
       <OnboardingTour />
       <TourButton />
+      <QuickActions
+        todayActionId={todayActionId}
+        todayActionCompleted={todayActionCompleted}
+        outstandingActionsCount={outstandingCount}
+      />
       <DashboardNav />
 
       <main className="container mx-auto px-4 py-8 md:py-10">
