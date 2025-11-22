@@ -7,6 +7,7 @@ export default function AutoCalendarToggle() {
   const [calendarType, setCalendarType] = useState<'google' | 'outlook'>('google');
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
 
   useEffect(() => {
     // Fetch current preferences
@@ -88,6 +89,31 @@ export default function AutoCalendarToggle() {
     }
   };
 
+  const handleDownloadAllActions = async () => {
+    setIsDownloading(true);
+    try {
+      const response = await fetch('/api/calendar/actions/download?days=90');
+      if (!response.ok) {
+        throw new Error('Failed to download calendar');
+      }
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'best-husband-actions-90-days.ics';
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (error) {
+      console.error('Error downloading calendar:', error);
+      alert('Failed to download calendar. Please try again.');
+    } finally {
+      setIsDownloading(false);
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="bg-slate-900/70 border border-slate-800 rounded-xl p-4">
@@ -117,31 +143,55 @@ export default function AutoCalendarToggle() {
         </label>
       </div>
       {autoAdd && (
-        <div className="pt-3 border-t border-slate-800">
-          <p className="text-[11px] text-slate-400 mb-2">Choose your calendar:</p>
-          <div className="flex gap-2">
+        <div className="pt-3 border-t border-slate-800 space-y-3">
+          <div>
+            <p className="text-[11px] text-slate-400 mb-2">Choose your calendar:</p>
+            <div className="flex gap-2">
+              <button
+                onClick={() => handleCalendarTypeChange('google')}
+                disabled={isSaving}
+                className={`px-3 py-1.5 text-xs rounded-lg transition-colors ${
+                  calendarType === 'google'
+                    ? 'bg-primary-500/20 border border-primary-500/50 text-primary-300'
+                    : 'bg-slate-800 border border-slate-700 text-slate-300 hover:bg-slate-700'
+                }`}
+              >
+                📅 Google Calendar
+              </button>
+              <button
+                onClick={() => handleCalendarTypeChange('outlook')}
+                disabled={isSaving}
+                className={`px-3 py-1.5 text-xs rounded-lg transition-colors ${
+                  calendarType === 'outlook'
+                    ? 'bg-primary-500/20 border border-primary-500/50 text-primary-300'
+                    : 'bg-slate-800 border border-slate-700 text-slate-300 hover:bg-slate-700'
+                }`}
+              >
+                📅 Outlook Calendar
+              </button>
+            </div>
+          </div>
+          <div>
             <button
-              onClick={() => handleCalendarTypeChange('google')}
-              disabled={isSaving}
-              className={`px-3 py-1.5 text-xs rounded-lg transition-colors ${
-                calendarType === 'google'
-                  ? 'bg-primary-500/20 border border-primary-500/50 text-primary-300'
-                  : 'bg-slate-800 border border-slate-700 text-slate-300 hover:bg-slate-700'
-              }`}
+              onClick={handleDownloadAllActions}
+              disabled={isDownloading}
+              className="w-full px-4 py-2 bg-primary-500 disabled:bg-primary-900 disabled:text-slate-400 text-slate-950 text-sm font-semibold rounded-lg hover:bg-primary-400 transition-colors disabled:cursor-default flex items-center justify-center gap-2"
             >
-              📅 Google Calendar
+              {isDownloading ? (
+                <>
+                  <span className="animate-spin">⏳</span>
+                  <span>Generating...</span>
+                </>
+              ) : (
+                <>
+                  <span>📥</span>
+                  <span>Download All Future Actions (90 days)</span>
+                </>
+              )}
             </button>
-            <button
-              onClick={() => handleCalendarTypeChange('outlook')}
-              disabled={isSaving}
-              className={`px-3 py-1.5 text-xs rounded-lg transition-colors ${
-                calendarType === 'outlook'
-                  ? 'bg-primary-500/20 border border-primary-500/50 text-primary-300'
-                  : 'bg-slate-800 border border-slate-700 text-slate-300 hover:bg-slate-700'
-              }`}
-            >
-              📅 Outlook Calendar
-            </button>
+            <p className="text-[10px] text-slate-500 mt-1.5 text-center">
+              Import the downloaded file into your {calendarType === 'google' ? 'Google' : 'Outlook'} Calendar
+            </p>
           </div>
         </div>
       )}
