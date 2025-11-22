@@ -62,7 +62,7 @@ export async function POST(request: Request) {
     // Generate iCal content
     const icalContent = `BEGIN:VCALENDAR
 VERSION:2.0
-PRODID:-//Husband Daily Tips//EN
+PRODID:-//Best Husband Ever//EN
 CALSCALE:GREGORIAN
 METHOD:PUBLISH
 BEGIN:VEVENT

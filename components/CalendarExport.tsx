@@ -17,7 +17,7 @@ export default function CalendarExport() {
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = 'husband-daily-tips.ics';
+      a.download = 'best-husband-ever.ics';
       document.body.appendChild(a);
       a.click();
       window.URL.revokeObjectURL(url);
