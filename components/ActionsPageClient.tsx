@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import ActionsList from './ActionsList';
 import ActionsSearchFilter from './ActionsSearchFilter';
 import Link from 'next/link';
@@ -30,20 +30,47 @@ export default function ActionsPageClient({
   favoritedActions,
 }: ActionsPageClientProps) {
   // Ensure all actions have required fields
-  const normalizedActions = allActions.map((action) => ({
-    ...action,
-    description: action.description || '',
-    theme: action.theme || action.category,
-    requirement_type: action.requirement_type ?? null,
-    icon: action.icon ?? null,
-  }));
+  const normalizedActions = useMemo(() => {
+    if (!allActions || !Array.isArray(allActions)) {
+      return [];
+    }
+    return allActions
+      .filter(action => action && action.id) // Filter out any null/undefined actions
+      .map((action) => ({
+        ...action,
+        description: action.description || '',
+        theme: action.theme || action.category || 'other',
+        requirement_type: action.requirement_type ?? null,
+        icon: action.icon ?? null,
+      }));
+  }, [allActions]);
 
   const [filteredActions, setFilteredActions] = useState<Action[]>(normalizedActions);
   
-  // Convert completedMap to Map if it's a plain object
-  const completedMapInstance = completedMap instanceof Map 
-    ? completedMap 
-    : new Map(Object.entries(completedMap));
+  // Update filteredActions when normalizedActions changes
+  useEffect(() => {
+    setFilteredActions(normalizedActions);
+  }, [normalizedActions]);
+  
+  // Convert completedMap to Map if it's a plain object (must be done in useMemo to avoid hydration issues)
+  const completedMapInstance = useMemo(() => {
+    if (!completedMap) {
+      return new Map<string, any[]>();
+    }
+    if (completedMap instanceof Map) {
+      return completedMap;
+    }
+    // It's a plain object, convert to Map
+    const map = new Map<string, any[]>();
+    if (typeof completedMap === 'object' && completedMap !== null) {
+      Object.entries(completedMap).forEach(([key, value]) => {
+        if (Array.isArray(value)) {
+          map.set(key, value);
+        }
+      });
+    }
+    return map;
+  }, [completedMap]);
   
   const [completedActionIds, setCompletedActionIds] = useState<Set<string>>(
     new Set(Array.from(completedMapInstance.keys()))
@@ -118,8 +145,14 @@ export default function ActionsPageClient({
   };
 
   // Filter out favorited actions from main list
-  const favoritedActionIds = new Set(favoritedActions.map((fa) => fa.id));
-  const nonFavoritedFiltered = filteredActions.filter((action) => !favoritedActionIds.has(action.id));
+  const favoritedActionIds = useMemo(() => {
+    if (!favoritedActions || !Array.isArray(favoritedActions)) return new Set<string>();
+    return new Set(favoritedActions.filter(fa => fa && fa.id).map((fa) => fa.id));
+  }, [favoritedActions]);
+  
+  const nonFavoritedFiltered = useMemo(() => {
+    return filteredActions.filter((action) => !favoritedActionIds.has(action.id));
+  }, [filteredActions, favoritedActionIds]);
 
   return (
     <>
@@ -132,7 +165,7 @@ export default function ActionsPageClient({
       />
 
       {/* Favorited Actions Section */}
-      {favoritedActions && favoritedActions.length > 0 && (
+      {favoritedActions && Array.isArray(favoritedActions) && favoritedActions.length > 0 && favoritedActions.some(fa => fa && fa.id) && (
         <section className="mb-8 bg-yellow-500/10 border border-yellow-500/30 rounded-xl p-6 md:p-8">
           <div className="flex items-center gap-2 mb-6">
             <span className="text-2xl">⭐</span>
@@ -141,7 +174,11 @@ export default function ActionsPageClient({
               ({favoritedActions.length} action{favoritedActions.length !== 1 ? 's' : ''})
             </span>
           </div>
-          <ActionsList actions={favoritedActions} completedMap={completedMapInstance} userId={userId} />
+          <ActionsList 
+            actions={favoritedActions.filter(fa => fa && fa.id)} 
+            completedMap={completedMapInstance} 
+            userId={userId} 
+          />
         </section>
       )}
 
