@@ -5,9 +5,13 @@ import { useState, useEffect } from 'react';
 export default function AutoCalendarToggle() {
   const [autoAdd, setAutoAdd] = useState(false);
   const [calendarType, setCalendarType] = useState<'google' | 'outlook'>('google');
+  const [subscriptionTier, setSubscriptionTier] = useState<'free' | 'premium' | 'pro'>('free');
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
+  const [feedUrl, setFeedUrl] = useState<string | null>(null);
+  const [isLoadingFeedUrl, setIsLoadingFeedUrl] = useState(false);
+  const [showFeedUrl, setShowFeedUrl] = useState(false);
 
   useEffect(() => {
     // Fetch current preferences
@@ -26,6 +30,7 @@ export default function AutoCalendarToggle() {
       .then((data) => {
         setAutoAdd(data.preferences?.auto_add_to_calendar || false);
         setCalendarType(data.preferences?.calendar_type || 'google');
+        setSubscriptionTier(data.subscriptionTier || 'free');
         setIsLoading(false);
       })
       .catch((error) => {
@@ -114,6 +119,42 @@ export default function AutoCalendarToggle() {
     }
   };
 
+  const handleGetFeedUrl = async () => {
+    setIsLoadingFeedUrl(true);
+    try {
+      const response = await fetch('/api/calendar/feed-url');
+      if (!response.ok) {
+        const error = await response.json();
+        if (error.requiresUpgrade) {
+          alert('Calendar feed subscription is only available for paid users. Please upgrade to access automatic calendar syncing.');
+        } else if (error.requiresEnable) {
+          alert('Please enable auto-add to calendar first.');
+        } else {
+          throw new Error(error.error || 'Failed to get feed URL');
+        }
+        return;
+      }
+
+      const data = await response.json();
+      setFeedUrl(data.feedUrl);
+      setShowFeedUrl(true);
+    } catch (error: any) {
+      console.error('Error getting feed URL:', error);
+      alert('Failed to get calendar feed URL. Please try again.');
+    } finally {
+      setIsLoadingFeedUrl(false);
+    }
+  };
+
+  const copyFeedUrl = () => {
+    if (feedUrl) {
+      navigator.clipboard.writeText(feedUrl);
+      alert('Calendar feed URL copied to clipboard!');
+    }
+  };
+
+  const isPaidUser = subscriptionTier === 'premium' || subscriptionTier === 'pro';
+
   if (isLoading) {
     return (
       <div className="bg-slate-900/70 border border-slate-800 rounded-xl p-4">
@@ -171,29 +212,83 @@ export default function AutoCalendarToggle() {
               </button>
             </div>
           </div>
-          <div>
-            <button
-              onClick={handleDownloadAllActions}
-              disabled={isDownloading}
-              className="w-full px-4 py-2 bg-primary-500 disabled:bg-primary-900 disabled:text-slate-400 text-slate-950 text-sm font-semibold rounded-lg hover:bg-primary-400 transition-colors disabled:cursor-default flex items-center justify-center gap-2"
-            >
-              {isDownloading ? (
-                <>
-                  <span className="animate-spin">⏳</span>
-                  <span>Generating...</span>
-                </>
-              ) : (
-                <>
-                  <span>📥</span>
-                  <span>Download Next 7 Days of Actions</span>
-                </>
+          {isPaidUser ? (
+            <div className="space-y-3">
+              <div>
+                <button
+                  onClick={handleGetFeedUrl}
+                  disabled={isLoadingFeedUrl}
+                  className="w-full px-4 py-2 bg-primary-500 disabled:bg-primary-900 disabled:text-slate-400 text-slate-950 text-sm font-semibold rounded-lg hover:bg-primary-400 transition-colors disabled:cursor-default flex items-center justify-center gap-2"
+                >
+                  {isLoadingFeedUrl ? (
+                    <>
+                      <span className="animate-spin">⏳</span>
+                      <span>Generating...</span>
+                    </>
+                  ) : (
+                    <>
+                      <span>🔗</span>
+                      <span>Get Calendar Subscription URL</span>
+                    </>
+                  )}
+                </button>
+                <p className="text-[10px] text-slate-500 mt-1.5 text-center">
+                  Subscribe once, and all future actions will automatically sync to your calendar!
+                </p>
+              </div>
+              {showFeedUrl && feedUrl && (
+                <div className="bg-slate-800 rounded-lg p-3 space-y-2">
+                  <p className="text-xs text-slate-300 font-medium">Your Calendar Feed URL:</p>
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      value={feedUrl}
+                      readOnly
+                      className="flex-1 px-2 py-1.5 bg-slate-900 border border-slate-700 rounded text-xs text-slate-200"
+                    />
+                    <button
+                      onClick={copyFeedUrl}
+                      className="px-3 py-1.5 bg-slate-700 hover:bg-slate-600 text-slate-200 text-xs rounded transition-colors"
+                    >
+                      Copy
+                    </button>
+                  </div>
+                  <div className="text-[10px] text-slate-400 space-y-1">
+                    <p><strong>Google Calendar:</strong> Settings → Add calendar → From URL → Paste URL</p>
+                    <p><strong>Outlook:</strong> Add calendar → Subscribe from web → Paste URL</p>
+                    <p><strong>Apple Calendar:</strong> File → New Calendar Subscription → Paste URL</p>
+                  </div>
+                </div>
               )}
-            </button>
-            <p className="text-[10px] text-slate-500 mt-1.5 text-center">
-              Import the downloaded file into your {calendarType === 'google' ? 'Google' : 'Outlook'} Calendar. 
-              After that, new actions will be added daily via email links.
-            </p>
-          </div>
+            </div>
+          ) : (
+            <div>
+              <button
+                onClick={handleDownloadAllActions}
+                disabled={isDownloading}
+                className="w-full px-4 py-2 bg-primary-500 disabled:bg-primary-900 disabled:text-slate-400 text-slate-950 text-sm font-semibold rounded-lg hover:bg-primary-400 transition-colors disabled:cursor-default flex items-center justify-center gap-2"
+              >
+                {isDownloading ? (
+                  <>
+                    <span className="animate-spin">⏳</span>
+                    <span>Generating...</span>
+                  </>
+                ) : (
+                  <>
+                    <span>📥</span>
+                    <span>Download Next 7 Days of Actions</span>
+                  </>
+                )}
+              </button>
+              <p className="text-[10px] text-slate-500 mt-1.5 text-center">
+                Import the downloaded file into your {calendarType === 'google' ? 'Google' : 'Outlook'} Calendar. 
+                After that, new actions will be added daily via email links.
+              </p>
+              <p className="text-[10px] text-primary-400 mt-2 text-center font-medium">
+                💡 Upgrade to paid for automatic calendar syncing (no manual clicks needed!)
+              </p>
+            </div>
+          )}
         </div>
       )}
     </div>
