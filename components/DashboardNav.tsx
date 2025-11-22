@@ -23,7 +23,14 @@ export default function DashboardNav() {
 
   useEffect(() => {
     async function fetchDisplayName() {
-      if (isLoading || userError) return;
+      // Wait for Auth0 to finish loading
+      if (isLoading) return;
+      
+      // If there's an error or no user, use fallback
+      if (userError || !user) {
+        setDisplayName(null);
+        return;
+      }
       
       try {
         const response = await fetch('/api/user/display-name', {
@@ -41,9 +48,7 @@ export default function DashboardNav() {
       }
     }
 
-    if (!isLoading && !userError) {
-      fetchDisplayName();
-    }
+    fetchDisplayName();
   }, [user, isLoading, userError]);
 
   return (
