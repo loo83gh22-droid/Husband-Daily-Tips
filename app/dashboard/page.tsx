@@ -13,6 +13,7 @@ import OutstandingActions from '@/components/OutstandingActions';
 import AutoCalendarToggle from '@/components/AutoCalendarToggle';
 import OnboardingTour, { TourButton } from '@/components/OnboardingTour';
 import QuickActions from '@/components/QuickActions';
+import NotificationSystem from '@/components/NotificationSystem';
 import Link from 'next/link';
 
 async function getUserData(auth0Id: string) {
@@ -527,10 +528,28 @@ export default async function Dashboard() {
 
   const outstandingCount = outstandingActions?.length || 0;
 
+  // Get last action date for notifications
+  const { data: lastAction } = await adminSupabase
+    .from('user_daily_actions')
+    .select('date')
+    .eq('user_id', user.id)
+    .eq('completed', true)
+    .order('date', { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  const lastActionDate = lastAction?.date || undefined;
+
   return (
     <div className="min-h-screen bg-slate-950">
       <OnboardingTour />
       <TourButton />
+      <NotificationSystem
+        currentStreak={stats.currentStreak}
+        healthScore={stats.healthScore}
+        outstandingActionsCount={outstandingCount}
+        lastActionDate={lastActionDate}
+      />
       <QuickActions
         todayActionId={todayActionId}
         todayActionCompleted={todayActionCompleted}

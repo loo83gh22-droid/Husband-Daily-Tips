@@ -7,6 +7,7 @@ import { motion } from 'framer-motion';
 import ReflectionModal from './ReflectionModal';
 import SocialShare from './SocialShare';
 import ActionCelebration from './ActionCelebration';
+import { toast } from './Toast';
 import { getGuideSlugForAction } from '@/lib/action-guide-mapping';
 
 interface Tip {
@@ -94,9 +95,16 @@ export default function DailyTipCard({ tip, subscriptionTier = 'free' }: DailyTi
       // Show celebration animation
       setShowCelebration(true);
 
+      // Show success toast
+      toast.success('Action completed! Keep it up! 🎉', 3000);
+
       // Show badge notifications if any were earned
       if (data.newlyEarnedBadges && data.newlyEarnedBadges.length > 0) {
         setNewlyEarnedBadges(data.newlyEarnedBadges);
+        // Show toast for each badge
+        data.newlyEarnedBadges.forEach((badge: any) => {
+          toast.success(`New badge earned: ${badge.icon} ${badge.name}!`, 5000);
+        });
         // Auto-hide badge notification after 5 seconds
         setTimeout(() => setNewlyEarnedBadges([]), 5000);
       }
@@ -108,6 +116,7 @@ export default function DailyTipCard({ tip, subscriptionTier = 'free' }: DailyTi
     } catch (error) {
       console.error(error);
       setErrorMessage('Could not save this action. You can try again in a moment.');
+      toast.error('Failed to save action. Please try again.', 4000);
     } finally {
       setIsSubmitting(false);
     }
