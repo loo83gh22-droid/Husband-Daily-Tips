@@ -57,18 +57,26 @@ export async function GET(request: Request) {
     }
 
     // Format the response
+    // Handle both single object and array responses from Supabase
     const actions = (outstandingActions || [])
-      .filter((oa) => oa.actions) // Filter out any null actions
-      .map((oa) => ({
-        id: oa.actions.id,
-        user_daily_actions_id: oa.id,
-        action_id: oa.action_id,
-        date: oa.date,
-        name: oa.actions.name,
-        description: oa.actions.description,
-        icon: oa.actions.icon,
-        category: oa.actions.category,
-      }));
+      .filter((oa) => oa.actions != null) // Filter out any null actions
+      .map((oa: any) => {
+        // Supabase relation can return single object or array - handle both cases
+        const action = Array.isArray(oa.actions) ? oa.actions[0] : oa.actions;
+        if (!action) return null; // Skip if action is still null/undefined
+        
+        return {
+          id: action.id,
+          user_daily_actions_id: oa.id,
+          action_id: oa.action_id,
+          date: oa.date,
+          name: action.name,
+          description: action.description,
+          icon: action.icon,
+          category: action.category,
+        };
+      })
+      .filter((action) => action !== null); // Remove any null entries
 
     return NextResponse.json({ actions });
   } catch (error) {
