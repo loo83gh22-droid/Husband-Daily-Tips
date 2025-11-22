@@ -14,6 +14,13 @@ const resend = new Resend(process.env.RESEND_API_KEY);
  */
 export async function POST(request: Request) {
   try {
+    // Debug: Log all headers to see what's actually being received
+    const allHeaders: Record<string, string> = {};
+    request.headers.forEach((value, key) => {
+      allHeaders[key] = value;
+    });
+    console.log('All headers received:', JSON.stringify(allHeaders, null, 2));
+    
     // Verify this is called with proper auth (use same secret as other email endpoints)
     // Try multiple header name formats (case-insensitive)
     const authHeader = request.headers.get('authorization') || 
@@ -36,7 +43,8 @@ export async function POST(request: Request) {
         expectedLength: expectedAuth.length,
         receivedLength: authHeader?.length || 0,
         secretSet: !!process.env.CRON_SECRET,
-        secretLength: process.env.CRON_SECRET?.length || 0
+        secretLength: process.env.CRON_SECRET?.length || 0,
+        allHeadersKeys: Object.keys(allHeaders)
       });
       
       // Return more details for debugging (remove in production)
@@ -47,7 +55,9 @@ export async function POST(request: Request) {
           expectedLength: expectedAuth.length,
           secretConfigured: !!process.env.CRON_SECRET,
           secretLength: process.env.CRON_SECRET?.length || 0,
-          receivedPrefix: authHeader ? authHeader.substring(0, 20) : 'null'
+          receivedPrefix: authHeader ? authHeader.substring(0, 20) : 'null',
+          headersReceived: Object.keys(allHeaders),
+          headerCount: Object.keys(allHeaders).length
         }
       }, { status: 401 });
     }
