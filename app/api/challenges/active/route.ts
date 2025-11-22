@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getSession } from '@auth0/nextjs-auth0';
-import { supabase } from '@/lib/supabase';
+import { getSupabaseAdmin } from '@/lib/supabase';
 
 /**
  * Get active weekly challenges
@@ -8,6 +8,9 @@ import { supabase } from '@/lib/supabase';
 export async function GET() {
   try {
     const today = new Date().toISOString().split('T')[0];
+
+    // Use admin client to bypass RLS (Auth0 context isn't set)
+    const supabase = getSupabaseAdmin();
 
     // Get user for completion counts
     const session = await getSession();
