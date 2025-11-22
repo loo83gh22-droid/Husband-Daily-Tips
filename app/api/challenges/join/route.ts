@@ -319,7 +319,8 @@ async function sendChallengeEmail(
   const joinedDate = userChallenge?.joined_date || new Date().toISOString().split('T')[0];
   try {
     const { Resend } = await import('resend');
-    const resend = new Resend(process.env.RESEND_API_KEY);
+    // Initialize Resend - will be validated before use
+    const resend = new Resend(process.env.RESEND_API_KEY || '');
 
     if (!resend || !process.env.RESEND_API_KEY) {
       console.log('Resend not configured, skipping challenge email');
