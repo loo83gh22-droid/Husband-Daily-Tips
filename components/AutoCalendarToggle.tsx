@@ -187,7 +187,7 @@ export default function AutoCalendarToggle() {
         <div className="pt-3 border-t border-slate-800 space-y-3">
           <div>
             <p className="text-[11px] text-slate-400 mb-2">Choose your calendar:</p>
-            <div className="flex gap-2">
+            <div className="flex gap-2 flex-wrap">
               <button
                 onClick={() => handleCalendarTypeChange('google')}
                 disabled={isSaving}
@@ -209,6 +209,17 @@ export default function AutoCalendarToggle() {
                 }`}
               >
                 📅 Outlook Calendar
+              </button>
+              <button
+                onClick={() => handleCalendarTypeChange('apple')}
+                disabled={isSaving}
+                className={`px-3 py-1.5 text-xs rounded-lg transition-colors ${
+                  calendarType === 'apple'
+                    ? 'bg-primary-500/20 border border-primary-500/50 text-primary-300'
+                    : 'bg-slate-800 border border-slate-700 text-slate-300 hover:bg-slate-700'
+                }`}
+              >
+                📅 Apple Calendar
               </button>
             </div>
           </div>
