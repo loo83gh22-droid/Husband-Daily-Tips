@@ -14,6 +14,7 @@ import AutoCalendarToggle from '@/components/AutoCalendarToggle';
 import OnboardingTour, { TourButton } from '@/components/OnboardingTour';
 import QuickActions from '@/components/QuickActions';
 import NotificationSystem from '@/components/NotificationSystem';
+import ProgressCharts from '@/components/ProgressCharts';
 import Link from 'next/link';
 
 async function getUserData(auth0Id: string) {
@@ -647,6 +648,15 @@ export default async function Dashboard() {
 
             <div data-tour="badges">
               <BadgesDisplay userId={user.id} />
+            </div>
+
+            {/* Progress Charts */}
+            <div className="mt-5">
+              <ProgressCharts
+                userId={user.id}
+                currentStreak={stats.currentStreak}
+                healthScore={stats.healthScore}
+              />
             </div>
           </div>
         </div>
