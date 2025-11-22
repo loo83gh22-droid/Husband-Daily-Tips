@@ -16,7 +16,6 @@ import QuickActions from '@/components/QuickActions';
 import NotificationSystem from '@/components/NotificationSystem';
 import ProgressCharts from '@/components/ProgressCharts';
 import KeyboardShortcuts from '@/components/KeyboardShortcuts';
-import MovieSuggestions from '@/components/MovieSuggestions';
 import Link from 'next/link';
 
 async function getUserData(auth0Id: string) {
@@ -660,11 +659,6 @@ export default async function Dashboard() {
 
             <div data-tour="badges">
               <BadgesDisplay userId={user.id} />
-            </div>
-
-            {/* Movie Suggestions */}
-            <div className="mt-5">
-              <MovieSuggestions />
             </div>
           </div>
         </div>
