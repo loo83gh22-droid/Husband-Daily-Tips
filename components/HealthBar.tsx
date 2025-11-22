@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { motion } from 'framer-motion';
 import HealthMilestoneModal from './HealthMilestoneModal';
 
 interface HealthBarProps {
@@ -24,13 +25,31 @@ export default function HealthBar({ value, shouldPulse = false, onPulseComplete 
   const [celebratedMilestones, setCelebratedMilestones] = useState<Set<Milestone>>(new Set());
   const [currentMilestone, setCurrentMilestone] = useState<Milestone | null>(null);
   const [isInitialized, setIsInitialized] = useState(false);
+  const [healthHistory, setHealthHistory] = useState<number[]>([]);
+  const [showSparkle, setShowSparkle] = useState(false);
+  const [trend, setTrend] = useState<'up' | 'down' | 'steady' | null>(null);
 
   const clamped = Math.max(0, Math.min(100, value));
 
-  // Load previous health and celebrated milestones from localStorage on mount
+  // Load previous health, history, and celebrated milestones from localStorage on mount
   useEffect(() => {
     const stored = localStorage.getItem('previous_health');
     const storedHealth = stored ? parseFloat(stored) : null;
+
+    // Load health history (last 7 days)
+    const storedHistory = localStorage.getItem('health_history');
+    let history: number[] = [];
+    if (storedHistory) {
+      try {
+        history = JSON.parse(storedHistory);
+        // Keep only last 7 days
+        if (history.length > 7) {
+          history = history.slice(-7);
+        }
+      } catch {
+        // Ignore parse errors
+      }
+    }
 
     // Load previously celebrated milestones
     const celebrated = localStorage.getItem('celebrated_milestones');
@@ -44,6 +63,7 @@ export default function HealthBar({ value, shouldPulse = false, onPulseComplete 
     }
 
     setPreviousHealth(storedHealth);
+    setHealthHistory(history);
     setCelebratedMilestones(storedCelebrated);
     setIsInitialized(true);
   }, []);
@@ -126,12 +146,50 @@ export default function HealthBar({ value, shouldPulse = false, onPulseComplete 
       }
     }
 
-    // Update stored previous health
+    // Update stored previous health and history
     if (previousHealth !== clamped) {
+      const healthIncreased = previousHealth !== null && clamped > previousHealth;
+      
+      // Show sparkle animation if health increased
+      if (healthIncreased && clamped > (previousHealth || 0)) {
+        setShowSparkle(true);
+        setTimeout(() => setShowSparkle(false), 2000);
+      }
+
+      // Update trend
+      if (previousHealth !== null) {
+        const diff = clamped - previousHealth;
+        if (diff > 0.5) setTrend('up');
+        else if (diff < -0.5) setTrend('down');
+        else setTrend('steady');
+      }
+
+      // Update health history (last 7 days)
+      const today = new Date().toISOString().split('T')[0];
+      const historyKey = `health_${today}`;
+      const storedToday = localStorage.getItem(historyKey);
+      
+      // Only store once per day
+      if (!storedToday) {
+        const newHistory = [...healthHistory, clamped];
+        const trimmedHistory = newHistory.slice(-7); // Keep last 7 days
+        setHealthHistory(trimmedHistory);
+        localStorage.setItem('health_history', JSON.stringify(trimmedHistory));
+        localStorage.setItem(historyKey, clamped.toString());
+        
+        // Clean up old daily entries (older than 7 days)
+        for (let i = 8; i < 30; i++) {
+          const oldDate = new Date();
+          oldDate.setDate(oldDate.getDate() - i);
+          const oldKey = `health_${oldDate.toISOString().split('T')[0]}`;
+          localStorage.removeItem(oldKey);
+        }
+      }
+
       localStorage.setItem('previous_health', clamped.toString());
       setPreviousHealth(clamped);
     }
-  }, [clamped, previousHealth, celebratedMilestones, isInitialized]);
+  }, [clamped, previousHealth, celebratedMilestones, isInitialized, healthHistory]);
 
   const handleCloseModal = () => {
     setCurrentMilestone(null);
@@ -150,6 +208,38 @@ export default function HealthBar({ value, shouldPulse = false, onPulseComplete 
     if (clamped >= 45) return 'text-yellow-400';
     return 'text-rose-400';
   };
+
+  // Get next milestone and points away
+  const getNextMilestone = () => {
+    for (const milestone of MILESTONES) {
+      if (clamped < milestone) {
+        return {
+          value: milestone,
+          pointsAway: milestone - clamped,
+        };
+      }
+    }
+    return null; // Already at max
+  };
+
+  const nextMilestone = getNextMilestone();
+
+  // Calculate 7-day trend
+  const calculateTrend = () => {
+    if (healthHistory.length < 2) return null;
+    const recent = healthHistory.slice(-7);
+    if (recent.length < 2) return null;
+    
+    const first = recent[0];
+    const last = recent[recent.length - 1];
+    const diff = last - first;
+    
+    if (diff > 1) return 'up';
+    if (diff < -1) return 'down';
+    return 'steady';
+  };
+
+  const trendDirection = trend || calculateTrend();
 
   // Don't render until initialized to avoid hydration issues
   if (!isInitialized) {
@@ -180,14 +270,37 @@ export default function HealthBar({ value, shouldPulse = false, onPulseComplete 
               </p>
             </div>
             <div className="text-right ml-4">
-              <p className={`text-lg md:text-xl font-bold ${getLabelColor()} drop-shadow-lg`}>{label}</p>
-              <p className="text-base md:text-lg font-semibold text-slate-200 mt-0.5">{clamped.toFixed(1)}%</p>
+              <div className="flex items-center justify-end gap-2 mb-1">
+                <p className={`text-lg md:text-xl font-bold ${getLabelColor()} drop-shadow-lg`}>{label}</p>
+                {trendDirection && trendDirection !== 'steady' && (
+                  <motion.span
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    className={`text-lg ${trendDirection === 'up' ? 'text-emerald-400' : 'text-rose-400'}`}
+                  >
+                    {trendDirection === 'up' ? '↑' : '↓'}
+                  </motion.span>
+                )}
+              </div>
+              <div className="flex items-center justify-end gap-2">
+                <p className="text-base md:text-lg font-semibold text-slate-200">{clamped.toFixed(1)}%</p>
+                {showSparkle && (
+                  <motion.span
+                    initial={{ scale: 0, rotate: 0 }}
+                    animate={{ scale: [0, 1.2, 1], rotate: [0, 180, 360] }}
+                    exit={{ scale: 0 }}
+                    className="text-lg"
+                  >
+                    ✨
+                  </motion.span>
+                )}
+              </div>
             </div>
           </div>
 
           <div className="h-6 w-full rounded-full bg-slate-800/80 overflow-hidden border-2 border-slate-700/60 mb-3 relative shadow-inner">
             {/* Animated glow effect on the progress bar */}
-            <div
+            <motion.div
               className={`h-full bg-gradient-to-r from-red-500 via-yellow-500 via-green-400 to-emerald-400 transition-all duration-700 ease-out relative overflow-hidden ${
                 shouldPulse ? 'animate-pulse' : ''
               }`}
@@ -197,6 +310,14 @@ export default function HealthBar({ value, shouldPulse = false, onPulseComplete 
                   onPulseComplete();
                 }
               }}
+              animate={showSparkle ? {
+                boxShadow: [
+                  '0 0 0px rgba(251, 191, 36, 0)',
+                  '0 0 20px rgba(251, 191, 36, 0.6)',
+                  '0 0 0px rgba(251, 191, 36, 0)',
+                ],
+              } : {}}
+              transition={{ duration: 0.6 }}
             >
               {/* Shimmer effect */}
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shimmer" />
@@ -208,7 +329,40 @@ export default function HealthBar({ value, shouldPulse = false, onPulseComplete 
               {shouldPulse && (
                 <div className="absolute inset-0 bg-gradient-to-r from-primary-400/50 via-emerald-400/50 to-primary-400/50 animate-ping" />
               )}
-            </div>
+
+              {/* Sparkle particles on increase */}
+              {showSparkle && (
+                <>
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0, x: 0, y: 0 }}
+                    animate={{ opacity: [0, 1, 0], scale: [0, 1, 0], x: 10, y: -5 }}
+                    transition={{ duration: 1, delay: 0 }}
+                    className="absolute text-yellow-300 text-xs"
+                    style={{ left: '20%', top: '20%' }}
+                  >
+                    ✨
+                  </motion.div>
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0, x: 0, y: 0 }}
+                    animate={{ opacity: [0, 1, 0], scale: [0, 1, 0], x: -10, y: 5 }}
+                    transition={{ duration: 1, delay: 0.2 }}
+                    className="absolute text-yellow-300 text-xs"
+                    style={{ left: '50%', top: '50%' }}
+                  >
+                    ✨
+                  </motion.div>
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0, x: 0, y: 0 }}
+                    animate={{ opacity: [0, 1, 0], scale: [0, 1, 0], x: 5, y: -10 }}
+                    transition={{ duration: 1, delay: 0.4 }}
+                    className="absolute text-yellow-300 text-xs"
+                    style={{ left: '80%', top: '30%' }}
+                  >
+                    ✨
+                  </motion.div>
+                </>
+              )}
+            </motion.div>
             
             {/* Milestone markers - more prominent */}
             {MILESTONES.map((milestone) => (
@@ -237,6 +391,85 @@ export default function HealthBar({ value, shouldPulse = false, onPulseComplete 
             {/* Additional visual depth with inner border */}
             <div className="absolute inset-0 rounded-full border border-white/5 pointer-events-none" />
           </div>
+
+          {/* 7-Day Mini Chart */}
+          {healthHistory.length > 0 && (
+            <div className="mb-4 pt-3 border-t border-slate-700/50">
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-xs text-slate-400 font-medium">7-Day Trend</p>
+                {trendDirection && trendDirection !== 'steady' && (
+                  <span className={`text-xs font-semibold ${
+                    trendDirection === 'up' ? 'text-emerald-400' : 'text-rose-400'
+                  }`}>
+                    {trendDirection === 'up' ? '↑ Improving' : '↓ Needs attention'}
+                  </span>
+                )}
+              </div>
+              <div className="flex items-end gap-1 h-12">
+                {healthHistory.map((health, index) => {
+                  const maxHealth = Math.max(...healthHistory, clamped);
+                  const height = maxHealth > 0 ? (health / maxHealth) * 100 : 0;
+                  const isLatest = index === healthHistory.length - 1;
+                  
+                  return (
+                    <div key={index} className="flex-1 flex flex-col items-center">
+                      <div className="w-full bg-slate-800/50 rounded-t relative" style={{ height: '40px' }}>
+                        <motion.div
+                          initial={{ height: 0 }}
+                          animate={{ height: `${height}%` }}
+                          transition={{ duration: 0.5, delay: index * 0.1 }}
+                          className={`w-full rounded-t ${
+                            isLatest
+                              ? 'bg-primary-500'
+                              : health >= 70
+                                ? 'bg-emerald-500'
+                                : health >= 50
+                                  ? 'bg-yellow-500'
+                                  : 'bg-rose-500'
+                          }`}
+                        />
+                      </div>
+                      <span className="text-[8px] text-slate-500 mt-1">
+                        {index === healthHistory.length - 1 ? 'Today' : `-${healthHistory.length - index - 1}d`}
+                      </span>
+                    </div>
+                  );
+                })}
+                {/* Today's value */}
+                {healthHistory.length < 7 && (
+                  <div className="flex-1 flex flex-col items-center">
+                    <div className="w-full bg-slate-800/50 rounded-t relative" style={{ height: '40px' }}>
+                      <motion.div
+                        initial={{ height: 0 }}
+                        animate={{ height: `${(clamped / Math.max(...healthHistory, clamped)) * 100}%` }}
+                        transition={{ duration: 0.5, delay: healthHistory.length * 0.1 }}
+                        className={`w-full rounded-t ${
+                          clamped >= 70
+                            ? 'bg-emerald-500'
+                            : clamped >= 50
+                              ? 'bg-yellow-500'
+                              : 'bg-rose-500'
+                        }`}
+                      />
+                    </div>
+                    <span className="text-[8px] text-slate-500 mt-1">Today</span>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Next Milestone Hint */}
+          {nextMilestone && nextMilestone.pointsAway <= 10 && (
+            <div className="mb-4 p-3 bg-primary-500/10 border border-primary-500/30 rounded-lg">
+              <p className="text-xs text-primary-300 font-medium">
+                {nextMilestone.pointsAway <= 1 
+                  ? `Almost there! ${nextMilestone.pointsAway.toFixed(1)} point away from ${nextMilestone.value}%`
+                  : `${nextMilestone.pointsAway.toFixed(1)} points away from ${nextMilestone.value}% milestone`
+                }
+              </p>
+            </div>
+          )}
 
           <div className="mt-4 space-y-3">
             <div className="flex flex-wrap items-center gap-x-5 gap-y-1.5">
