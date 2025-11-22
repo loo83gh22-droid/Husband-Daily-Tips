@@ -293,156 +293,163 @@ END:VCALENDAR`;
         initial={false}
         animate={isCompleted ? { scale: [1, 1.02, 1], boxShadow: ['0 0 0px rgba(251, 191, 36, 0)', '0 0 20px rgba(251, 191, 36, 0.5)', '0 0 0px rgba(251, 191, 36, 0)'] } : {}}
         transition={{ duration: 0.6, ease: 'easeOut' }}
-        className="bg-slate-900/80 rounded-xl shadow-lg p-8 mb-6 border border-slate-800"
+        className="bg-gradient-to-br from-slate-900/95 via-amber-950/10 to-slate-900/95 rounded-2xl shadow-2xl p-8 md:p-10 mb-6 border-2 border-primary-500/20 hover:border-primary-500/30 transition-all relative overflow-hidden"
       >
-      <div className="flex items-start justify-between mb-4">
-        <div>
-          <span className="inline-block px-3 py-1 bg-primary-500/10 text-primary-300 text-xs font-semibold rounded-full mb-2">
-            {tip.category}
-          </span>
-          <h3 className="text-2xl font-semibold text-slate-50 mb-2 flex items-center gap-2">
-            {tip.icon && <span>{tip.icon}</span>}
-            {tip.title || tip.name}
-          </h3>
-        </div>
-        <div className="flex items-center gap-3">
-          {tip.isAction && (() => {
-            const guideSlug = getGuideSlugForAction(tip.name || '', tip.theme);
-            return guideSlug ? (
-              <Link
-                href={`/dashboard/how-to-guides/${guideSlug}`}
-                className="px-3 py-1.5 border border-emerald-500/50 text-emerald-300 text-xs font-medium rounded-lg hover:bg-emerald-500/10 transition-colors flex items-center gap-1.5"
-              >
-                <span>📚</span>
-                <span>How-To Guide</span>
-              </Link>
-            ) : null;
-          })()}
-          <div className="text-xs text-slate-500 text-right" suppressHydrationWarning>
-            {mounted ? displayDate : ''}
-          </div>
-        </div>
-      </div>
-      
-      <div className="prose max-w-none">
-        <p className="text-slate-200 text-base leading-relaxed whitespace-pre-line mb-3">
-          {tip.content || tip.description}
-        </p>
-        {tip.benefit && (
-          <div className="mt-4 p-4 bg-slate-800/50 border-l-4 border-primary-500/50 rounded-r-lg">
-            <p className="text-xs font-semibold text-primary-300 mb-1">Why this matters:</p>
-            <p className="text-slate-300 text-sm leading-relaxed">{tip.benefit}</p>
-          </div>
-        )}
-      </div>
-
-      <div className="mt-6 flex flex-col gap-4">
-        <div className="flex flex-wrap gap-3">
-          <button
-            onClick={handleMarkDone}
-            disabled={isSubmitting || isCompleted}
-            className="px-4 py-3 sm:py-2 bg-primary-500 disabled:bg-primary-900 disabled:text-slate-400 text-slate-950 text-sm font-semibold rounded-lg hover:bg-primary-400 active:bg-primary-600 transition-colors disabled:cursor-default min-h-[44px] touch-manipulation"
-          >
-            {isCompleted ? 'Marked as done ✓' : isSubmitting ? 'Saving…' : 'Mark as done ✓'}
-          </button>
-          <button
-            type="button"
-            className="px-4 py-2.5 sm:py-2 border border-slate-700 text-slate-100 text-sm rounded-lg hover:bg-slate-900 active:bg-slate-800 transition-colors min-h-[44px] touch-manipulation"
-          >
-            Save for later
-          </button>
-          <button
-            onClick={handleToggleFavorite}
-            disabled={isTogglingFavorite}
-            className={`px-4 py-2.5 sm:py-2 border text-sm font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-default flex items-center gap-2 min-h-[44px] touch-manipulation active:scale-95 ${
-              isFavorited
-                ? 'border-yellow-500/50 bg-yellow-500/10 text-yellow-300 hover:bg-yellow-500/20'
-                : 'border-slate-700 text-slate-300 hover:bg-slate-900'
-            }`}
-          >
-            {isTogglingFavorite ? (
-              '...'
-            ) : (
-              <>
-                <span>{isFavorited ? '⭐' : '☆'}</span>
-                <span>{isFavorited ? 'Favorited' : 'Favorite'}</span>
-              </>
-            )}
-          </button>
-        </div>
-        <div className="flex flex-wrap gap-3">
-          <a
-            href={generateGoogleCalendarUrl()}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="px-4 py-3 sm:py-2 border border-slate-700 text-slate-100 text-sm rounded-lg hover:bg-slate-900 active:bg-slate-800 transition-colors flex items-center gap-2 min-h-[44px] touch-manipulation"
-          >
-            <span>📅</span>
-            <span>Add to Google Calendar</span>
-          </a>
-          <a
-            href={generateOutlookCalendarUrl()}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="px-4 py-3 sm:py-2 border border-slate-700 text-slate-100 text-sm rounded-lg hover:bg-slate-900 active:bg-slate-800 transition-colors flex items-center gap-2 min-h-[44px] touch-manipulation"
-          >
-            <span>📅</span>
-            <span>Add to Outlook Calendar</span>
-          </a>
-          <a
-            href={generateAppleCalendarUrl()}
-            download="best-husband-action.ics"
-            className="px-4 py-3 sm:py-2 border border-slate-700 text-slate-100 text-sm rounded-lg hover:bg-slate-900 active:bg-slate-800 transition-colors flex items-center gap-2 min-h-[44px] touch-manipulation"
-          >
-            <span>📅</span>
-            <span>Add to Apple Calendar</span>
-          </a>
-        </div>
-        <div className="flex flex-col gap-2">
-          <SocialShare
-            title={tip.title || tip.name || ''}
-            text={`Tomorrow's Action: ${tip.title || tip.name} - ${(tip.content || tip.description || '').substring(0, 100)}...`}
-          />
-        </div>
-      </div>
-
-      {errorMessage && (
-        <p className="mt-3 text-[11px] text-rose-400">{errorMessage}</p>
-      )}
-
-      {/* Badge notification */}
-      {newlyEarnedBadges.length > 0 && (
-        <div className="mt-4 p-4 bg-primary-500/10 border border-primary-500/30 rounded-lg">
-          <p className="text-xs font-semibold text-primary-300 mb-2">🎉 Badge Earned!</p>
-          {newlyEarnedBadges.map((badge, idx) => (
-            <div key={idx} className="flex items-center gap-2 mb-2 last:mb-0">
-              <span className="text-xl">{badge.icon}</span>
-              <div>
-                <p className="text-sm font-medium text-slate-200">{badge.name}</p>
-                <p className="text-xs text-slate-400">{badge.description}</p>
-                {badge.healthBonus > 0 && (
-                  <p className="text-xs text-primary-300 mt-1">
-                    +{badge.healthBonus} health bonus
-                  </p>
-                )}
+        {/* Subtle glow effect */}
+        <div className="absolute inset-0 bg-gradient-to-r from-primary-500/0 via-primary-500/5 to-primary-500/0 opacity-50 pointer-events-none" />
+        <div className="relative z-10">
+          <div className="flex items-start justify-between mb-6">
+            <div className="flex-1">
+              <span className="inline-block px-4 py-1.5 bg-primary-500/20 text-primary-300 text-sm font-semibold rounded-full mb-3 border border-primary-500/30">
+                {tip.category}
+              </span>
+              <h3 className="text-2xl md:text-3xl font-bold text-slate-50 mb-3 flex items-center gap-3">
+                {tip.icon && <span className="text-3xl">{tip.icon}</span>}
+                <span>{tip.title || tip.name}</span>
+              </h3>
+            </div>
+            <div className="flex items-center gap-3">
+              {tip.isAction && (() => {
+                const guideSlug = getGuideSlugForAction(tip.name || '', tip.theme);
+                return guideSlug ? (
+                  <Link
+                    href={`/dashboard/how-to-guides/${guideSlug}`}
+                    className="px-3 py-1.5 border border-emerald-500/50 text-emerald-300 text-xs font-medium rounded-lg hover:bg-emerald-500/10 transition-colors flex items-center gap-1.5"
+                  >
+                    <span>📚</span>
+                    <span>How-To Guide</span>
+                  </Link>
+                ) : null;
+              })()}
+              <div className="text-xs text-slate-500 text-right" suppressHydrationWarning>
+                {mounted ? displayDate : ''}
               </div>
             </div>
-          ))}
-        </div>
-      )}
+          </div>
+          
+          <div className="prose max-w-none">
+            <p className="text-slate-100 text-base md:text-lg leading-relaxed whitespace-pre-line mb-4">
+              {tip.content || tip.description}
+            </p>
+            {tip.benefit && (
+              <div className="mt-5 p-5 bg-slate-800/60 border-l-4 border-primary-500/60 rounded-r-lg">
+                <p className="text-sm font-bold text-primary-300 mb-2">Why this matters:</p>
+                <p className="text-slate-200 text-base leading-relaxed">{tip.benefit}</p>
+              </div>
+            )}
+          </div>
 
-      {/* Reflection Modal */}
-      <ReflectionModal
-        isOpen={showReflection}
-        onClose={() => setShowReflection(false)}
-        tipId={tip.id}
-        tipTitle={tip.title || tip.name || 'Action'}
-        onSuccess={() => {
-          // Refresh page to show updated stats
-          window.location.reload();
-        }}
-        subscriptionTier={subscriptionTier}
-      />
+          <div className="mt-8 flex flex-col gap-5">
+        {/* Primary Action Button */}
+        <button
+          onClick={handleMarkDone}
+          disabled={isSubmitting || isCompleted}
+          className="px-8 py-4 bg-primary-500 disabled:bg-primary-900 disabled:text-slate-400 text-slate-950 text-base md:text-lg font-bold rounded-xl hover:bg-primary-400 active:bg-primary-600 transition-all disabled:cursor-default min-h-[56px] touch-manipulation shadow-lg shadow-primary-500/30 hover:shadow-xl hover:shadow-primary-500/40 hover:scale-[1.02] active:scale-[0.98]"
+        >
+          {isCompleted ? '✓ Marked as done' : isSubmitting ? 'Saving…' : '✓ Mark as done'}
+        </button>
+
+            {/* Secondary Actions */}
+            <div className="flex flex-wrap gap-3 pt-4 border-t border-slate-700/50">
+              <button
+                type="button"
+                className="px-4 py-2.5 border border-slate-700 text-slate-200 text-sm rounded-lg hover:bg-slate-800 active:bg-slate-700 transition-colors min-h-[44px] touch-manipulation"
+              >
+                Save for later
+              </button>
+              <button
+                onClick={handleToggleFavorite}
+                disabled={isTogglingFavorite}
+                className={`px-4 py-2.5 border text-sm font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-default flex items-center gap-2 min-h-[44px] touch-manipulation active:scale-95 ${
+                  isFavorited
+                    ? 'border-yellow-500/50 bg-yellow-500/10 text-yellow-300 hover:bg-yellow-500/20'
+                    : 'border-slate-700 text-slate-300 hover:bg-slate-800'
+                }`}
+              >
+                {isTogglingFavorite ? (
+                  '...'
+                ) : (
+                  <>
+                    <span>{isFavorited ? '⭐' : '☆'}</span>
+                    <span>{isFavorited ? 'Favorited' : 'Favorite'}</span>
+                  </>
+                )}
+              </button>
+            </div>
+            <div className="flex flex-wrap gap-3">
+              <a
+                href={generateGoogleCalendarUrl()}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-4 py-2.5 border border-slate-700 text-slate-200 text-sm rounded-lg hover:bg-slate-800 active:bg-slate-700 transition-colors flex items-center gap-2 min-h-[44px] touch-manipulation"
+              >
+                <span>📅</span>
+                <span>Add to Google Calendar</span>
+              </a>
+              <a
+                href={generateOutlookCalendarUrl()}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-4 py-2.5 border border-slate-700 text-slate-200 text-sm rounded-lg hover:bg-slate-800 active:bg-slate-700 transition-colors flex items-center gap-2 min-h-[44px] touch-manipulation"
+              >
+                <span>📅</span>
+                <span>Add to Outlook Calendar</span>
+              </a>
+              <a
+                href={generateAppleCalendarUrl()}
+                download="best-husband-action.ics"
+                className="px-4 py-2.5 border border-slate-700 text-slate-200 text-sm rounded-lg hover:bg-slate-800 active:bg-slate-700 transition-colors flex items-center gap-2 min-h-[44px] touch-manipulation"
+              >
+                <span>📅</span>
+                <span>Add to Apple Calendar</span>
+              </a>
+            </div>
+            <div className="flex flex-col gap-2">
+              <SocialShare
+                title={tip.title || tip.name || ''}
+                text={`Tomorrow's Action: ${tip.title || tip.name} - ${(tip.content || tip.description || '').substring(0, 100)}...`}
+              />
+            </div>
+          </div>
+
+          {errorMessage && (
+            <p className="mt-4 text-sm text-rose-400">{errorMessage}</p>
+          )}
+
+          {/* Badge notification */}
+          {newlyEarnedBadges.length > 0 && (
+            <div className="mt-5 p-5 bg-primary-500/10 border border-primary-500/30 rounded-lg">
+              <p className="text-sm font-bold text-primary-300 mb-2">🎉 Badge Earned!</p>
+              {newlyEarnedBadges.map((badge, idx) => (
+                <div key={idx} className="flex items-center gap-2 mb-2 last:mb-0">
+                  <span className="text-xl">{badge.icon}</span>
+                  <div>
+                    <p className="text-sm font-medium text-slate-200">{badge.name}</p>
+                    <p className="text-xs text-slate-400">{badge.description}</p>
+                    {badge.healthBonus > 0 && (
+                      <p className="text-xs text-primary-300 mt-1">
+                        +{badge.healthBonus} health bonus
+                      </p>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Reflection Modal */}
+          <ReflectionModal
+            isOpen={showReflection}
+            onClose={() => setShowReflection(false)}
+            tipId={tip.id}
+            tipTitle={tip.title || tip.name || 'Action'}
+            onSuccess={() => {
+              // Refresh page to show updated stats
+              window.location.reload();
+            }}
+            subscriptionTier={subscriptionTier}
+          />
+        </div>
       </motion.div>
     </>
   );

@@ -166,23 +166,23 @@ export default function ProgressCharts({ userId, currentStreak, healthScore }: P
 
       {selectedView === 'trend' ? (
         <div>
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center justify-between mb-6">
             <div>
-              <p className="text-2xl font-bold text-slate-50">{healthScore.toFixed(1)}%</p>
-              <p className="text-xs text-slate-400">
+              <p className="text-3xl md:text-4xl font-bold text-slate-50 mb-1">{healthScore.toFixed(1)}%</p>
+              <p className="text-sm text-slate-300">
                 {healthTrend > 0 ? (
-                  <span className="text-emerald-400">↑ {healthTrend.toFixed(1)}% this month</span>
+                  <span className="text-emerald-400 font-semibold">↑ {healthTrend.toFixed(1)}% over 90 days</span>
                 ) : healthTrend < 0 ? (
-                  <span className="text-rose-400">↓ {Math.abs(healthTrend).toFixed(1)}% this month</span>
+                  <span className="text-rose-400 font-semibold">↓ {Math.abs(healthTrend).toFixed(1)}% over 90 days</span>
                 ) : (
-                  <span className="text-slate-400">No change</span>
+                  <span className="text-slate-400">Steady progress</span>
                 )}
               </p>
             </div>
           </div>
 
           {/* Simple line chart */}
-          <div className="h-48 relative">
+          <div className="h-64 md:h-72 relative">
             <svg className="w-full h-full" viewBox="0 0 300 120" preserveAspectRatio="none">
               {/* Grid lines */}
               {[0, 25, 50, 75, 100].map((value) => (
