@@ -1,13 +1,15 @@
 import { getSession } from '@auth0/nextjs-auth0';
 import { redirect } from 'next/navigation';
-import { supabase } from '@/lib/supabase';
+import { getSupabaseAdmin } from '@/lib/supabase';
 import DashboardNav from '@/components/DashboardNav';
 import { calculateBadgeProgress } from '@/lib/badges';
 import Link from 'next/link';
 
 async function getUserStats(userId: string) {
+  // Use admin client to bypass RLS (Auth0 context isn't set)
+  const adminSupabase = getSupabaseAdmin();
   // Get tips for stats
-  const { data: tips } = await supabase
+  const { data: tips } = await adminSupabase
     .from('user_tips')
     .select('date')
     .eq('user_id', userId)
@@ -34,7 +36,7 @@ async function getUserStats(userId: string) {
   }
 
   // Get action completions for actionCounts
-  const { data: actionCompletions } = await supabase
+  const { data: actionCompletions } = await adminSupabase
     .from('user_action_completions')
     .select('actions(requirement_type)')
     .eq('user_id', userId);
@@ -56,7 +58,9 @@ async function getUserStats(userId: string) {
 }
 
 async function getUserBadges(auth0Id: string) {
-  const { data: user } = await supabase
+  // Use admin client to bypass RLS (Auth0 context isn't set)
+  const adminSupabase = getSupabaseAdmin();
+  const { data: user } = await adminSupabase
     .from('users')
     .select('id')
     .eq('auth0_id', auth0Id)
@@ -68,7 +72,7 @@ async function getUserBadges(auth0Id: string) {
   const stats = await getUserStats(user.id);
 
   // Get all badges
-  const { data: allBadges } = await supabase
+  const { data: allBadges } = await adminSupabase
     .from('badges')
     .select('*')
     .order('badge_type', { ascending: true })
@@ -88,7 +92,7 @@ async function getUserBadges(auth0Id: string) {
   const uniqueBadges = Array.from(badgeKeyMap.values());
 
   // Get user's earned badges
-  const { data: earnedBadges } = await supabase
+  const { data: earnedBadges } = await adminSupabase
     .from('user_badges')
     .select('badge_id, earned_at')
     .eq('user_id', user.id);
@@ -105,7 +109,7 @@ async function getUserBadges(auth0Id: string) {
 
       // Only calculate progress for unearned badges
       if (!earned_at) {
-        progress = await calculateBadgeProgress(supabase, user.id, badge, stats);
+        progress = await calculateBadgeProgress(adminSupabase, user.id, badge, stats);
       }
 
       return {

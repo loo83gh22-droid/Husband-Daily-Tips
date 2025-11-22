@@ -1,11 +1,13 @@
 import { getSession } from '@auth0/nextjs-auth0';
 import { redirect } from 'next/navigation';
-import { supabase } from '@/lib/supabase';
+import { getSupabaseAdmin } from '@/lib/supabase';
 import DashboardNav from '@/components/DashboardNav';
 import JournalEntry from '@/components/JournalEntry';
 
 async function getUserReflections(auth0Id: string) {
-  const { data: user } = await supabase
+  // Use admin client to bypass RLS (Auth0 context isn't set)
+  const adminSupabase = getSupabaseAdmin();
+  const { data: user } = await adminSupabase
     .from('users')
     .select('id')
     .eq('auth0_id', auth0Id)
@@ -14,7 +16,7 @@ async function getUserReflections(auth0Id: string) {
   if (!user) return { favorites: [], regular: [] };
 
   // Get all reflections
-  const { data: reflections, error } = await supabase
+  const { data: reflections, error } = await adminSupabase
     .from('reflections')
     .select('*')
     .eq('user_id', user.id)
@@ -28,7 +30,7 @@ async function getUserReflections(auth0Id: string) {
       .filter((id: any) => id !== null);
 
     if (tipIds.length > 0) {
-      const { data: userTips } = await supabase
+      const { data: userTips } = await adminSupabase
         .from('user_tips')
         .select('id, tips(title, category)')
         .in('id', tipIds);
@@ -42,7 +44,7 @@ async function getUserReflections(auth0Id: string) {
 
     // Get action completions linked to reflections
     const reflectionIds = reflections.map((r: any) => r.id);
-    const { data: actionCompletions } = await supabase
+    const { data: actionCompletions } = await adminSupabase
       .from('user_action_completions')
       .select('journal_entry_id, actions(name, icon)')
       .in('journal_entry_id', reflectionIds);

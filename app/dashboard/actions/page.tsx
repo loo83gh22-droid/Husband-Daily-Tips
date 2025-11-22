@@ -1,12 +1,14 @@
 import { getSession } from '@auth0/nextjs-auth0';
 import { redirect } from 'next/navigation';
-import { supabase } from '@/lib/supabase';
+import { getSupabaseAdmin } from '@/lib/supabase';
 import DashboardNav from '@/components/DashboardNav';
 import ActionsList from '@/components/ActionsList';
 import Link from 'next/link';
 
 async function getActions(auth0Id: string) {
-  const { data: user } = await supabase
+  // Use admin client to bypass RLS (Auth0 context isn't set)
+  const adminSupabase = getSupabaseAdmin();
+  const { data: user } = await adminSupabase
     .from('users')
     .select('id')
     .eq('auth0_id', auth0Id)
@@ -16,7 +18,7 @@ async function getActions(auth0Id: string) {
 
   // Get all actions - use distinct to avoid duplicates
   // Order by display_order (marriage importance), then by name
-  const { data: actions } = await supabase
+  const { data: actions } = await adminSupabase
     .from('actions')
     .select('*')
     .order('display_order', { ascending: true, nullsFirst: false })
@@ -31,7 +33,7 @@ async function getActions(auth0Id: string) {
     : [];
 
   // Get user's completed actions (all instances)
-  const { data: completions } = await supabase
+  const { data: completions } = await adminSupabase
     .from('user_action_completions')
     .select('id, action_id, completed_at, notes')
     .eq('user_id', user.id)
@@ -51,7 +53,7 @@ async function getActions(auth0Id: string) {
   });
 
   // Get favorited actions
-  const { data: favoritedActionsData } = await supabase
+  const { data: favoritedActionsData } = await adminSupabase
     .from('user_daily_actions')
     .select('*, actions(*)')
     .eq('user_id', user.id)
