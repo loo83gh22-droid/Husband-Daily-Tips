@@ -89,30 +89,47 @@ export async function GET(request: Request) {
       }[] | null;
     };
     
-    const actions = ((outstandingActions || []) as OutstandingAction[])
-      .filter((oa) => oa.actions != null) // Filter out any null actions
-      .map((oa) => {
-        // Supabase relation can return single object or array - handle both cases
-        const actionsData = oa.actions;
-        if (!actionsData) return null;
-        
-        const action = Array.isArray(actionsData) ? actionsData[0] : actionsData;
-        if (!action) return null;
-        
-        return {
-          id: action.id,
-          user_daily_actions_id: oa.id,
-          action_id: oa.action_id,
-          date: oa.date,
-          name: action.name,
-          description: action.description,
-          icon: action.icon,
-          category: action.category,
-        };
-      })
-      .filter((action): action is NonNullable<typeof action> => action !== null); // Remove any null entries with type guard
+    try {
+      const actions = ((outstandingActions || []) as OutstandingAction[])
+        .filter((oa) => oa.actions != null) // Filter out any null actions
+        .map((oa) => {
+          try {
+            // Supabase relation can return single object or array - handle both cases
+            const actionsData = oa.actions;
+            if (!actionsData) return null;
+            
+            const action = Array.isArray(actionsData) ? actionsData[0] : actionsData;
+            if (!action || !action.id || !action.name) {
+              console.warn('Invalid action data for user_daily_action:', oa.id, 'action_id:', oa.action_id);
+              return null;
+            }
+            
+            return {
+              id: action.id,
+              user_daily_actions_id: oa.id,
+              action_id: oa.action_id,
+              date: oa.date,
+              name: action.name || '',
+              description: action.description || '',
+              icon: action.icon || '',
+              category: action.category || '',
+            };
+          } catch (mapError: any) {
+            console.error('Error mapping action:', mapError, 'for user_daily_action:', oa.id);
+            return null;
+          }
+        })
+        .filter((action): action is NonNullable<typeof action> => action !== null); // Remove any null entries with type guard
 
-    return NextResponse.json({ actions });
+      return NextResponse.json({ actions });
+    } catch (mappingError: any) {
+      console.error('Error in mapping outstanding actions:', mappingError);
+      console.error('Outstanding actions data:', JSON.stringify(outstandingActions, null, 2));
+      return NextResponse.json({ 
+        error: 'Error processing outstanding actions', 
+        details: mappingError?.message || 'Unknown mapping error'
+      }, { status: 500 });
+    }
   } catch (error: any) {
     console.error('Unexpected error fetching outstanding actions:', error);
     console.error('Error stack:', error?.stack);
