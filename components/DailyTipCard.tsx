@@ -211,6 +211,50 @@ export default function DailyTipCard({ tip, subscriptionTier = 'free' }: DailyTi
     return `https://outlook.live.com/calendar/0/deeplink/compose?${params.toString()}`;
   };
 
+  // Generate Apple Calendar ICS data URL for this action/tip
+  const generateAppleCalendarUrl = () => {
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const startDate = new Date(tomorrow);
+    startDate.setHours(9, 0, 0); // 9 AM default
+    const endDate = new Date(startDate);
+    endDate.setHours(10, 0, 0); // 1 hour event
+
+    const formatDate = (date: Date) => {
+      const year = date.getUTCFullYear();
+      const month = String(date.getUTCMonth() + 1).padStart(2, '0');
+      const day = String(date.getUTCDate()).padStart(2, '0');
+      const hours = String(date.getUTCHours()).padStart(2, '0');
+      const minutes = String(date.getUTCMinutes()).padStart(2, '0');
+      const seconds = String(date.getUTCSeconds()).padStart(2, '0');
+      return `${year}${month}${day}T${hours}${minutes}${seconds}Z`;
+    };
+
+    const escapeText = (text: string) => text.replace(/,/g, '\\,').replace(/\n/g, '\\n').replace(/;/g, '\\;');
+
+    const icsContent = `BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Best Husband Ever//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:${tip.id || 'action'}-${Date.now()}@besthusbandever.com
+DTSTART:${formatDate(startDate)}
+DTEND:${formatDate(endDate)}
+SUMMARY:${escapeText(tip.icon ? `${tip.icon} ${tip.title || tip.name || 'Daily Action'}` : tip.title || tip.name || 'Daily Action')}
+DESCRIPTION:${escapeText(tip.description || tip.content || '')}
+LOCATION:
+STATUS:CONFIRMED
+SEQUENCE:0
+DTSTAMP:${formatDate(new Date())}
+END:VEVENT
+END:VCALENDAR`;
+
+    // Create a data URL for the ICS content
+    const dataUrl = `data:text/calendar;charset=utf-8,${encodeURIComponent(icsContent)}`;
+    return dataUrl;
+  };
+
   return (
     <div className="bg-slate-900/80 rounded-xl shadow-lg p-8 mb-6 border border-slate-800">
       <div className="flex items-start justify-between mb-4">
@@ -306,6 +350,14 @@ export default function DailyTipCard({ tip, subscriptionTier = 'free' }: DailyTi
           >
             <span>📅</span>
             <span>Add to Outlook Calendar</span>
+          </a>
+          <a
+            href={generateAppleCalendarUrl()}
+            download="best-husband-action.ics"
+            className="px-4 py-2 border border-slate-700 text-slate-100 text-sm rounded-lg hover:bg-slate-900 transition-colors flex items-center gap-2"
+          >
+            <span>📅</span>
+            <span>Add to Apple Calendar</span>
           </a>
         </div>
         <div className="flex flex-col gap-2">
