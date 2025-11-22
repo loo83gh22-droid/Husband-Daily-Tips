@@ -84,7 +84,7 @@ export default function ActionsSearchFilter({
   }, [actions, searchQuery, selectedCategory, completionFilter, finalCompletedIds]);
 
   // Update parent when filtered actions change
-  useMemo(() => {
+  useEffect(() => {
     onFilteredActionsChange(filteredActions);
   }, [filteredActions, onFilteredActionsChange]);
 
