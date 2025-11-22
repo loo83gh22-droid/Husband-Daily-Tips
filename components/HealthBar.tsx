@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import HealthMilestoneModal from './HealthMilestoneModal';
 
 interface HealthBarProps {
   /**
@@ -22,8 +21,6 @@ type Milestone = typeof MILESTONES[number];
 
 export default function HealthBar({ value, shouldPulse = false, onPulseComplete }: HealthBarProps) {
   const [previousHealth, setPreviousHealth] = useState<number | null>(null);
-  const [celebratedMilestones, setCelebratedMilestones] = useState<Set<Milestone>>(new Set());
-  const [currentMilestone, setCurrentMilestone] = useState<Milestone | null>(null);
   const [isInitialized, setIsInitialized] = useState(false);
   const [healthHistory, setHealthHistory] = useState<number[]>([]);
   const [showSparkle, setShowSparkle] = useState(false);
@@ -51,20 +48,8 @@ export default function HealthBar({ value, shouldPulse = false, onPulseComplete 
       }
     }
 
-    // Load previously celebrated milestones
-    const celebrated = localStorage.getItem('celebrated_milestones');
-    let storedCelebrated = new Set<Milestone>();
-    if (celebrated) {
-      try {
-        storedCelebrated = new Set(JSON.parse(celebrated));
-      } catch {
-        // Ignore parse errors
-      }
-    }
-
     setPreviousHealth(storedHealth);
     setHealthHistory(history);
-    setCelebratedMilestones(storedCelebrated);
     setIsInitialized(true);
   }, []);
 
@@ -79,45 +64,6 @@ export default function HealthBar({ value, shouldPulse = false, onPulseComplete 
       localStorage.setItem('previous_health', clamped.toString());
       setPreviousHealth(clamped);
       return;
-    }
-
-    // Remove milestones from celebrated set if health has dropped below them
-    // This allows re-celebration if they reach the milestone again
-    const updatedCelebrated = new Set(celebratedMilestones);
-    let removedAny = false;
-    for (const milestone of MILESTONES) {
-      if (updatedCelebrated.has(milestone) && clamped < milestone) {
-        // Health dropped below this milestone - remove from celebrated
-        updatedCelebrated.delete(milestone);
-        removedAny = true;
-      }
-    }
-
-    if (removedAny) {
-      // Save updated celebrated milestones
-      setCelebratedMilestones(updatedCelebrated);
-      localStorage.setItem('celebrated_milestones', JSON.stringify(Array.from(updatedCelebrated)));
-    }
-
-    // Check for upward milestone crossings only
-    // Only celebrate when crossing FROM BELOW a milestone TO at/above that milestone
-    // AND only if they're currently still at/above that milestone (not if they've dropped)
-    for (const milestone of MILESTONES) {
-      const crossedUpward = previousHealth < milestone && clamped >= milestone;
-      const notYetCelebrated = !updatedCelebrated.has(milestone);
-      const currentlyAtOrAbove = clamped >= milestone;
-
-      // Only celebrate if they crossed upward AND are currently at/above AND haven't celebrated
-      if (crossedUpward && notYetCelebrated && currentlyAtOrAbove) {
-        // Show celebration for crossing upward!
-        setCurrentMilestone(milestone);
-        const newCelebrated = new Set(updatedCelebrated);
-        newCelebrated.add(milestone);
-        setCelebratedMilestones(newCelebrated);
-        // Save to localStorage
-        localStorage.setItem('celebrated_milestones', JSON.stringify(Array.from(newCelebrated)));
-        break; // Only show one celebration at a time
-      }
     }
 
     // Update stored previous health and history
@@ -163,11 +109,7 @@ export default function HealthBar({ value, shouldPulse = false, onPulseComplete 
       localStorage.setItem('previous_health', clamped.toString());
       setPreviousHealth(clamped);
     }
-  }, [clamped, previousHealth, celebratedMilestones, isInitialized, healthHistory]);
-
-  const handleCloseModal = () => {
-    setCurrentMilestone(null);
-  };
+  }, [clamped, previousHealth, isInitialized, healthHistory]);
 
   let label = 'Holding steady';
   if (clamped >= 85) label = 'Strong';
@@ -392,9 +334,6 @@ export default function HealthBar({ value, shouldPulse = false, onPulseComplete 
       </div>
 
       {/* Milestone Celebration Modal */}
-      {currentMilestone && (
-        <HealthMilestoneModal milestone={currentMilestone} isOpen={true} onClose={handleCloseModal} />
-      )}
     </>
   );
 }
