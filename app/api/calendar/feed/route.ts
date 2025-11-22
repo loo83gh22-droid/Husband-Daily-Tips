@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import { format } from 'date-fns';
+import crypto from 'crypto';
 
 /**
  * Public calendar feed (iCal format) for users with auto-add enabled
@@ -18,8 +19,18 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: 'Missing userId or token' }, { status: 400 });
     }
 
-    // Verify token (in production, use proper token verification)
-    // For now, we'll use a simple hash check
+    // Verify token
+    const secret = process.env.CALENDAR_FEED_SECRET || 'default-secret-change-in-production';
+    const expectedToken = crypto
+      .createHash('sha256')
+      .update(`${userId}-${secret}`)
+      .digest('hex')
+      .substring(0, 32);
+
+    if (token !== expectedToken) {
+      return NextResponse.json({ error: 'Invalid token' }, { status: 401 });
+    }
+
     const adminSupabase = getSupabaseAdmin();
     const { data: user, error: userError } = await adminSupabase
       .from('users')
