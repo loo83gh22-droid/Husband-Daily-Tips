@@ -9,7 +9,7 @@ import HamburgerMenu from './HamburgerMenu';
 
 export default function DashboardNav() {
   const pathname = usePathname();
-  const { user } = useUser();
+  const { user, isLoading } = useUser();
   const [displayName, setDisplayName] = useState<string | null>(null);
 
   const navLinks = [
@@ -23,6 +23,8 @@ export default function DashboardNav() {
 
   useEffect(() => {
     async function fetchDisplayName() {
+      if (isLoading) return;
+      
       try {
         const response = await fetch('/api/user/display-name', {
           credentials: 'include',
@@ -34,14 +36,15 @@ export default function DashboardNav() {
           setDisplayName(user?.name || null);
         }
       } catch (error) {
+        // Silently fail and use Auth0 name as fallback
         setDisplayName(user?.name || null);
       }
     }
 
-    if (user) {
+    if (!isLoading) {
       fetchDisplayName();
     }
-  }, [user]);
+  }, [user, isLoading]);
 
   return (
     <nav className="bg-slate-950/80 border-b border-slate-900 backdrop-blur sticky top-0 z-40">
