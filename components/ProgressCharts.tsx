@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { format, subDays, eachDayOfInterval, startOfWeek, endOfWeek } from 'date-fns';
+import { format, subDays } from 'date-fns';
 
 interface ProgressChartsProps {
   userId: string;
@@ -78,7 +78,7 @@ export default function ProgressCharts({ userId, currentStreak, healthScore }: P
         const response = await fetch(`/api/actions/completions?userId=${userId}&days=90`);
         if (response.ok) {
           const data = await response.json();
-          const dates = new Set(data.completions?.map((c: any) => c.date) || []);
+          const dates = new Set<string>(data.completions?.map((c: any) => c.date as string) || []);
           setCompletionDates(dates);
         }
       } catch (error) {

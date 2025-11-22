@@ -8,10 +8,11 @@ import Link from 'next/link';
 interface Action {
   id: string;
   name: string;
-  description?: string;
+  description: string;
   category: string;
-  theme?: string;
-  icon?: string;
+  theme: string;
+  requirement_type: string | null;
+  icon: string | null;
   display_order?: number;
 }
 
@@ -28,7 +29,16 @@ export default function ActionsPageClient({
   userId,
   favoritedActions,
 }: ActionsPageClientProps) {
-  const [filteredActions, setFilteredActions] = useState<Action[]>(allActions);
+  // Ensure all actions have required fields
+  const normalizedActions = allActions.map((action) => ({
+    ...action,
+    description: action.description || '',
+    theme: action.theme || action.category,
+    requirement_type: action.requirement_type ?? null,
+    icon: action.icon ?? null,
+  }));
+
+  const [filteredActions, setFilteredActions] = useState<Action[]>(normalizedActions);
   const [completedActionIds, setCompletedActionIds] = useState<Set<string>>(
     new Set(Array.from(completedMap.keys()))
   );
@@ -36,12 +46,12 @@ export default function ActionsPageClient({
   // Get unique categories
   const categories = useMemo(() => {
     const cats = new Set<string>();
-    allActions.forEach((action) => {
+    normalizedActions.forEach((action) => {
       const theme = action.theme?.toLowerCase() || action.category.toLowerCase();
       cats.add(theme);
     });
     return Array.from(cats).sort();
-  }, [allActions]);
+  }, [normalizedActions]);
 
   // Group filtered actions by theme
   const actionsByTheme = useMemo(() => {
@@ -109,7 +119,7 @@ export default function ActionsPageClient({
     <>
       {/* Search and Filter */}
       <ActionsSearchFilter
-        actions={allActions}
+        actions={normalizedActions}
         onFilteredActionsChange={setFilteredActions}
         categories={categories}
         completedActionIds={completedActionIds}

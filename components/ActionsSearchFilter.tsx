@@ -5,10 +5,11 @@ import { useState, useMemo, useEffect } from 'react';
 interface Action {
   id: string;
   name: string;
-  description?: string;
+  description: string;
   category: string;
-  theme?: string;
-  icon?: string;
+  theme: string;
+  requirement_type: string | null;
+  icon: string | null;
 }
 
 interface ActionsSearchFilterProps {
@@ -22,17 +23,18 @@ export default function ActionsSearchFilter({
   actions,
   onFilteredActionsChange,
   categories,
+  completedActionIds: propCompletedIds,
 }: ActionsSearchFilterProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [completionFilter, setCompletionFilter] = useState<'all' | 'completed' | 'incomplete'>('all');
   const [internalCompletedIds, setInternalCompletedIds] = useState<Set<string>>(new Set());
 
-  const finalCompletedIds = completedActionIds || internalCompletedIds;
+  const finalCompletedIds = propCompletedIds || internalCompletedIds;
 
   // Fetch completed actions if not provided
   useEffect(() => {
-    if (completedActionIds) return; // Skip if provided as prop
+    if (propCompletedIds) return; // Skip if provided as prop
 
     async function fetchCompleted() {
       try {
@@ -46,7 +48,7 @@ export default function ActionsSearchFilter({
       }
     }
     fetchCompleted();
-  }, [completedActionIds]);
+  }, [propCompletedIds]);
 
   // Filter actions based on search, category, and completion status
   const filteredActions = useMemo(() => {
