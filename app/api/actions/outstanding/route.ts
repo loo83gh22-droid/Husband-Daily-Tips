@@ -36,7 +36,7 @@ export async function GET(request: Request) {
         date,
         completed,
         dnc,
-        actions (
+        actions!inner (
           id,
           name,
           description,
@@ -54,7 +54,14 @@ export async function GET(request: Request) {
     if (error) {
       console.error('Error fetching outstanding actions:', error);
       console.error('Error details:', JSON.stringify(error, null, 2));
-      return NextResponse.json({ error: 'Failed to fetch outstanding actions', details: error.message }, { status: 500 });
+      console.error('Error code:', error.code);
+      console.error('Error hint:', error.hint);
+      return NextResponse.json({ 
+        error: 'Failed to fetch outstanding actions', 
+        details: error.message,
+        code: error.code,
+        hint: error.hint
+      }, { status: 500 });
     }
 
     // Format the response
