@@ -104,7 +104,7 @@ export default function ChallengeJoinSuccessModal({
 
         <div className="bg-slate-800/50 rounded-lg p-4 mb-6">
           <p className="text-sm text-slate-300 mb-2">
-            <strong className="text-primary-400">Here&apos;s the deal:</strong> We&apos;ve locked in 7 personalized actions, one for each day. These aren&apos;t random—they&apos;re tailored to you.
+            <strong className="text-primary-400">Here&apos;s the deal:</strong> We&apos;ve locked in 7 actions, one for each day. These aren&apos;t random—they&apos;re picked for you based on your survey.
           </p>
           <p className="text-xs text-slate-400">
             Want to be extra smart? Add them to your calendar now. Planning ahead = actually doing it. Pre-assigned actions take priority over the daily algorithm, so you&apos;re locked and loaded.

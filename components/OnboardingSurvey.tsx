@@ -239,7 +239,7 @@ export default function OnboardingSurvey({ userId, onComplete }: OnboardingSurve
         </div>
 
         <p className="text-xs text-slate-500 text-center mt-6">
-          Your responses help us personalize your daily actions and provide an honest starting point for your relationship health.
+          Your responses help us give you actions that fit your situation and show you where you're starting from.
         </p>
       </div>
     </div>

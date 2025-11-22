@@ -59,7 +59,7 @@ export default async function SubscriptionPage() {
         'Achievement badges',
         'Private journal & Team Wins',
         'All features unlocked',
-        'Expert relationship advice',
+        'Real, practical relationship tips',
       ],
       popular: true,
     },

@@ -51,7 +51,7 @@ export default async function PublicSurveyPage() {
               Get Your Husband Score
             </h1>
             <p className="text-slate-400 text-base md:text-lg">
-              Take our quick 10-question survey to discover your baseline and get personalized actions.
+              Take our quick 10-question survey to see where you're at and get actions that fit your situation.
               <br />
               <span className="text-sm text-slate-500 mt-2 block">
                 Takes about 2 minutes • Free • No signup required to take the survey

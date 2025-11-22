@@ -1397,10 +1397,10 @@ You expressed genuine gratitude. She felt seen and appreciated. You strengthened
     category: 'Communication',
     difficulty: 'Medium',
     time: 'Ongoing',
-    excerpt: 'Research shows healthy relationships need 5 positive interactions for every negative one. Learn how to build this ratio and rebuild connection.',
+    excerpt: 'Healthy relationships need way more positive moments than negative ones. Learn how to build this ratio and rebuild connection.',
     content: `## Why This Matters
 
-Research from relationship expert John Gottman shows that healthy relationships need 5 positive interactions for every negative one. If you're criticizing, complaining, or being negative more than you're being positive, you're eroding your connection.
+Here's the thing: if you're criticizing, complaining, or being negative more than you're being positive, you're slowly killing your connection. Healthy relationships need way more positive interactions than negative ones. Think 5 to 1. That's the ratio that works.
 
 ## The Secret: Focus on What's Working
 
@@ -1616,7 +1616,6 @@ You affirmed her. She felt seen and valued. You spoke her love language. That's 
 
 People express and receive love in different ways. Understanding how your partner feels most loved—her "love language"—helps you show love in ways that actually land. When you speak her language, she feels deeply understood and cared for.
 
-*Note: The concept of "love languages" was popularized by relationship counselor Gary Chapman in his book "The 5 Love Languages." This guide adapts those concepts into practical, actionable steps for husbands.*
 
 ## The Secret: It's About How She Feels Loved
 
@@ -2404,7 +2403,7 @@ You sat close and talked. You felt more connected. Physical proximity increased 
     excerpt: 'Learn to recognize when she\'s reaching out for connection and how to respond positively. Small moments build big emotional bonds.',
     content: `## Why This Matters
 
-Research from relationship expert John Gottman shows that turning toward your partner's "bids for connection" is crucial for relationship health. When she reaches out, how you respond determines whether you connect or drift apart.
+When she reaches out—a comment, a question, a look—how you respond determines everything. Turn toward her, and you connect. Turn away, and you drift apart. It's that simple, and it's that important.
 
 ## The Secret: Notice and Respond
 
@@ -3433,10 +3432,10 @@ You took the kids out. Mom got real alone time. She relaxed and recharged. That'
     category: 'Intimacy',
     difficulty: 'Easy',
     time: '30-60 min',
-    excerpt: 'Learn how relationship games can deepen connection and add playfulness. Try games designed to facilitate meaningful conversations.',
+    excerpt: 'Learn how relationship games can deepen connection and add playfulness. Try games that help you have real conversations.',
     content: `## Why This Matters
 
-Relationship games create structured opportunities for deep connection. They facilitate conversations you might not have otherwise and add playfulness to your relationship. They're fun and meaningful.
+Relationship games create structured opportunities for deep connection. They help you have conversations you might not have otherwise and add playfulness to your relationship. They're fun and meaningful.
 
 ## The Secret: Be Open and Vulnerable
 
@@ -3453,8 +3452,7 @@ These games only work if you're willing to be honest and vulnerable. They create
 
 ### 2. "The Gottman Card Decks" App
 
-- Research-based questions
-- Created by relationship experts
+- Good conversation starters
 - Multiple card decks (love, intimacy, etc.)
 - Free app available
 
