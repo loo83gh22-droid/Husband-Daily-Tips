@@ -8,7 +8,7 @@ async function getUserProfile(auth0Id: string) {
   try {
     const { data: user, error } = await supabase
       .from('users')
-      .select('username, wedding_date, post_anonymously, timezone, profile_picture')
+      .select('username, wedding_date, post_anonymously, timezone, profile_picture, has_kids, kids_live_with_you')
       .eq('auth0_id', auth0Id)
       .single();
 
@@ -29,6 +29,8 @@ async function getUserProfile(auth0Id: string) {
       post_anonymously: user?.post_anonymously || false,
       timezone: user?.timezone || 'America/New_York',
       profile_picture: user?.profile_picture || null,
+      has_kids: user?.has_kids ?? null,
+      kids_live_with_you: user?.kids_live_with_you ?? null,
     };
   } catch (err) {
     console.error('Unexpected error fetching profile:', err);
@@ -38,6 +40,8 @@ async function getUserProfile(auth0Id: string) {
       post_anonymously: false,
       timezone: 'America/New_York',
       profile_picture: null,
+      has_kids: null,
+      kids_live_with_you: null,
     };
   }
 }
