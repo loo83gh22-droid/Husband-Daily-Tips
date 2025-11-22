@@ -58,10 +58,32 @@ export default function BadgesDisplay({ userId }: BadgesDisplayProps) {
     );
   }
 
-  // Deduplicate badges by ID first (in case API returns duplicates)
-  const uniqueBadges = Array.from(
-    new Map(badges.map((badge) => [badge.id, badge])).values()
-  );
+  // Deduplicate badges by ID first, then by name (in case API returns duplicates with different IDs but same name)
+  const badgesById = new Map(badges.map((badge) => [badge.id, badge]));
+  const badgesByName = new Map<string, Badge>();
+  
+  // If we have duplicates by name, keep the one with earned_at if available, otherwise keep the first
+  badgesById.forEach((badge) => {
+    const existing = badgesByName.get(badge.name);
+    if (!existing) {
+      badgesByName.set(badge.name, badge);
+    } else {
+      // If current badge is earned and existing is not, replace it
+      if (badge.earned_at && !existing.earned_at) {
+        badgesByName.set(badge.name, badge);
+      }
+      // If both are earned or both are not, keep the one with better progress
+      else if (!badge.earned_at && !existing.earned_at) {
+        const badgeProgress = badge.progress?.percentage || 0;
+        const existingProgress = existing.progress?.percentage || 0;
+        if (badgeProgress > existingProgress) {
+          badgesByName.set(badge.name, badge);
+        }
+      }
+    }
+  });
+  
+  const uniqueBadges = Array.from(badgesByName.values());
 
   const earnedBadges = uniqueBadges.filter((b) => b.earned_at);
   
