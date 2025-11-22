@@ -47,10 +47,16 @@ interface ChallengeCardProps {
 
 export default function ChallengeCard({ challenge, userChallenge, userId, onJoin }: ChallengeCardProps) {
   const [isJoining, setIsJoining] = useState(false);
+  // Sync isJoined with userChallenge prop - update when prop changes
   const [isJoined, setIsJoined] = useState(!!userChallenge);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [errorChallengeName, setErrorChallengeName] = useState('');
+
+  // Update isJoined when userChallenge prop changes
+  useEffect(() => {
+    setIsJoined(!!userChallenge);
+  }, [userChallenge]);
 
   const startDate = new Date(challenge.start_date);
   const endDate = new Date(challenge.end_date);
@@ -231,7 +237,7 @@ export default function ChallengeCard({ challenge, userChallenge, userId, onJoin
       )}
 
       <div className="flex gap-2">
-        {!isJoined ? (
+        {!userChallenge ? (
           <button
             onClick={handleJoin}
             disabled={isJoining || isPast}
