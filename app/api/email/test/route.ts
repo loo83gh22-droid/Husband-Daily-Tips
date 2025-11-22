@@ -14,26 +14,18 @@ const resend = new Resend(process.env.RESEND_API_KEY);
  */
 export async function POST(request: Request) {
   try {
-    // Debug: Log all headers to see what's actually being received
-    const allHeaders: Record<string, string> = {};
-    request.headers.forEach((value, key) => {
-      allHeaders[key] = value;
-    });
-    console.log('All headers received:', JSON.stringify(allHeaders, null, 2));
-    
     // Verify this is called with proper auth (use same secret as other email endpoints)
     // Try multiple header name formats (case-insensitive)
     const authHeader = request.headers.get('authorization') || 
                        request.headers.get('Authorization') ||
                        request.headers.get('AUTHORIZATION');
     
-    // Also allow query parameter as fallback for testing
+    // Also allow query parameter as fallback (useful for PowerShell/curl testing)
     const { searchParams } = new URL(request.url);
     const querySecret = searchParams.get('secret');
     
     const expectedAuth = `Bearer ${process.env.CRON_SECRET}`;
     
-    // Debug logging (remove after testing)
     if (!process.env.CRON_SECRET) {
       console.error('CRON_SECRET is not set in environment variables');
       return NextResponse.json({ 
@@ -47,28 +39,7 @@ export async function POST(request: Request) {
                       (querySecret && querySecret === process.env.CRON_SECRET);
     
     if (!authValid) {
-      console.error('Auth mismatch:', {
-        received: authHeader ? authHeader.substring(0, 20) + '...' : 'null',
-        expectedLength: expectedAuth.length,
-        receivedLength: authHeader?.length || 0,
-        secretSet: !!process.env.CRON_SECRET,
-        secretLength: process.env.CRON_SECRET?.length || 0,
-        allHeadersKeys: Object.keys(allHeaders)
-      });
-      
-      // Return more details for debugging (remove in production)
-      return NextResponse.json({ 
-        error: 'Unauthorized',
-        debug: {
-          receivedLength: authHeader?.length || 0,
-          expectedLength: expectedAuth.length,
-          secretConfigured: !!process.env.CRON_SECRET,
-          secretLength: process.env.CRON_SECRET?.length || 0,
-          receivedPrefix: authHeader ? authHeader.substring(0, 20) : 'null',
-          headersReceived: Object.keys(allHeaders),
-          headerCount: Object.keys(allHeaders).length
-        }
-      }, { status: 401 });
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const { username } = await request.json();
