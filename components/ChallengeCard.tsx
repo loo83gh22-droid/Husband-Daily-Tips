@@ -237,7 +237,7 @@ export default function ChallengeCard({ challenge, userChallenge, userId, onJoin
       )}
 
       <div className="flex gap-2">
-        {!userChallenge ? (
+        {!userChallenge && !isJoined ? (
           <button
             onClick={handleJoin}
             disabled={isJoining || isPast}

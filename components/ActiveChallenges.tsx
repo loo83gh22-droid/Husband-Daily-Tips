@@ -83,7 +83,9 @@ export default function ActiveChallenges() {
       });
       if (response.ok) {
         const data = await response.json();
-        setUserChallenges(data.challenges || []);
+        // Use allChallenges (includes completed) for enrollment detection
+        // This ensures we can detect if user is enrolled even if challenge is completed
+        setUserChallenges(data.allChallenges || data.challenges || []);
       } else if (response.status === 401) {
         // Silently handle auth errors
         setUserChallenges([]);

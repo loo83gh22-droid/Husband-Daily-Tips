@@ -28,7 +28,29 @@ export async function GET() {
 
     const today = new Date().toISOString().split('T')[0];
 
-    // Get user's active challenges (incomplete ones)
+    // Get ALL user's challenges (both active and completed) to properly detect enrollment
+    const { data: allUserChallenges, error: allError } = await supabase
+      .from('user_challenges')
+      .select(`
+        *,
+        challenges (
+          *,
+          challenge_actions (
+            day_number,
+            actions (
+              id,
+              name,
+              description,
+              icon,
+              benefit
+            )
+          )
+        )
+      `)
+      .eq('user_id', user.id)
+      .order('joined_date', { ascending: false });
+
+    // Get user's active challenges (incomplete ones) for the main response
     const { data: userChallenges, error } = await supabase
       .from('user_challenges')
       .select(`
@@ -70,7 +92,7 @@ export async function GET() {
       completionCounts.set(cc.challenge_id, currentCount + (cc.completion_count || 0));
     });
 
-    // Calculate progress for each challenge
+    // Calculate progress for each active challenge
     const challengesWithProgress = (userChallenges || []).map((uc: any) => {
       const challenge = uc.challenges;
       const totalDays = challenge?.challenge_actions?.length || 7;
@@ -87,7 +109,27 @@ export async function GET() {
       };
     });
 
-    return NextResponse.json({ challenges: challengesWithProgress });
+    // Also include all challenges (active + completed) for enrollment detection
+    const allChallengesWithProgress = (allUserChallenges || []).map((uc: any) => {
+      const challenge = uc.challenges;
+      const totalDays = challenge?.challenge_actions?.length || 7;
+      const completedDays = uc.completed_days || 0;
+      const progress = (completedDays / totalDays) * 100;
+      const completionCount = completionCounts.get(challenge.id) || 0;
+
+      return {
+        ...uc,
+        progress,
+        totalDays,
+        remainingDays: totalDays - completedDays,
+        completionCount,
+      };
+    });
+
+    return NextResponse.json({ 
+      challenges: challengesWithProgress,
+      allChallenges: allChallengesWithProgress // Include all for enrollment detection
+    });
   } catch (error) {
     console.error('Unexpected error fetching user challenges:', error);
     return NextResponse.json({ error: 'Unexpected error' }, { status: 500 });
