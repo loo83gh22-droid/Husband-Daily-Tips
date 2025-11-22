@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getSession } from '@auth0/nextjs-auth0';
-import { supabase } from '@/lib/supabase';
+import { getSupabaseAdmin } from '@/lib/supabase';
 
 /**
  * Get the current day's action from an active challenge
@@ -15,6 +15,9 @@ export async function GET() {
     }
 
     const auth0Id = session.user.sub;
+
+    // Use admin client to bypass RLS (Auth0 context isn't set)
+    const supabase = getSupabaseAdmin();
 
     // Get user
     const { data: user, error: userError } = await supabase
