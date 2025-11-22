@@ -124,8 +124,8 @@ export default async function SubscriptionPage() {
                   <span className="text-lg text-slate-400">/month</span>
                 </div>
                 {plan.price > 0 && (
-                  <p className="text-xs text-slate-400 mb-4">
-                    Less than a quarter a day! After 7-day trial
+                  <p className="text-sm text-primary-400 font-semibold mb-4">
+                    $7 a month. Less than $0.25 a day. A no-brainer to level up your biggest win.
                   </p>
                 )}
                 {plan.price === 0 && (
