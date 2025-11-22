@@ -17,9 +17,17 @@ interface HealthDataPoint {
 export default function ProgressCharts({ userId, currentStreak, healthScore }: ProgressChartsProps) {
   const [healthHistory, setHealthHistory] = useState<HealthDataPoint[]>([]);
   const [loading, setLoading] = useState(true);
+  const [mounted, setMounted] = useState(false);
   const [selectedView, setSelectedView] = useState<'trend' | 'calendar'>('trend');
 
+  // Only run on client to avoid hydration mismatches
   useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!mounted || !userId) return;
+
     async function fetchHealthHistory() {
       try {
         // Fetch health history from API
@@ -32,22 +40,22 @@ export default function ProgressCharts({ userId, currentStreak, healthScore }: P
           if (data.history && data.history.length > 0) {
             setHealthHistory(data.history);
           } else {
-            // Fallback: generate trend from current health
+            // Fallback: generate deterministic trend from current health (no random values)
             const dataPoints: HealthDataPoint[] = [];
             for (let i = 30; i >= 0; i--) {
               const date = subDays(new Date(), i);
-              // Generate a realistic trend (slight variation, generally improving)
               const daysAgo = 30 - i;
+              // Deterministic calculation - no random values
               const baseHealth = Math.max(0, healthScore - (daysAgo * 0.3));
               dataPoints.push({
                 date: date.toISOString().split('T')[0],
-                health: Math.min(100, Math.max(0, baseHealth + (Math.random() * 3 - 1.5))),
+                health: Math.min(100, Math.max(0, baseHealth)),
               });
             }
             setHealthHistory(dataPoints);
           }
         } else {
-          // Fallback: generate trend from current health
+          // Fallback: generate deterministic trend
           const dataPoints: HealthDataPoint[] = [];
           for (let i = 30; i >= 0; i--) {
             const date = subDays(new Date(), i);
@@ -55,14 +63,14 @@ export default function ProgressCharts({ userId, currentStreak, healthScore }: P
             const baseHealth = Math.max(0, healthScore - (daysAgo * 0.3));
             dataPoints.push({
               date: date.toISOString().split('T')[0],
-              health: Math.min(100, Math.max(0, baseHealth + (Math.random() * 3 - 1.5))),
+              health: Math.min(100, Math.max(0, baseHealth)),
             });
           }
           setHealthHistory(dataPoints);
         }
       } catch (error) {
         console.error('Error fetching health history:', error);
-        // Fallback on error
+        // Fallback on error - deterministic
         const dataPoints: HealthDataPoint[] = [];
         for (let i = 30; i >= 0; i--) {
           const date = subDays(new Date(), i);
@@ -70,7 +78,7 @@ export default function ProgressCharts({ userId, currentStreak, healthScore }: P
           const baseHealth = Math.max(0, healthScore - (daysAgo * 0.3));
           dataPoints.push({
             date: date.toISOString().split('T')[0],
-            health: Math.min(100, Math.max(0, baseHealth + (Math.random() * 3 - 1.5))),
+            health: Math.min(100, Math.max(0, baseHealth)),
           });
         }
         setHealthHistory(dataPoints);
@@ -79,10 +87,8 @@ export default function ProgressCharts({ userId, currentStreak, healthScore }: P
       }
     }
 
-    if (userId) {
-      fetchHealthHistory();
-    }
-  }, [userId, healthScore]);
+    fetchHealthHistory();
+  }, [userId, healthScore, mounted]);
 
   // Get completion dates for calendar view
   const [completionDates, setCompletionDates] = useState<Set<string>>(new Set());
@@ -106,7 +112,8 @@ export default function ProgressCharts({ userId, currentStreak, healthScore }: P
     }
   }, [userId]);
 
-  if (loading) {
+  // Don't render until mounted to avoid hydration issues
+  if (!mounted || loading) {
     return (
       <div className="bg-slate-900/80 border border-slate-800 rounded-xl p-6">
         <div className="animate-pulse space-y-4">
@@ -122,9 +129,12 @@ export default function ProgressCharts({ userId, currentStreak, healthScore }: P
     ? healthHistory[healthHistory.length - 1].health - healthHistory[0].health
     : 0;
 
-  // Get max and min health for chart scaling
-  const maxHealth = Math.max(...healthHistory.map((d) => d.health), 100);
-  const minHealth = Math.min(...healthHistory.map((d) => d.health), 0);
+  // Get max and min health for chart scaling (with guards for empty arrays)
+  const healthValues = healthHistory.length > 0 
+    ? healthHistory.map((d) => d.health) 
+    : [healthScore];
+  const maxHealth = Math.max(...healthValues, 100);
+  const minHealth = Math.min(...healthValues, 0);
 
   return (
     <div className="bg-slate-900/80 border border-slate-800 rounded-xl p-6">
