@@ -1,12 +1,14 @@
 import { getSession } from '@auth0/nextjs-auth0';
 import { redirect } from 'next/navigation';
-import { supabase } from '@/lib/supabase';
+import { getSupabaseAdmin } from '@/lib/supabase';
 import DashboardNav from '@/components/DashboardNav';
 import DeepThoughtsPost from '@/components/DeepThoughtsPost';
 import Link from 'next/link';
 
 async function getUserSubscription(auth0Id: string) {
-  const { data: user } = await supabase
+  // Use admin client to bypass RLS (Auth0 context isn't set)
+  const adminSupabase = getSupabaseAdmin();
+  const { data: user } = await adminSupabase
     .from('users')
     .select('subscription_tier')
     .eq('auth0_id', auth0Id)
@@ -16,7 +18,9 @@ async function getUserSubscription(auth0Id: string) {
 }
 
 async function getTeamWins() {
-  const { data: thoughts, error } = await supabase
+  // Use admin client to bypass RLS (Auth0 context isn't set)
+  const adminSupabase = getSupabaseAdmin();
+  const { data: thoughts, error } = await adminSupabase
     .from('deep_thoughts')
     .select(`
       *,
@@ -38,9 +42,11 @@ async function getTeamWins() {
 }
 
 async function getActiveChallenge() {
+  // Use admin client to bypass RLS (Auth0 context isn't set)
+  const adminSupabase = getSupabaseAdmin();
   const today = new Date().toISOString().split('T')[0];
   
-  const { data: challenge, error } = await supabase
+  const { data: challenge, error } = await adminSupabase
     .from('challenges')
     .select('*')
     .eq('is_active', true)
