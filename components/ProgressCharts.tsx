@@ -31,7 +31,7 @@ export default function ProgressCharts({ userId, currentStreak, healthScore }: P
     async function fetchHealthHistory() {
       try {
         // Fetch health history from API
-        const response = await fetch(`/api/health/history?days=30`, {
+        const response = await fetch(`/api/health/history?days=90`, {
           credentials: 'include',
         });
         
@@ -42,9 +42,9 @@ export default function ProgressCharts({ userId, currentStreak, healthScore }: P
           } else {
             // Fallback: generate deterministic trend from current health (no random values)
             const dataPoints: HealthDataPoint[] = [];
-            for (let i = 30; i >= 0; i--) {
+            for (let i = 90; i >= 0; i--) {
               const date = subDays(new Date(), i);
-              const daysAgo = 30 - i;
+              const daysAgo = 90 - i;
               // Deterministic calculation - no random values
               const baseHealth = Math.max(0, healthScore - (daysAgo * 0.3));
               dataPoints.push({
@@ -57,9 +57,9 @@ export default function ProgressCharts({ userId, currentStreak, healthScore }: P
         } else {
           // Fallback: generate deterministic trend
           const dataPoints: HealthDataPoint[] = [];
-          for (let i = 30; i >= 0; i--) {
+          for (let i = 90; i >= 0; i--) {
             const date = subDays(new Date(), i);
-            const daysAgo = 30 - i;
+            const daysAgo = 90 - i;
             const baseHealth = Math.max(0, healthScore - (daysAgo * 0.3));
             dataPoints.push({
               date: date.toISOString().split('T')[0],
@@ -72,9 +72,9 @@ export default function ProgressCharts({ userId, currentStreak, healthScore }: P
         console.error('Error fetching health history:', error);
         // Fallback on error - deterministic
         const dataPoints: HealthDataPoint[] = [];
-        for (let i = 30; i >= 0; i--) {
+        for (let i = 90; i >= 0; i--) {
           const date = subDays(new Date(), i);
-          const daysAgo = 30 - i;
+          const daysAgo = 90 - i;
           const baseHealth = Math.max(0, healthScore - (daysAgo * 0.3));
           dataPoints.push({
             date: date.toISOString().split('T')[0],
