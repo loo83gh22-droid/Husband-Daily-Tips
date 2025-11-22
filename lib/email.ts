@@ -5,7 +5,8 @@
 
 import { Resend } from 'resend';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+// Initialize Resend - will be validated in send function
+const resend = new Resend(process.env.RESEND_API_KEY || '');
 
 export interface EmailTip {
   title: string;

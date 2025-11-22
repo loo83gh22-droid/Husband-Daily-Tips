@@ -2,7 +2,8 @@ import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
 import { getSupabaseAdmin } from '@/lib/supabase';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+// Initialize Resend - will be validated before use
+const resend = new Resend(process.env.RESEND_API_KEY || '');
 
 /**
  * Test email endpoint - sends a test email to a user by username
