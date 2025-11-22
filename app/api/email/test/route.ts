@@ -26,6 +26,11 @@ export async function POST(request: Request) {
     const authHeader = request.headers.get('authorization') || 
                        request.headers.get('Authorization') ||
                        request.headers.get('AUTHORIZATION');
+    
+    // Also allow query parameter as fallback for testing
+    const { searchParams } = new URL(request.url);
+    const querySecret = searchParams.get('secret');
+    
     const expectedAuth = `Bearer ${process.env.CRON_SECRET}`;
     
     // Debug logging (remove after testing)
@@ -37,7 +42,11 @@ export async function POST(request: Request) {
       }, { status: 500 });
     }
     
-    if (authHeader !== expectedAuth) {
+    // Check both header and query parameter
+    const authValid = authHeader === expectedAuth || 
+                      (querySecret && querySecret === process.env.CRON_SECRET);
+    
+    if (!authValid) {
       console.error('Auth mismatch:', {
         received: authHeader ? authHeader.substring(0, 20) + '...' : 'null',
         expectedLength: expectedAuth.length,
