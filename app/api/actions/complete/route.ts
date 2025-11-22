@@ -90,18 +90,20 @@ export async function POST(request: Request) {
       );
     }
 
-    // Also mark as completed in user_daily_actions if it's today's action
-    const today = new Date().toISOString().split('T')[0];
-    const { data: dailyAction } = await supabase
+    // Mark as completed in user_daily_actions for ANY date (not just today)
+    // This allows users to catch up on missed days - they can complete past actions
+    const { data: dailyActions } = await supabase
       .from('user_daily_actions')
-      .select('id')
+      .select('id, date')
       .eq('user_id', user.id)
       .eq('action_id', actionId)
-      .eq('date', today)
-      .single();
+      .eq('completed', false)
+      .order('date', { ascending: false })
+      .limit(1); // Get the most recent incomplete action for this action_id
 
-    if (dailyAction) {
-      // Mark as completed
+    if (dailyActions && dailyActions.length > 0) {
+      const dailyAction = dailyActions[0];
+      // Mark as completed (can be any date - allows catch-up)
       await supabase
         .from('user_daily_actions')
         .update({ completed: true })

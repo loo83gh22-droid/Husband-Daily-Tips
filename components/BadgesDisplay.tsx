@@ -73,7 +73,7 @@ export default function BadgesDisplay({ userId }: BadgesDisplayProps) {
       const bPercent = b.progress?.percentage || 0;
       return bPercent - aPercent;
     })
-    .slice(0, 10); // Limit to 10 badges
+    .slice(0, 5); // Limit to top 5 badges closest to completion
 
   return (
     <div className="bg-slate-900/70 border border-slate-800 rounded-xl p-4 md:p-6">
