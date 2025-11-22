@@ -9,12 +9,17 @@ interface HealthBarProps {
    * We derive this from streak + recent activity.
    */
   value: number;
+  /**
+   * Trigger a pulse animation when health increases
+   */
+  shouldPulse?: boolean;
+  onPulseComplete?: () => void;
 }
 
 const MILESTONES = [50, 60, 70, 80, 90, 100] as const;
 type Milestone = typeof MILESTONES[number];
 
-export default function HealthBar({ value }: HealthBarProps) {
+export default function HealthBar({ value, shouldPulse = false, onPulseComplete }: HealthBarProps) {
   const [previousHealth, setPreviousHealth] = useState<number | null>(null);
   const [celebratedMilestones, setCelebratedMilestones] = useState<Set<Milestone>>(new Set());
   const [currentMilestone, setCurrentMilestone] = useState<Milestone | null>(null);
@@ -183,14 +188,26 @@ export default function HealthBar({ value }: HealthBarProps) {
           <div className="h-6 w-full rounded-full bg-slate-800/80 overflow-hidden border-2 border-slate-700/60 mb-3 relative shadow-inner">
             {/* Animated glow effect on the progress bar */}
             <div
-              className="h-full bg-gradient-to-r from-red-500 via-yellow-500 via-green-400 to-emerald-400 transition-all duration-700 ease-out relative overflow-hidden"
+              className={`h-full bg-gradient-to-r from-red-500 via-yellow-500 via-green-400 to-emerald-400 transition-all duration-700 ease-out relative overflow-hidden ${
+                shouldPulse ? 'animate-pulse' : ''
+              }`}
               style={{ width: `${clamped}%` }}
+              onAnimationEnd={() => {
+                if (shouldPulse && onPulseComplete) {
+                  onPulseComplete();
+                }
+              }}
             >
               {/* Shimmer effect */}
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shimmer" />
               
               {/* Subtle inner glow */}
               <div className="absolute inset-0 bg-gradient-to-b from-white/10 to-transparent" />
+              
+              {/* Pulse glow effect when health increases */}
+              {shouldPulse && (
+                <div className="absolute inset-0 bg-gradient-to-r from-primary-400/50 via-emerald-400/50 to-primary-400/50 animate-ping" />
+              )}
             </div>
             
             {/* Milestone markers - more prominent */}

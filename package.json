@@ -12,14 +12,17 @@
   "dependencies": {
     "@auth0/nextjs-auth0": "^3.0.0",
     "@supabase/supabase-js": "^2.39.0",
+    "canvas-confetti": "^1.9.4",
     "date-fns": "^3.0.6",
     "dotenv": "^17.2.3",
+    "framer-motion": "^12.23.24",
     "next": "^14.2.25",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "resend": "^6.5.0"
   },
   "devDependencies": {
+    "@types/canvas-confetti": "^1.9.0",
     "@types/node": "^20.10.6",
     "@types/react": "^18.2.46",
     "@types/react-dom": "^18.2.18",
