@@ -92,7 +92,7 @@ export default function AutoCalendarToggle() {
   const handleDownloadAllActions = async () => {
     setIsDownloading(true);
     try {
-      const response = await fetch('/api/calendar/actions/download?days=90');
+      const response = await fetch('/api/calendar/actions/download?days=7');
       if (!response.ok) {
         throw new Error('Failed to download calendar');
       }
@@ -101,7 +101,7 @@ export default function AutoCalendarToggle() {
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = 'best-husband-actions-90-days.ics';
+      a.download = 'best-husband-actions-7-days.ics';
       document.body.appendChild(a);
       a.click();
       window.URL.revokeObjectURL(url);
@@ -185,12 +185,13 @@ export default function AutoCalendarToggle() {
               ) : (
                 <>
                   <span>📥</span>
-                  <span>Download All Future Actions (90 days)</span>
+                  <span>Download Next 7 Days of Actions</span>
                 </>
               )}
             </button>
             <p className="text-[10px] text-slate-500 mt-1.5 text-center">
-              Import the downloaded file into your {calendarType === 'google' ? 'Google' : 'Outlook'} Calendar
+              Import the downloaded file into your {calendarType === 'google' ? 'Google' : 'Outlook'} Calendar. 
+              After that, new actions will be added daily via email links.
             </p>
           </div>
         </div>
