@@ -79,16 +79,32 @@ export async function GET(request: Request) {
         .filter((id): id is string => id != null && id !== '')
     ));
     
+    console.log('Outstanding actions count:', outstandingActions.length);
+    console.log('Unique action IDs count:', actionIds.length);
+    console.log('Action IDs:', actionIds);
+    
     if (actionIds.length === 0) {
       console.warn('No valid action IDs found in outstanding actions');
       return NextResponse.json({ actions: [] });
     }
     
     // Fetch actions separately
-    const { data: actions, error: actionsError } = await supabase
-      .from('actions')
-      .select('id, name, description, icon, category')
-      .in('id', actionIds);
+    let actions;
+    let actionsError;
+    try {
+      const result = await supabase
+        .from('actions')
+        .select('id, name, description, icon, category')
+        .in('id', actionIds);
+      actions = result.data;
+      actionsError = result.error;
+    } catch (queryError: any) {
+      console.error('Exception during actions query:', queryError);
+      return NextResponse.json({ 
+        error: 'Actions query exception', 
+        details: queryError?.message || 'Unknown query error'
+      }, { status: 500 });
+    }
 
     if (actionsError) {
       console.error('Error fetching actions:', actionsError);
