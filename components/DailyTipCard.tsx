@@ -3,8 +3,10 @@
 import { useState, useEffect } from 'react';
 import { format } from 'date-fns';
 import Link from 'next/link';
+import { motion } from 'framer-motion';
 import ReflectionModal from './ReflectionModal';
 import SocialShare from './SocialShare';
+import ActionCelebration from './ActionCelebration';
 import { getGuideSlugForAction } from '@/lib/action-guide-mapping';
 
 interface Tip {
@@ -43,6 +45,9 @@ export default function DailyTipCard({ tip, subscriptionTier = 'free' }: DailyTi
   const [isTogglingFavorite, setIsTogglingFavorite] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [displayDate, setDisplayDate] = useState('');
+  const [showCelebration, setShowCelebration] = useState(false);
+  const [healthIncrease, setHealthIncrease] = useState(0);
+  const [isMilestone, setIsMilestone] = useState(false);
 
   // Only set date after mount to avoid hydration mismatch
   useEffect(() => {
@@ -56,6 +61,10 @@ export default function DailyTipCard({ tip, subscriptionTier = 'free' }: DailyTi
     setErrorMessage(null);
 
     try {
+      // Get current health before completion (we'll estimate based on standard increase)
+      // Daily actions give 6 health points
+      const healthIncreaseAmount = 6;
+      
       // Use action completion API if it's an action, otherwise use tip API
       const endpoint = tip.isAction ? '/api/actions/complete' : '/api/tips/complete';
       const body = tip.isAction 
@@ -76,6 +85,14 @@ export default function DailyTipCard({ tip, subscriptionTier = 'free' }: DailyTi
 
       const data = await response.json();
       setIsCompleted(true);
+      setHealthIncrease(healthIncreaseAmount);
+
+      // Check if this might be a milestone (we'll trigger confetti for significant increases)
+      // For now, trigger confetti for any completion, but we could check actual health
+      setIsMilestone(false);
+
+      // Show celebration animation
+      setShowCelebration(true);
 
       // Show badge notifications if any were earned
       if (data.newlyEarnedBadges && data.newlyEarnedBadges.length > 0) {
@@ -84,10 +101,10 @@ export default function DailyTipCard({ tip, subscriptionTier = 'free' }: DailyTi
         setTimeout(() => setNewlyEarnedBadges([]), 5000);
       }
 
-      // Show reflection modal after a brief delay
+      // Show reflection modal after celebration completes
       setTimeout(() => {
         setShowReflection(true);
-      }, 500);
+      }, 3500); // Wait for celebration to finish
     } catch (error) {
       console.error(error);
       setErrorMessage('Could not save this action. You can try again in a moment.');
@@ -256,7 +273,19 @@ END:VCALENDAR`;
   };
 
   return (
-    <div className="bg-slate-900/80 rounded-xl shadow-lg p-8 mb-6 border border-slate-800">
+    <>
+      <ActionCelebration
+        isVisible={showCelebration}
+        healthIncrease={healthIncrease}
+        isMilestone={isMilestone}
+        onComplete={() => setShowCelebration(false)}
+      />
+      <motion.div
+        initial={false}
+        animate={isCompleted ? { scale: [1, 1.02, 1], boxShadow: ['0 0 0px rgba(251, 191, 36, 0)', '0 0 20px rgba(251, 191, 36, 0.5)', '0 0 0px rgba(251, 191, 36, 0)'] } : {}}
+        transition={{ duration: 0.6, ease: 'easeOut' }}
+        className="bg-slate-900/80 rounded-xl shadow-lg p-8 mb-6 border border-slate-800"
+      >
       <div className="flex items-start justify-between mb-4">
         <div>
           <span className="inline-block px-3 py-1 bg-primary-500/10 text-primary-300 text-xs font-semibold rounded-full mb-2">
@@ -405,7 +434,8 @@ END:VCALENDAR`;
         }}
         subscriptionTier={subscriptionTier}
       />
-    </div>
+      </motion.div>
+    </>
   );
 }
 
