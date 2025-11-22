@@ -114,12 +114,12 @@ export async function POST(request: Request) {
       // Track daily health points (capped at 6 per day)
       // Each daily action completion gives exactly 6 points (one-time per day)
       // This ensures maximum health accrual is 6 points per day
-      // Use the date of the action, not today (allows catch-up)
+      // Use the date of the action being completed, not today (allows catch-up)
       await supabase
         .from('daily_health_points')
         .upsert({
           user_id: user.id,
-          date: actionDate,
+          date: actionDate, // Use actionDate from the daily action, not today's date
           points_earned: 6, // Always 6 points for completing daily action (capped)
         }, {
           onConflict: 'user_id,date',
