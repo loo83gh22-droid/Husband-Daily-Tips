@@ -1,12 +1,16 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useUser } from '@auth0/nextjs-auth0/client';
 import BrandLogo from './BrandLogo';
 import HamburgerMenu from './HamburgerMenu';
 
 export default function DashboardNav() {
   const pathname = usePathname();
+  const { user } = useUser();
+  const [displayName, setDisplayName] = useState<string | null>(null);
 
   const navLinks = [
     { href: '/dashboard', label: 'Dashboard', icon: '📊' },
@@ -17,11 +21,40 @@ export default function DashboardNav() {
     { href: '/dashboard/how-to-guides', label: 'How To Guides', icon: '🔧' },
   ];
 
+  useEffect(() => {
+    async function fetchDisplayName() {
+      try {
+        const response = await fetch('/api/user/display-name', {
+          credentials: 'include',
+        });
+        if (response.ok) {
+          const data = await response.json();
+          setDisplayName(data.displayName || user?.name || null);
+        } else {
+          setDisplayName(user?.name || null);
+        }
+      } catch (error) {
+        setDisplayName(user?.name || null);
+      }
+    }
+
+    if (user) {
+      fetchDisplayName();
+    }
+  }, [user]);
+
   return (
     <nav className="bg-slate-950/80 border-b border-slate-900 backdrop-blur sticky top-0 z-40">
       <div className="container mx-auto px-4 py-3">
         <div className="flex items-center justify-between">
-          <BrandLogo variant="nav" />
+          <div className="flex items-center gap-3">
+            <BrandLogo variant="nav" />
+            {displayName && (
+              <span className="text-sm text-slate-300 font-medium hidden md:inline">
+                {displayName}
+              </span>
+            )}
+          </div>
 
           <div className="flex items-center gap-1 md:gap-2">
             {navLinks.map((link) => {
