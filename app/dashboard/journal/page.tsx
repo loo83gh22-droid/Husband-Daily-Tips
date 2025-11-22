@@ -106,28 +106,23 @@ export default async function JournalPage() {
             {/* Journal Summary */}
             <div className="bg-slate-900/80 border border-slate-800 rounded-xl p-6 mb-8">
               <h2 className="text-lg font-semibold text-slate-50 mb-3">
-                Why Journaling Matters (And Why We Make It Easy)
+                Journaling is Hard. That's Why It Works.
               </h2>
-              <p className="text-sm text-slate-300 leading-relaxed mb-4">
-                Look, journaling is hard. We get it. Sitting down to write about what happened, 
-                what you learned, what surprised you—that takes effort. But here's the thing: 
-                that effort is exactly why it works. When you actually reflect on what you did 
-                and how it went, you start seeing patterns. You notice what works. You catch 
-                yourself doing things differently. That's how real change happens.
+              <p className="text-sm text-slate-300 leading-relaxed mb-3">
+                Writing down what happened forces you to actually think about it. No shortcuts. 
+                No autopilot. Just you, being honest about what worked and what didn't. That's 
+                where the real change happens—not in doing the action, but in reflecting on it.
               </p>
               <p className="text-sm text-slate-300 leading-relaxed mb-4">
-                We make it easy by prompting you right after you complete each daily action. 
-                No need to remember to journal later. No blank page staring back at you. 
-                Just a simple question: "How did it go?" Write a sentence. Write a paragraph. 
-                Or skip it. But when you do write, you're building something real—a record 
-                of your actual journey, not just a checklist of completed tasks.
+                We prompt you right after you complete an action. No blank page. No "I'll do it later." 
+                Just: "How'd it go?" Write one sentence. Write ten. Or skip it. Your call. But when 
+                you write, you're building something real—your actual journey, not just a checklist.
               </p>
               <div className="bg-slate-800/50 border border-slate-700/50 rounded-lg p-4 mt-4">
                 <p className="text-xs text-slate-400 leading-relaxed">
-                  <strong className="text-slate-300">Note:</strong> Your journal only shows actions you've completed. 
-                  If you skip an action or mark it as "not for me," it won't appear here. 
-                  This is your record of what you actually did, not what you didn't do. 
-                  That's by design—we want you to focus on your wins, not your misses.
+                  <strong className="text-slate-300">Quick note:</strong> This journal only shows actions you completed. 
+                  Skip something? It won't show up here. This is your record of wins, not misses. 
+                  That's intentional.
                 </p>
               </div>
             </div>
