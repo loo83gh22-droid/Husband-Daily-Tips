@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
 import { getSession } from '@auth0/nextjs-auth0';
-import { supabase } from '@/lib/supabase';
 import { getSupabaseAdmin } from '@/lib/supabase';
 
 /**
@@ -21,10 +20,11 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Missing reflectionId' }, { status: 400 });
     }
 
+    // Use admin client to bypass RLS (Auth0 context isn't set)
     const supabaseAdmin = getSupabaseAdmin();
 
     // Get user
-    const { data: user, error: userError } = await supabase
+    const { data: user, error: userError } = await supabaseAdmin
       .from('users')
       .select('id')
       .eq('auth0_id', auth0Id)
@@ -35,7 +35,7 @@ export async function POST(request: Request) {
     }
 
     // Get the reflection to check ownership and if it's shared
-    const { data: reflection, error: reflectionError } = await supabase
+    const { data: reflection, error: reflectionError } = await supabaseAdmin
       .from('reflections')
       .select('id, user_id, shared_to_forum')
       .eq('id', reflectionId)
