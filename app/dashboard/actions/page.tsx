@@ -65,7 +65,7 @@ async function getActions(auth0Id: string) {
     ? favoritedActionsData
         .filter((fad) => {
           const actionId = fad.actions?.id;
-          if (!actionId || favoritedActionIds.has(actionId)) return false;
+          if (!actionId || !fad.actions || favoritedActionIds.has(actionId)) return false;
           favoritedActionIds.add(actionId);
           return true;
         })
@@ -74,14 +74,20 @@ async function getActions(auth0Id: string) {
           favorited: true,
           favoritedDate: fad.date,
         }))
-        .filter((action) => action !== null)
+        .filter((action) => action && action.id) // Filter out null/undefined actions
     : [];
+
+  // Convert Map to plain object for serialization
+  const completedMapObj: Record<string, Array<{ id: string; completed_at: string; notes: string | null }>> = {};
+  completedMap.forEach((value, key) => {
+    completedMapObj[key] = value;
+  });
 
   return {
     actions: uniqueActions,
-    completedMap,
+    completedMap: completedMapObj,
     userId: user.id,
-    favoritedActions,
+    favoritedActions, // Already filtered above
   };
 }
 
@@ -190,13 +196,13 @@ export default async function ActionsPage() {
             <div className="flex items-center gap-4 text-sm">
               <span className="text-slate-300">
                 <span className="font-semibold text-primary-300">
-                  {Array.from(completedMap.keys()).length}
+                  {Object.keys(completedMap).length}
                 </span>{' '}
                 / {actions.length} actions completed
               </span>
               <span className="text-slate-500">•</span>
               <span className="text-slate-400">
-                {Math.round((Array.from(completedMap.keys()).length / actions.length) * 100)}%
+                {actions.length > 0 ? Math.round((Object.keys(completedMap).length / actions.length) * 100) : 0}%
                 complete
               </span>
             </div>

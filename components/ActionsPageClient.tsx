@@ -18,7 +18,7 @@ interface Action {
 
 interface ActionsPageClientProps {
   allActions: Action[];
-  completedMap: Map<string, any[]>;
+  completedMap: Record<string, any[]> | Map<string, any[]>;
   userId: string;
   favoritedActions: Action[];
 }
@@ -39,8 +39,14 @@ export default function ActionsPageClient({
   }));
 
   const [filteredActions, setFilteredActions] = useState<Action[]>(normalizedActions);
+  
+  // Convert completedMap to Map if it's a plain object
+  const completedMapInstance = completedMap instanceof Map 
+    ? completedMap 
+    : new Map(Object.entries(completedMap));
+  
   const [completedActionIds, setCompletedActionIds] = useState<Set<string>>(
-    new Set(Array.from(completedMap.keys()))
+    new Set(Array.from(completedMapInstance.keys()))
   );
 
   // Get unique categories
@@ -135,7 +141,7 @@ export default function ActionsPageClient({
               ({favoritedActions.length} action{favoritedActions.length !== 1 ? 's' : ''})
             </span>
           </div>
-          <ActionsList actions={favoritedActions} completedMap={completedMap} userId={userId} />
+          <ActionsList actions={favoritedActions} completedMap={completedMapInstance} userId={userId} />
         </section>
       )}
 
@@ -160,7 +166,7 @@ export default function ActionsPageClient({
 
                 <ActionsList
                   actions={themeActions.slice(0, 10)}
-                  completedMap={completedMap}
+                  completedMap={completedMapInstance}
                   userId={userId}
                 />
 
