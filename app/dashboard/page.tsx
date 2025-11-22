@@ -10,6 +10,7 @@ import DashboardNav from '@/components/DashboardNav';
 import OnboardingSurvey from '@/components/OnboardingSurvey';
 import ActiveChallenges from '@/components/ActiveChallenges';
 import OutstandingActions from '@/components/OutstandingActions';
+import AutoCalendarToggle from '@/components/AutoCalendarToggle';
 import Link from 'next/link';
 
 async function getUserData(auth0Id: string) {
@@ -515,6 +516,10 @@ export default async function Dashboard() {
               </div>
             )}
 
+            {/* Auto-add to Calendar Toggle */}
+            <div className="mt-6">
+              <AutoCalendarToggle />
+            </div>
 
             {/* Outstanding Actions */}
             <div className="mt-6">
