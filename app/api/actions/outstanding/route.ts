@@ -2,6 +2,9 @@ import { NextResponse } from 'next/server';
 import { getSession } from '@auth0/nextjs-auth0';
 import { getSupabaseAdmin } from '@/lib/supabase';
 
+// Force dynamic rendering since we use cookies for authentication
+export const dynamic = 'force-dynamic';
+
 /**
  * Get outstanding (incomplete) actions for a user
  * Returns actions that are not completed and not marked as DNC
@@ -55,7 +58,7 @@ export async function GET(request: Request) {
     }
 
     // Get unique action IDs
-    const actionIds = [...new Set(outstandingActions.map(oa => oa.action_id))];
+    const actionIds = Array.from(new Set(outstandingActions.map(oa => oa.action_id)));
     
     // Fetch actions separately
     const { data: actions, error: actionsError } = await supabase
