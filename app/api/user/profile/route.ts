@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getSession } from '@auth0/nextjs-auth0';
-import { supabase } from '@/lib/supabase';
+import { getSupabaseAdmin } from '@/lib/supabase';
 
 /**
  * Update user profile (username, wedding_date, post_anonymously, timezone, profile_picture)
@@ -17,8 +17,11 @@ async function updateProfile(request: Request) {
     const auth0Id = session.user.sub;
     const { username, wedding_date, post_anonymously, timezone, profile_picture, has_kids, kids_live_with_you } = await request.json();
 
+    // Use admin client to bypass RLS (Auth0 context isn't set for RLS)
+    const adminSupabase = getSupabaseAdmin();
+    
     // Get user
-    const { data: user, error: userError } = await supabase
+    const { data: user, error: userError } = await adminSupabase
       .from('users')
       .select('id')
       .eq('auth0_id', auth0Id)
@@ -40,7 +43,7 @@ async function updateProfile(request: Request) {
 
       // Check if username is already taken (by another user)
       if (trimmedUsername) {
-        const { data: existingUser } = await supabase
+        const { data: existingUser } = await adminSupabase
           .from('users')
           .select('id')
           .eq('username', trimmedUsername)
@@ -95,7 +98,7 @@ async function updateProfile(request: Request) {
       updateData.kids_live_with_you = kids_live_with_you;
     }
 
-    const { error: updateError } = await supabase
+    const { error: updateError } = await adminSupabase
       .from('users')
       .update(updateData)
       .eq('id', user.id);
@@ -133,11 +136,14 @@ export async function GET() {
 
     const auth0Id = session.user.sub;
 
-        const { data: user, error: userError } = await supabase
-          .from('users')
-          .select('username, wedding_date, post_anonymously, name, timezone, profile_picture, has_kids, kids_live_with_you')
-          .eq('auth0_id', auth0Id)
-          .single();
+    // Use admin client to bypass RLS (Auth0 context isn't set for RLS)
+    const adminSupabase = getSupabaseAdmin();
+    
+    const { data: user, error: userError } = await adminSupabase
+      .from('users')
+      .select('username, wedding_date, post_anonymously, name, timezone, profile_picture, has_kids, kids_live_with_you')
+      .eq('auth0_id', auth0Id)
+      .single();
 
     if (userError || !user) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
