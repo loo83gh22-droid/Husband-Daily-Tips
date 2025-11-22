@@ -99,9 +99,38 @@ export default async function JournalPage() {
             <h1 className="text-3xl md:text-4xl font-semibold text-slate-50 mb-2">
               Your Journal
             </h1>
-            <p className="text-slate-400 text-sm md:text-base">
+            <p className="text-slate-400 text-sm md:text-base mb-6">
               Private reflections on your journey. Favorites appear at the top.
             </p>
+
+            {/* Journal Summary */}
+            <div className="bg-slate-900/80 border border-slate-800 rounded-xl p-6 mb-8">
+              <h2 className="text-lg font-semibold text-slate-50 mb-3">
+                Why Journaling Matters (And Why We Make It Easy)
+              </h2>
+              <p className="text-sm text-slate-300 leading-relaxed mb-4">
+                Look, journaling is hard. We get it. Sitting down to write about what happened, 
+                what you learned, what surprised you—that takes effort. But here's the thing: 
+                that effort is exactly why it works. When you actually reflect on what you did 
+                and how it went, you start seeing patterns. You notice what works. You catch 
+                yourself doing things differently. That's how real change happens.
+              </p>
+              <p className="text-sm text-slate-300 leading-relaxed mb-4">
+                We make it easy by prompting you right after you complete each daily action. 
+                No need to remember to journal later. No blank page staring back at you. 
+                Just a simple question: "How did it go?" Write a sentence. Write a paragraph. 
+                Or skip it. But when you do write, you're building something real—a record 
+                of your actual journey, not just a checklist of completed tasks.
+              </p>
+              <div className="bg-slate-800/50 border border-slate-700/50 rounded-lg p-4 mt-4">
+                <p className="text-xs text-slate-400 leading-relaxed">
+                  <strong className="text-slate-300">Note:</strong> Your journal only shows actions you've completed. 
+                  If you skip an action or mark it as "not for me," it won't appear here. 
+                  This is your record of what you actually did, not what you didn't do. 
+                  That's by design—we want you to focus on your wins, not your misses.
+                </p>
+              </div>
+            </div>
           </div>
 
           {allReflections.length === 0 ? (
