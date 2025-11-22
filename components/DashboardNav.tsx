@@ -9,7 +9,7 @@ import HamburgerMenu from './HamburgerMenu';
 
 export default function DashboardNav() {
   const pathname = usePathname();
-  const { user, isLoading } = useUser();
+  const { user, isLoading, error: userError } = useUser();
   const [displayName, setDisplayName] = useState<string | null>(null);
 
   const navLinks = [
@@ -23,7 +23,7 @@ export default function DashboardNav() {
 
   useEffect(() => {
     async function fetchDisplayName() {
-      if (isLoading) return;
+      if (isLoading || userError) return;
       
       try {
         const response = await fetch('/api/user/display-name', {
@@ -41,10 +41,10 @@ export default function DashboardNav() {
       }
     }
 
-    if (!isLoading) {
+    if (!isLoading && !userError) {
       fetchDisplayName();
     }
-  }, [user, isLoading]);
+  }, [user, isLoading, userError]);
 
   return (
     <nav className="bg-slate-950/80 border-b border-slate-900 backdrop-blur sticky top-0 z-40">
