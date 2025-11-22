@@ -57,8 +57,17 @@ export async function GET(request: Request) {
       return NextResponse.json({ actions: [] });
     }
 
-    // Get unique action IDs
-    const actionIds = Array.from(new Set(outstandingActions.map(oa => oa.action_id)));
+    // Get unique action IDs (filter out any null/undefined values)
+    const actionIds = Array.from(new Set(
+      outstandingActions
+        .map(oa => oa.action_id)
+        .filter((id): id is string => id != null && id !== '')
+    ));
+    
+    if (actionIds.length === 0) {
+      console.warn('No valid action IDs found in outstanding actions');
+      return NextResponse.json({ actions: [] });
+    }
     
     // Fetch actions separately
     const { data: actions, error: actionsError } = await supabase
