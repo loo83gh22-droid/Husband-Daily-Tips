@@ -56,10 +56,7 @@ export async function GET(request: Request) {
     }
 
     if (error) {
-      console.error('Error fetching outstanding actions:', error);
-      console.error('Error details:', JSON.stringify(error, null, 2));
-      console.error('Error code:', error.code);
-      console.error('Error hint:', error.hint);
+      console.error('Error fetching outstanding actions:', error.message, error.code);
       return NextResponse.json({ 
         error: 'Failed to fetch outstanding actions', 
         details: error.message,
@@ -140,9 +137,7 @@ export async function GET(request: Request) {
 
       return NextResponse.json({ actions: formattedActions });
     } catch (mappingError: any) {
-      console.error('Error in mapping outstanding actions:', mappingError);
-      console.error('Outstanding actions data:', JSON.stringify(outstandingActions, null, 2));
-      console.error('Actions map size:', actionsMap.size);
+      console.error('Error in mapping outstanding actions:', mappingError?.message);
       return NextResponse.json({ 
         error: 'Error processing outstanding actions', 
         details: mappingError?.message || 'Unknown mapping error'

@@ -149,7 +149,7 @@ export async function POST(request: Request) {
           }
         }
 
-        console.log(`Assigned ${assignedCount} actions for 7-day challenge`);
+        // Actions assigned for 7-day challenge
       } catch (assignError) {
         // Don't fail challenge join if action assignment fails
         console.error('Error assigning actions for challenge:', assignError);
