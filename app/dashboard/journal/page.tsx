@@ -102,9 +102,6 @@ export default async function JournalPage() {
                 <h1 className="text-3xl md:text-4xl font-semibold text-slate-50 mb-2">
                   Your Journal
                 </h1>
-                <p className="text-slate-400 text-sm md:text-base">
-                  Private reflections on your journey. Favorites appear at the top.
-                </p>
               </div>
               {allReflections.length > 0 && (
                 <JournalExportButton reflections={allReflections} />
