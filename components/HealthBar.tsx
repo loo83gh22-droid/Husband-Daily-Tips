@@ -5,7 +5,7 @@ import HealthMilestoneModal from './HealthMilestoneModal';
 
 interface HealthBarProps {
   /**
-   * 0–100 value representing current relationship health.
+   * 0–100 value representing current husband hit points.
    * We derive this from streak + recent activity.
    */
   value: number;
@@ -168,7 +168,7 @@ export default function HealthBar({ value }: HealthBarProps) {
           <div className="flex items-center justify-between mb-4">
             <div>
               <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
-                Relationship Health
+                Husband Hit Points
               </p>
               <p className="mt-1.5 text-xs text-slate-300 leading-relaxed">
                 A simple mirror of how consistently you&apos;re showing up.
@@ -221,36 +221,28 @@ export default function HealthBar({ value }: HealthBarProps) {
             <div className="absolute inset-0 rounded-full border border-white/5 pointer-events-none" />
           </div>
 
-          <div className="flex flex-wrap items-center gap-x-5 gap-y-1.5 mt-2">
-            <p className="text-[11px] text-slate-400 font-medium">
-              • Completing today&apos;s action nudges this up.
-            </p>
-            <p className="text-[11px] text-slate-400 font-medium">
-              • Missing days in a row slowly drains it.
-            </p>
-            <p className="text-[11px] text-slate-400 font-medium">
-              • Big husband moves give visible boosts.
-            </p>
-          </div>
-
-          {/* Details link with hover popup */}
-          <div className="mt-3 relative group">
-            <button className="text-xs text-primary-400 hover:text-primary-300 font-medium underline decoration-primary-500/50 underline-offset-2 transition-colors">
-              Details
-            </button>
-            
-            {/* Hover Popup */}
-            <div className="absolute left-0 bottom-full mb-2 w-72 bg-slate-800 border border-slate-700 rounded-lg p-3 shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
-              <div className="absolute bottom-0 left-3 transform translate-y-1/2 rotate-45 w-2 h-2 bg-slate-800 border-r border-b border-slate-700"></div>
-              
-              <p className="text-xs text-slate-200 mb-2 font-semibold">
-                How it works
+          <div className="mt-4 space-y-3">
+            <div className="flex flex-wrap items-center gap-x-5 gap-y-1.5">
+              <p className="text-[11px] text-slate-400 font-medium">
+                • Completing today&apos;s action nudges this up.
               </p>
-              <p className="text-[11px] text-slate-400 leading-relaxed mb-3">
+              <p className="text-[11px] text-slate-400 font-medium">
+                • Missing days in a row slowly drains it.
+              </p>
+              <p className="text-[11px] text-slate-400 font-medium">
+                • Big husband moves give visible boosts.
+              </p>
+            </div>
+
+            <div className="pt-3 border-t border-slate-700/50 space-y-2">
+              <p className="text-xs text-slate-200 font-semibold">
+                How Hit Points Work
+              </p>
+              <p className="text-[11px] text-slate-400 leading-relaxed">
                 Climbing: daily actions and &quot;big husband&quot; moves. Draining: inactivity. This is your honest dashboard, not a score for her.
               </p>
 
-              <div className="pt-2 border-t border-slate-700/50">
+              <div className="pt-2">
                 <p className="text-xs text-slate-200 mb-1.5 font-semibold">
                   Big Husband Moves
                 </p>
