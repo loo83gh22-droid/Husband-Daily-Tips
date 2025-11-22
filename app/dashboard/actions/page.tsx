@@ -2,8 +2,7 @@ import { getSession } from '@auth0/nextjs-auth0';
 import { redirect } from 'next/navigation';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import DashboardNav from '@/components/DashboardNav';
-import ActionsList from '@/components/ActionsList';
-import Link from 'next/link';
+import ActionsPageClient from '@/components/ActionsPageClient';
 
 async function getActions(auth0Id: string) {
   // Use admin client to bypass RLS (Auth0 context isn't set)
@@ -203,113 +202,12 @@ export default async function ActionsPage() {
             </div>
           </div>
 
-          {/* Favorited Actions Section */}
-          {favoritedActions && favoritedActions.length > 0 && (
-            <section className="mb-8 bg-yellow-500/10 border border-yellow-500/30 rounded-xl p-6 md:p-8">
-              <div className="flex items-center gap-2 mb-6">
-                <span className="text-2xl">⭐</span>
-                <h2 className="text-xl md:text-2xl font-semibold text-slate-50">
-                  Favorites
-                </h2>
-                <span className="text-sm text-slate-400">
-                  ({favoritedActions.length} action{favoritedActions.length !== 1 ? 's' : ''})
-                </span>
-              </div>
-              <ActionsList
-                actions={favoritedActions}
-                completedMap={completedMap}
-                userId={userId}
-              />
-            </section>
-          )}
-
-          <div className="space-y-8">
-            {sortedThemes.map((theme) => {
-              const themeActions = actionsByTheme[theme];
-              // Format theme name - handle special cases
-              let themeName = theme.charAt(0).toUpperCase() + theme.slice(1).replace(/_/g, ' ');
-              if (theme === 'outdoor') {
-                themeName = 'Outdoor Activities';
-              } else if (theme === 'active') {
-                themeName = 'Active Together';
-              } else if (theme === 'quality_time') {
-                themeName = 'Quality Time';
-              }
-
-              return (
-                <section
-                  key={theme}
-                  className="bg-slate-900/50 border border-slate-800 rounded-xl p-6 md:p-8"
-                >
-                  <div className="flex items-center justify-between mb-6">
-                    <h2 className="text-xl md:text-2xl font-semibold text-slate-50 flex items-center gap-2">
-                      <span>
-                        {theme === 'communication'
-                          ? '💬'
-                          : theme === 'intimacy'
-                            ? '💝'
-                            : theme === 'partnership'
-                              ? '🤝'
-                          : theme === 'romance'
-                            ? '💕'
-                            : theme === 'gratitude'
-                              ? '🙏'
-                                  : theme === 'conflict'
-                                    ? '⚖️'
-                                    : theme === 'reconnection'
-                                      ? '🔗'
-                                      : theme === 'quality_time'
-                                        ? '⏰'
-                                        : theme === 'outdoor'
-                                          ? '🌲'
-                                          : theme === 'active'
-                                            ? '💪'
-                                    : '📋'}
-                      </span>
-                      {themeName}
-                    </h2>
-                  </div>
-
-                  <ActionsList
-                    actions={(() => {
-                      // Randomly select 2 actions from this category
-                      const shuffled = [...themeActions].sort(() => Math.random() - 0.5);
-                      return shuffled.slice(0, 2);
-                    })()}
-                    completedMap={completedMap}
-                    userId={userId}
-                  />
-
-                  {themeActions.length > 2 && (
-                    <div className="mt-6 text-center">
-                      <Link
-                        href={`/dashboard/actions/${theme}`}
-                        className="inline-flex items-center gap-2 px-6 py-2 bg-primary-500/10 border border-primary-500/30 text-primary-300 rounded-lg hover:bg-primary-500/20 transition-colors text-sm font-medium"
-                      >
-                        See More {themeName} Actions
-                        <span className="text-xs text-slate-400">
-                          ({themeActions.length - 2} more)
-                        </span>
-                        <svg
-                          className="w-4 h-4"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M9 5l7 7-7 7"
-                          />
-                        </svg>
-                      </Link>
-                    </div>
-                  )}
-                </section>
-              );
-            })}
-          </div>
+          <ActionsPageClient
+            allActions={actions}
+            completedMap={completedMap}
+            userId={userId}
+            favoritedActions={favoritedActions}
+          />
         </div>
       </main>
     </div>
