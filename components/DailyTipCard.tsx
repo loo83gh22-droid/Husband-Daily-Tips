@@ -162,6 +162,55 @@ export default function DailyTipCard({ tip, subscriptionTier = 'free' }: DailyTi
     }
   };
 
+  // Generate Google Calendar URL for this action/tip
+  const generateGoogleCalendarUrl = () => {
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const startDate = new Date(tomorrow);
+    startDate.setHours(9, 0, 0); // 9 AM default
+    const endDate = new Date(startDate);
+    endDate.setHours(10, 0, 0); // 1 hour event
+
+    const formatDate = (date: Date) => {
+      return date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+    };
+
+    const params = new URLSearchParams({
+      action: 'TEMPLATE',
+      text: tip.title || tip.name || 'Daily Action',
+      dates: `${formatDate(startDate)}/${formatDate(endDate)}`,
+      details: tip.description || tip.content || '',
+      sf: 'true',
+      output: 'xml',
+    });
+
+    return `https://calendar.google.com/calendar/render?${params.toString()}`;
+  };
+
+  // Generate Outlook Calendar URL for this action/tip
+  const generateOutlookCalendarUrl = () => {
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const startDate = new Date(tomorrow);
+    startDate.setHours(9, 0, 0); // 9 AM default
+    const endDate = new Date(startDate);
+    endDate.setHours(10, 0, 0); // 1 hour event
+
+    const formatDate = (date: Date) => {
+      return date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+    };
+
+    const params = new URLSearchParams({
+      subject: tip.title || tip.name || 'Daily Action',
+      startdt: formatDate(startDate),
+      enddt: formatDate(endDate),
+      body: tip.description || tip.content || '',
+      location: '',
+    });
+
+    return `https://outlook.live.com/calendar/0/deeplink/compose?${params.toString()}`;
+  };
+
   return (
     <div className="bg-slate-900/80 rounded-xl shadow-lg p-8 mb-6 border border-slate-800">
       <div className="flex items-start justify-between mb-4">
@@ -174,8 +223,22 @@ export default function DailyTipCard({ tip, subscriptionTier = 'free' }: DailyTi
             {tip.title || tip.name}
           </h3>
         </div>
-        <div className="text-xs text-slate-500 text-right" suppressHydrationWarning>
-          {mounted ? displayDate : ''}
+        <div className="flex items-center gap-3">
+          {tip.isAction && (() => {
+            const guideSlug = getGuideSlugForAction(tip.name || '', tip.theme);
+            return guideSlug ? (
+              <Link
+                href={`/dashboard/how-to-guides/${guideSlug}`}
+                className="px-3 py-1.5 border border-emerald-500/50 text-emerald-300 text-xs font-medium rounded-lg hover:bg-emerald-500/10 transition-colors flex items-center gap-1.5"
+              >
+                <span>📚</span>
+                <span>How-To Guide</span>
+              </Link>
+            ) : null;
+          })()}
+          <div className="text-xs text-slate-500 text-right" suppressHydrationWarning>
+            {mounted ? displayDate : ''}
+          </div>
         </div>
       </div>
       
@@ -206,32 +269,6 @@ export default function DailyTipCard({ tip, subscriptionTier = 'free' }: DailyTi
           >
             Save for later
           </button>
-          {tip.isAction && (() => {
-            const guideSlug = getGuideSlugForAction(tip.name || '', tip.theme);
-            return guideSlug ? (
-              <Link
-                href={`/dashboard/how-to-guides/${guideSlug}`}
-                className="px-4 py-2 border border-emerald-500/50 text-emerald-300 text-sm font-medium rounded-lg hover:bg-emerald-500/10 transition-colors flex items-center gap-2"
-              >
-                <span>📚</span>
-                <span>How-To Guide</span>
-              </Link>
-            ) : null;
-          })()}
-          <button
-            onClick={handleExportToCalendar}
-            disabled={isExportingCalendar}
-            className="px-4 py-2 border border-primary-500/50 text-primary-300 text-sm font-medium rounded-lg hover:bg-primary-500/10 transition-colors disabled:opacity-50 disabled:cursor-default flex items-center gap-2"
-          >
-            {isExportingCalendar ? (
-              'Exporting...'
-            ) : (
-              <>
-                <span>📅</span>
-                <span>Send to Calendar</span>
-              </>
-            )}
-          </button>
           <button
             onClick={handleToggleFavorite}
             disabled={isTogglingFavorite}
@@ -251,11 +288,27 @@ export default function DailyTipCard({ tip, subscriptionTier = 'free' }: DailyTi
             )}
           </button>
         </div>
+        <div className="flex flex-wrap gap-3">
+          <a
+            href={generateGoogleCalendarUrl()}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="px-4 py-2 border border-slate-700 text-slate-100 text-sm rounded-lg hover:bg-slate-900 transition-colors flex items-center gap-2"
+          >
+            <span>📅</span>
+            <span>Add to Google Calendar</span>
+          </a>
+          <a
+            href={generateOutlookCalendarUrl()}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="px-4 py-2 border border-slate-700 text-slate-100 text-sm rounded-lg hover:bg-slate-900 transition-colors flex items-center gap-2"
+          >
+            <span>📅</span>
+            <span>Add to Outlook Calendar</span>
+          </a>
+        </div>
         <div className="flex flex-col gap-2">
-              <p className="text-[11px] text-slate-500">
-                Completing this boosts your health bar. Skipping it won&apos;t break anything—but
-                consistency is what actually moves the needle.
-              </p>
           <SocialShare
             title={tip.title || tip.name || ''}
             text={`Tomorrow's Action: ${tip.title || tip.name} - ${(tip.content || tip.description || '').substring(0, 100)}...`}
