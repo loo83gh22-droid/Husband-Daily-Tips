@@ -28,7 +28,7 @@ export async function POST(request: Request) {
     const adminSupabase = getSupabaseAdmin();
     const { data: user, error: userError } = await adminSupabase
       .from('users')
-      .select('id, email, name, username, timezone, subscription_tier')
+      .select('id, email, name, username, timezone, subscription_tier, calendar_preferences')
       .eq('id', userId)
       .single();
 
