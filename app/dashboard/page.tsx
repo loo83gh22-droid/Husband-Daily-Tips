@@ -563,7 +563,7 @@ export default async function Dashboard() {
             {/* Previous Actions Link */}
             <div className="mt-6 text-center">
               <Link
-                href="/dashboard/tips"
+                href="/dashboard/journal"
                 className="text-primary-300 hover:text-primary-200 text-sm font-semibold"
               >
                 View your previous actions →
