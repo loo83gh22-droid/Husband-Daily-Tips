@@ -15,6 +15,7 @@ export default function SocialShare({ title, text, url }: SocialShareProps) {
   const shareLinks = {
     facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
     twitter: `https://twitter.com/intent/tweet?text=${encodedText}&url=${encodedUrl}`,
+    whatsapp: `https://wa.me/?text=${encodedText}%20${encodedUrl}`,
     // Instagram doesn't have a direct share URL, but you can copy to clipboard
   };
 
@@ -45,11 +46,21 @@ export default function SocialShare({ title, text, url }: SocialShareProps) {
       <button
         onClick={() => handleShare('twitter')}
         className="p-2 bg-slate-800 hover:bg-slate-700 rounded-lg transition-colors"
-        aria-label="Share on Twitter"
-        title="Share on Twitter"
+        aria-label="Share on X"
+        title="Share on X"
       >
         <svg className="w-4 h-4 text-slate-300" fill="currentColor" viewBox="0 0 24 24">
-          <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z" />
+          <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+        </svg>
+      </button>
+      <button
+        onClick={() => handleShare('whatsapp')}
+        className="p-2 bg-slate-800 hover:bg-slate-700 rounded-lg transition-colors"
+        aria-label="Share on WhatsApp"
+        title="Share on WhatsApp"
+      >
+        <svg className="w-4 h-4 text-slate-300" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .96 4.534.96 10.08c0 1.792.413 3.56 1.206 5.165L.5 23.5l8.33-2.18a11.77 11.77 0 003.22.44c6.555 0 11.09-4.534 11.09-10.08 0-2.688-1.01-5.216-2.85-7.13" />
         </svg>
       </button>
       <button
