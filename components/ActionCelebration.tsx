@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import confetti, { type Options } from 'canvas-confetti';
+import confetti from 'canvas-confetti';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface ActionCelebrationProps {
