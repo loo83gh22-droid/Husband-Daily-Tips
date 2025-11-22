@@ -30,15 +30,30 @@ export async function GET(request: Request) {
     // Get outstanding actions: not completed, not DNC, date <= today
     // This includes both regular actions AND challenge actions
     // Order by date ascending (oldest first) - allows users to catch up chronologically
-    const { data: outstandingActions, error } = await supabase
-      .from('user_daily_actions')
-      .select('id, user_id, action_id, date, completed, dnc')
-      .eq('user_id', userId)
-      .eq('completed', false)
-      .eq('dnc', false)
-      .lte('date', today)
-      .order('date', { ascending: true })
-      .limit(30); // Limit to 30 actions to allow catching up on missed days
+    let outstandingActions;
+    let error;
+    
+    try {
+      const result = await supabase
+        .from('user_daily_actions')
+        .select('id, user_id, action_id, date, completed, dnc')
+        .eq('user_id', userId)
+        .eq('completed', false)
+        .eq('dnc', false)
+        .lte('date', today)
+        .order('date', { ascending: true })
+        .limit(30); // Limit to 30 actions to allow catching up on missed days
+      
+      outstandingActions = result.data;
+      error = result.error;
+    } catch (queryError: any) {
+      console.error('Exception during query:', queryError);
+      return NextResponse.json({ 
+        error: 'Query exception', 
+        details: queryError?.message || 'Unknown query error',
+        stack: process.env.NODE_ENV === 'development' ? queryError?.stack : undefined
+      }, { status: 500 });
+    }
 
     if (error) {
       console.error('Error fetching outstanding actions:', error);
