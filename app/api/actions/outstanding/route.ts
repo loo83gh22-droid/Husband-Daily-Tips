@@ -10,15 +10,23 @@ export const dynamic = 'force-dynamic';
  * Returns actions that are not completed and not marked as DNC
  */
 export async function GET(request: Request) {
+  console.log('=== Outstanding Actions API Called ===');
+  console.log('Request URL:', request.url);
+  
   try {
+    console.log('Getting session...');
     const session = await getSession();
+    console.log('Session obtained:', session ? 'Yes' : 'No');
 
     if (!session?.user) {
+      console.log('No session user, returning 401');
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    console.log('Session user ID:', session.user.sub);
     const { searchParams } = new URL(request.url);
     const userId = searchParams.get('userId');
+    console.log('User ID from query:', userId);
 
     if (!userId) {
       return NextResponse.json({ error: 'Missing userId' }, { status: 400 });
