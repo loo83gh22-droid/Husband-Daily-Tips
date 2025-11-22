@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getSession } from '@auth0/nextjs-auth0';
-import { supabase } from '@/lib/supabase';
+import { getSupabaseAdmin } from '@/lib/supabase';
 
 export async function GET() {
   try {
@@ -12,8 +12,11 @@ export async function GET() {
 
     const auth0Id = session.user.sub;
 
+    // Use admin client to bypass RLS (Auth0 context isn't set)
+    const adminSupabase = getSupabaseAdmin();
+
     // Get user
-    const { data: user, error: userError } = await supabase
+    const { data: user, error: userError } = await adminSupabase
       .from('users')
       .select('id, survey_completed')
       .eq('auth0_id', auth0Id)

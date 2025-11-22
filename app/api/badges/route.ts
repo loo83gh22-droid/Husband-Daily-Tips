@@ -1,11 +1,11 @@
 import { NextResponse } from 'next/server';
 import { getSession } from '@auth0/nextjs-auth0';
-import { supabase } from '@/lib/supabase';
+import { getSupabaseAdmin } from '@/lib/supabase';
 import { calculateBadgeProgress } from '@/lib/badges';
 
-async function getUserStats(userId: string) {
+async function getUserStats(userId: string, adminSupabase: ReturnType<typeof getSupabaseAdmin>) {
   // Get tips for stats
-  const { data: tips } = await supabase
+  const { data: tips } = await adminSupabase
     .from('user_tips')
     .select('date')
     .eq('user_id', userId)
@@ -32,7 +32,7 @@ async function getUserStats(userId: string) {
   }
 
   // Get action completions for actionCounts
-  const { data: actionCompletions } = await supabase
+  const { data: actionCompletions } = await adminSupabase
     .from('user_action_completions')
     .select('actions(requirement_type)')
     .eq('user_id', userId);
@@ -65,8 +65,11 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const userId = searchParams.get('userId');
 
+    // Use admin client to bypass RLS (Auth0 context isn't set)
+    const adminSupabase = getSupabaseAdmin();
+
     // Get user
-    const { data: user, error: userError } = await supabase
+    const { data: user, error: userError } = await adminSupabase
       .from('users')
       .select('id')
       .eq('auth0_id', auth0Id)
@@ -77,10 +80,10 @@ export async function GET(request: Request) {
     }
 
     // Get user stats for progress calculation
-    const stats = await getUserStats(user.id);
+    const stats = await getUserStats(user.id, adminSupabase);
 
     // Get all badges - use DISTINCT ON to prevent duplicates
-    const { data: allBadges, error: badgesError } = await supabase
+    const { data: allBadges, error: badgesError } = await adminSupabase
       .from('badges')
       .select('*')
       .order('badge_type', { ascending: true })
@@ -96,7 +99,7 @@ export async function GET(request: Request) {
     );
 
     // Get user's earned badges
-    const { data: earnedBadges, error: earnedError } = await supabase
+    const { data: earnedBadges, error: earnedError } = await adminSupabase
       .from('user_badges')
       .select('badge_id, earned_at')
       .eq('user_id', user.id);
@@ -113,7 +116,7 @@ export async function GET(request: Request) {
 
         // Only calculate progress for unearned badges
         if (!earned_at) {
-          progress = await calculateBadgeProgress(supabase, user.id, badge, stats);
+          progress = await calculateBadgeProgress(adminSupabase, user.id, badge, stats);
         }
 
         return {
