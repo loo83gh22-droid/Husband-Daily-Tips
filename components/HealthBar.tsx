@@ -165,18 +165,18 @@ export default function HealthBar({ value }: HealthBarProps) {
         <div className="absolute inset-0 bg-gradient-to-r from-primary-500/5 via-transparent to-emerald-500/5 pointer-events-none" />
         
         <div className="relative z-10">
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+          <div className="flex items-center justify-between mb-5">
+            <div className="flex-1">
+              <h2 className="text-2xl md:text-3xl font-bold text-slate-100 uppercase tracking-tight mb-2">
                 Husband Hit Points
-              </p>
-              <p className="mt-1.5 text-xs text-slate-300 leading-relaxed">
+              </h2>
+              <p className="text-sm text-slate-300 leading-relaxed">
                 A simple mirror of how consistently you&apos;re showing up.
               </p>
             </div>
-            <div className="text-right">
-              <p className={`text-base font-bold ${getLabelColor()} drop-shadow-lg`}>{label}</p>
-              <p className="text-sm font-semibold text-slate-200 mt-0.5">{clamped.toFixed(1)}%</p>
+            <div className="text-right ml-4">
+              <p className={`text-lg md:text-xl font-bold ${getLabelColor()} drop-shadow-lg`}>{label}</p>
+              <p className="text-base md:text-lg font-semibold text-slate-200 mt-0.5">{clamped.toFixed(1)}%</p>
             </div>
           </div>
 
@@ -223,33 +223,24 @@ export default function HealthBar({ value }: HealthBarProps) {
 
           <div className="mt-4 space-y-3">
             <div className="flex flex-wrap items-center gap-x-5 gap-y-1.5">
-              <p className="text-[11px] text-slate-400 font-medium">
+              <p className="text-xs text-slate-400 font-medium">
                 • Completing today&apos;s action nudges this up.
               </p>
-              <p className="text-[11px] text-slate-400 font-medium">
+              <p className="text-xs text-slate-400 font-medium">
                 • Missing days in a row slowly drains it.
               </p>
-              <p className="text-[11px] text-slate-400 font-medium">
+              <p className="text-xs text-slate-400 font-medium">
                 • Big husband moves give visible boosts.
               </p>
             </div>
 
-            <div className="pt-3 border-t border-slate-700/50 space-y-2">
-              <p className="text-xs text-slate-200 font-semibold">
-                How Hit Points Work
+            <div className="pt-3 border-t border-slate-700/50">
+              <p className="text-xs text-slate-200 mb-1.5 font-semibold">
+                Big Husband Moves
               </p>
               <p className="text-[11px] text-slate-400 leading-relaxed">
-                Climbing: daily actions and &quot;big husband&quot; moves. Draining: inactivity. This is your honest dashboard, not a score for her.
+                Meaningful gestures beyond daily tasks—surprise dates, major projects, heartfelt notes, special celebrations. Currently equal value; bonus points coming soon.
               </p>
-
-              <div className="pt-2">
-                <p className="text-xs text-slate-200 mb-1.5 font-semibold">
-                  Big Husband Moves
-                </p>
-                <p className="text-[11px] text-slate-400 leading-relaxed">
-                  Meaningful gestures beyond daily tasks—surprise dates, major projects, heartfelt notes, special celebrations. Currently equal value; bonus points coming soon.
-                </p>
-              </div>
             </div>
           </div>
         </div>
