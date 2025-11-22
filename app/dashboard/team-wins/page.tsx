@@ -87,8 +87,7 @@ export default async function TeamWinsPage() {
               💪 Team Wins
             </h1>
             <p className="text-slate-400 text-sm md:text-base">
-              Real wins from husbands who are crushing it. Celebrate the victories, learn from the
-              breakthroughs, and build momentum together.
+              Real wins from husbands who are showing up. Big or small, celebrate what worked, learn from what didn't, and keep moving forward together.
             </p>
           </div>
 
