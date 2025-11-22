@@ -15,6 +15,7 @@ import OnboardingTour, { TourButton } from '@/components/OnboardingTour';
 import QuickActions from '@/components/QuickActions';
 import NotificationSystem from '@/components/NotificationSystem';
 import ProgressCharts from '@/components/ProgressCharts';
+import KeyboardShortcuts from '@/components/KeyboardShortcuts';
 import Link from 'next/link';
 
 async function getUserData(auth0Id: string) {
@@ -543,6 +544,7 @@ export default async function Dashboard() {
 
   return (
     <div className="min-h-screen bg-slate-950">
+      <KeyboardShortcuts />
       <OnboardingTour />
       <TourButton />
       <NotificationSystem
