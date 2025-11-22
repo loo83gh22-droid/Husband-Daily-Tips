@@ -139,14 +139,16 @@ export default function QuickActions({
                   (action.id === 'outstanding' && outstandingActionsCount === 0)
                 }
                 className={`
-                  flex items-center gap-3 px-4 py-3 
+                  flex items-center gap-3 px-4 py-3.5 sm:py-3
                   bg-slate-900 border-2 border-slate-700 
                   rounded-xl shadow-lg 
                   text-slate-100 text-sm font-semibold
                   hover:bg-slate-800 hover:border-primary-500/50
+                  active:bg-slate-700 active:scale-95
                   transition-all duration-200
                   disabled:opacity-50 disabled:cursor-not-allowed
-                  min-w-[200px]
+                  min-w-[200px] min-h-[48px]
+                  touch-manipulation
                   ${action.color && action.id === 'mark-done' ? action.color : ''}
                 `}
               >
@@ -166,12 +168,13 @@ export default function QuickActions({
         whileTap={{ scale: 0.95 }}
         onClick={() => setIsOpen(!isOpen)}
         className={`
-          w-14 h-14 rounded-full 
+          w-16 h-16 sm:w-14 sm:h-14 rounded-full 
           bg-primary-500 text-slate-950 
-          shadow-lg hover:bg-primary-400
+          shadow-lg hover:bg-primary-400 active:bg-primary-600
           flex items-center justify-center
           text-2xl font-bold
           transition-all duration-200
+          touch-manipulation
           ${isOpen ? 'rotate-45' : ''}
         `}
         aria-label="Quick actions"

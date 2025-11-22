@@ -162,14 +162,14 @@ export default function OutstandingActions({ userId }: OutstandingActionsProps) 
                 <button
                   onClick={() => handleMarkComplete(action.action_id, action.user_daily_actions_id)}
                   disabled={markingComplete === action.user_daily_actions_id || markingDNC === action.user_daily_actions_id}
-                  className="flex-1 px-3 py-1.5 text-xs font-medium bg-primary-500/20 border border-primary-500/30 text-primary-300 rounded hover:bg-primary-500/30 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex-1 px-3 py-2.5 sm:py-1.5 text-xs font-medium bg-primary-500/20 border border-primary-500/30 text-primary-300 rounded hover:bg-primary-500/30 active:bg-primary-500/40 transition-colors disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] touch-manipulation"
                 >
                   {markingComplete === action.user_daily_actions_id ? 'Completing...' : '✓ Complete'}
                 </button>
                 <button
                   onClick={() => handleMarkDNC(action.user_daily_actions_id)}
                   disabled={markingComplete === action.user_daily_actions_id || markingDNC === action.user_daily_actions_id}
-                  className="flex-1 px-3 py-1.5 text-xs font-medium bg-slate-700/50 border border-slate-600/50 text-slate-300 rounded hover:bg-slate-700/70 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex-1 px-3 py-2.5 sm:py-1.5 text-xs font-medium bg-slate-700/50 border border-slate-600/50 text-slate-300 rounded hover:bg-slate-700/70 active:bg-slate-700/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] touch-manipulation"
                 >
                   {markingDNC === action.user_daily_actions_id ? 'Marking...' : 'DNC'}
                 </button>

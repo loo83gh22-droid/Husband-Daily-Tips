@@ -332,7 +332,7 @@ END:VCALENDAR`;
           <button
             onClick={handleMarkDone}
             disabled={isSubmitting || isCompleted}
-            className="px-4 py-2 bg-primary-500 disabled:bg-primary-900 disabled:text-slate-400 text-slate-950 text-sm font-semibold rounded-lg hover:bg-primary-400 transition-colors disabled:cursor-default"
+            className="px-4 py-3 sm:py-2 bg-primary-500 disabled:bg-primary-900 disabled:text-slate-400 text-slate-950 text-sm font-semibold rounded-lg hover:bg-primary-400 active:bg-primary-600 transition-colors disabled:cursor-default min-h-[44px] touch-manipulation"
           >
             {isCompleted ? 'Marked as done ✓' : isSubmitting ? 'Saving…' : 'Mark as done ✓'}
           </button>
@@ -366,7 +366,7 @@ END:VCALENDAR`;
             href={generateGoogleCalendarUrl()}
             target="_blank"
             rel="noopener noreferrer"
-            className="px-4 py-2 border border-slate-700 text-slate-100 text-sm rounded-lg hover:bg-slate-900 transition-colors flex items-center gap-2"
+            className="px-4 py-3 sm:py-2 border border-slate-700 text-slate-100 text-sm rounded-lg hover:bg-slate-900 active:bg-slate-800 transition-colors flex items-center gap-2 min-h-[44px] touch-manipulation"
           >
             <span>📅</span>
             <span>Add to Google Calendar</span>
@@ -375,7 +375,7 @@ END:VCALENDAR`;
             href={generateOutlookCalendarUrl()}
             target="_blank"
             rel="noopener noreferrer"
-            className="px-4 py-2 border border-slate-700 text-slate-100 text-sm rounded-lg hover:bg-slate-900 transition-colors flex items-center gap-2"
+            className="px-4 py-3 sm:py-2 border border-slate-700 text-slate-100 text-sm rounded-lg hover:bg-slate-900 active:bg-slate-800 transition-colors flex items-center gap-2 min-h-[44px] touch-manipulation"
           >
             <span>📅</span>
             <span>Add to Outlook Calendar</span>
@@ -383,7 +383,7 @@ END:VCALENDAR`;
           <a
             href={generateAppleCalendarUrl()}
             download="best-husband-action.ics"
-            className="px-4 py-2 border border-slate-700 text-slate-100 text-sm rounded-lg hover:bg-slate-900 transition-colors flex items-center gap-2"
+            className="px-4 py-3 sm:py-2 border border-slate-700 text-slate-100 text-sm rounded-lg hover:bg-slate-900 active:bg-slate-800 transition-colors flex items-center gap-2 min-h-[44px] touch-manipulation"
           >
             <span>📅</span>
             <span>Add to Apple Calendar</span>
