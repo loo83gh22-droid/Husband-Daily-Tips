@@ -53,7 +53,8 @@ export async function GET(request: Request) {
 
     if (error) {
       console.error('Error fetching outstanding actions:', error);
-      return NextResponse.json({ error: 'Failed to fetch outstanding actions' }, { status: 500 });
+      console.error('Error details:', JSON.stringify(error, null, 2));
+      return NextResponse.json({ error: 'Failed to fetch outstanding actions', details: error.message }, { status: 500 });
     }
 
     // Format the response
@@ -105,9 +106,14 @@ export async function GET(request: Request) {
       .filter((action): action is NonNullable<typeof action> => action !== null); // Remove any null entries with type guard
 
     return NextResponse.json({ actions });
-  } catch (error) {
+  } catch (error: any) {
     console.error('Unexpected error fetching outstanding actions:', error);
-    return NextResponse.json({ error: 'Unexpected error' }, { status: 500 });
+    console.error('Error stack:', error?.stack);
+    return NextResponse.json({ 
+      error: 'Unexpected error', 
+      details: error?.message || 'Unknown error',
+      stack: process.env.NODE_ENV === 'development' ? error?.stack : undefined
+    }, { status: 500 });
   }
 }
 
