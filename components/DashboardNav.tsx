@@ -16,7 +16,7 @@ export default function DashboardNav() {
     { href: '/dashboard', label: 'Dashboard', icon: '📊' },
     { href: '/dashboard/actions', label: 'Actions', icon: '🎯' },
     { href: '/dashboard/badges', label: 'Badges', icon: '🏆' },
-    { href: '/dashboard/journal', label: 'Journal', icon: '📝' },
+    { href: '/dashboard/journal', label: 'Journal', icon: '✒️' },
     { href: '/dashboard/team-wins', label: 'Team Wins', icon: '💪' },
     { href: '/dashboard/how-to-guides', label: 'How To Guides', icon: '🔧' },
   ];

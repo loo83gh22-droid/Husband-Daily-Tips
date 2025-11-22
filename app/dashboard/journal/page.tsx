@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import DashboardNav from '@/components/DashboardNav';
 import JournalEntry from '@/components/JournalEntry';
+import JournalExportButton from '@/components/JournalExportButton';
 
 async function getUserReflections(auth0Id: string) {
   // Use admin client to bypass RLS (Auth0 context isn't set)
@@ -96,12 +97,19 @@ export default async function JournalPage() {
       <main className="container mx-auto px-4 py-8 md:py-10">
         <div className="max-w-4xl mx-auto">
           <div className="mb-8">
-            <h1 className="text-3xl md:text-4xl font-semibold text-slate-50 mb-2">
-              Your Journal
-            </h1>
-            <p className="text-slate-400 text-sm md:text-base mb-6">
-              Private reflections on your journey. Favorites appear at the top.
-            </p>
+            <div className="flex items-start justify-between mb-6">
+              <div>
+                <h1 className="text-3xl md:text-4xl font-semibold text-slate-50 mb-2">
+                  Your Journal
+                </h1>
+                <p className="text-slate-400 text-sm md:text-base">
+                  Private reflections on your journey. Favorites appear at the top.
+                </p>
+              </div>
+              {allReflections.length > 0 && (
+                <JournalExportButton reflections={allReflections} />
+              )}
+            </div>
 
             {/* Journal Summary */}
             <div className="bg-slate-900/80 border border-slate-800 rounded-xl p-6 mb-8">
