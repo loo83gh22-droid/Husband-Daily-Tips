@@ -569,12 +569,12 @@ export default async function Dashboard() {
         <div className="grid lg:grid-cols-[1.4fr,1fr] gap-8 md:gap-10 items-start">
           {/* Left column: Daily tip + health bar */}
           <div className="max-w-3xl">
-            <div className="flex items-center justify-between mb-4" data-tour="mission-header">
+            <div className="flex items-center justify-between mb-6" data-tour="mission-header">
               <div>
-                <h2 className="text-2xl md:text-3xl font-semibold text-slate-50">
-                  Tomorrow&apos;s Mission
+                <h2 className="text-3xl md:text-4xl font-bold text-slate-50 mb-2">
+                  Today&apos;s Mission
                 </h2>
-                <p className="text-xs text-slate-400 mt-1">
+                <p className="text-sm md:text-base text-slate-300 font-medium">
                   {displayAction?.isChallengeAction ? (
                     <>
                       <span className="font-semibold text-primary-400">{displayAction.challengeName}</span> - Day {displayAction.challengeDay} of 7
@@ -601,20 +601,20 @@ export default async function Dashboard() {
             )}
 
             {/* Auto-add to Calendar Toggle */}
-            <div className="mt-6" data-tour="calendar">
+            <div className="mt-8" data-tour="calendar">
               <AutoCalendarToggle />
             </div>
 
             {/* Outstanding Actions */}
-            <div className="mt-6">
+            <div className="mt-8">
               <OutstandingActions userId={user.id} />
             </div>
 
             {/* Previous Actions Link */}
-            <div className="mt-6 text-center">
+            <div className="mt-8 text-center">
               <Link
                 href="/dashboard/journal"
-                className="text-primary-300 hover:text-primary-200 text-sm font-semibold"
+                className="text-primary-300 hover:text-primary-200 text-base font-semibold transition-colors"
               >
                 View your previous actions →
               </Link>
@@ -622,7 +622,7 @@ export default async function Dashboard() {
           </div>
 
           {/* Right column: Health bar + stats */}
-          <div className="space-y-5">
+          <div className="space-y-6 md:space-y-8">
             <div data-tour="hit-points">
               <HealthBar value={stats.healthScore} />
             </div>
@@ -636,24 +636,28 @@ export default async function Dashboard() {
               />
             </div>
 
-            <div className="grid md:grid-cols-3 gap-4" data-tour="stats">
+            <div className="grid md:grid-cols-3 gap-5 md:gap-6" data-tour="stats">
               <StatsCard
                 title="Current streak"
                 value={stats.currentStreak}
                 subtitle="days in a row"
                 icon="🔥"
+                color="warm"
+                currentStreak={stats.currentStreak}
               />
               <StatsCard
                 title="Total actions"
                 value={stats.totalTips}
                 subtitle="completed so far"
                 icon="📈"
+                color="blue"
               />
               <StatsCard
                 title="Active days"
                 value={stats.totalDays}
                 subtitle="days you showed up"
                 icon="📅"
+                color="green"
               />
             </div>
 

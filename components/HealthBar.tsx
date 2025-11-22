@@ -308,24 +308,24 @@ export default function HealthBar({ value, shouldPulse = false, onPulseComplete 
             <div className="absolute inset-0 rounded-full border border-white/5 pointer-events-none" />
           </div>
 
-          <div className="mt-4 space-y-3">
-            <div className="flex flex-wrap items-center gap-x-5 gap-y-1.5">
-              <p className="text-xs text-slate-400 font-medium">
+          <div className="mt-5 space-y-4">
+            <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
+              <p className="text-sm text-slate-300 font-medium">
                 • Completing today&apos;s action nudges this up.
               </p>
-              <p className="text-xs text-slate-400 font-medium">
+              <p className="text-sm text-slate-300 font-medium">
                 • Missing days in a row slowly drains it.
               </p>
-              <p className="text-xs text-slate-400 font-medium">
+              <p className="text-sm text-slate-300 font-medium">
                 • Big husband moves give visible boosts.
               </p>
             </div>
 
-            <div className="pt-3 border-t border-slate-700/50">
-              <p className="text-xs text-slate-200 mb-1.5 font-semibold">
+            <div className="pt-4 border-t border-slate-700/50">
+              <p className="text-sm text-slate-200 mb-2 font-bold">
                 Big Husband Moves
               </p>
-              <p className="text-[11px] text-slate-400 leading-relaxed">
+              <p className="text-sm text-slate-400 leading-relaxed">
                 Meaningful gestures beyond daily tasks—surprise dates, major projects, heartfelt notes, special celebrations. Currently equal value; bonus points coming soon.
               </p>
             </div>
