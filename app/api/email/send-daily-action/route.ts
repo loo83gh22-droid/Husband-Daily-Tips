@@ -107,6 +107,47 @@ export async function POST(request: Request) {
     // Get display name
     const displayName = user.username || (user.name ? user.name.split(' ')[0] : 'there');
 
+    // Check if user has auto-add to calendar enabled
+    const prefs = (user.calendar_preferences as any) || {};
+    const autoAddEnabled = prefs.auto_add_to_calendar || false;
+    const calendarType = prefs.calendar_type || 'google';
+
+    // Generate calendar link for tomorrow's action
+    let calendarLink = '';
+    if (autoAddEnabled) {
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      const startDate = new Date(tomorrow);
+      startDate.setHours(9, 0, 0); // 9 AM default
+      const endDate = new Date(startDate);
+      endDate.setHours(10, 0, 0); // 1 hour event
+
+      const formatDate = (date: Date) => {
+        return date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+      };
+
+      if (calendarType === 'google') {
+        const params = new URLSearchParams({
+          action: 'TEMPLATE',
+          text: action.name || 'Daily Action',
+          dates: `${formatDate(startDate)}/${formatDate(endDate)}`,
+          details: action.description || '',
+          sf: 'true',
+          output: 'xml',
+        });
+        calendarLink = `https://calendar.google.com/calendar/render?${params.toString()}`;
+      } else {
+        const params = new URLSearchParams({
+          subject: action.name || 'Daily Action',
+          startdt: formatDate(startDate),
+          enddt: formatDate(endDate),
+          body: action.description || '',
+          location: '',
+        });
+        calendarLink = `https://outlook.live.com/calendar/0/deeplink/compose?${params.toString()}`;
+      }
+    }
+
     // Send email
     const { data: emailData, error: emailError } = await resend.emails.send({
       from: process.env.RESEND_FROM_EMAIL || 'Best Husband Ever - Tomorrow\'s Action! <action@besthusbandever.com>',
@@ -151,16 +192,29 @@ export async function POST(request: Request) {
                   View in Dashboard →
                 </a>
                 
-                <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-top: 10px;">
-                  <a href="${process.env.AUTH0_BASE_URL || 'https://besthusbandever.com'}/api/calendar/actions/download?days=1&userId=${user.id}" 
-                     style="display: inline-block; background-color: #0f172a; color: #fbbf24; padding: 10px 20px; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 14px; border: 2px solid #fbbf24;">
-                    📅 Download Tomorrow's Action
-                  </a>
-                  <a href="${process.env.AUTH0_BASE_URL || 'https://besthusbandever.com'}/api/calendar/actions/download?days=7&userId=${user.id}" 
-                     style="display: inline-block; background-color: #0f172a; color: #fbbf24; padding: 10px 20px; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 14px; border: 2px solid #fbbf24;">
-                    📅 Download 7 Days of Actions
-                  </a>
-                </div>
+                ${autoAddEnabled && calendarLink ? `
+                  <div style="margin-top: 15px;">
+                    <a href="${calendarLink}" 
+                       target="_blank"
+                       style="display: inline-block; background-color: #0f172a; color: #fbbf24; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 14px; border: 2px solid #fbbf24; text-align: center; width: 100%;">
+                      📅 Add to ${calendarType === 'google' ? 'Google' : 'Outlook'} Calendar
+                    </a>
+                    <p style="color: #64748b; font-size: 11px; margin-top: 8px; text-align: center;">
+                      Auto-add enabled: Click to add tomorrow's action to your calendar
+                    </p>
+                  </div>
+                ` : `
+                  <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-top: 10px;">
+                    <a href="${process.env.AUTH0_BASE_URL || 'https://besthusbandever.com'}/api/calendar/actions/download?days=1&userId=${user.id}" 
+                       style="display: inline-block; background-color: #0f172a; color: #fbbf24; padding: 10px 20px; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 14px; border: 2px solid #fbbf24;">
+                      📅 Download Tomorrow's Action
+                    </a>
+                    <a href="${process.env.AUTH0_BASE_URL || 'https://besthusbandever.com'}/api/calendar/actions/download?days=7&userId=${user.id}" 
+                       style="display: inline-block; background-color: #0f172a; color: #fbbf24; padding: 10px 20px; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 14px; border: 2px solid #fbbf24;">
+                      📅 Download 7 Days of Actions
+                    </a>
+                  </div>
+                `}
               </div>
               
               <p style="color: #94a3b8; font-size: 13px; margin-top: 30px; padding-top: 20px; border-top: 1px solid #e2e8f0;">
