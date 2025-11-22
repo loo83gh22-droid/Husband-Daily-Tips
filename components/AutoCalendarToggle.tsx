@@ -257,6 +257,7 @@ export default function AutoCalendarToggle() {
                     <p><strong>Google Calendar:</strong> Settings → Add calendar → From URL → Paste URL</p>
                     <p><strong>Outlook:</strong> Add calendar → Subscribe from web → Paste URL</p>
                     <p><strong>Apple Calendar:</strong> File → New Calendar Subscription → Paste URL</p>
+                    <p className="text-slate-500 mt-1">Note: Apple Calendar works best with the feed subscription URL above</p>
                   </div>
                 </div>
               )}

@@ -68,9 +68,10 @@ export async function GET(request: Request) {
         outlook: `1. Open Outlook Calendar
 2. Click "Add calendar" → "Subscribe from web"
 3. Paste this URL and click "Import"`,
-        apple: `1. Open Calendar app
+        apple: `1. Open Calendar app (macOS or iOS)
 2. Go to File → New Calendar Subscription
-3. Paste this URL and click "Subscribe"`
+3. Paste this URL and click "Subscribe"
+4. The calendar will sync automatically`
       }
     });
   } catch (error) {
