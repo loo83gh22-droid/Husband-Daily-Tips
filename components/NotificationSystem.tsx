@@ -43,19 +43,6 @@ export default function NotificationSystem({
       toast.info(`Week ${Math.floor(currentStreak / 7)} complete! Keep it going! 💪`, 4000);
     }
 
-    // Check for health milestones
-    const healthMilestones = [50, 60, 70, 80, 90, 100];
-    const crossedHealthMilestone = healthMilestones.find(
-      (milestone) => previousHealth < milestone && healthScore >= milestone
-    );
-
-    if (crossedHealthMilestone) {
-      toast.success(
-        `🎯 Health milestone reached: ${healthScore.toFixed(0)}%! You're crushing it!`,
-        5000
-      );
-    }
-
     // Check for outstanding actions warning
     if (outstandingActionsCount > 5) {
       toast.warning(
