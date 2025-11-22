@@ -97,7 +97,7 @@ export default async function Home() {
             <div className="flex items-center justify-between mb-4">
               <div>
                 <p className="text-xs font-semibold text-slate-400 uppercase tracking-[0.2em]">
-                  RELATIONSHIP HEALTH
+                  HUSBAND HIT POINTS
                 </p>
                 <p className="mt-1 text-sm text-slate-300">
                   Your honest, no-BS relationship meter. It tells you what you need to hear.
