@@ -16,6 +16,7 @@ import QuickActions from '@/components/QuickActions';
 import NotificationSystem from '@/components/NotificationSystem';
 import ProgressCharts from '@/components/ProgressCharts';
 import KeyboardShortcuts from '@/components/KeyboardShortcuts';
+import MovieSuggestions from '@/components/MovieSuggestions';
 import Link from 'next/link';
 
 async function getUserData(auth0Id: string) {
