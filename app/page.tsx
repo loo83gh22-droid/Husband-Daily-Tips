@@ -509,11 +509,22 @@ export default async function Home() {
 
       {/* Footer */}
       <footer className="border-t border-slate-900/80 bg-slate-950">
-        <div className="container mx-auto px-4 py-6 flex flex-col md:flex-row items-center justify-between gap-3">
-          <p className="text-xs text-slate-500">
-            © {new Date().getFullYear()} Best Husband Ever. Built for husbands who don&apos;t want to sleepwalk through their marriage.
-          </p>
-          <p className="text-[11px] text-slate-600">
+        <div className="container mx-auto px-4 py-6">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-4">
+            <p className="text-xs text-slate-500">
+              © {new Date().getFullYear()} Best Husband Ever. Built for husbands who don&apos;t want to sleepwalk through their marriage.
+            </p>
+            <div className="flex items-center gap-4 text-xs text-slate-500">
+              <Link href="/legal/terms" className="hover:text-slate-300 transition-colors">
+                Terms of Service
+              </Link>
+              <span className="text-slate-700">•</span>
+              <Link href="/legal/privacy" className="hover:text-slate-300 transition-colors">
+                Privacy Policy
+              </Link>
+            </div>
+          </div>
+          <p className="text-[11px] text-slate-600 text-center md:text-left">
             This is not therapy. It&apos;s a daily practice tool. Use it to support—not replace—honest conversations with your wife.
           </p>
         </div>

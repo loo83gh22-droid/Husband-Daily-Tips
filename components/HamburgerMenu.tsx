@@ -90,7 +90,21 @@ export default function HamburgerMenu() {
                 </Link>
               );
             })}
-            <div className="border-t border-slate-800 mt-2 pt-2">
+            <div className="border-t border-slate-800 mt-2 pt-2 space-y-1">
+              <Link
+                href="/legal/terms"
+                className="flex items-center gap-3 px-4 py-3 text-sm text-slate-400 hover:bg-slate-800 hover:text-slate-200 transition-colors"
+              >
+                <span className="text-lg">📄</span>
+                <span>Terms of Service</span>
+              </Link>
+              <Link
+                href="/legal/privacy"
+                className="flex items-center gap-3 px-4 py-3 text-sm text-slate-400 hover:bg-slate-800 hover:text-slate-200 transition-colors"
+              >
+                <span className="text-lg">🔒</span>
+                <span>Privacy Policy</span>
+              </Link>
               <Link
                 href="/api/auth/logout"
                 prefetch={false}
