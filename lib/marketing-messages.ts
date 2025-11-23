@@ -1,7 +1,7 @@
 import { getSupabaseAdmin } from './supabase';
 
-export type MarketingMessageCategory = 'pricing' | 'value' | 'motivation' | 'social_proof' | 'urgency';
-export type MarketingMessageContext = 'subscription_page' | 'dashboard' | 'landing_page' | 'all';
+export type MarketingMessageCategory = 'pricing' | 'value' | 'motivation' | 'social_proof' | 'urgency' | 'conversion' | 'cta';
+export type MarketingMessageContext = 'subscription_page' | 'dashboard' | 'landing_page' | 'social_post' | 'banner' | 'all';
 
 export interface MarketingMessage {
   id: string;

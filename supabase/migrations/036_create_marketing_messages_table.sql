@@ -2,8 +2,8 @@
 CREATE TABLE IF NOT EXISTS marketing_messages (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   message TEXT NOT NULL,
-  category TEXT NOT NULL CHECK (category IN ('pricing', 'value', 'motivation', 'social_proof', 'urgency')),
-  context TEXT, -- Where this message should be used (e.g., 'subscription_page', 'dashboard', 'landing_page')
+  category TEXT NOT NULL CHECK (category IN ('pricing', 'value', 'motivation', 'social_proof', 'urgency', 'conversion', 'cta')),
+  context TEXT, -- Where this message should be used (e.g., 'subscription_page', 'dashboard', 'landing_page', 'social_post', 'banner')
   is_active BOOLEAN DEFAULT TRUE,
   display_order INTEGER DEFAULT 0,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
@@ -53,7 +53,31 @@ INSERT INTO marketing_messages (message, category, context, display_order) VALUE
   -- Urgency/CTA
   ('Your relationship doesn''t wait. Why should you?', 'urgency', 'subscription_page', 40),
   ('Start today. See results this week.', 'urgency', 'landing_page', 41),
-  ('The best time to start was yesterday. The second best time is now.', 'urgency', 'subscription_page', 42);
+  ('The best time to start was yesterday. The second best time is now.', 'urgency', 'subscription_page', 42),
+  
+  -- Conversion-focused "Buy Me" messages
+  ('$0.25 per day to be a better husband. That''s it.', 'conversion', 'landing_page', 50),
+  ('Skip the coffee. Upgrade your marriage.', 'conversion', 'social_post', 51),
+  ('One ProV1 golf ball = One month of relationship wins. Easy choice.', 'conversion', 'social_post', 52),
+  ('Your phone''s full of distractions. Make this one count.', 'conversion', 'landing_page', 53),
+  ('Less than a gumball. More valuable than therapy.', 'conversion', 'banner', 54),
+  ('$7/month. One less beer. One better marriage.', 'conversion', 'social_post', 55),
+  ('The only subscription that makes your biggest win even bigger.', 'conversion', 'landing_page', 56),
+  ('Stop scrolling. Start winning.', 'conversion', 'banner', 57),
+  ('For the price of 1 Starbucks, get 30 days of better.', 'conversion', 'social_post', 58),
+  ('Cheaper than Netflix. More valuable than your unused gym membership.', 'conversion', 'landing_page', 59),
+  ('One fast food meal = One month of relationship improvement.', 'conversion', 'social_post', 60),
+  ('$0.25 a day. That''s less than a parking meter. But way more valuable.', 'conversion', 'banner', 61),
+  ('Your marriage is worth more than $7/month. But that''s all it costs.', 'conversion', 'landing_page', 62),
+  ('Skip one impulse buy. Get 30 days of intentional action.', 'conversion', 'social_post', 63),
+  ('Better than therapy. Cheaper than divorce. Smarter than waiting.', 'conversion', 'landing_page', 64),
+  
+  -- Direct CTA messages
+  ('Ready to level up? Start your 7-day free trial.', 'cta', 'landing_page', 70),
+  ('Join thousands of husbands who are already winning.', 'cta', 'landing_page', 71),
+  ('7 days free. No credit card. No risk. Just results.', 'cta', 'banner', 72),
+  ('Try it free. See the difference. Make it permanent.', 'cta', 'landing_page', 73),
+  ('Start your free trial today. Your marriage will thank you tomorrow.', 'cta', 'social_post', 74);
 
 -- Function to update updated_at timestamp
 CREATE TRIGGER update_marketing_messages_updated_at BEFORE UPDATE ON marketing_messages

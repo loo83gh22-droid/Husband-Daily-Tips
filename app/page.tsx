@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { getSession } from '@auth0/nextjs-auth0';
 import { redirect } from 'next/navigation';
 import BrandLogo from '@/components/BrandLogo';
+import { getMarketingMessage } from '@/lib/marketing-messages';
 
 export default async function Home() {
   const session = await getSession();
@@ -445,7 +446,7 @@ export default async function Home() {
                 $7<span className="text-lg text-slate-300">/month</span>
               </div>
               <p className="text-sm text-primary-400 font-semibold mb-6">
-                $7 a month. Less than $0.25 a day. A no-brainer to level up your biggest win.
+                {pricingMessage?.message || '$7 a month. Less than $0.25 a day. A no-brainer to level up your biggest win.'}
               </p>
               <ul className="space-y-3 mb-6">
                 <li className="flex items-center text-slate-50">
