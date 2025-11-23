@@ -49,13 +49,10 @@ export default function CategoryCard({
       whileTap={{ scale: 0.99 }}
       className={`border rounded-lg p-4 transition-all ${colorClasses}`}
     >
-      <div className="flex items-center gap-2 mb-3">
-        <span className="text-xl">{icon}</span>
+      <div className="flex items-center gap-3 mb-3">
+        <span className="text-2xl">{icon}</span>
         <div className="flex-1 min-w-0">
-          <h3 className="text-sm font-semibold text-slate-50 truncate">{name}</h3>
-          <p className="text-[10px] text-slate-400">
-            {completedCount} / {actionCount}
-          </p>
+          <h3 className="text-lg md:text-xl font-bold text-slate-50 truncate">{name}</h3>
         </div>
       </div>
 
