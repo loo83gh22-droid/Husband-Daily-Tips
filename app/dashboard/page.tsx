@@ -15,6 +15,7 @@ import QuickActions from '@/components/QuickActions';
 import NotificationSystem from '@/components/NotificationSystem';
 import ProgressCharts from '@/components/ProgressCharts';
 import KeyboardShortcuts from '@/components/KeyboardShortcuts';
+import FollowUpSurveyChecker from '@/components/FollowUpSurveyChecker';
 import Link from 'next/link';
 
 async function getUserData(auth0Id: string) {
@@ -552,6 +553,7 @@ export default async function Dashboard() {
         outstandingActionsCount={outstandingCount}
         lastActionDate={lastActionDate}
       />
+      <FollowUpSurveyChecker />
       <QuickActions
         todayActionId={todayActionId}
         todayActionCompleted={todayActionCompleted}
