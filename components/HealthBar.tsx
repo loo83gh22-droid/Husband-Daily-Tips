@@ -178,7 +178,7 @@ export default function HealthBar({ value, shouldPulse = false, onPulseComplete 
         <div className="relative z-10">
           <div className="flex items-center justify-between mb-5">
             <div className="flex-1">
-              <h2 className="text-2xl md:text-3xl font-bold text-slate-100 uppercase tracking-tight mb-2">
+              <h2 className="text-2xl md:text-3xl font-bold text-slate-100 mb-2">
                 Husband Hit Points
               </h2>
               <p className="text-sm text-slate-300 leading-relaxed">
