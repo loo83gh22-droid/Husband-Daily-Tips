@@ -4,6 +4,7 @@ import { getSupabaseAdmin } from '@/lib/supabase';
 import DashboardNav from '@/components/DashboardNav';
 import JournalEntry from '@/components/JournalEntry';
 import JournalExportButton from '@/components/JournalExportButton';
+import AutoCalendarToggle from '@/components/AutoCalendarToggle';
 
 async function getUserReflections(auth0Id: string) {
   // Use admin client to bypass RLS (Auth0 context isn't set)
@@ -109,7 +110,7 @@ export default async function JournalPage() {
             </div>
 
             {/* Journal Summary */}
-            <div className="bg-slate-900/80 border border-slate-800 rounded-xl p-6 mb-8">
+            <div className="bg-slate-900/80 border border-slate-800 rounded-xl p-6 mb-6">
               <h2 className="text-lg font-semibold text-slate-50 mb-3">
                 Journaling is Hard. That's Why It Works.
               </h2>
@@ -130,6 +131,11 @@ export default async function JournalPage() {
                   That's intentional.
                 </p>
               </div>
+            </div>
+
+            {/* Calendar Auto-Add Settings */}
+            <div className="mb-8">
+              <AutoCalendarToggle />
             </div>
           </div>
 
