@@ -109,12 +109,35 @@ async function getActions(auth0Id: string) {
     }
   }
 
+  // Calculate actions completed this week (for engagement metric)
+  const weekAgo = new Date();
+  weekAgo.setDate(weekAgo.getDate() - 7);
+  const weekAgoStr = weekAgo.toISOString().split('T')[0];
+
+  const { data: recentCompletions } = await adminSupabase
+    .from('user_action_completions')
+    .select('id')
+    .eq('user_id', user.id)
+    .gte('completed_at', weekAgoStr);
+
+  const actionsThisWeek = recentCompletions?.length || 0;
+
+  // Get badge count for engagement
+  const { data: badges } = await adminSupabase
+    .from('user_badges')
+    .select('id')
+    .eq('user_id', user.id);
+
+  const badgesEarned = badges?.length || 0;
+
   return {
     actions: uniqueActions,
     completedMap: completedMapObj,
     userId: user.id,
     favoritedActions, // Already filtered above
     currentStreak,
+    actionsThisWeek,
+    badgesEarned,
   };
 }
 
@@ -126,7 +149,7 @@ export default async function ActionsPage() {
   }
 
   const auth0Id = session.user.sub;
-  const { actions, completedMap, userId, favoritedActions, currentStreak } = await getActions(auth0Id);
+  const { actions, completedMap, userId, favoritedActions, currentStreak, actionsThisWeek, badgesEarned } = await getActions(auth0Id);
 
   // Filter out favorited actions from main actions list (they'll be shown separately)
   const favoritedActionIds = new Set(favoritedActions.map((fa: any) => fa.id));
@@ -206,12 +229,16 @@ export default async function ActionsPage() {
   // Note: Each theme section renders its own ActionsList component
 
   const completedCount = Object.keys(completedMap).length;
-  const completionPercentage = actions.length > 0 ? Math.round((completedCount / actions.length) * 100) : 0;
 
   return (
     <div className="min-h-screen bg-slate-950">
       <DashboardNav />
-      <ActionsQuickStats totalActions={actions.length} completedActions={completedCount} />
+      <ActionsQuickStats 
+        totalActions={actions.length} 
+        completedActions={completedCount}
+        actionsThisWeek={actionsThisWeek}
+        badgesEarned={badgesEarned}
+      />
 
       <main className="container mx-auto px-4 py-8 md:py-10">
         <div className="max-w-6xl mx-auto">
@@ -223,37 +250,20 @@ export default async function ActionsPage() {
               Track specific actions to earn badges. Complete actions to build toward your goals.
             </p>
             
-            {/* Quick Stats (visible when not sticky) */}
+            {/* Quick Stats (visible when not sticky) - Focus on growth, not completion */}
             <div className="bg-gradient-to-r from-slate-900/80 via-slate-800/80 to-slate-900/80 border border-slate-700/50 rounded-xl p-6 mb-6 backdrop-blur-sm">
               <div className="grid grid-cols-3 gap-4 md:gap-8">
-                {/* Total Actions */}
+                {/* Actions This Week */}
                 <div className="flex items-center gap-3">
                   <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-gradient-to-br from-blue-500/20 to-blue-600/20 border border-blue-500/30 flex items-center justify-center">
-                    <span className="text-2xl">📋</span>
+                    <span className="text-2xl">📈</span>
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-xs text-slate-400 font-medium uppercase tracking-wide">Total Actions</p>
-                    <p className="text-xl md:text-2xl font-bold text-slate-50 mt-0.5">
-                      {actions.length}
+                    <p className="text-xs text-slate-400 font-medium uppercase tracking-wide">This Week</p>
+                    <p className="text-xl md:text-2xl font-bold text-blue-400 mt-0.5">
+                      {actionsThisWeek}
                     </p>
-                  </div>
-                </div>
-
-                {/* Completion Percentage */}
-                <div className="flex items-center gap-3">
-                  <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-gradient-to-br from-emerald-500/20 to-emerald-600/20 border border-emerald-500/30 flex items-center justify-center">
-                    <span className="text-2xl">✓</span>
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-xs text-slate-400 font-medium uppercase tracking-wide">Complete</p>
-                    <div className="flex items-baseline gap-2 mt-0.5">
-                      <p className="text-xl md:text-2xl font-bold text-emerald-400">
-                        {completionPercentage}%
-                      </p>
-                      <span className="text-xs text-slate-500">
-                        ({completedCount}/{actions.length})
-                      </span>
-                    </div>
+                    <p className="text-[10px] text-slate-500 mt-0.5">actions completed</p>
                   </div>
                 </div>
 
@@ -267,21 +277,36 @@ export default async function ActionsPage() {
                     <p className="text-xl md:text-2xl font-bold text-orange-400 mt-0.5">
                       {currentStreak} {currentStreak === 1 ? 'day' : 'days'}
                     </p>
+                    <p className="text-[10px] text-slate-500 mt-0.5">keep it going!</p>
+                  </div>
+                </div>
+
+                {/* Badges Earned */}
+                <div className="flex items-center gap-3">
+                  <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-gradient-to-br from-emerald-500/20 to-emerald-600/20 border border-emerald-500/30 flex items-center justify-center">
+                    <span className="text-2xl">🏆</span>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs text-slate-400 font-medium uppercase tracking-wide">Badges</p>
+                    <p className="text-xl md:text-2xl font-bold text-emerald-400 mt-0.5">
+                      {badgesEarned}
+                    </p>
+                    <p className="text-[10px] text-slate-500 mt-0.5">achievements unlocked</p>
                   </div>
                 </div>
               </div>
 
-              {/* Progress Bar */}
+              {/* Growth Message */}
               <div className="mt-4 pt-4 border-t border-slate-700/50">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-xs text-slate-400 font-medium">Overall Progress</span>
-                  <span className="text-xs font-semibold text-primary-300">{completionPercentage}%</span>
-                </div>
-                <div className="w-full bg-slate-800 rounded-full h-2.5 overflow-hidden">
-                  <div
-                    className="h-full bg-gradient-to-r from-primary-500 to-primary-600 rounded-full shadow-sm shadow-primary-500/50 transition-all duration-1000"
-                    style={{ width: `${completionPercentage}%` }}
-                  />
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-semibold text-slate-200">
+                      {completedCount} total actions completed
+                    </p>
+                    <p className="text-xs text-slate-400 mt-0.5">
+                      Consistency builds stronger relationships. Keep showing up! 💪
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>

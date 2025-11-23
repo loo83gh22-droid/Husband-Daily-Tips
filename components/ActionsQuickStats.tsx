@@ -4,23 +4,23 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 
 interface QuickStats {
-  totalActions: number;
-  completedActions: number;
-  completionPercentage: number;
   currentStreak: number;
+  actionsThisWeek: number;
+  badgesEarned: number;
 }
 
 interface ActionsQuickStatsProps {
   totalActions: number;
   completedActions: number;
+  actionsThisWeek: number;
+  badgesEarned: number;
 }
 
-export default function ActionsQuickStats({ totalActions, completedActions }: ActionsQuickStatsProps) {
+export default function ActionsQuickStats({ totalActions, completedActions, actionsThisWeek, badgesEarned }: ActionsQuickStatsProps) {
   const [stats, setStats] = useState<QuickStats>({
-    totalActions,
-    completedActions,
-    completionPercentage: totalActions > 0 ? Math.round((completedActions / totalActions) * 100) : 0,
     currentStreak: 0,
+    actionsThisWeek,
+    badgesEarned,
   });
   const [isSticky, setIsSticky] = useState(false);
 
@@ -52,8 +52,6 @@ export default function ActionsQuickStats({ totalActions, completedActions }: Ac
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const completionPercentage = totalActions > 0 ? Math.round((completedActions / totalActions) * 100) : 0;
-
   return (
     <motion.div
       initial={false}
@@ -70,34 +68,16 @@ export default function ActionsQuickStats({ totalActions, completedActions }: Ac
         <div className="max-w-6xl mx-auto">
           <div className="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 border-b-2 border-primary-500/30 shadow-lg shadow-primary-500/10 backdrop-blur-xl rounded-b-xl p-4">
             <div className="grid grid-cols-3 gap-4 md:gap-8">
-              {/* Total Actions */}
+              {/* Actions This Week */}
               <div className="flex items-center gap-3">
                 <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-gradient-to-br from-blue-500/20 to-blue-600/20 border border-blue-500/30 flex items-center justify-center">
-                  <span className="text-2xl">📋</span>
+                  <span className="text-2xl">📈</span>
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-xs text-slate-400 font-medium uppercase tracking-wide">Total Actions</p>
-                  <p className="text-xl md:text-2xl font-bold text-slate-50 mt-0.5">
-                    {totalActions}
+                  <p className="text-xs text-slate-400 font-medium uppercase tracking-wide">This Week</p>
+                  <p className="text-xl md:text-2xl font-bold text-blue-400 mt-0.5">
+                    {stats.actionsThisWeek}
                   </p>
-                </div>
-              </div>
-
-              {/* Completion Percentage */}
-              <div className="flex items-center gap-3">
-                <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-gradient-to-br from-emerald-500/20 to-emerald-600/20 border border-emerald-500/30 flex items-center justify-center">
-                  <span className="text-2xl">✓</span>
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-xs text-slate-400 font-medium uppercase tracking-wide">Complete</p>
-                  <div className="flex items-baseline gap-2 mt-0.5">
-                    <p className="text-xl md:text-2xl font-bold text-emerald-400">
-                      {completionPercentage}%
-                    </p>
-                    <span className="text-xs text-slate-500">
-                      ({completedActions}/{totalActions})
-                    </span>
-                  </div>
                 </div>
               </div>
 
@@ -113,21 +93,18 @@ export default function ActionsQuickStats({ totalActions, completedActions }: Ac
                   </p>
                 </div>
               </div>
-            </div>
 
-            {/* Progress Bar */}
-            <div className="mt-4 pt-4 border-t border-slate-700/50">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-xs text-slate-400 font-medium">Overall Progress</span>
-                <span className="text-xs font-semibold text-primary-300">{completionPercentage}%</span>
-              </div>
-              <div className="w-full bg-slate-800 rounded-full h-2 overflow-hidden">
-                <motion.div
-                  initial={{ width: 0 }}
-                  animate={{ width: `${completionPercentage}%` }}
-                  transition={{ duration: 0.8, ease: 'easeOut' }}
-                  className="h-full bg-gradient-to-r from-primary-500 to-primary-600 rounded-full shadow-sm shadow-primary-500/50"
-                />
+              {/* Badges Earned */}
+              <div className="flex items-center gap-3">
+                <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-gradient-to-br from-emerald-500/20 to-emerald-600/20 border border-emerald-500/30 flex items-center justify-center">
+                  <span className="text-2xl">🏆</span>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs text-slate-400 font-medium uppercase tracking-wide">Badges</p>
+                  <p className="text-xl md:text-2xl font-bold text-emerald-400 mt-0.5">
+                    {stats.badgesEarned}
+                  </p>
+                </div>
               </div>
             </div>
           </div>
