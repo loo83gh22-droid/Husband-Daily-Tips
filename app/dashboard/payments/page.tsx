@@ -1,6 +1,24 @@
 import { getSession } from '@auth0/nextjs-auth0';
 import { redirect } from 'next/navigation';
 import DashboardNav from '@/components/DashboardNav';
+import { getSupabaseAdmin } from '@/lib/supabase';
+import CustomerPortalButton from '@/components/CustomerPortalButton';
+
+async function getUserSubscription(auth0Id: string) {
+  const adminSupabase = getSupabaseAdmin();
+  
+  const { data: user, error } = await adminSupabase
+    .from('users')
+    .select('subscription_tier, stripe_customer_id, subscription_status')
+    .eq('auth0_id', auth0Id)
+    .single();
+
+  if (error || !user) {
+    return null;
+  }
+
+  return user;
+}
 
 export default async function PaymentsPage() {
   const session = await getSession();
@@ -8,6 +26,10 @@ export default async function PaymentsPage() {
   if (!session?.user) {
     redirect('/api/auth/login');
   }
+
+  const auth0Id = session.user.sub;
+  const subscription = await getUserSubscription(auth0Id);
+  const hasActiveSubscription = subscription?.subscription_tier === 'premium' && subscription?.stripe_customer_id;
 
   return (
     <div className="min-h-screen bg-slate-950">
@@ -26,33 +48,37 @@ export default async function PaymentsPage() {
 
           <div className="bg-slate-900/80 border border-slate-800 rounded-xl p-8">
             <div className="max-w-2xl mx-auto">
-              <h2 className="text-xl font-semibold text-slate-50 mb-4">Payment Integration</h2>
-              <p className="text-slate-300 mb-6">
-                We will integrate Stripe here in the future for secure payment processing. This will allow you to:
-              </p>
-              <ul className="space-y-3 text-slate-300 mb-6">
-                <li className="flex items-start gap-3">
-                  <span className="text-green-400 mt-1">✓</span>
-                  <span>Securely manage your payment methods</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-green-400 mt-1">✓</span>
-                  <span>Update billing information</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-green-400 mt-1">✓</span>
-                  <span>View payment history</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-green-400 mt-1">✓</span>
-                  <span>Cancel or modify your subscription</span>
-                </li>
-              </ul>
-              <div className="bg-primary-500/10 border border-primary-500/30 rounded-lg p-4">
-                <p className="text-primary-300 text-sm">
-                  <strong>Coming Soon:</strong> Stripe integration for seamless payment management.
-                </p>
-              </div>
+              {hasActiveSubscription ? (
+                <>
+                  <h2 className="text-xl font-semibold text-slate-50 mb-4">Manage Your Subscription</h2>
+                  <p className="text-slate-300 mb-6">
+                    Use the Stripe Customer Portal to securely manage your subscription, payment methods, and billing history.
+                  </p>
+                  <CustomerPortalButton />
+                  <div className="mt-6 space-y-3 text-sm text-slate-400">
+                    <p>In the portal, you can:</p>
+                    <ul className="list-disc list-inside space-y-1 ml-4">
+                      <li>Update your payment method</li>
+                      <li>View billing history and invoices</li>
+                      <li>Cancel or modify your subscription</li>
+                      <li>Update billing information</li>
+                    </ul>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <h2 className="text-xl font-semibold text-slate-50 mb-4">No Active Subscription</h2>
+                  <p className="text-slate-300 mb-6">
+                    You don't have an active paid subscription. Upgrade to Premium to unlock all features.
+                  </p>
+                  <a
+                    href="/dashboard/subscription"
+                    className="inline-block px-6 py-3 bg-primary-500 text-slate-950 rounded-lg font-semibold hover:bg-primary-400 transition-colors"
+                  >
+                    View Plans
+                  </a>
+                </>
+              )}
             </div>
           </div>
         </div>

@@ -157,15 +157,7 @@ export default async function SubscriptionPage() {
                     Current Plan
                   </button>
                 ) : (
-                  <button
-                    className={`w-full px-6 py-3 rounded-lg font-semibold transition-colors ${
-                      isPopular
-                        ? 'bg-primary-500 text-slate-950 hover:bg-primary-400'
-                        : 'bg-slate-800 text-slate-200 hover:bg-slate-700 border border-slate-700'
-                    }`}
-                  >
-                    {plan.price === 0 ? 'Downgrade' : 'Upgrade'}
-                  </button>
+                  <SubscriptionButton plan={plan} />
                 )}
               </div>
             );
