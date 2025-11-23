@@ -7,7 +7,11 @@ import Stripe from 'stripe';
 export const dynamic = 'force-dynamic';
 
 export async function POST(request: NextRequest) {
+  // Log that we received the request
+  console.log('Webhook received at:', new Date().toISOString());
+  
   if (!process.env.STRIPE_SECRET_KEY || !stripe) {
+    console.error('Stripe not configured');
     return NextResponse.json(
       { error: 'Stripe is not configured' },
       { status: 500 }
@@ -17,6 +21,8 @@ export async function POST(request: NextRequest) {
   const body = await request.text();
   const headersList = await headers();
   const signature = headersList.get('stripe-signature');
+  
+  console.log('Webhook signature present:', !!signature);
 
   if (!signature || !STRIPE_WEBHOOK_SECRET) {
     console.error('Missing Stripe signature or webhook secret');
@@ -28,12 +34,14 @@ export async function POST(request: NextRequest) {
 
   let event: Stripe.Event;
 
+  let event: Stripe.Event;
   try {
     event = stripe.webhooks.constructEvent(
       body,
       signature,
       STRIPE_WEBHOOK_SECRET
     );
+    console.log('Webhook event verified:', event.type);
   } catch (err: any) {
     console.error('Webhook signature verification failed:', err.message);
     return NextResponse.json(
