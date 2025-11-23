@@ -2,6 +2,7 @@ import { getSession } from '@auth0/nextjs-auth0';
 import { redirect } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import DashboardNav from '@/components/DashboardNav';
+import SubscriptionButton from '@/components/SubscriptionButton';
 
 async function getUserSubscription(auth0Id: string) {
   try {
