@@ -427,6 +427,24 @@ END:VCALENDAR`;
                   </Link>
                 ) : null;
               })()}
+              <button
+                onClick={handleToggleFavorite}
+                disabled={isTogglingFavorite}
+                className={`px-3 py-1.5 border text-xs font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-default flex items-center gap-1.5 active:scale-95 ${
+                  isFavorited
+                    ? 'border-yellow-500/50 bg-yellow-500/10 text-yellow-300 hover:bg-yellow-500/20'
+                    : 'border-slate-700 text-slate-300 hover:bg-slate-800'
+                }`}
+              >
+                {isTogglingFavorite ? (
+                  '...'
+                ) : (
+                  <>
+                    <span>{isFavorited ? '⭐' : '☆'}</span>
+                    <span>{isFavorited ? 'Favorited' : 'Favorite'}</span>
+                  </>
+                )}
+              </button>
               <div className="text-xs text-slate-500 text-right" suppressHydrationWarning>
                 {mounted ? displayDate : ''}
               </div>
