@@ -161,7 +161,6 @@ export default function DailyTipCard({ tip, subscriptionTier = 'free' }: DailyTi
   };
 
   const isPaidUser = subscriptionTier === 'premium' || subscriptionTier === 'pro';
-  }, []);
 
   const handleMarkDone = async () => {
     if (isSubmitting || isCompleted) return;
