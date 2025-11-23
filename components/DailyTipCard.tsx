@@ -51,6 +51,11 @@ export default function DailyTipCard({ tip, subscriptionTier = 'free' }: DailyTi
   const [isMilestone, setIsMilestone] = useState(false);
   const [autoAddToCalendar, setAutoAddToCalendar] = useState(false);
   const [calendarType, setCalendarType] = useState<'google' | 'outlook' | 'apple'>('google');
+  const [isSavingCalendar, setIsSavingCalendar] = useState(false);
+  const [isLoadingFeedUrl, setIsLoadingFeedUrl] = useState(false);
+  const [feedUrl, setFeedUrl] = useState<string | null>(null);
+  const [showFeedUrl, setShowFeedUrl] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
 
   // Only set date after mount to avoid hydration mismatch
   useEffect(() => {
@@ -74,6 +79,88 @@ export default function DailyTipCard({ tip, subscriptionTier = 'free' }: DailyTi
       .catch(() => {
         // Silently handle errors
       });
+  }, []);
+
+  const handleCalendarTypeChange = async (type: 'google' | 'outlook' | 'apple') => {
+    setCalendarType(type);
+    setIsSavingCalendar(true);
+    try {
+      await fetch('/api/user/preferences', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({
+          auto_add_to_calendar: autoAddToCalendar,
+          calendar_type: type,
+        }),
+      });
+    } catch (error) {
+      console.error('Error updating calendar type:', error);
+    } finally {
+      setIsSavingCalendar(false);
+    }
+  };
+
+  const handleGetFeedUrl = async () => {
+    setIsLoadingFeedUrl(true);
+    try {
+      const response = await fetch('/api/calendar/feed-url');
+      if (!response.ok) {
+        const error = await response.json();
+        if (error.requiresUpgrade) {
+          alert('Calendar feed subscription is only available for paid users. Please upgrade to access automatic calendar syncing.');
+        } else if (error.requiresEnable) {
+          alert('Please enable auto-add to calendar first.');
+        } else {
+          throw new Error(error.error || 'Failed to get feed URL');
+        }
+        return;
+      }
+
+      const data = await response.json();
+      setFeedUrl(data.feedUrl);
+      setShowFeedUrl(true);
+    } catch (error: any) {
+      console.error('Error getting feed URL:', error);
+      alert('Failed to get calendar feed URL. Please try again.');
+    } finally {
+      setIsLoadingFeedUrl(false);
+    }
+  };
+
+  const handleDownloadAllActions = async () => {
+    setIsDownloading(true);
+    try {
+      const response = await fetch('/api/calendar/actions/download?days=7');
+      if (!response.ok) {
+        throw new Error('Failed to download calendar');
+      }
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'best-husband-actions-7-days.ics';
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (error) {
+      console.error('Error downloading calendar:', error);
+      alert('Failed to download calendar. Please try again.');
+    } finally {
+      setIsDownloading(false);
+    }
+  };
+
+  const copyFeedUrl = () => {
+    if (feedUrl) {
+      navigator.clipboard.writeText(feedUrl);
+      alert('Calendar feed URL copied to clipboard!');
+    }
+  };
+
+  const isPaidUser = subscriptionTier === 'premium' || subscriptionTier === 'pro';
   }, []);
 
   const handleMarkDone = async () => {
