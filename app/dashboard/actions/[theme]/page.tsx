@@ -1,41 +1,44 @@
 import { getSession } from '@auth0/nextjs-auth0';
 import { redirect } from 'next/navigation';
-import { supabase } from '@/lib/supabase';
+import { getSupabaseAdmin } from '@/lib/supabase';
 import DashboardNav from '@/components/DashboardNav';
 import ActionsList from '@/components/ActionsList';
 import Link from 'next/link';
 
 async function getActionsByTheme(auth0Id: string, theme: string) {
-  const { data: user } = await supabase
+  // Use admin client to bypass RLS (Auth0 context isn't set)
+  const adminSupabase = getSupabaseAdmin();
+  
+  const { data: user } = await adminSupabase
     .from('users')
     .select('id')
     .eq('auth0_id', auth0Id)
     .single();
 
-  if (!user) return { actions: [], completedMap: new Map() };
+  if (!user) return { actions: [], completedMap: {} };
 
   // Get all actions for this theme
   // First try to match by theme, then by category if theme doesn't match
-  const { data: actions } = await supabase
+  const { data: actions } = await adminSupabase
     .from('actions')
     .select('*')
     .eq('theme', theme)
     .order('name', { ascending: true });
 
   // Get user's completed actions
-  const { data: completions } = await supabase
+  const { data: completions } = await adminSupabase
     .from('user_action_completions')
     .select('id, action_id, completed_at, notes')
     .eq('user_id', user.id)
     .order('completed_at', { ascending: false });
 
-  // Group completions by action_id
-  const completedMap = new Map<string, Array<{ id: string; completed_at: string; notes: string | null }>>();
+  // Group completions by action_id - convert to plain object for serialization
+  const completedMap: Record<string, Array<{ id: string; completed_at: string; notes: string | null }>> = {};
   completions?.forEach((c) => {
-    if (!completedMap.has(c.action_id)) {
-      completedMap.set(c.action_id, []);
+    if (!completedMap[c.action_id]) {
+      completedMap[c.action_id] = [];
     }
-    completedMap.get(c.action_id)!.push({
+    completedMap[c.action_id].push({
       id: c.id,
       completed_at: c.completed_at,
       notes: c.notes,
@@ -127,8 +130,8 @@ export default async function ActionsByThemePage({
 
           <section className="bg-slate-900/50 border border-slate-800 rounded-xl p-6 md:p-8">
             <ActionsList
-              actions={actions}
-              completedMap={completedMap}
+              actions={actions || []}
+              completedMap={new Map(Object.entries(completedMap))}
               userId={userId}
             />
           </section>

@@ -80,7 +80,7 @@ export default function CategoryCard({
       {/* Actions */}
       <div className="flex flex-col gap-2">
         <Link
-          href={`/dashboard/actions/${theme}`}
+          href={`/dashboard/actions#category-${theme}`}
           className="w-full px-4 py-2 text-sm font-medium text-slate-100 bg-slate-800/50 border border-slate-700 rounded-lg hover:bg-slate-700/50 transition-colors text-center"
         >
           View Actions

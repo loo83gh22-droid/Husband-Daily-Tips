@@ -31,6 +31,26 @@ export default function ActionsPageClient({
   userId,
   favoritedActions,
 }: ActionsPageClientProps) {
+  // Scroll to category if hash is present in URL
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const hash = window.location.hash;
+      if (hash) {
+        // Wait for content to render, then scroll
+        setTimeout(() => {
+          const element = document.querySelector(hash);
+          if (element) {
+            element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            // Highlight the section briefly
+            element.classList.add('ring-2', 'ring-primary-500', 'ring-opacity-50');
+            setTimeout(() => {
+              element.classList.remove('ring-2', 'ring-primary-500', 'ring-opacity-50');
+            }, 2000);
+          }
+        }, 300);
+      }
+    }
+  }, []);
   // Ensure all actions have required fields
   const normalizedActions = useMemo(() => {
     if (!allActions || !Array.isArray(allActions)) {
@@ -299,7 +319,8 @@ export default function ActionsPageClient({
             return (
               <section
                 key={theme}
-                className="bg-slate-900/50 border border-slate-800 rounded-xl p-6 md:p-8"
+                id={`category-${theme}`}
+                className="bg-slate-900/50 border border-slate-800 rounded-xl p-6 md:p-8 scroll-mt-24"
               >
                 <div className="flex items-center justify-between mb-6">
                   <h2 className="text-xl md:text-2xl font-semibold text-slate-50 flex items-center gap-2">
