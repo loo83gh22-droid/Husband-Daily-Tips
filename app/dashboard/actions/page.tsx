@@ -14,7 +14,14 @@ async function getActions(auth0Id: string) {
     .eq('auth0_id', auth0Id)
     .single();
 
-  if (!user) return { actions: [], completedMap: new Map(), favoritedActions: [], currentStreak: 0 };
+  if (!user) return { 
+    actions: [], 
+    completedMap: new Map(), 
+    favoritedActions: [], 
+    currentStreak: 0,
+    actionsThisWeek: 0,
+    badgesEarned: 0,
+  };
 
   // Get all actions - use distinct to avoid duplicates
   // Order by display_order (marriage importance), then by name
@@ -120,7 +127,7 @@ async function getActions(auth0Id: string) {
     .eq('user_id', user.id)
     .gte('completed_at', weekAgoISO);
 
-  const actionsThisWeek = recentCompletions?.length || 0;
+  const actionsThisWeek: number = recentCompletions ? recentCompletions.length : 0;
 
   // Get badge count for engagement
   const { data: badges } = await adminSupabase
@@ -128,7 +135,7 @@ async function getActions(auth0Id: string) {
     .select('id')
     .eq('user_id', user.id);
 
-  const badgesEarned = badges?.length || 0;
+  const badgesEarned: number = badges?.length ?? 0;
 
   return {
     actions: uniqueActions,
