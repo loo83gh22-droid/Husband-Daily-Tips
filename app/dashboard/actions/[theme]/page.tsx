@@ -65,12 +65,10 @@ export default async function ActionsByThemePage({
 
   // Format theme name - handle special cases
   let themeName = params.theme.charAt(0).toUpperCase() + params.theme.slice(1).replace(/_/g, ' ');
-  if (params.theme === 'outdoor') {
-    themeName = 'Outdoor Activities';
-  } else if (params.theme === 'active') {
-    themeName = 'Active Together';
-  } else if (params.theme === 'quality_time') {
+  if (params.theme === 'quality_time') {
     themeName = 'Quality Time';
+  } else if (params.theme === 'conflict_resolution') {
+    themeName = 'Conflict Resolution';
   }
 
   const themeIcon =
@@ -84,17 +82,13 @@ export default async function ActionsByThemePage({
             ? '💕'
             : params.theme === 'gratitude'
               ? '🙏'
-              : params.theme === 'conflict'
+              : params.theme === 'conflict_resolution'
                 ? '⚖️'
                 : params.theme === 'reconnection'
                   ? '🔗'
                   : params.theme === 'quality_time'
                     ? '⏰'
-                    : params.theme === 'outdoor'
-                      ? '🌲'
-                      : params.theme === 'active'
-                        ? '💪'
-                        : '📋';
+                    : '📋';
 
   return (
     <div className="min-h-screen bg-slate-950">

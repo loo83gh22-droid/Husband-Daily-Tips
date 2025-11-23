@@ -1,0 +1,105 @@
+'use client';
+
+import Link from 'next/link';
+import { motion } from 'framer-motion';
+
+interface CategoryCardProps {
+  theme: string;
+  name: string;
+  icon: string;
+  actionCount: number;
+  completedCount: number;
+  challengeId?: string;
+  challengeName?: string;
+  isEnrolled?: boolean;
+  onJoinChallenge?: (challengeId: string) => void;
+}
+
+const getThemeColor = (theme: string) => {
+  const colors: Record<string, string> = {
+    communication: 'border-blue-500/30 bg-gradient-to-br from-slate-900/90 via-blue-950/20 to-slate-800/90 hover:border-blue-500/50',
+    intimacy: 'border-pink-500/30 bg-gradient-to-br from-slate-900/90 via-pink-950/20 to-slate-800/90 hover:border-pink-500/50',
+    partnership: 'border-emerald-500/30 bg-gradient-to-br from-slate-900/90 via-emerald-950/20 to-slate-800/90 hover:border-emerald-500/50',
+    romance: 'border-rose-500/30 bg-gradient-to-br from-slate-900/90 via-rose-950/20 to-slate-800/90 hover:border-rose-500/50',
+    gratitude: 'border-amber-500/30 bg-gradient-to-br from-slate-900/90 via-amber-950/20 to-slate-800/90 hover:border-amber-500/50',
+    conflict_resolution: 'border-purple-500/30 bg-gradient-to-br from-slate-900/90 via-purple-950/20 to-slate-800/90 hover:border-purple-500/50',
+    reconnection: 'border-cyan-500/30 bg-gradient-to-br from-slate-900/90 via-cyan-950/20 to-slate-800/90 hover:border-cyan-500/50',
+    quality_time: 'border-green-500/30 bg-gradient-to-br from-slate-900/90 via-green-950/20 to-slate-800/90 hover:border-green-500/50',
+  };
+  return colors[theme] || 'border-slate-700/50 bg-gradient-to-br from-slate-900/90 to-slate-800/90 hover:border-slate-600/50';
+};
+
+export default function CategoryCard({
+  theme,
+  name,
+  icon,
+  actionCount,
+  completedCount,
+  challengeId,
+  challengeName,
+  isEnrolled,
+  onJoinChallenge,
+}: CategoryCardProps) {
+  const completionPercentage = actionCount > 0 ? Math.round((completedCount / actionCount) * 100) : 0;
+  const colorClasses = getThemeColor(theme);
+
+  return (
+    <motion.div
+      whileHover={{ scale: 1.02 }}
+      whileTap={{ scale: 0.98 }}
+      className={`border-2 rounded-xl p-6 transition-all ${colorClasses}`}
+    >
+      <div className="flex items-start justify-between mb-4">
+        <div className="flex items-center gap-3">
+          <span className="text-3xl">{icon}</span>
+          <div>
+            <h3 className="text-lg font-semibold text-slate-50">{name}</h3>
+            <p className="text-xs text-slate-400 mt-0.5">
+              {completedCount} / {actionCount} completed
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Progress Bar */}
+      <div className="mb-4">
+        <div className="flex items-center justify-between mb-2">
+          <span className="text-xs text-slate-400">Progress</span>
+          <span className="text-xs font-semibold text-slate-300">{completionPercentage}%</span>
+        </div>
+        <div className="w-full bg-slate-800 rounded-full h-2 overflow-hidden">
+          <motion.div
+            initial={{ width: 0 }}
+            animate={{ width: `${completionPercentage}%` }}
+            transition={{ duration: 0.5, ease: 'easeOut' }}
+            className="h-full bg-primary-500 rounded-full"
+          />
+        </div>
+      </div>
+
+      {/* Actions */}
+      <div className="flex flex-col gap-2">
+        <Link
+          href={`/dashboard/actions/${theme}`}
+          className="w-full px-4 py-2 text-sm font-medium text-slate-100 bg-slate-800/50 border border-slate-700 rounded-lg hover:bg-slate-700/50 transition-colors text-center"
+        >
+          View Actions
+        </Link>
+        {challengeId && challengeName && (
+          <button
+            onClick={() => challengeId && onJoinChallenge?.(challengeId)}
+            disabled={isEnrolled}
+            className={`w-full px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
+              isEnrolled
+                ? 'bg-slate-700/30 text-slate-500 border border-slate-700 cursor-not-allowed'
+                : 'bg-primary-500/20 text-primary-300 border border-primary-500/30 hover:bg-primary-500/30'
+            }`}
+          >
+            {isEnrolled ? 'Challenge Active' : 'Start Challenge'}
+          </button>
+        )}
+      </div>
+    </motion.div>
+  );
+}
+

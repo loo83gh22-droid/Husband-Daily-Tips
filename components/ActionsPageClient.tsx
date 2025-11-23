@@ -3,6 +3,8 @@
 import { useState, useMemo, useEffect } from 'react';
 import ActionsList from './ActionsList';
 import ActionsSearchFilter from './ActionsSearchFilter';
+import FeaturedChallenges from './FeaturedChallenges';
+import CategoryCard from './CategoryCard';
 import Link from 'next/link';
 
 interface Action {
@@ -115,11 +117,9 @@ export default function ActionsPageClient({
     'partnership',
     'romance',
     'gratitude',
-    'conflict',
+    'conflict_resolution',
     'reconnection',
     'quality_time',
-    'outdoor',
-    'active',
   ];
 
   const sortedThemes = Object.keys(actionsByTheme).sort((a, b) => {
@@ -132,9 +132,8 @@ export default function ActionsPageClient({
   });
 
   const formatThemeName = (theme: string) => {
-    if (theme === 'outdoor') return 'Outdoor Activities';
-    if (theme === 'active') return 'Active Together';
     if (theme === 'quality_time') return 'Quality Time';
+    if (theme === 'conflict_resolution') return 'Conflict Resolution';
     return theme.charAt(0).toUpperCase() + theme.slice(1).replace(/_/g, ' ');
   };
 
@@ -145,11 +144,9 @@ export default function ActionsPageClient({
       partnership: '🤝',
       romance: '💕',
       gratitude: '🙏',
-      conflict: '⚖️',
+      conflict_resolution: '⚖️',
       reconnection: '🔗',
       quality_time: '⏰',
-      outdoor: '🌲',
-      active: '💪',
     };
     return icons[theme] || '📋';
   };
@@ -164,8 +161,108 @@ export default function ActionsPageClient({
     return filteredActions.filter((action) => !favoritedActionIds.has(action.id));
   }, [filteredActions, favoritedActionIds]);
 
+  // Calculate category stats for category cards
+  const categoryStats = useMemo(() => {
+    const stats: Record<string, { total: number; completed: number }> = {};
+    sortedThemes.forEach((theme) => {
+      const themeActions = normalizedActions.filter(
+        (action) => (action.theme?.toLowerCase() || action.category.toLowerCase()) === theme
+      );
+      const completed = themeActions.filter((action) => completedActionIds.has(action.id)).length;
+      stats[theme] = { total: themeActions.length, completed };
+    });
+    return stats;
+  }, [normalizedActions, sortedThemes, completedActionIds]);
+
+  // Fetch challenges for category cards
+  const [challenges, setChallenges] = useState<Array<{ id: string; theme: string; name: string }>>([]);
+  const [userChallenges, setUserChallenges] = useState<Array<{ challenge_id: string }>>([]);
+
+  useEffect(() => {
+    async function fetchChallenges() {
+      try {
+        const [challengesRes, userChallengesRes] = await Promise.all([
+          fetch('/api/challenges/active', { credentials: 'include' }),
+          fetch('/api/challenges/user', { credentials: 'include' }),
+        ]);
+        if (challengesRes.ok) {
+          const data = await challengesRes.json();
+          setChallenges(data.challenges || []);
+        }
+        if (userChallengesRes.ok) {
+          const data = await userChallengesRes.json();
+          setUserChallenges(data.allChallenges || data.challenges || []);
+        }
+      } catch (error) {
+        // Silently handle errors
+      }
+    }
+    fetchChallenges();
+  }, []);
+
+  const handleJoinChallenge = async (challengeId: string) => {
+    try {
+      const response = await fetch('/api/challenges/join', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ challengeId }),
+      });
+      if (response.ok) {
+        // Refresh challenges
+        const [challengesRes, userChallengesRes] = await Promise.all([
+          fetch('/api/challenges/active', { credentials: 'include' }),
+          fetch('/api/challenges/user', { credentials: 'include' }),
+        ]);
+        if (challengesRes.ok) {
+          const data = await challengesRes.json();
+          setChallenges(data.challenges || []);
+        }
+        if (userChallengesRes.ok) {
+          const data = await userChallengesRes.json();
+          setUserChallenges(data.allChallenges || data.challenges || []);
+        }
+      }
+    } catch (error) {
+      console.error('Error joining challenge:', error);
+    }
+  };
+
   return (
     <>
+      {/* Featured Challenges */}
+      <FeaturedChallenges />
+
+      {/* Category Cards Grid */}
+      <section className="mb-8">
+        <h2 className="text-2xl md:text-3xl font-semibold text-slate-50 mb-4">Categories</h2>
+        <p className="text-sm text-slate-400 mb-6">
+          Explore actions by category. Each category has a 7-day challenge you can start anytime.
+        </p>
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {sortedThemes.map((theme) => {
+            const stats = categoryStats[theme];
+            const challenge = challenges.find((c) => c.theme === theme);
+            const isEnrolled = challenge ? userChallenges.some((uc) => uc.challenge_id === challenge.id) : false;
+            
+            return (
+              <CategoryCard
+                key={theme}
+                theme={theme}
+                name={formatThemeName(theme)}
+                icon={getThemeIcon(theme)}
+                actionCount={stats?.total || 0}
+                completedCount={stats?.completed || 0}
+                challengeId={challenge?.id}
+                challengeName={challenge?.name}
+                isEnrolled={isEnrolled}
+                onJoinChallenge={handleJoinChallenge}
+              />
+            );
+          })}
+        </div>
+      </section>
+
       {/* Search and Filter */}
       <ActionsSearchFilter
         actions={normalizedActions}

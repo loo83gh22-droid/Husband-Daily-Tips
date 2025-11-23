@@ -448,7 +448,7 @@ export default async function HowToGuidesPage() {
         },
       ],
     },
-    'conflict': {
+    'conflict_resolution': {
       name: 'Conflict Resolution',
       description: 'Handle disagreements in ways that strengthen, not weaken, your relationship.',
       icon: '⚖️',

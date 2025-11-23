@@ -112,16 +112,14 @@ export default async function ActionsPage() {
   
   // Define theme display order (by marriage importance)
   const themeOrder = [
-    'communication',    // 1. Most foundational
-    'intimacy',         // 2. Deepest connection
-    'partnership',      // 3. Working together
-    'romance',          // 4. Keeping spark alive
-    'gratitude',        // 5. Appreciation
-    'conflict',         // 6. Handling disagreements
-    'reconnection',     // 7. Addressing disconnection
-    'quality_time',     // 8. Spending time together
-    'outdoor',          // 9. Outdoor activities (combined outdoor + adventure)
-    'active',           // 10. Active together (fitness)
+    'communication',        // 1. Most foundational
+    'intimacy',             // 2. Deepest connection
+    'partnership',          // 3. Working together
+    'romance',              // 4. Keeping spark alive
+    'gratitude',            // 5. Appreciation
+    'conflict_resolution',  // 6. Handling disagreements positively
+    'reconnection',         // 7. Addressing disconnection
+    'quality_time',         // 8. Spending time together (includes outdoor & active)
   ];
   
   // Double-check for duplicates and group by theme (only non-favorited actions)
