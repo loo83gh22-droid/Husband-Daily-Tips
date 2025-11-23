@@ -293,21 +293,46 @@ export default function OnboardingTour({ onComplete }: OnboardingTourProps) {
   if (highlightedElement && !isDummyElement && typeof highlightedElement.getBoundingClientRect === 'function') {
     try {
       const rect = highlightedElement.getBoundingClientRect();
+      const viewportHeight = typeof window !== 'undefined' ? window.innerHeight : 800;
+      const tooltipHeight = 200; // Approximate tooltip height
+      
       // Only use element position if rect is valid and element is visible
       if (rect.width > 0 && rect.height > 0 && 
           rect.top >= 0 && rect.left >= 0 &&
-          rect.bottom <= window.innerHeight + 100 && // Allow some off-screen tolerance
-          rect.right <= window.innerWidth + 100) {
+          rect.bottom <= viewportHeight + 100 && // Allow some off-screen tolerance
+          rect.right <= viewportWidth + 100) {
         const tooltipOffset = 16;
         const tooltipLeft = Math.max(16, Math.min(rect.left + rect.width / 2, viewportWidth - 16));
-        const tooltipTop = rect.bottom + window.scrollY + tooltipOffset;
         
-        // Position tooltip below the element, but ensure it's visible
+        // Check if tooltip would fit below the element
+        const spaceBelow = viewportHeight - rect.bottom;
+        const spaceAbove = rect.top;
+        
+        // Position tooltip below if there's enough space, otherwise above
+        let tooltipTop: number;
+        let transform: string;
+        
+        if (spaceBelow >= tooltipHeight + tooltipOffset) {
+          // Position below element
+          tooltipTop = rect.bottom + window.scrollY + tooltipOffset;
+          transform = 'translate(-50%, 0)';
+        } else if (spaceAbove >= tooltipHeight + tooltipOffset) {
+          // Position above element (for navigation at top of page)
+          tooltipTop = rect.top + window.scrollY - tooltipOffset;
+          transform = 'translate(-50%, -100%)';
+        } else {
+          // Not enough space above or below, center it
+          tooltipTop = viewportHeight / 2;
+          transform = 'translate(-50%, -50%)';
+        }
+        
         tooltipStyle = {
           top: `${tooltipTop}px`,
           left: `${tooltipLeft}px`,
-          transform: 'translate(-50%, 0)',
+          transform: transform,
           maxWidth: `${Math.min(viewportWidth - 32, 340)}px`,
+          position: 'fixed' as const,
+          zIndex: 10000,
         };
       } else {
         // Element exists but positioning would be off-screen, center it instead
@@ -316,6 +341,8 @@ export default function OnboardingTour({ onComplete }: OnboardingTourProps) {
           left: '50%',
           transform: 'translate(-50%, -50%)',
           maxWidth: `${Math.min(viewportWidth - 32, 340)}px`,
+          position: 'fixed' as const,
+          zIndex: 10000,
         };
       }
     } catch (e) {
@@ -325,6 +352,8 @@ export default function OnboardingTour({ onComplete }: OnboardingTourProps) {
         left: '50%',
         transform: 'translate(-50%, -50%)',
         maxWidth: `${Math.min(viewportWidth - 32, 340)}px`,
+        position: 'fixed' as const,
+        zIndex: 10000,
       };
     }
   } else {
