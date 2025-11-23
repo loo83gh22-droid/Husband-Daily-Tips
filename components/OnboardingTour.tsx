@@ -8,50 +8,50 @@ interface TourStep {
   target: string; // CSS selector or data attribute
   title: string;
   content: string;
-  position: 'top' | 'bottom' | 'left' | 'right' | 'center';
+  position: 'top' | 'bottom' | 'left' | 'right';
 }
 
 const TOUR_STEPS: TourStep[] = [
   {
     id: 'mission',
     target: '[data-tour="mission"]',
-    title: "Tomorrow's Mission",
-    content: "This is your daily action. Complete it to boost your Husband Hit Points. Each day you get a new action tailored to your situation.",
+    title: "Today's Mission",
+    content: "This is your daily action. Complete it to boost your Husband Hit Points.",
     position: 'bottom',
   },
   {
     id: 'hit-points',
     target: '[data-tour="hit-points"]',
     title: 'Husband Hit Points',
-    content: "Your relationship health score. Complete actions to increase it. Miss days and it slowly decreases. Consistency is what moves the needle.",
-    position: 'left',
+    content: "Your relationship health score. Complete actions to increase it.",
+    position: 'bottom',
   },
   {
     id: 'stats',
     target: '[data-tour="stats"]',
     title: 'Your Stats',
-    content: "Track your progress here: current streak, total actions completed, and active days. Keep the streak going!",
-    position: 'top',
+    content: "Track your progress: current streak, total actions, and active days.",
+    position: 'bottom',
   },
   {
     id: 'badges',
     target: '[data-tour="badges"]',
     title: 'Badges',
-    content: "Earn badges by completing actions and hitting milestones. They're proof you're showing up consistently.",
-    position: 'top',
+    content: "Earn badges by completing actions and hitting milestones.",
+    position: 'bottom',
   },
   {
     id: 'calendar',
     target: '[data-tour="calendar"]',
     title: 'Auto-Add to Calendar',
-    content: "Turn this on to automatically add your daily actions to your calendar. Set it once and forget it.",
-    position: 'top',
+    content: "Turn this on to automatically add your daily actions to your calendar.",
+    position: 'bottom',
   },
   {
     id: 'navigation',
     target: '[data-tour="navigation"]',
     title: 'Navigation',
-    content: "Use these links to explore: view all actions, check your badges, read your journal, see team wins, and access how-to guides.",
+    content: "Explore actions, badges, journal, team wins, and how-to guides.",
     position: 'bottom',
   },
 ];
@@ -65,6 +65,7 @@ export default function OnboardingTour({ onComplete }: OnboardingTourProps) {
   const [isActive, setIsActive] = useState(false);
   const [highlightedElement, setHighlightedElement] = useState<HTMLElement | null>(null);
   const highlightedRef = useRef<HTMLElement | null>(null);
+  const autoAdvanceTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     // Check if user has seen the tour
@@ -75,7 +76,7 @@ export default function OnboardingTour({ onComplete }: OnboardingTourProps) {
       // Small delay to ensure DOM is ready
       setTimeout(() => {
         setIsActive(true);
-      }, 500);
+      }, 800);
     }
   }, []);
 
@@ -87,20 +88,25 @@ export default function OnboardingTour({ onComplete }: OnboardingTourProps) {
       if (element) {
         // Cleanup previous element
         if (highlightedRef.current) {
-          highlightedRef.current.style.zIndex = '';
-          highlightedRef.current.style.position = '';
+          highlightedRef.current.classList.remove('ring-4', 'ring-primary-500', 'ring-opacity-75', 'z-50', 'relative');
         }
         
         setHighlightedElement(element);
         highlightedRef.current = element;
         
-        // Scroll to element if needed
+        // Scroll to element smoothly
         element.scrollIntoView({ behavior: 'smooth', block: 'center' });
         
-        // Add highlight class
-        element.style.transition = 'all 0.3s ease';
-        element.style.zIndex = '10000';
-        element.style.position = 'relative';
+        // Add highlight ring
+        element.classList.add('ring-4', 'ring-primary-500', 'ring-opacity-75', 'z-50', 'relative');
+        
+        // Auto-advance after 3 seconds
+        if (autoAdvanceTimerRef.current) {
+          clearTimeout(autoAdvanceTimerRef.current);
+        }
+        autoAdvanceTimerRef.current = setTimeout(() => {
+          handleNext();
+        }, 3000);
       } else {
         // If element not found, skip to next step
         if (currentStep < TOUR_STEPS.length - 1) {
@@ -114,8 +120,10 @@ export default function OnboardingTour({ onComplete }: OnboardingTourProps) {
     return () => {
       // Cleanup: remove highlight styles
       if (highlightedRef.current) {
-        highlightedRef.current.style.zIndex = '';
-        highlightedRef.current.style.position = '';
+        highlightedRef.current.classList.remove('ring-4', 'ring-primary-500', 'ring-opacity-75', 'z-50', 'relative');
+      }
+      if (autoAdvanceTimerRef.current) {
+        clearTimeout(autoAdvanceTimerRef.current);
       }
     };
   }, [currentStep, isActive]);
@@ -135,6 +143,12 @@ export default function OnboardingTour({ onComplete }: OnboardingTourProps) {
   const handleComplete = () => {
     setIsActive(false);
     localStorage.setItem('has_seen_onboarding_tour', 'true');
+    if (autoAdvanceTimerRef.current) {
+      clearTimeout(autoAdvanceTimerRef.current);
+    }
+    if (highlightedRef.current) {
+      highlightedRef.current.classList.remove('ring-4', 'ring-primary-500', 'ring-opacity-75', 'z-50', 'relative');
+    }
     if (onComplete) {
       onComplete();
     }
@@ -146,11 +160,15 @@ export default function OnboardingTour({ onComplete }: OnboardingTourProps) {
 
   const step = TOUR_STEPS[currentStep];
   const rect = highlightedElement.getBoundingClientRect();
-  const tooltipOffset = 20;
+  const viewportWidth = typeof window !== 'undefined' ? window.innerWidth : 1024;
+  const isMobile = viewportWidth < 768;
+  const tooltipOffset = 16;
 
-  // Calculate tooltip position based on step position
+  // Calculate tooltip position - always bottom on mobile, use step position on desktop
   let tooltipStyle: React.CSSProperties = {};
-  switch (step.position) {
+  const position = isMobile ? 'bottom' : step.position;
+  
+  switch (position) {
     case 'top':
       tooltipStyle = {
         top: `${rect.top + window.scrollY - tooltipOffset}px`,
@@ -161,8 +179,9 @@ export default function OnboardingTour({ onComplete }: OnboardingTourProps) {
     case 'bottom':
       tooltipStyle = {
         top: `${rect.bottom + window.scrollY + tooltipOffset}px`,
-        left: `${rect.left + rect.width / 2}px`,
+        left: `${Math.max(16, Math.min(rect.left + rect.width / 2, viewportWidth - 16))}px`,
         transform: 'translate(-50%, 0)',
+        maxWidth: `${Math.min(viewportWidth - 32, 320)}px`,
       };
       break;
     case 'left':
@@ -179,80 +198,66 @@ export default function OnboardingTour({ onComplete }: OnboardingTourProps) {
         transform: 'translate(0, -50%)',
       };
       break;
-    case 'center':
-      tooltipStyle = {
-        top: `${rect.top + window.scrollY + rect.height / 2}px`,
-        left: `${rect.left + rect.width / 2}px`,
-        transform: 'translate(-50%, -50%)',
-      };
-      break;
   }
 
   return (
     <AnimatePresence>
       <div className="fixed inset-0 z-[9998] pointer-events-none">
-        {/* Dark overlay */}
+        {/* Subtle backdrop - not a full dark overlay */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="absolute inset-0 bg-black/70"
-        />
-
-        {/* Highlight ring around element */}
-        <motion.div
-          initial={{ scale: 0.95, opacity: 0 }}
-          animate={{ 
-            scale: 1, 
-            opacity: 1,
-            top: `${rect.top - 8}px`,
-            left: `${rect.left - 8}px`,
-            width: `${rect.width + 16}px`,
-            height: `${rect.height + 16}px`,
-          }}
-          exit={{ scale: 0.95, opacity: 0 }}
-          className="absolute border-4 border-primary-500 rounded-xl pointer-events-none z-[9999]"
-          style={{
-            boxShadow: '0 0 0 4px rgba(251, 191, 36, 0.3), 0 0 40px rgba(251, 191, 36, 0.5)',
-          }}
+          className="absolute inset-0 bg-black/20"
+          onClick={handleSkip}
         />
 
         {/* Tooltip */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.9, y: step.position === 'top' ? 10 : step.position === 'bottom' ? -10 : 0 }}
+          initial={{ opacity: 0, scale: 0.95, y: 10 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.9 }}
-          className="fixed bg-slate-900 border-2 border-primary-500 rounded-xl p-5 shadow-2xl max-w-sm pointer-events-auto z-[10000]"
+          exit={{ opacity: 0, scale: 0.95 }}
+          className="fixed bg-slate-900 border-2 border-primary-500 rounded-xl p-4 shadow-2xl pointer-events-auto z-[10000]"
           style={tooltipStyle}
         >
           {/* Progress indicator */}
-          <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center justify-between mb-2">
             <span className="text-xs text-primary-400 font-semibold">
-              Step {currentStep + 1} of {TOUR_STEPS.length}
+              {currentStep + 1} / {TOUR_STEPS.length}
             </span>
             <button
               onClick={handleSkip}
-              className="text-slate-400 hover:text-slate-200 text-sm"
+              className="text-slate-400 hover:text-slate-200 text-xs font-medium"
             >
-              Skip tour
+              Skip
             </button>
           </div>
 
-          <h3 className="text-lg font-bold text-slate-50 mb-2">{step.title}</h3>
-          <p className="text-sm text-slate-300 leading-relaxed mb-4">{step.content}</p>
+          <h3 className="text-base font-bold text-slate-50 mb-1">{step.title}</h3>
+          <p className="text-sm text-slate-300 leading-relaxed mb-3">{step.content}</p>
 
           {/* Navigation buttons */}
-          <div className="flex items-center justify-between gap-3">
+          <div className="flex items-center justify-between gap-2">
             <button
-              onClick={() => setCurrentStep(Math.max(0, currentStep - 1))}
+              onClick={() => {
+                if (autoAdvanceTimerRef.current) {
+                  clearTimeout(autoAdvanceTimerRef.current);
+                }
+                setCurrentStep(Math.max(0, currentStep - 1));
+              }}
               disabled={currentStep === 0}
-              className="px-4 py-2 text-sm font-medium text-slate-300 bg-slate-800 rounded-lg hover:bg-slate-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-3 py-1.5 text-xs font-medium text-slate-300 bg-slate-800 rounded-lg hover:bg-slate-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Previous
             </button>
             <button
-              onClick={handleNext}
-              className="px-4 py-2 text-sm font-semibold text-slate-950 bg-primary-500 rounded-lg hover:bg-primary-400 transition-colors"
+              onClick={() => {
+                if (autoAdvanceTimerRef.current) {
+                  clearTimeout(autoAdvanceTimerRef.current);
+                }
+                handleNext();
+              }}
+              className="px-3 py-1.5 text-xs font-semibold text-slate-950 bg-primary-500 rounded-lg hover:bg-primary-400 transition-colors"
             >
               {currentStep === TOUR_STEPS.length - 1 ? 'Got it!' : 'Next'}
             </button>
@@ -265,39 +270,21 @@ export default function OnboardingTour({ onComplete }: OnboardingTourProps) {
 
 // Button component to restart the tour
 export function TourButton() {
-  const [isStarting, setIsStarting] = useState(false);
-
   const handleStartTour = () => {
-    setIsStarting(true);
-    // Remove the flag so tour will start on next render
+    // Remove the flag so tour will start
     localStorage.removeItem('has_seen_onboarding_tour');
-    // Small delay then reload to trigger tour
-    setTimeout(() => {
-      window.location.reload();
-    }, 200);
+    // Trigger tour by setting a flag and reloading
+    window.location.reload();
   };
 
   return (
-    <motion.button
-      whileHover={{ scale: 1.05 }}
-      whileTap={{ scale: 0.95 }}
+    <button
       onClick={handleStartTour}
-      disabled={isStarting}
-      className="fixed bottom-6 right-6 z-50 px-4 py-2 bg-primary-500 text-slate-950 text-sm font-semibold rounded-lg shadow-lg hover:bg-primary-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+      className="fixed bottom-4 right-4 md:bottom-6 md:right-6 z-50 px-3 py-2 md:px-4 md:py-2 bg-primary-500 text-slate-950 text-xs md:text-sm font-semibold rounded-lg shadow-lg hover:bg-primary-400 transition-colors flex items-center gap-2 touch-manipulation"
       title="Take the tour again"
     >
-      {isStarting ? (
-        <>
-          <span className="animate-spin">⏳</span>
-          <span>Starting...</span>
-        </>
-      ) : (
-        <>
-          <span>🎯</span>
-          <span className="hidden sm:inline">Take Tour</span>
-        </>
-      )}
-    </motion.button>
+      <span>🎯</span>
+      <span className="hidden sm:inline">Take Tour</span>
+    </button>
   );
 }
-
