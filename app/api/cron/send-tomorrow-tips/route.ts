@@ -3,19 +3,16 @@ import { getSupabaseAdmin } from '@/lib/supabase';
 import { sendTomorrowTipEmail } from '@/lib/email';
 
 /**
- * Cron endpoint to send tomorrow's tips at 12pm
+ * Cron endpoint to send tomorrow's tips at 5pm in each user's timezone
  * 
- * Set up in Vercel:
- * 1. Go to Project Settings → Cron Jobs
- * 2. Add new cron job:
- *    - Path: /api/cron/send-tomorrow-tips
- *    - Schedule: 0 12 * * * (12pm daily)
+ * This endpoint runs every hour and checks which users should receive emails
+ * based on their timezone (5pm in their local time).
  * 
- * Or use vercel.json:
+ * Set up in Vercel (vercel.json):
  * {
  *   "crons": [{
  *     "path": "/api/cron/send-tomorrow-tips",
- *     "schedule": "0 12 * * *"
+ *     "schedule": "0 * * * *"  // Every hour
  *   }]
  * }
  */
@@ -37,10 +34,16 @@ export async function GET(request: Request) {
     request.headers.get('x-cron-secret') ||
     (querySecret ? `Bearer ${querySecret}` : null);
   
-  const expectedAuth = `Bearer ${process.env.CRON_SECRET}`;
+  const cronSecret = process.env.CRON_SECRET;
+  const expectedAuth = `Bearer ${cronSecret}`;
   
-  if (!authHeader || authHeader !== expectedAuth) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  // Allow Vercel Cron (has x-vercel-cron header) or bearer token
+  if (cronSecret && authHeader !== expectedAuth) {
+    // Check if it's from Vercel Cron (has specific header)
+    const vercelCron = request.headers.get('x-vercel-cron');
+    if (!vercelCron) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
   }
 
   try {
@@ -62,11 +65,12 @@ export async function GET(request: Request) {
     }
 
     const supabase = getSupabaseAdmin();
+    const now = new Date();
 
-    // Get all active users
+    // Get all active users with their timezones
     const { data: users, error: usersError } = await supabase
       .from('users')
-      .select('id, email, name')
+      .select('id, email, name, timezone')
       .not('email', 'is', null);
 
     if (usersError) {
@@ -88,6 +92,38 @@ export async function GET(request: Request) {
       });
     }
 
+    // Filter users: only send to those where it's 5pm (17:00) in their timezone
+    const usersToEmail = [];
+    for (const user of users) {
+      const timezone = user.timezone || 'America/New_York'; // Default timezone
+      
+      try {
+        // Get current time in user's timezone
+        const userTime = new Date(now.toLocaleString('en-US', { timeZone: timezone }));
+        const hour = userTime.getHours();
+
+        // If it's 5pm (17:00) in their timezone, add to list
+        if (hour === 17) {
+          usersToEmail.push(user);
+        }
+      } catch (error) {
+        console.error(`Error processing timezone for user ${user.id}:`, error);
+        // Skip this user if timezone is invalid
+      }
+    }
+
+    if (usersToEmail.length === 0) {
+      return NextResponse.json({
+        success: true,
+        sent: 0,
+        errors: 0,
+        total: users.length,
+        message: 'No users to email at this time (not 5pm in any user timezone)',
+        checked: users.length,
+        currentUtcTime: now.toISOString(),
+      });
+    }
+
     // Get tomorrow's date
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
@@ -96,8 +132,8 @@ export async function GET(request: Request) {
     let sentCount = 0;
     let errorCount = 0;
 
-    // For each user, get an action for tomorrow
-    for (const user of users) {
+    // For each user where it's 5pm, get an action for tomorrow
+    for (const user of usersToEmail) {
       try {
         // Check if user already has an action for tomorrow
         const { data: existingAction } = await supabase
@@ -199,6 +235,8 @@ export async function GET(request: Request) {
       sent: sentCount,
       errors: errorCount,
       total: users.length,
+      usersEmailed: usersToEmail.length,
+      message: `Sent ${sentCount} emails to users where it's 5pm in their timezone`,
     });
   } catch (error: any) {
     console.error('Unexpected error in cron job:', error);

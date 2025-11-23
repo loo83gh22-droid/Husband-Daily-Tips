@@ -7,7 +7,7 @@
   "crons": [
     {
       "path": "/api/cron/send-tomorrow-tips",
-      "schedule": "0 12 * * *"
+      "schedule": "0 * * * *"
     }
   ]
 }
