@@ -4,7 +4,82 @@ import { getSupabaseAdmin } from '@/lib/supabase';
 import DashboardNav from '@/components/DashboardNav';
 import JournalEntry from '@/components/JournalEntry';
 import JournalExportButton from '@/components/JournalExportButton';
-import AutoCalendarToggle from '@/components/AutoCalendarToggle';
+import ProgressCharts from '@/components/ProgressCharts';
+
+async function getUserData(auth0Id: string) {
+  // Use admin client to bypass RLS (Auth0 context isn't set)
+  const adminSupabase = getSupabaseAdmin();
+  const { data: user } = await adminSupabase
+    .from('users')
+    .select('id')
+    .eq('auth0_id', auth0Id)
+    .single();
+
+  if (!user) return { userId: null, stats: null };
+  
+  // Get user stats
+  const { data: surveySummary } = await adminSupabase
+    .from('survey_summary')
+    .select('baseline_health')
+    .eq('user_id', user.id)
+    .single();
+  
+  const baselineHealth = surveySummary?.baseline_health || null;
+
+  const { data: tips } = await adminSupabase
+    .from('user_tips')
+    .select('date')
+    .eq('user_id', user.id)
+    .order('date', { ascending: false });
+
+  const totalTips = tips?.length || 0;
+  const uniqueDays = new Set(tips?.map((t) => t.date) || []).size;
+
+  // Calculate current streak
+  let currentStreak = 0;
+  if (tips && tips.length > 0) {
+    const sortedDates = [...new Set(tips.map((t) => t.date))].sort().reverse();
+    const today = new Date().toISOString().split('T')[0];
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    const yesterdayStr = yesterday.toISOString().split('T')[0];
+
+    if (sortedDates.includes(today) || sortedDates.includes(yesterdayStr)) {
+      currentStreak = 1;
+      for (let i = 0; i < sortedDates.length - 1; i++) {
+        const currentDate = new Date(sortedDates[i]);
+        const nextDate = new Date(sortedDates[i + 1]);
+        const diffDays = Math.floor((currentDate.getTime() - nextDate.getTime()) / (1000 * 60 * 60 * 24));
+        if (diffDays === 1) {
+          currentStreak++;
+        } else {
+          break;
+        }
+      }
+    }
+  }
+
+  // Get health score
+  const { data: healthData } = await adminSupabase
+    .from('user_health_history')
+    .select('health_score')
+    .eq('user_id', user.id)
+    .order('date', { ascending: false })
+    .limit(1)
+    .single();
+
+  const healthScore = healthData?.health_score || baselineHealth || 0;
+
+  return {
+    userId: user.id,
+    stats: {
+      totalTips,
+      currentStreak,
+      totalDays: uniqueDays,
+      healthScore,
+    },
+  };
+}
 
 async function getUserReflections(auth0Id: string) {
   // Use admin client to bypass RLS (Auth0 context isn't set)
@@ -90,6 +165,7 @@ export default async function JournalPage() {
   const auth0Id = session.user.sub;
   const { favorites, regular } = await getUserReflections(auth0Id);
   const allReflections = [...favorites, ...regular];
+  const { userId, stats } = await getUserData(auth0Id);
 
   return (
     <div className="min-h-screen bg-slate-950">
@@ -133,10 +209,16 @@ export default async function JournalPage() {
               </div>
             </div>
 
-            {/* Calendar Auto-Add Settings */}
-            <div className="mb-8">
-              <AutoCalendarToggle />
-            </div>
+            {/* Progress Overview Chart */}
+            {userId && stats && (
+              <div className="mb-8">
+                <ProgressCharts
+                  userId={userId}
+                  currentStreak={stats.currentStreak}
+                  healthScore={stats.healthScore}
+                />
+              </div>
+            )}
           </div>
 
           {allReflections.length === 0 ? (

@@ -624,14 +624,6 @@ export default async function Dashboard() {
               <HealthBar value={stats.healthScore} />
             </div>
 
-            {/* Progress Charts */}
-            <div>
-              <ProgressCharts
-                userId={user.id}
-                currentStreak={stats.currentStreak}
-                healthScore={stats.healthScore}
-              />
-            </div>
 
             <div className="grid md:grid-cols-3 gap-5 md:gap-6" data-tour="stats">
               <StatsCard
