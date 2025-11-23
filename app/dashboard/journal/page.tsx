@@ -38,7 +38,7 @@ async function getUserData(auth0Id: string) {
   // Calculate current streak
   let currentStreak = 0;
   if (tips && tips.length > 0) {
-    const sortedDates = [...new Set(tips.map((t) => t.date))].sort().reverse();
+    const sortedDates = Array.from(new Set(tips.map((t) => t.date))).sort().reverse();
     const today = new Date().toISOString().split('T')[0];
     const yesterday = new Date();
     yesterday.setDate(yesterday.getDate() - 1);
