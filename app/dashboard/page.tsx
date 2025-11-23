@@ -10,7 +10,6 @@ import DashboardNav from '@/components/DashboardNav';
 import OnboardingSurvey from '@/components/OnboardingSurvey';
 import ActiveChallenges from '@/components/ActiveChallenges';
 import OutstandingActions from '@/components/OutstandingActions';
-import AutoCalendarToggle from '@/components/AutoCalendarToggle';
 import OnboardingTour, { TourButton } from '@/components/OnboardingTour';
 import QuickActions from '@/components/QuickActions';
 import NotificationSystem from '@/components/NotificationSystem';
@@ -602,10 +601,6 @@ export default async function Dashboard() {
               </div>
             )}
 
-            {/* Auto-add to Calendar Toggle */}
-            <div className="mt-8" data-tour="calendar">
-              <AutoCalendarToggle />
-            </div>
 
             {/* Outstanding Actions */}
             <div className="mt-8">

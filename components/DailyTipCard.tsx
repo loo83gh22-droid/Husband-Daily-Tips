@@ -49,11 +49,31 @@ export default function DailyTipCard({ tip, subscriptionTier = 'free' }: DailyTi
   const [showCelebration, setShowCelebration] = useState(false);
   const [healthIncrease, setHealthIncrease] = useState(0);
   const [isMilestone, setIsMilestone] = useState(false);
+  const [autoAddToCalendar, setAutoAddToCalendar] = useState(false);
+  const [calendarType, setCalendarType] = useState<'google' | 'outlook' | 'apple'>('google');
 
   // Only set date after mount to avoid hydration mismatch
   useEffect(() => {
     setMounted(true);
     setDisplayDate(format(new Date(), 'MMM d, yyyy'));
+    
+    // Fetch calendar preferences
+    fetch('/api/user/preferences', {
+      credentials: 'include',
+    })
+      .then((res) => {
+        if (res.ok) {
+          return res.json();
+        }
+        return { preferences: {} };
+      })
+      .then((data) => {
+        setAutoAddToCalendar(data.preferences?.auto_add_to_calendar || false);
+        setCalendarType(data.preferences?.calendar_type || 'google');
+      })
+      .catch(() => {
+        // Silently handle errors
+      });
   }, []);
 
   const handleMarkDone = async () => {
