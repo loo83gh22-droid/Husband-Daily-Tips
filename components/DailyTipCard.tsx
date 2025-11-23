@@ -473,33 +473,6 @@ END:VCALENDAR`;
           {isCompleted ? '✓ Marked as done' : isSubmitting ? 'Saving…' : '✓ Mark as done'}
         </button>
 
-            {/* Secondary Actions */}
-            <div className="flex flex-wrap gap-3 pt-4 border-t border-slate-700/50">
-              <button
-                type="button"
-                className="px-4 py-2.5 border border-slate-700 text-slate-200 text-sm rounded-lg hover:bg-slate-800 active:bg-slate-700 transition-colors min-h-[44px] touch-manipulation"
-              >
-                Save for later
-              </button>
-              <button
-                onClick={handleToggleFavorite}
-                disabled={isTogglingFavorite}
-                className={`px-4 py-2.5 border text-sm font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-default flex items-center gap-2 min-h-[44px] touch-manipulation active:scale-95 ${
-                  isFavorited
-                    ? 'border-yellow-500/50 bg-yellow-500/10 text-yellow-300 hover:bg-yellow-500/20'
-                    : 'border-slate-700 text-slate-300 hover:bg-slate-800'
-                }`}
-              >
-                {isTogglingFavorite ? (
-                  '...'
-                ) : (
-                  <>
-                    <span>{isFavorited ? '⭐' : '☆'}</span>
-                    <span>{isFavorited ? 'Favorited' : 'Favorite'}</span>
-                  </>
-                )}
-              </button>
-            </div>
             <div className="flex flex-wrap gap-2">
               <a
                 href={generateGoogleCalendarUrl()}
