@@ -119,10 +119,10 @@ export default function ActiveChallenges() {
       <div className="flex items-center justify-between mb-4">
         <div>
           <h2 className="text-xl md:text-2xl font-semibold text-slate-50">
-            Weekly Challenges
+            Weekly Events
           </h2>
           <p className="text-xs text-slate-400 mt-1">
-            7 days. 7 chances to level up. One challenge at a time.
+            7 days. 7 chances to level up. One event at a time.
           </p>
         </div>
       </div>

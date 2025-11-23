@@ -243,7 +243,7 @@ export default function ChallengeCard({ challenge, userChallenge, userId, onJoin
             disabled={isJoining || isPast}
             className={`flex-1 px-4 py-2 bg-${color}-500 text-slate-950 text-sm font-semibold rounded-lg hover:bg-${color}-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed`}
           >
-            {isJoining ? 'Joining...' : isPast ? 'Challenge Ended' : 'Join Challenge'}
+            {isJoining ? 'Joining...' : isPast ? 'Event Ended' : 'Join Event'}
           </button>
         ) : (
           <Link

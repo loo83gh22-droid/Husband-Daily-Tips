@@ -3,7 +3,7 @@
 import { useState, useMemo, useEffect } from 'react';
 import ActionsList from './ActionsList';
 import ActionsSearchFilter from './ActionsSearchFilter';
-import FeaturedChallenges from './FeaturedChallenges';
+import FeaturedEvents from './FeaturedChallenges';
 import CategoryCard from './CategoryCard';
 import Link from 'next/link';
 
@@ -230,20 +230,20 @@ export default function ActionsPageClient({
 
   return (
     <>
-      {/* Featured Challenges */}
-      <FeaturedChallenges />
+      {/* Featured Events */}
+      <FeaturedEvents />
 
       {/* Category Cards Grid */}
       <section className="mb-8">
         <h2 className="text-2xl md:text-3xl font-semibold text-slate-50 mb-4">Categories</h2>
         <p className="text-sm text-slate-400 mb-6">
-          Explore actions by category. Each category has a 7-day challenge you can start anytime.
+          Explore actions by category. Each category has a 7-day event you can start anytime.
         </p>
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
           {sortedThemes.map((theme) => {
             const stats = categoryStats[theme];
-            const challenge = challenges.find((c) => c.theme === theme);
-            const isEnrolled = challenge ? userChallenges.some((uc) => uc.challenge_id === challenge.id) : false;
+            const event = challenges.find((c) => c.theme === theme);
+            const isEnrolled = event ? userChallenges.some((uc) => uc.challenge_id === event.id) : false;
             
             return (
               <CategoryCard
@@ -253,10 +253,10 @@ export default function ActionsPageClient({
                 icon={getThemeIcon(theme)}
                 actionCount={stats?.total || 0}
                 completedCount={stats?.completed || 0}
-                challengeId={challenge?.id}
-                challengeName={challenge?.name}
+                eventId={event?.id}
+                eventName={event?.name}
                 isEnrolled={isEnrolled}
-                onJoinChallenge={handleJoinChallenge}
+                onJoinEvent={handleJoinChallenge}
               />
             );
           })}

@@ -9,10 +9,10 @@ interface CategoryCardProps {
   icon: string;
   actionCount: number;
   completedCount: number;
-  challengeId?: string;
-  challengeName?: string;
+  eventId?: string;
+  eventName?: string;
   isEnrolled?: boolean;
-  onJoinChallenge?: (challengeId: string) => void;
+  onJoinEvent?: (eventId: string) => void;
 }
 
 const getThemeColor = (theme: string) => {
@@ -35,10 +35,10 @@ export default function CategoryCard({
   icon,
   actionCount,
   completedCount,
-  challengeId,
-  challengeName,
+  eventId,
+  eventName,
   isEnrolled,
-  onJoinChallenge,
+  onJoinEvent,
 }: CategoryCardProps) {
   const completionPercentage = actionCount > 0 ? Math.round((completedCount / actionCount) * 100) : 0;
   const colorClasses = getThemeColor(theme);
@@ -85,9 +85,9 @@ export default function CategoryCard({
         >
           View Actions
         </Link>
-        {challengeId && challengeName && (
+        {eventId && eventName && (
           <button
-            onClick={() => challengeId && onJoinChallenge?.(challengeId)}
+            onClick={() => eventId && onJoinEvent?.(eventId)}
             disabled={isEnrolled}
             className={`w-full px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
               isEnrolled
@@ -95,7 +95,7 @@ export default function CategoryCard({
                 : 'bg-primary-500/20 text-primary-300 border border-primary-500/30 hover:bg-primary-500/30'
             }`}
           >
-            {isEnrolled ? 'Challenge Active' : 'Start Challenge'}
+            {isEnrolled ? 'Event Active' : 'Start Event'}
           </button>
         )}
       </div>

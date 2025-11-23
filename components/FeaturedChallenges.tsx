@@ -25,7 +25,7 @@ interface UserChallenge {
   remainingDays: number;
 }
 
-export default function FeaturedChallenges() {
+export default function FeaturedEvents() {
   const [challenges, setChallenges] = useState<Challenge[]>([]);
   const [userChallenges, setUserChallenges] = useState<UserChallenge[]>([]);
   const [loading, setLoading] = useState(true);
@@ -99,9 +99,9 @@ export default function FeaturedChallenges() {
     <section className="mb-8">
       <div className="flex items-center justify-between mb-4">
         <div>
-          <h2 className="text-2xl md:text-3xl font-semibold text-slate-50">Featured Challenges</h2>
+          <h2 className="text-2xl md:text-3xl font-semibold text-slate-50">Featured Events</h2>
           <p className="text-sm text-slate-400 mt-1">
-            7 days. 7 chances to level up. Pick a challenge and get started.
+            7 days. 7 chances to level up. Pick an event and get started.
           </p>
         </div>
         {challenges.length > 3 && (
