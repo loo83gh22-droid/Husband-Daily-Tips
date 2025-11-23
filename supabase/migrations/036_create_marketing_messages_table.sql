@@ -64,7 +64,9 @@ INSERT INTO marketing_messages (message, category, context, display_order) VALUE
   ('Join thousands of husbands who are already winning.', 'cta', 'landing_page', 71),
   ('7 days free. No credit card. No risk. Just results.', 'cta', 'banner', 72),
   ('Try it free. See the difference. Make it permanent.', 'cta', 'landing_page', 73),
-  ('Start your free trial today. Your marriage will thank you tomorrow.', 'cta', 'social_post', 74);
+  ('Start your free trial today. Your marriage will thank you tomorrow.', 'cta', 'social_post', 74),
+  ('Be spontaneous... with a little help.', 'value', 'landing_page', 75),
+  ('This is for fun with the benefit of a happier partner and a happier you.', 'value', 'landing_page', 76);
 
 -- Function to update updated_at timestamp
 CREATE TRIGGER update_marketing_messages_updated_at BEFORE UPDATE ON marketing_messages
