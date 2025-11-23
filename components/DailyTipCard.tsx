@@ -396,33 +396,68 @@ END:VCALENDAR`;
                 )}
               </button>
             </div>
-            <div className="flex flex-wrap gap-3">
+            <div className="flex flex-wrap gap-2">
               <a
                 href={generateGoogleCalendarUrl()}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-4 py-2.5 border border-slate-700 text-slate-200 text-sm rounded-lg hover:bg-slate-800 active:bg-slate-700 transition-colors flex items-center gap-2 min-h-[44px] touch-manipulation"
+                className="px-3 py-2 border border-slate-700 text-slate-200 text-xs rounded-lg hover:bg-slate-800 active:bg-slate-700 transition-colors flex items-center gap-1.5 min-h-[44px] touch-manipulation"
               >
                 <span>📅</span>
-                <span>Add to Google Calendar</span>
+                <span>Google</span>
               </a>
               <a
                 href={generateOutlookCalendarUrl()}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-4 py-2.5 border border-slate-700 text-slate-200 text-sm rounded-lg hover:bg-slate-800 active:bg-slate-700 transition-colors flex items-center gap-2 min-h-[44px] touch-manipulation"
+                className="px-3 py-2 border border-slate-700 text-slate-200 text-xs rounded-lg hover:bg-slate-800 active:bg-slate-700 transition-colors flex items-center gap-1.5 min-h-[44px] touch-manipulation"
               >
                 <span>📅</span>
-                <span>Add to Outlook Calendar</span>
+                <span>Outlook</span>
               </a>
               <a
                 href={generateAppleCalendarUrl()}
                 download="best-husband-action.ics"
-                className="px-4 py-2.5 border border-slate-700 text-slate-200 text-sm rounded-lg hover:bg-slate-800 active:bg-slate-700 transition-colors flex items-center gap-2 min-h-[44px] touch-manipulation"
+                className="px-3 py-2 border border-slate-700 text-slate-200 text-xs rounded-lg hover:bg-slate-800 active:bg-slate-700 transition-colors flex items-center gap-1.5 min-h-[44px] touch-manipulation"
               >
                 <span>📅</span>
-                <span>Add to Apple Calendar</span>
+                <span>Apple</span>
               </a>
+            </div>
+            {/* Auto-add toggle - compact version */}
+            <div className="flex items-center justify-between pt-3 border-t border-slate-700/50">
+              <div className="flex-1">
+                <p className="text-xs text-slate-300 font-medium">Auto-add to Calendar</p>
+                <p className="text-[10px] text-slate-400 mt-0.5">
+                  Automatically add future actions
+                </p>
+              </div>
+              <label className="relative inline-flex items-center cursor-pointer ml-4">
+                <input
+                  type="checkbox"
+                  checked={autoAddToCalendar}
+                  onChange={async (e) => {
+                    const checked = e.target.checked;
+                    setAutoAddToCalendar(checked);
+                    try {
+                      await fetch('/api/user/preferences', {
+                        method: 'PATCH',
+                        headers: { 'Content-Type': 'application/json' },
+                        credentials: 'include',
+                        body: JSON.stringify({
+                          auto_add_to_calendar: checked,
+                          calendar_type: calendarType,
+                        }),
+                      });
+                    } catch (error) {
+                      console.error('Error updating preference:', error);
+                      setAutoAddToCalendar(!checked); // Revert on error
+                    }
+                  }}
+                  className="sr-only peer"
+                />
+                <div className="w-10 h-5 bg-slate-700 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary-500 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary-500"></div>
+              </label>
             </div>
             <div className="flex flex-col gap-2">
               <SocialShare
