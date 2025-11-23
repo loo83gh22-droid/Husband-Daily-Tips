@@ -20,6 +20,14 @@ export function getGuideSlugForAction(actionName: string, actionTheme?: string):
     'express gratitude to partner': 'express-gratitude-to-partner',
     'practice the 5:1 ratio': 'practice-5-1-ratio',
     'be present during quality time': 'be-present-quality-time',
+    'validate her feelings': 'listen-without-fixing',
+    'ask open-ended questions': 'ask-better-questions',
+    'put your phone down': 'be-present-quality-time',
+    'repeat back what you heard': 'listen-without-fixing',
+    'ask "what do you need from me?"': 'ask-better-questions',
+    'share your day without complaining': 'share-your-feelings',
+    'have a "no problem solving" conversation': 'have-hard-conversation',
+    'tell her something you appreciate': 'express-gratitude-to-partner',
 
     // Intimacy
     'speak her love language': 'practice-love-languages',
@@ -36,6 +44,14 @@ export function getGuideSlugForAction(actionName: string, actionTheme?: string):
     'express gratitude for who she is': 'share-gratitude-for-character',
     'practice acts of service': 'practice-acts-of-service',
     'practice words of affirmation': 'practice-words-of-affirmation',
+    'hold hands while walking': 'non-sexual-physical-touch',
+    'ask about her dreams': 'create-love-map',
+    'give her a back rub': 'non-sexual-physical-touch',
+    'tell her why you fell in love': 'create-love-map',
+    'kiss her goodbye and hello': 'non-sexual-physical-touch',
+    'ask "how are you really?"': 'ask-about-inner-world',
+    'share a vulnerable moment': 'share-your-feelings',
+    'create a "us" memory': 'do-something-you-used-to-enjoy',
 
     // Partnership
     'help when hosting party': 'help-hosting-party',
@@ -49,6 +65,13 @@ export function getGuideSlugForAction(actionName: string, actionTheme?: string):
     'plan together': 'plan-together',
     'take over a chore': 'take-over-chore-completely',
     'be proactive around house': 'be-proactive-around-house',
+    'take over a task completely': 'take-over-chore-completely',
+    'handle something she usually does': 'handle-household-tasks',
+    'make a decision without asking': 'plan-together',
+    'plan something together': 'plan-together',
+    'handle a problem before she notices': 'notice-what-needs-doing',
+    'ask about her work/projects': 'support-her-goals',
+    'take initiative on household maintenance': 'handle-household-tasks',
 
     // Romance
     'plan perfect date night': 'plan-perfect-date-night',
@@ -58,6 +81,13 @@ export function getGuideSlugForAction(actionName: string, actionTheme?: string):
     'write love note': 'write-love-note',
     'plan weekend getaway': 'plan-weekend-getaway',
     'give physical affection': 'give-physical-affection',
+    'leave a love note': 'write-love-note',
+    'bring her favorite treat': 'plan-surprise-that-shows-you-know-her',
+    'compliment her character': 'give-genuine-compliment',
+    'tell her she\'s beautiful': 'give-genuine-compliment',
+    'recreate a favorite memory': 'do-something-you-used-to-enjoy',
+    'give her your full attention': 'be-present-quality-time',
+    'tell her why you love her': 'write-love-note',
 
     // Gratitude
     'express gratitude daily': 'express-gratitude-daily',
@@ -66,6 +96,13 @@ export function getGuideSlugForAction(actionName: string, actionTheme?: string):
     'acknowledge her effort': 'appreciate-her-effort',
     'send gratitude text': 'send-gratitude-text',
     'morning gratitude': 'morning-gratitude',
+    'thank her for something specific': 'express-gratitude-to-partner',
+    'write down what you\'re grateful for': 'gratitude-list',
+    'celebrate her accomplishment': 'appreciate-her-effort',
+    'thank her for who she is': 'share-gratitude-for-character',
+    'notice the small things': 'express-gratitude-daily',
+    'express gratitude publicly': 'express-gratitude-to-partner',
+    'send a gratitude text': 'send-gratitude-text',
 
     // Conflict
     'resolve disagreement': 'resolve-disagreement',
@@ -74,6 +111,13 @@ export function getGuideSlugForAction(actionName: string, actionTheme?: string):
     'stay calm during conflict': 'stay-calm-during-conflict',
     'use i statements': 'use-i-statements',
     'make amends': 'make-amends',
+    'use "i feel" instead of "you always"': 'use-i-statements',
+    'take a break when things get heated': 'stay-calm-during-conflict',
+    'apologize first': 'apologize-right-way',
+    'listen without defending': 'listen-without-fixing',
+    'take responsibility for your part': 'take-responsibility',
+    'propose a solution': 'resolve-disagreement',
+    'stay calm and speak softly': 'stay-calm-during-conflict',
 
     // Reconnection
     'have 20 minute conversation': 'have-20-minute-conversation',

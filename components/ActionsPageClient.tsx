@@ -118,7 +118,7 @@ export default function ActionsPageClient({
     return Array.from(cats).sort();
   }, [normalizedActions]);
 
-  // Group filtered actions by theme
+  // Group filtered actions by theme and randomize per category (once per page load)
   const actionsByTheme = useMemo(() => {
     const grouped: Record<string, Action[]> = {};
     filteredActions.forEach((action) => {
@@ -128,8 +128,36 @@ export default function ActionsPageClient({
       }
       grouped[theme].push(action);
     });
-    return grouped;
+    
+    // Randomize actions within each category (shuffle once per memoization)
+    const randomized: Record<string, Action[]> = {};
+    Object.keys(grouped).forEach((theme) => {
+      const actions = [...grouped[theme]];
+      // Fisher-Yates shuffle for randomization
+      for (let i = actions.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [actions[i], actions[j]] = [actions[j], actions[i]];
+      }
+      randomized[theme] = actions;
+    });
+    
+    return randomized;
   }, [filteredActions]);
+  
+  // Track which categories are expanded
+  const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set());
+  
+  const toggleCategory = (theme: string) => {
+    setExpandedCategories((prev) => {
+      const next = new Set(prev);
+      if (next.has(theme)) {
+        next.delete(theme);
+      } else {
+        next.add(theme);
+      }
+      return next;
+    });
+  };
 
   const themeOrder = [
     'communication',
@@ -330,23 +358,38 @@ export default function ActionsPageClient({
                 </div>
 
                 <ActionsList
-                  actions={themeActions.slice(0, 10)}
+                  actions={
+                    expandedCategories.has(theme)
+                      ? themeActions
+                      : themeActions.slice(0, 4)
+                  }
                   completedMap={completedMapInstance}
                   userId={userId}
                 />
 
-                {themeActions.length > 10 && (
+                {themeActions.length > 4 && (
                   <div className="mt-6 text-center">
-                    <Link
-                      href={`/dashboard/actions/${theme}`}
+                    <button
+                      onClick={() => toggleCategory(theme)}
                       className="inline-flex items-center gap-2 px-6 py-2 bg-primary-500/10 border border-primary-500/30 text-primary-300 rounded-lg hover:bg-primary-500/20 transition-colors text-sm font-medium"
                     >
-                      See More {formatThemeName(theme)} Actions
-                      <span className="text-xs text-slate-400">({themeActions.length - 10} more)</span>
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                      </svg>
-                    </Link>
+                      {expandedCategories.has(theme) ? (
+                        <>
+                          See Less
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+                          </svg>
+                        </>
+                      ) : (
+                        <>
+                          See More {formatThemeName(theme)} Actions
+                          <span className="text-xs text-slate-400">({themeActions.length - 4} more)</span>
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                          </svg>
+                        </>
+                      )}
+                    </button>
                   </div>
                 )}
               </section>

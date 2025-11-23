@@ -33,8 +33,6 @@ export async function POST(request: NextRequest) {
   }
 
   let event: Stripe.Event;
-
-  let event: Stripe.Event;
   try {
     event = stripe.webhooks.constructEvent(
       body,
