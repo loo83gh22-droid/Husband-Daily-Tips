@@ -112,13 +112,13 @@ async function getActions(auth0Id: string) {
   // Calculate actions completed this week (for engagement metric)
   const weekAgo = new Date();
   weekAgo.setDate(weekAgo.getDate() - 7);
-  const weekAgoStr = weekAgo.toISOString().split('T')[0];
+  const weekAgoISO = weekAgo.toISOString();
 
   const { data: recentCompletions } = await adminSupabase
     .from('user_action_completions')
     .select('id')
     .eq('user_id', user.id)
-    .gte('completed_at', weekAgoStr);
+    .gte('completed_at', weekAgoISO);
 
   const actionsThisWeek = recentCompletions?.length || 0;
 
