@@ -3,8 +3,8 @@
 import { useState, useMemo, useEffect } from 'react';
 import ActionsList from './ActionsList';
 import ActionsSearchFilter from './ActionsSearchFilter';
-import FeaturedEvents from './FeaturedChallenges';
 import CategoryCard from './CategoryCard';
+import ChallengeCard from './ChallengeCard';
 import Link from 'next/link';
 
 interface Action {
@@ -222,9 +222,37 @@ export default function ActionsPageClient({
     return stats;
   }, [normalizedActions, sortedThemes, completedActionIds]);
 
-  // Fetch challenges for category cards
-  const [challenges, setChallenges] = useState<Array<{ id: string; theme: string; name: string }>>([]);
-  const [userChallenges, setUserChallenges] = useState<Array<{ challenge_id: string }>>([]);
+  // Fetch challenges for category cards and category sections
+  const [challenges, setChallenges] = useState<Array<{ 
+    id: string; 
+    theme: string; 
+    name: string;
+    description: string;
+    start_date: string;
+    end_date: string;
+    challenge_actions?: Array<{
+      day_number: number;
+      actions: {
+        id: string;
+        name: string;
+        description: string;
+        icon: string;
+      };
+    }>;
+    userCompletionCount?: number;
+    duration_days?: number;
+  }>>([]);
+  const [userChallenges, setUserChallenges] = useState<Array<{ 
+    challenge_id: string;
+    id: string;
+    joined_date: string;
+    completed_days: number;
+    completed: boolean;
+    progress: number;
+    totalDays: number;
+    remainingDays: number;
+    completionCount?: number;
+  }>>([]);
 
   useEffect(() => {
     async function fetchChallenges() {
@@ -239,7 +267,23 @@ export default function ActionsPageClient({
         }
         if (userChallengesRes.ok) {
           const data = await userChallengesRes.json();
-          setUserChallenges(data.allChallenges || data.challenges || []);
+          // Transform user challenges to match expected format
+          // The API returns challenges with nested 'challenges' property
+          const transformed = (data.allChallenges || data.challenges || []).map((uc: any) => {
+            const challenge = uc.challenges || uc.challenge;
+            return {
+              challenge_id: uc.challenge_id || challenge?.id || uc.id,
+              id: uc.id,
+              joined_date: uc.joined_date,
+              completed_days: uc.completed_days || 0,
+              completed: uc.completed || false,
+              progress: uc.progress || 0,
+              totalDays: uc.totalDays || challenge?.challenge_actions?.length || 7,
+              remainingDays: uc.remainingDays || 0,
+              completionCount: uc.completionCount,
+            };
+          });
+          setUserChallenges(transformed);
         }
       } catch (error) {
         // Silently handle errors
@@ -257,7 +301,7 @@ export default function ActionsPageClient({
         body: JSON.stringify({ challengeId }),
       });
       if (response.ok) {
-        // Refresh challenges
+        // Refresh challenges and user challenges
         const [challengesRes, userChallengesRes] = await Promise.all([
           fetch('/api/challenges/active', { credentials: 'include' }),
           fetch('/api/challenges/user', { credentials: 'include' }),
@@ -268,7 +312,22 @@ export default function ActionsPageClient({
         }
         if (userChallengesRes.ok) {
           const data = await userChallengesRes.json();
-          setUserChallenges(data.allChallenges || data.challenges || []);
+          // Transform user challenges to match expected format
+          const transformed = (data.allChallenges || data.challenges || []).map((uc: any) => {
+            const challenge = uc.challenges || uc.challenge;
+            return {
+              challenge_id: uc.challenge_id || challenge?.id || uc.id,
+              id: uc.id,
+              joined_date: uc.joined_date,
+              completed_days: uc.completed_days || 0,
+              completed: uc.completed || false,
+              progress: uc.progress || 0,
+              totalDays: uc.totalDays || challenge?.challenge_actions?.length || 7,
+              remainingDays: uc.remainingDays || 0,
+              completionCount: uc.completionCount,
+            };
+          });
+          setUserChallenges(transformed);
         }
       }
     } catch (error) {
@@ -278,9 +337,6 @@ export default function ActionsPageClient({
 
   return (
     <>
-      {/* Featured Events */}
-      <FeaturedEvents />
-
       {/* Category Cards Grid */}
       <section className="mb-8">
         <h2 className="text-2xl md:text-3xl font-semibold text-slate-50 mb-4">Categories</h2>
@@ -344,6 +400,19 @@ export default function ActionsPageClient({
             const themeActions = actionsByTheme[theme] || [];
             if (themeActions.length === 0) return null;
 
+            // Find the event for this theme
+            const event = challenges.find((c) => c.theme === theme);
+            const userChallenge = event 
+              ? userChallenges.find((uc) => uc.challenge_id === event.id)
+              : null;
+
+            // When collapsed: show event (if exists) + 3 random actions = 4 items total
+            // When expanded: show event (if exists) + all actions
+            const isExpanded = expandedCategories.has(theme);
+            const actionsToShow = isExpanded 
+              ? themeActions 
+              : themeActions.slice(0, event ? 3 : 4); // If event exists, show 3 actions; otherwise 4
+
             return (
               <section
                 key={theme}
@@ -357,23 +426,46 @@ export default function ActionsPageClient({
                   </h2>
                 </div>
 
-                <ActionsList
-                  actions={
-                    expandedCategories.has(theme)
-                      ? themeActions
-                      : themeActions.slice(0, 4)
-                  }
-                  completedMap={completedMapInstance}
-                  userId={userId}
-                />
+                {/* Event Card (if exists) - shown first */}
+                {event && (
+                  <div className="mb-6">
+                    <ChallengeCard
+                      challenge={event}
+                      userChallenge={userChallenge ? {
+                        id: userChallenge.id,
+                        challenge_id: userChallenge.challenge_id,
+                        joined_date: userChallenge.joined_date,
+                        completed_days: userChallenge.completed_days,
+                        completed: userChallenge.completed,
+                        challenges: event,
+                        progress: userChallenge.progress,
+                        totalDays: userChallenge.totalDays,
+                        remainingDays: userChallenge.remainingDays,
+                        completionCount: userChallenge.completionCount,
+                      } : undefined}
+                      userId={userId}
+                      onJoin={handleJoinChallenge}
+                    />
+                  </div>
+                )}
 
-                {themeActions.length > 4 && (
+                {/* Actions List */}
+                {actionsToShow.length > 0 && (
+                  <ActionsList
+                    actions={actionsToShow}
+                    completedMap={completedMapInstance}
+                    userId={userId}
+                  />
+                )}
+
+                {/* Show "See More" if there are more actions (accounting for event) */}
+                {themeActions.length > (event ? 3 : 4) && (
                   <div className="mt-6 text-center">
                     <button
                       onClick={() => toggleCategory(theme)}
                       className="inline-flex items-center gap-2 px-6 py-2 bg-primary-500/10 border border-primary-500/30 text-primary-300 rounded-lg hover:bg-primary-500/20 transition-colors text-sm font-medium"
                     >
-                      {expandedCategories.has(theme) ? (
+                      {isExpanded ? (
                         <>
                           See Less
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -383,7 +475,9 @@ export default function ActionsPageClient({
                       ) : (
                         <>
                           See More {formatThemeName(theme)} Actions
-                          <span className="text-xs text-slate-400">({themeActions.length - 4} more)</span>
+                          <span className="text-xs text-slate-400">
+                            ({themeActions.length - (event ? 3 : 4)} more)
+                          </span>
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                           </svg>
