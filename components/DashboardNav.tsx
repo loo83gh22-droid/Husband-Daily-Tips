@@ -58,9 +58,14 @@ export default function DashboardNav() {
           <div className="flex items-center gap-3">
             <BrandLogo variant="nav" />
             {displayName && (
-              <span className="text-base md:text-lg text-slate-300 font-semibold hidden md:inline">
-                {displayName}
-              </span>
+              <>
+                <span className="text-base md:text-lg text-slate-300 font-semibold hidden md:inline">
+                  is
+                </span>
+                <span className="text-base md:text-lg text-slate-300 font-semibold hidden md:inline">
+                  {displayName}
+                </span>
+              </>
             )}
           </div>
 
