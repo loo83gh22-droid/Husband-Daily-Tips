@@ -66,7 +66,10 @@ export default function ActiveChallenges() {
       });
       if (response.ok) {
         const data = await response.json();
-        setChallenges(data.challenges || []);
+        const allChallenges = data.challenges || [];
+        // Randomly shuffle and select 3 challenges
+        const shuffled = [...allChallenges].sort(() => Math.random() - 0.5);
+        setChallenges(shuffled.slice(0, 3));
       }
     } catch (error) {
       // Silently handle errors

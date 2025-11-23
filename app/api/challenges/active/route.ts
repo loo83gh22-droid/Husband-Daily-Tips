@@ -41,7 +41,7 @@ export async function GET() {
       }
     }
 
-    // Get active challenges (current or upcoming)
+    // Get all active challenges (current or upcoming) - don't limit, let components randomize
     const { data: challenges, error } = await supabase
       .from('challenges')
       .select(`
@@ -59,8 +59,7 @@ export async function GET() {
       `)
       .eq('is_active', true)
       .gte('end_date', today) // Not ended yet
-      .order('start_date', { ascending: true })
-      .limit(3);
+      .order('start_date', { ascending: true });
 
     if (error) {
       console.error('Error fetching challenges:', error);

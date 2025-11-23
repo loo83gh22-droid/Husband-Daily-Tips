@@ -54,7 +54,10 @@ export default function FeaturedEvents() {
       const response = await fetch('/api/challenges/active', { credentials: 'include' });
       if (response.ok) {
         const data = await response.json();
-        setChallenges(data.challenges || []);
+        const allChallenges = data.challenges || [];
+        // Randomly shuffle and select 3 challenges
+        const shuffled = [...allChallenges].sort(() => Math.random() - 0.5);
+        setChallenges(shuffled.slice(0, 3));
       }
     } catch (error) {
       setChallenges([]);
@@ -92,8 +95,8 @@ export default function FeaturedEvents() {
     return null;
   }
 
-  // Show up to 3 featured challenges
-  const featuredChallenges = challenges.slice(0, 3);
+  // Challenges are already randomized and limited to 3 in fetchChallenges
+  const featuredChallenges = challenges;
 
   return (
     <section className="mb-8">
