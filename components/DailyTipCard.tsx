@@ -56,8 +56,11 @@ export default function DailyTipCard({ tip, subscriptionTier = 'free' }: DailyTi
   const [feedUrl, setFeedUrl] = useState<string | null>(null);
   const [showFeedUrl, setShowFeedUrl] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
+  const [showFullCalendarSettings, setShowFullCalendarSettings] = useState(false);
 
   const isPaidUser = subscriptionTier === 'premium' || subscriptionTier === 'pro';
+  // Show simplified view if auto-add is enabled and calendar type is set
+  const isCalendarSetup = autoAddToCalendar && calendarType;
 
   // Only set date after mount to avoid hydration mismatch
   useEffect(() => {
@@ -75,8 +78,14 @@ export default function DailyTipCard({ tip, subscriptionTier = 'free' }: DailyTi
         return { preferences: {} };
       })
       .then((data) => {
-        setAutoAddToCalendar(data.preferences?.auto_add_to_calendar || false);
-        setCalendarType(data.preferences?.calendar_type || 'google');
+        const autoAdd = data.preferences?.auto_add_to_calendar || false;
+        const calType = data.preferences?.calendar_type || 'google';
+        setAutoAddToCalendar(autoAdd);
+        setCalendarType(calType);
+        // If already set up, show simplified view by default
+        if (autoAdd && calType) {
+          setShowFullCalendarSettings(false);
+        }
       })
       .catch(() => {
         // Silently handle errors
@@ -254,6 +263,8 @@ export default function DailyTipCard({ tip, subscriptionTier = 'free' }: DailyTi
       const data = await response.json();
       setFeedUrl(data.feedUrl);
       setShowFeedUrl(true);
+      // After generating feed URL, user is considered "set up" - can show simplified view
+      setShowFullCalendarSettings(false);
     } catch (error: any) {
       console.error('Error getting feed URL:', error);
       alert('Failed to get calendar feed URL. Please try again.');
@@ -504,46 +515,70 @@ END:VCALENDAR`;
 
             {/* Auto-add toggle and calendar options */}
             <div className="pt-3 border-t border-slate-700/50 space-y-3">
-              <div className="flex items-center justify-between">
-                <div className="flex-1">
-                  <p className="text-xs text-slate-300 font-medium">Auto-add to Calendar</p>
-                  <p className="text-[10px] text-slate-400 mt-0.5">
-                    Automatically add future actions
-                  </p>
+              {/* Simplified view for users who have already set up calendar */}
+              {isCalendarSetup && !showFullCalendarSettings ? (
+                <div className="flex items-center justify-between">
+                  <div className="flex-1">
+                    <p className="text-xs text-slate-300 font-medium">
+                      ✓ You're automatically adding future actions to your {calendarType === 'google' ? 'Google' : calendarType === 'outlook' ? 'Outlook' : 'Apple'} calendar
+                    </p>
+                    <p className="text-[10px] text-slate-400 mt-0.5">
+                      {isPaidUser ? 'Syncing automatically via calendar subscription' : 'New actions added daily via email'}
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => setShowFullCalendarSettings(true)}
+                    className="px-3 py-1.5 text-[10px] text-slate-300 hover:text-slate-100 border border-slate-700 hover:border-slate-600 rounded-lg transition-colors"
+                  >
+                    Manage
+                  </button>
                 </div>
-                <label className="relative inline-flex items-center cursor-pointer ml-4">
-                  <input
-                    type="checkbox"
-                    checked={autoAddToCalendar}
-                    onChange={async (e) => {
-                      const checked = e.target.checked;
-                      setAutoAddToCalendar(checked);
-                      setIsSavingCalendar(true);
-                      try {
-                        await fetch('/api/user/preferences', {
-                          method: 'PATCH',
-                          headers: { 'Content-Type': 'application/json' },
-                          credentials: 'include',
-                          body: JSON.stringify({
-                            auto_add_to_calendar: checked,
-                            calendar_type: calendarType,
-                          }),
-                        });
-                      } catch (error) {
-                        console.error('Error updating preference:', error);
-                        setAutoAddToCalendar(!checked); // Revert on error
-                      } finally {
-                        setIsSavingCalendar(false);
-                      }
-                    }}
-                    disabled={isSavingCalendar}
-                    className="sr-only peer"
-                  />
-                  <div className="w-10 h-5 bg-slate-700 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary-500 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary-500 peer-disabled:opacity-50"></div>
-                </label>
-              </div>
-              
-              {autoAddToCalendar && (
+              ) : (
+                <>
+                  <div className="flex items-center justify-between">
+                    <div className="flex-1">
+                      <p className="text-xs text-slate-300 font-medium">Auto-add to Calendar</p>
+                      <p className="text-[10px] text-slate-400 mt-0.5">
+                        Automatically add future actions
+                      </p>
+                    </div>
+                    <label className="relative inline-flex items-center cursor-pointer ml-4">
+                      <input
+                        type="checkbox"
+                        checked={autoAddToCalendar}
+                        onChange={async (e) => {
+                          const checked = e.target.checked;
+                          setAutoAddToCalendar(checked);
+                          setIsSavingCalendar(true);
+                          try {
+                            await fetch('/api/user/preferences', {
+                              method: 'PATCH',
+                              headers: { 'Content-Type': 'application/json' },
+                              credentials: 'include',
+                              body: JSON.stringify({
+                                auto_add_to_calendar: checked,
+                                calendar_type: calendarType,
+                              }),
+                            });
+                            if (!checked) {
+                              setShowFullCalendarSettings(false);
+                              setShowFeedUrl(false);
+                            }
+                          } catch (error) {
+                            console.error('Error updating preference:', error);
+                            setAutoAddToCalendar(!checked); // Revert on error
+                          } finally {
+                            setIsSavingCalendar(false);
+                          }
+                        }}
+                        disabled={isSavingCalendar}
+                        className="sr-only peer"
+                      />
+                      <div className="w-10 h-5 bg-slate-700 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary-500 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary-500 peer-disabled:opacity-50"></div>
+                    </label>
+                  </div>
+                  
+                  {autoAddToCalendar && (
                 <div className="space-y-3 pt-2">
                   <div>
                     <p className="text-[10px] text-slate-400 mb-2">Choose your calendar:</p>
@@ -656,6 +691,8 @@ END:VCALENDAR`;
                     </div>
                   )}
                 </div>
+              )}
+                </>
               )}
             </div>
 
