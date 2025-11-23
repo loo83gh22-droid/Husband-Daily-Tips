@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import DashboardNav from '@/components/DashboardNav';
 import ActionsPageClient from '@/components/ActionsPageClient';
+import ActionsQuickStats from '@/components/ActionsQuickStats';
 
 async function getActions(auth0Id: string) {
   // Use admin client to bypass RLS (Auth0 context isn't set)
@@ -13,7 +14,7 @@ async function getActions(auth0Id: string) {
     .eq('auth0_id', auth0Id)
     .single();
 
-  if (!user) return { actions: [], completedMap: new Map(), favoritedActions: [] };
+  if (!user) return { actions: [], completedMap: new Map(), favoritedActions: [], currentStreak: 0 };
 
   // Get all actions - use distinct to avoid duplicates
   // Order by display_order (marriage importance), then by name
@@ -83,11 +84,37 @@ async function getActions(auth0Id: string) {
     completedMapObj[key] = value;
   });
 
+  // Calculate streak from user_tips
+  const { data: tips } = await adminSupabase
+    .from('user_tips')
+    .select('date')
+    .eq('user_id', user.id)
+    .order('date', { ascending: false });
+
+  let currentStreak = 0;
+  if (tips && tips.length > 0) {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    for (let i = 0; i < 365; i++) {
+      const checkDate = new Date(today);
+      checkDate.setDate(today.getDate() - i);
+      const dateStr = checkDate.toISOString().split('T')[0];
+
+      if (tips.some((t) => t.date === dateStr)) {
+        currentStreak++;
+      } else {
+        break;
+      }
+    }
+  }
+
   return {
     actions: uniqueActions,
     completedMap: completedMapObj,
     userId: user.id,
     favoritedActions, // Already filtered above
+    currentStreak,
   };
 }
 
@@ -99,7 +126,7 @@ export default async function ActionsPage() {
   }
 
   const auth0Id = session.user.sub;
-  const { actions, completedMap, userId, favoritedActions } = await getActions(auth0Id);
+  const { actions, completedMap, userId, favoritedActions, currentStreak } = await getActions(auth0Id);
 
   // Filter out favorited actions from main actions list (they'll be shown separately)
   const favoritedActionIds = new Set(favoritedActions.map((fa: any) => fa.id));
@@ -178,31 +205,85 @@ export default async function ActionsPage() {
   
   // Note: Each theme section renders its own ActionsList component
 
+  const completedCount = Object.keys(completedMap).length;
+  const completionPercentage = actions.length > 0 ? Math.round((completedCount / actions.length) * 100) : 0;
+
   return (
     <div className="min-h-screen bg-slate-950">
       <DashboardNav />
+      <ActionsQuickStats totalActions={actions.length} completedActions={completedCount} />
 
       <main className="container mx-auto px-4 py-8 md:py-10">
         <div className="max-w-6xl mx-auto">
           <div className="mb-8">
-            <h1 className="text-3xl md:text-4xl font-semibold text-slate-50 mb-2">
+            <h1 className="text-3xl md:text-4xl font-bold text-slate-50 mb-2 bg-gradient-to-r from-primary-400 to-primary-600 bg-clip-text text-transparent">
               Actions
             </h1>
-            <p className="text-slate-400 text-sm md:text-base mb-4">
+            <p className="text-slate-300 text-base md:text-lg mb-6 font-medium">
               Track specific actions to earn badges. Complete actions to build toward your goals.
             </p>
-            <div className="flex items-center gap-4 text-sm">
-              <span className="text-slate-300">
-                <span className="font-semibold text-primary-300">
-                  {Object.keys(completedMap).length}
-                </span>{' '}
-                / {actions.length} actions completed
-              </span>
-              <span className="text-slate-500">•</span>
-              <span className="text-slate-400">
-                {actions.length > 0 ? Math.round((Object.keys(completedMap).length / actions.length) * 100) : 0}%
-                complete
-              </span>
+            
+            {/* Quick Stats (visible when not sticky) */}
+            <div className="bg-gradient-to-r from-slate-900/80 via-slate-800/80 to-slate-900/80 border border-slate-700/50 rounded-xl p-6 mb-6 backdrop-blur-sm">
+              <div className="grid grid-cols-3 gap-4 md:gap-8">
+                {/* Total Actions */}
+                <div className="flex items-center gap-3">
+                  <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-gradient-to-br from-blue-500/20 to-blue-600/20 border border-blue-500/30 flex items-center justify-center">
+                    <span className="text-2xl">📋</span>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs text-slate-400 font-medium uppercase tracking-wide">Total Actions</p>
+                    <p className="text-xl md:text-2xl font-bold text-slate-50 mt-0.5">
+                      {actions.length}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Completion Percentage */}
+                <div className="flex items-center gap-3">
+                  <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-gradient-to-br from-emerald-500/20 to-emerald-600/20 border border-emerald-500/30 flex items-center justify-center">
+                    <span className="text-2xl">✓</span>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs text-slate-400 font-medium uppercase tracking-wide">Complete</p>
+                    <div className="flex items-baseline gap-2 mt-0.5">
+                      <p className="text-xl md:text-2xl font-bold text-emerald-400">
+                        {completionPercentage}%
+                      </p>
+                      <span className="text-xs text-slate-500">
+                        ({completedCount}/{actions.length})
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Current Streak */}
+                <div className="flex items-center gap-3">
+                  <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-gradient-to-br from-orange-500/20 to-orange-600/20 border border-orange-500/30 flex items-center justify-center">
+                    <span className="text-2xl">🔥</span>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs text-slate-400 font-medium uppercase tracking-wide">Streak</p>
+                    <p className="text-xl md:text-2xl font-bold text-orange-400 mt-0.5">
+                      {currentStreak} {currentStreak === 1 ? 'day' : 'days'}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Progress Bar */}
+              <div className="mt-4 pt-4 border-t border-slate-700/50">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-xs text-slate-400 font-medium">Overall Progress</span>
+                  <span className="text-xs font-semibold text-primary-300">{completionPercentage}%</span>
+                </div>
+                <div className="w-full bg-slate-800 rounded-full h-2.5 overflow-hidden">
+                  <div
+                    className="h-full bg-gradient-to-r from-primary-500 to-primary-600 rounded-full shadow-sm shadow-primary-500/50 transition-all duration-1000"
+                    style={{ width: `${completionPercentage}%` }}
+                  />
+                </div>
+              </div>
             </div>
           </div>
 
