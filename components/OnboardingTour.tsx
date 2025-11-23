@@ -114,42 +114,112 @@ export default function OnboardingTour({ onComplete }: OnboardingTourProps) {
         clearTimeout(autoAdvanceTimerRef.current);
       }
 
-      // IMPORTANT: Always show tooltip immediately, even while searching for element
-      // Set a fallback element so tooltip always renders
-      setHighlightedElement(document.body);
+      // CRITICAL: Always ensure highlightedElement is set so tooltip renders
+      // Use a dummy div if document.body isn't available yet
+      if (typeof document !== 'undefined') {
+        if (!highlightedElement || highlightedElement === document.body) {
+          // Create a dummy element to ensure tooltip always renders
+          const dummy = document.createElement('div');
+          dummy.style.position = 'fixed';
+          dummy.style.top = '50%';
+          dummy.style.left = '50%';
+          dummy.style.width = '1px';
+          dummy.style.height = '1px';
+          dummy.style.pointerEvents = 'none';
+          dummy.style.visibility = 'hidden';
+          document.body.appendChild(dummy);
+          setHighlightedElement(dummy);
+        }
+      }
 
       // Try to find element with retry logic
       const tryFindElement = (attempt = 0) => {
         const element = document.querySelector(step.target) as HTMLElement;
         
-        if (element && element.offsetParent !== null) {
-          // Element found and visible
-          retryCountRef.current = 0;
-          setHighlightedElement(element);
-          highlightedRef.current = element;
+        if (element) {
+          // Check if element is actually visible (not just in DOM)
+          const rect = element.getBoundingClientRect();
+          const isVisible = rect.width > 0 && rect.height > 0 && 
+                           element.offsetParent !== null &&
+                           window.getComputedStyle(element).visibility !== 'hidden' &&
+                           window.getComputedStyle(element).display !== 'none';
           
-          // Scroll to element smoothly
-          setTimeout(() => {
-            element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          }, 100);
-          
-          // Add highlight ring after scroll
-          setTimeout(() => {
-            element.classList.add('ring-4', 'ring-primary-500', 'ring-opacity-75', 'z-50', 'relative');
-          }, 400);
-          
-          // Auto-advance after 4 seconds
-          autoAdvanceTimerRef.current = setTimeout(() => {
-            handleNext();
-          }, 4000);
-        } else if (attempt < 10) {
-          // Element not found or not visible - retry with exponential backoff
+          if (isVisible) {
+            // Element found and visible
+            retryCountRef.current = 0;
+            
+            // Remove dummy element if it exists
+            const dummy = document.querySelector('[data-tour-dummy]');
+            if (dummy) {
+              dummy.remove();
+            }
+            
+            setHighlightedElement(element);
+            highlightedRef.current = element;
+            
+            // Scroll to element smoothly
+            setTimeout(() => {
+              element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 100);
+            
+            // Add highlight ring after scroll
+            setTimeout(() => {
+              element.classList.add('ring-4', 'ring-primary-500', 'ring-opacity-75', 'z-50', 'relative');
+            }, 400);
+            
+            // Auto-advance after 4 seconds
+            autoAdvanceTimerRef.current = setTimeout(() => {
+              handleNext();
+            }, 4000);
+          } else if (attempt < 15) {
+            // Element found but not visible yet - retry
+            retryCountRef.current = attempt + 1;
+            setTimeout(() => tryFindElement(attempt + 1), 200 + (attempt * 50));
+          } else {
+            // Element exists but never became visible - show tooltip centered anyway
+            retryCountRef.current = 0;
+            
+            // Keep dummy element so tooltip shows centered
+            if (typeof document !== 'undefined' && !document.querySelector('[data-tour-dummy]')) {
+              const dummy = document.createElement('div');
+              dummy.setAttribute('data-tour-dummy', 'true');
+              dummy.style.position = 'fixed';
+              dummy.style.top = '50%';
+              dummy.style.left = '50%';
+              dummy.style.width = '1px';
+              dummy.style.height = '1px';
+              dummy.style.pointerEvents = 'none';
+              dummy.style.visibility = 'hidden';
+              document.body.appendChild(dummy);
+              setHighlightedElement(dummy);
+            }
+            
+            // Auto-advance after 3 seconds
+            autoAdvanceTimerRef.current = setTimeout(() => {
+              handleNext();
+            }, 3000);
+          }
+        } else if (attempt < 15) {
+          // Element not found - retry with exponential backoff
           retryCountRef.current = attempt + 1;
-          setTimeout(() => tryFindElement(attempt + 1), 200 + (attempt * 100));
+          setTimeout(() => tryFindElement(attempt + 1), 200 + (attempt * 50));
         } else {
-          // After retries, keep showing tooltip (already set to document.body)
-          // Tooltip will appear in center of screen
+          // After retries, ensure dummy element exists for centered tooltip
           retryCountRef.current = 0;
+          
+          if (typeof document !== 'undefined' && !document.querySelector('[data-tour-dummy]')) {
+            const dummy = document.createElement('div');
+            dummy.setAttribute('data-tour-dummy', 'true');
+            dummy.style.position = 'fixed';
+            dummy.style.top = '50%';
+            dummy.style.left = '50%';
+            dummy.style.width = '1px';
+            dummy.style.height = '1px';
+            dummy.style.pointerEvents = 'none';
+            dummy.style.visibility = 'hidden';
+            document.body.appendChild(dummy);
+            setHighlightedElement(dummy);
+          }
           
           // Auto-advance after 3 seconds
           autoAdvanceTimerRef.current = setTimeout(() => {
@@ -163,6 +233,11 @@ export default function OnboardingTour({ onComplete }: OnboardingTourProps) {
     }
 
     return () => {
+      // Cleanup dummy elements
+      const dummy = document.querySelector('[data-tour-dummy]');
+      if (dummy) {
+        dummy.remove();
+      }
       // Cleanup: remove highlight styles
       if (highlightedRef.current) {
         highlightedRef.current.classList.remove('ring-4', 'ring-primary-500', 'ring-opacity-75', 'z-50', 'relative');
@@ -171,7 +246,7 @@ export default function OnboardingTour({ onComplete }: OnboardingTourProps) {
         clearTimeout(autoAdvanceTimerRef.current);
       }
     };
-  }, [currentStep, isActive]);
+  }, [currentStep, isActive, highlightedElement]);
 
   const handleNext = () => {
     if (currentStep < TOUR_STEPS.length - 1) {
@@ -211,27 +286,31 @@ export default function OnboardingTour({ onComplete }: OnboardingTourProps) {
   // Calculate tooltip position - ALWAYS show tooltip
   let tooltipStyle: React.CSSProperties = {};
   
-  // Try to position tooltip relative to element if found and valid, otherwise center it
-  const hasValidElement = highlightedElement && 
-                          highlightedElement !== document.body && 
-                          typeof highlightedElement.getBoundingClientRect === 'function';
+  // Check if we have a valid element (not dummy, not body)
+  const isDummyElement = highlightedElement?.hasAttribute?.('data-tour-dummy') || 
+                         highlightedElement === document.body;
   
-  if (hasValidElement) {
+  if (highlightedElement && !isDummyElement && typeof highlightedElement.getBoundingClientRect === 'function') {
     try {
       const rect = highlightedElement.getBoundingClientRect();
-      // Only use element position if rect is valid (not all zeros)
-      if (rect.width > 0 || rect.height > 0) {
+      // Only use element position if rect is valid and element is visible
+      if (rect.width > 0 && rect.height > 0 && 
+          rect.top >= 0 && rect.left >= 0 &&
+          rect.bottom <= window.innerHeight + 100 && // Allow some off-screen tolerance
+          rect.right <= window.innerWidth + 100) {
         const tooltipOffset = 16;
+        const tooltipLeft = Math.max(16, Math.min(rect.left + rect.width / 2, viewportWidth - 16));
+        const tooltipTop = rect.bottom + window.scrollY + tooltipOffset;
         
-        // Position tooltip below the element
+        // Position tooltip below the element, but ensure it's visible
         tooltipStyle = {
-          top: `${rect.bottom + window.scrollY + tooltipOffset}px`,
-          left: `${Math.max(16, Math.min(rect.left + rect.width / 2, viewportWidth - 16))}px`,
+          top: `${tooltipTop}px`,
+          left: `${tooltipLeft}px`,
           transform: 'translate(-50%, 0)',
           maxWidth: `${Math.min(viewportWidth - 32, 340)}px`,
         };
       } else {
-        // Invalid rect, center it
+        // Element exists but positioning would be off-screen, center it instead
         tooltipStyle = {
           top: '50%',
           left: '50%',
