@@ -16,42 +16,42 @@ const TOUR_STEPS: TourStep[] = [
     id: 'mission',
     target: '[data-tour="mission"]',
     title: "Today's Mission",
-    content: "This is your daily action. Complete it to boost your Husband Hit Points.",
+    content: "This is your daily action. Complete it to boost your Husband Hit Points. Each day you get a new action tailored to your situation.",
     position: 'bottom',
   },
   {
     id: 'hit-points',
     target: '[data-tour="hit-points"]',
     title: 'Husband Hit Points',
-    content: "Your relationship health score. Complete actions to increase it.",
+    content: "Your relationship health score. Complete actions to increase it. Miss days and it slowly decreases. Consistency is what moves the needle.",
     position: 'bottom',
   },
   {
     id: 'stats',
     target: '[data-tour="stats"]',
     title: 'Your Stats',
-    content: "Track your progress: current streak, total actions, and active days.",
+    content: "Track your progress here: current streak, total actions completed, and active days. Keep the streak going!",
     position: 'bottom',
   },
   {
     id: 'badges',
     target: '[data-tour="badges"]',
     title: 'Badges',
-    content: "Earn badges by completing actions and hitting milestones.",
+    content: "Earn badges by completing actions and hitting milestones. They're proof you're showing up consistently.",
     position: 'bottom',
   },
   {
     id: 'calendar',
     target: '[data-tour="calendar"]',
     title: 'Auto-Add to Calendar',
-    content: "Turn this on to automatically add your daily actions to your calendar.",
+    content: "Turn this on to automatically add your daily actions to your calendar. Set it once and forget it.",
     position: 'bottom',
   },
   {
     id: 'navigation',
     target: '[data-tour="navigation"]',
     title: 'Navigation',
-    content: "Explore actions, badges, journal, team wins, and how-to guides.",
+    content: "Use these links to explore: view all actions, check your badges, read your journal, see team wins, and access how-to guides.",
     position: 'bottom',
   },
 ];
@@ -66,6 +66,7 @@ export default function OnboardingTour({ onComplete }: OnboardingTourProps) {
   const [highlightedElement, setHighlightedElement] = useState<HTMLElement | null>(null);
   const highlightedRef = useRef<HTMLElement | null>(null);
   const autoAdvanceTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const retryCountRef = useRef(0);
 
   useEffect(() => {
     // Check if user has seen the tour
@@ -73,48 +74,88 @@ export default function OnboardingTour({ onComplete }: OnboardingTourProps) {
     
     // Auto-start if they haven't seen it
     if (!hasSeenTour) {
-      // Small delay to ensure DOM is ready
+      // Longer delay to ensure DOM is fully ready
       setTimeout(() => {
         setIsActive(true);
-      }, 800);
+      }, 1000);
     }
   }, []);
+
+  // Function to find element with retry logic
+  const findElement = (selector: string, retries = 5): HTMLElement | null => {
+    const element = document.querySelector(selector) as HTMLElement;
+    if (element) {
+      return element;
+    }
+    
+    if (retries > 0) {
+      // Retry after a short delay
+      return null; // Will be handled by retry logic
+    }
+    
+    return null;
+  };
 
   useEffect(() => {
     if (isActive && currentStep < TOUR_STEPS.length) {
       const step = TOUR_STEPS[currentStep];
-      const element = document.querySelector(step.target) as HTMLElement;
       
-      if (element) {
-        // Cleanup previous element
-        if (highlightedRef.current) {
-          highlightedRef.current.classList.remove('ring-4', 'ring-primary-500', 'ring-opacity-75', 'z-50', 'relative');
-        }
-        
-        setHighlightedElement(element);
-        highlightedRef.current = element;
-        
-        // Scroll to element smoothly
-        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        
-        // Add highlight ring
-        element.classList.add('ring-4', 'ring-primary-500', 'ring-opacity-75', 'z-50', 'relative');
-        
-        // Auto-advance after 3 seconds
-        if (autoAdvanceTimerRef.current) {
-          clearTimeout(autoAdvanceTimerRef.current);
-        }
-        autoAdvanceTimerRef.current = setTimeout(() => {
-          handleNext();
-        }, 3000);
-      } else {
-        // If element not found, skip to next step
-        if (currentStep < TOUR_STEPS.length - 1) {
-          setTimeout(() => setCurrentStep(currentStep + 1), 100);
-        } else {
-          handleComplete();
-        }
+      // Cleanup previous element
+      if (highlightedRef.current) {
+        highlightedRef.current.classList.remove('ring-4', 'ring-primary-500', 'ring-opacity-75', 'z-50', 'relative');
       }
+      
+      // Clear any existing timer
+      if (autoAdvanceTimerRef.current) {
+        clearTimeout(autoAdvanceTimerRef.current);
+      }
+
+      // IMPORTANT: Always show tooltip immediately, even while searching for element
+      // Set a fallback element so tooltip always renders
+      setHighlightedElement(document.body);
+
+      // Try to find element with retry logic
+      const tryFindElement = (attempt = 0) => {
+        const element = document.querySelector(step.target) as HTMLElement;
+        
+        if (element && element.offsetParent !== null) {
+          // Element found and visible
+          retryCountRef.current = 0;
+          setHighlightedElement(element);
+          highlightedRef.current = element;
+          
+          // Scroll to element smoothly
+          setTimeout(() => {
+            element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }, 100);
+          
+          // Add highlight ring after scroll
+          setTimeout(() => {
+            element.classList.add('ring-4', 'ring-primary-500', 'ring-opacity-75', 'z-50', 'relative');
+          }, 400);
+          
+          // Auto-advance after 4 seconds
+          autoAdvanceTimerRef.current = setTimeout(() => {
+            handleNext();
+          }, 4000);
+        } else if (attempt < 10) {
+          // Element not found or not visible - retry with exponential backoff
+          retryCountRef.current = attempt + 1;
+          setTimeout(() => tryFindElement(attempt + 1), 200 + (attempt * 100));
+        } else {
+          // After retries, keep showing tooltip (already set to document.body)
+          // Tooltip will appear in center of screen
+          retryCountRef.current = 0;
+          
+          // Auto-advance after 3 seconds
+          autoAdvanceTimerRef.current = setTimeout(() => {
+            handleNext();
+          }, 3000);
+        }
+      };
+
+      // Start trying to find element
+      tryFindElement(0);
     }
 
     return () => {
@@ -154,56 +195,52 @@ export default function OnboardingTour({ onComplete }: OnboardingTourProps) {
     }
   };
 
-  if (!isActive || currentStep >= TOUR_STEPS.length || !highlightedElement) {
+  if (!isActive || currentStep >= TOUR_STEPS.length) {
     return null;
   }
 
   const step = TOUR_STEPS[currentStep];
-  const rect = highlightedElement.getBoundingClientRect();
   const viewportWidth = typeof window !== 'undefined' ? window.innerWidth : 1024;
   const isMobile = viewportWidth < 768;
-  const tooltipOffset = 16;
 
-  // Calculate tooltip position - always bottom on mobile, use step position on desktop
+  // Calculate tooltip position - ALWAYS show tooltip, even if element not found
   let tooltipStyle: React.CSSProperties = {};
-  const position = isMobile ? 'bottom' : step.position;
   
-  switch (position) {
-    case 'top':
-      tooltipStyle = {
-        top: `${rect.top + window.scrollY - tooltipOffset}px`,
-        left: `${rect.left + rect.width / 2}px`,
-        transform: 'translate(-50%, -100%)',
-      };
-      break;
-    case 'bottom':
+  if (highlightedElement && highlightedElement.getBoundingClientRect) {
+    try {
+      const rect = highlightedElement.getBoundingClientRect();
+      const tooltipOffset = 16;
+      
+      // Always use bottom position for better visibility
       tooltipStyle = {
         top: `${rect.bottom + window.scrollY + tooltipOffset}px`,
         left: `${Math.max(16, Math.min(rect.left + rect.width / 2, viewportWidth - 16))}px`,
         transform: 'translate(-50%, 0)',
-        maxWidth: `${Math.min(viewportWidth - 32, 320)}px`,
+        maxWidth: `${Math.min(viewportWidth - 32, 340)}px`,
       };
-      break;
-    case 'left':
+    } catch (e) {
+      // Fallback to center if getBoundingClientRect fails
       tooltipStyle = {
-        top: `${rect.top + window.scrollY + rect.height / 2}px`,
-        left: `${rect.left + window.scrollX - tooltipOffset}px`,
-        transform: 'translate(-100%, -50%)',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        maxWidth: `${Math.min(viewportWidth - 32, 340)}px`,
       };
-      break;
-    case 'right':
-      tooltipStyle = {
-        top: `${rect.top + window.scrollY + rect.height / 2}px`,
-        left: `${rect.right + window.scrollX + tooltipOffset}px`,
-        transform: 'translate(0, -50%)',
-      };
-      break;
+    }
+  } else {
+    // Floating tooltip in center if element not found - but STILL SHOW IT
+    tooltipStyle = {
+      top: '50%',
+      left: '50%',
+      transform: 'translate(-50%, -50%)',
+      maxWidth: `${Math.min(viewportWidth - 32, 340)}px`,
+    };
   }
 
   return (
     <AnimatePresence>
       <div className="fixed inset-0 z-[9998] pointer-events-none">
-        {/* Subtle backdrop - not a full dark overlay */}
+        {/* Subtle backdrop */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -212,7 +249,7 @@ export default function OnboardingTour({ onComplete }: OnboardingTourProps) {
           onClick={handleSkip}
         />
 
-        {/* Tooltip */}
+        {/* Tooltip - always show, even if element not found */}
         <motion.div
           initial={{ opacity: 0, scale: 0.95, y: 10 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -273,7 +310,7 @@ export function TourButton() {
   const handleStartTour = () => {
     // Remove the flag so tour will start
     localStorage.removeItem('has_seen_onboarding_tour');
-    // Trigger tour by setting a flag and reloading
+    // Trigger tour by reloading
     window.location.reload();
   };
 
