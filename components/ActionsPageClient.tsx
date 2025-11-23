@@ -3,8 +3,8 @@
 import { useState, useMemo, useEffect } from 'react';
 import ActionsList from './ActionsList';
 import ActionsSearchFilter from './ActionsSearchFilter';
+import FeaturedEvents from './FeaturedChallenges';
 import CategoryCard from './CategoryCard';
-import ChallengeCard from './ChallengeCard';
 import Link from 'next/link';
 
 interface Action {
@@ -337,6 +337,9 @@ export default function ActionsPageClient({
 
   return (
     <>
+      {/* Featured Events */}
+      <FeaturedEvents />
+
       {/* Category Cards Grid */}
       <section className="mb-8">
         <h2 className="text-2xl md:text-3xl font-semibold text-slate-50 mb-4">Categories</h2>
@@ -400,19 +403,6 @@ export default function ActionsPageClient({
             const themeActions = actionsByTheme[theme] || [];
             if (themeActions.length === 0) return null;
 
-            // Find the event for this theme
-            const event = challenges.find((c) => c.theme === theme);
-            const userChallenge = event 
-              ? userChallenges.find((uc) => uc.challenge_id === event.id)
-              : null;
-
-            // When collapsed: show event (if exists) + 3 random actions = 4 items total
-            // When expanded: show event (if exists) + all actions
-            const isExpanded = expandedCategories.has(theme);
-            const actionsToShow = isExpanded 
-              ? themeActions 
-              : themeActions.slice(0, event ? 3 : 4); // If event exists, show 3 actions; otherwise 4
-
             return (
               <section
                 key={theme}
@@ -426,46 +416,23 @@ export default function ActionsPageClient({
                   </h2>
                 </div>
 
-                {/* Event Card (if exists) - shown first */}
-                {event && (
-                  <div className="mb-6">
-                    <ChallengeCard
-                      challenge={event}
-                      userChallenge={userChallenge ? {
-                        id: userChallenge.id,
-                        challenge_id: userChallenge.challenge_id,
-                        joined_date: userChallenge.joined_date,
-                        completed_days: userChallenge.completed_days,
-                        completed: userChallenge.completed,
-                        challenges: event,
-                        progress: userChallenge.progress,
-                        totalDays: userChallenge.totalDays,
-                        remainingDays: userChallenge.remainingDays,
-                        completionCount: userChallenge.completionCount,
-                      } : undefined}
-                      userId={userId}
-                      onJoin={handleJoinChallenge}
-                    />
-                  </div>
-                )}
+                <ActionsList
+                  actions={
+                    expandedCategories.has(theme)
+                      ? themeActions
+                      : themeActions.slice(0, 4)
+                  }
+                  completedMap={completedMapInstance}
+                  userId={userId}
+                />
 
-                {/* Actions List */}
-                {actionsToShow.length > 0 && (
-                  <ActionsList
-                    actions={actionsToShow}
-                    completedMap={completedMapInstance}
-                    userId={userId}
-                  />
-                )}
-
-                {/* Show "See More" if there are more actions (accounting for event) */}
-                {themeActions.length > (event ? 3 : 4) && (
+                {themeActions.length > 4 && (
                   <div className="mt-6 text-center">
                     <button
                       onClick={() => toggleCategory(theme)}
                       className="inline-flex items-center gap-2 px-6 py-2 bg-primary-500/10 border border-primary-500/30 text-primary-300 rounded-lg hover:bg-primary-500/20 transition-colors text-sm font-medium"
                     >
-                      {isExpanded ? (
+                      {expandedCategories.has(theme) ? (
                         <>
                           See Less
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -475,9 +442,7 @@ export default function ActionsPageClient({
                       ) : (
                         <>
                           See More {formatThemeName(theme)} Actions
-                          <span className="text-xs text-slate-400">
-                            ({themeActions.length - (event ? 3 : 4)} more)
-                          </span>
+                          <span className="text-xs text-slate-400">({themeActions.length - 4} more)</span>
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                           </svg>

@@ -45,29 +45,23 @@ export default function CategoryCard({
 
   return (
     <motion.div
-      whileHover={{ scale: 1.02 }}
-      whileTap={{ scale: 0.98 }}
-      className={`border-2 rounded-xl p-6 transition-all ${colorClasses}`}
+      whileHover={{ scale: 1.01 }}
+      whileTap={{ scale: 0.99 }}
+      className={`border rounded-lg p-4 transition-all ${colorClasses}`}
     >
-      <div className="flex items-start justify-between mb-4">
-        <div className="flex items-center gap-3">
-          <span className="text-3xl">{icon}</span>
-          <div>
-            <h3 className="text-lg font-semibold text-slate-50">{name}</h3>
-            <p className="text-xs text-slate-400 mt-0.5">
-              {completedCount} / {actionCount} completed
-            </p>
-          </div>
+      <div className="flex items-center gap-2 mb-3">
+        <span className="text-xl">{icon}</span>
+        <div className="flex-1 min-w-0">
+          <h3 className="text-sm font-semibold text-slate-50 truncate">{name}</h3>
+          <p className="text-[10px] text-slate-400">
+            {completedCount} / {actionCount}
+          </p>
         </div>
       </div>
 
       {/* Progress Bar */}
-      <div className="mb-4">
-        <div className="flex items-center justify-between mb-2">
-          <span className="text-xs text-slate-400">Progress</span>
-          <span className="text-xs font-semibold text-slate-300">{completionPercentage}%</span>
-        </div>
-        <div className="w-full bg-slate-800 rounded-full h-2 overflow-hidden">
+      <div className="mb-3">
+        <div className="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden">
           <motion.div
             initial={{ width: 0 }}
             animate={{ width: `${completionPercentage}%` }}
@@ -78,10 +72,10 @@ export default function CategoryCard({
       </div>
 
       {/* Actions */}
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-1.5">
         <Link
           href={`/dashboard/actions#category-${theme}`}
-          className="w-full px-4 py-2 text-sm font-medium text-slate-100 bg-slate-800/50 border border-slate-700 rounded-lg hover:bg-slate-700/50 transition-colors text-center"
+          className="w-full px-3 py-1.5 text-xs font-medium text-slate-100 bg-slate-800/50 border border-slate-700 rounded-md hover:bg-slate-700/50 transition-colors text-center"
         >
           View Actions
         </Link>
@@ -89,13 +83,13 @@ export default function CategoryCard({
           <button
             onClick={() => eventId && onJoinEvent?.(eventId)}
             disabled={isEnrolled}
-            className={`w-full px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
+            className={`w-full px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${
               isEnrolled
                 ? 'bg-slate-700/30 text-slate-500 border border-slate-700 cursor-not-allowed'
                 : 'bg-primary-500/20 text-primary-300 border border-primary-500/30 hover:bg-primary-500/30'
             }`}
           >
-            {isEnrolled ? 'Event Active' : 'Start Event'}
+            {isEnrolled ? 'Active' : 'Start Event'}
           </button>
         )}
       </div>

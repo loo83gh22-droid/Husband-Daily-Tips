@@ -100,34 +100,37 @@ export default function FeaturedEvents() {
 
   return (
     <section className="mb-8">
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center justify-between mb-6">
         <div>
-          <h2 className="text-2xl md:text-3xl font-semibold text-slate-50">Featured Events</h2>
-          <p className="text-sm text-slate-400 mt-1">
+          <h2 className="text-3xl md:text-4xl font-bold text-slate-50 bg-gradient-to-r from-primary-400 to-primary-600 bg-clip-text text-transparent">
+            Featured Events
+          </h2>
+          <p className="text-base text-slate-300 mt-2 font-medium">
             7 days. 7 chances to level up. Pick an event and get started.
           </p>
         </div>
         {challenges.length > 3 && (
           <Link
             href="/dashboard"
-            className="text-sm text-primary-300 hover:text-primary-200 transition-colors"
+            className="text-sm text-primary-300 hover:text-primary-200 transition-colors font-medium"
           >
             View All →
           </Link>
         )}
       </div>
 
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
         {featuredChallenges.map((challenge) => {
           const userChallenge = userChallenges.find((uc) => uc.challenge_id === challenge.id);
           return (
-            <ChallengeCard
-              key={challenge.id}
-              challenge={challenge}
-              userChallenge={userChallenge}
-              userId={userId || undefined}
-              onJoin={handleJoin}
-            />
+            <div key={challenge.id} className="transform transition-transform hover:scale-[1.02]">
+              <ChallengeCard
+                challenge={challenge}
+                userChallenge={userChallenge}
+                userId={userId || undefined}
+                onJoin={handleJoin}
+              />
+            </div>
           );
         })}
       </div>

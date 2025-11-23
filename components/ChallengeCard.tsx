@@ -129,17 +129,36 @@ export default function ChallengeCard({ challenge, userChallenge, userId, onJoin
     romance: '💕',
     roommate_syndrome: '🔗',
     connection: '🔗',
+    intimacy: '💝',
+    partnership: '🤝',
+    gratitude: '🙏',
+    conflict_resolution: '⚖️',
+    reconnection: '🔗',
+    quality_time: '⏰',
   };
 
-  const themeColors: Record<string, string> = {
-    communication: 'primary',
-    romance: 'rose',
-    roommate_syndrome: 'amber',
-    connection: 'amber',
+  const getButtonClasses = (theme: string, isDisabled: boolean) => {
+    const baseClasses = 'flex-1 px-4 py-2.5 text-slate-950 text-sm font-bold rounded-lg transition-all shadow-md transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none';
+    
+    if (isDisabled) {
+      return `${baseClasses} bg-slate-700 text-slate-500`;
+    }
+
+    const colorMap: Record<string, string> = {
+      communication: 'bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-400 hover:to-blue-500 shadow-blue-500/30 hover:shadow-blue-500/50',
+      romance: 'bg-gradient-to-r from-rose-500 to-rose-600 hover:from-rose-400 hover:to-rose-500 shadow-rose-500/30 hover:shadow-rose-500/50',
+      intimacy: 'bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-400 hover:to-pink-500 shadow-pink-500/30 hover:shadow-pink-500/50',
+      partnership: 'bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-400 hover:to-emerald-500 shadow-emerald-500/30 hover:shadow-emerald-500/50',
+      gratitude: 'bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 shadow-amber-500/30 hover:shadow-amber-500/50',
+      conflict_resolution: 'bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-400 hover:to-purple-500 shadow-purple-500/30 hover:shadow-purple-500/50',
+      reconnection: 'bg-gradient-to-r from-cyan-500 to-cyan-600 hover:from-cyan-400 hover:to-cyan-500 shadow-cyan-500/30 hover:shadow-cyan-500/50',
+      quality_time: 'bg-gradient-to-r from-green-500 to-green-600 hover:from-green-400 hover:to-green-500 shadow-green-500/30 hover:shadow-green-500/50',
+    };
+
+    return `${baseClasses} ${colorMap[theme] || 'bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-400 hover:to-primary-500 shadow-primary-500/30 hover:shadow-primary-500/50'}`;
   };
 
   const emoji = themeEmojis[challenge.theme] || '🎯';
-  const color = themeColors[challenge.theme] || 'primary';
 
   // Map challenge name to badge slug for linking
   const getChallengeBadgeSlug = (challengeName: string): string => {
@@ -152,7 +171,7 @@ export default function ChallengeCard({ challenge, userChallenge, userId, onJoin
   };
 
   return (
-    <div className="bg-slate-900/80 border border-slate-800 rounded-xl p-6">
+    <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 border-2 border-primary-500/30 rounded-xl p-6 shadow-lg shadow-primary-500/10 hover:border-primary-500/50 hover:shadow-primary-500/20 transition-all">
       <div className="flex items-start justify-between mb-4">
         <div className="flex items-center gap-3">
           <span className="text-3xl">{emoji}</span>
@@ -179,7 +198,7 @@ export default function ChallengeCard({ challenge, userChallenge, userId, onJoin
           </div>
         </div>
         {isActive && !isJoined && (
-          <span className="px-3 py-1 bg-green-500/20 text-green-400 text-xs font-semibold rounded-full">
+          <span className="px-3 py-1 bg-gradient-to-r from-green-500/30 to-emerald-500/30 text-green-300 text-xs font-bold rounded-full border border-green-500/50 shadow-sm">
             Available
           </span>
         )}
@@ -204,7 +223,17 @@ export default function ChallengeCard({ challenge, userChallenge, userId, onJoin
         {userChallenge && (
           <div className="h-2 w-full rounded-full bg-slate-800 overflow-hidden">
             <div
-              className={`h-full bg-${color}-500 transition-all`}
+              className={`h-full transition-all ${
+                challenge.theme === 'romance' ? 'bg-rose-500' :
+                challenge.theme === 'intimacy' ? 'bg-pink-500' :
+                challenge.theme === 'partnership' ? 'bg-emerald-500' :
+                challenge.theme === 'gratitude' ? 'bg-amber-500' :
+                challenge.theme === 'conflict_resolution' ? 'bg-purple-500' :
+                challenge.theme === 'reconnection' ? 'bg-cyan-500' :
+                challenge.theme === 'quality_time' ? 'bg-green-500' :
+                challenge.theme === 'communication' ? 'bg-blue-500' :
+                'bg-primary-500'
+              }`}
               style={{ width: `${userChallenge.progress}%` }}
             />
           </div>
@@ -241,7 +270,7 @@ export default function ChallengeCard({ challenge, userChallenge, userId, onJoin
           <button
             onClick={handleJoin}
             disabled={isJoining || isPast}
-            className={`flex-1 px-4 py-2 bg-${color}-500 text-slate-950 text-sm font-semibold rounded-lg hover:bg-${color}-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed`}
+            className={getButtonClasses(challenge.theme, isJoining || isPast)}
           >
             {isJoining ? 'Joining...' : isPast ? 'Event Ended' : 'Join Event'}
           </button>
