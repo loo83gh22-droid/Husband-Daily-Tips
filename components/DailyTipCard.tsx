@@ -510,40 +510,161 @@ END:VCALENDAR`;
                 <span>Apple</span>
               </a>
             </div>
-            {/* Auto-add toggle - compact version */}
-            <div className="flex items-center justify-between pt-3 border-t border-slate-700/50">
-              <div className="flex-1">
-                <p className="text-xs text-slate-300 font-medium">Auto-add to Calendar</p>
-                <p className="text-[10px] text-slate-400 mt-0.5">
-                  Automatically add future actions
-                </p>
+            {/* Auto-add toggle and calendar options */}
+            <div className="pt-3 border-t border-slate-700/50 space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="flex-1">
+                  <p className="text-xs text-slate-300 font-medium">Auto-add to Calendar</p>
+                  <p className="text-[10px] text-slate-400 mt-0.5">
+                    Automatically add future actions
+                  </p>
+                </div>
+                <label className="relative inline-flex items-center cursor-pointer ml-4">
+                  <input
+                    type="checkbox"
+                    checked={autoAddToCalendar}
+                    onChange={async (e) => {
+                      const checked = e.target.checked;
+                      setAutoAddToCalendar(checked);
+                      setIsSavingCalendar(true);
+                      try {
+                        await fetch('/api/user/preferences', {
+                          method: 'PATCH',
+                          headers: { 'Content-Type': 'application/json' },
+                          credentials: 'include',
+                          body: JSON.stringify({
+                            auto_add_to_calendar: checked,
+                            calendar_type: calendarType,
+                          }),
+                        });
+                      } catch (error) {
+                        console.error('Error updating preference:', error);
+                        setAutoAddToCalendar(!checked); // Revert on error
+                      } finally {
+                        setIsSavingCalendar(false);
+                      }
+                    }}
+                    disabled={isSavingCalendar}
+                    className="sr-only peer"
+                  />
+                  <div className="w-10 h-5 bg-slate-700 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary-500 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary-500 peer-disabled:opacity-50"></div>
+                </label>
               </div>
-              <label className="relative inline-flex items-center cursor-pointer ml-4">
-                <input
-                  type="checkbox"
-                  checked={autoAddToCalendar}
-                  onChange={async (e) => {
-                    const checked = e.target.checked;
-                    setAutoAddToCalendar(checked);
-                    try {
-                      await fetch('/api/user/preferences', {
-                        method: 'PATCH',
-                        headers: { 'Content-Type': 'application/json' },
-                        credentials: 'include',
-                        body: JSON.stringify({
-                          auto_add_to_calendar: checked,
-                          calendar_type: calendarType,
-                        }),
-                      });
-                    } catch (error) {
-                      console.error('Error updating preference:', error);
-                      setAutoAddToCalendar(!checked); // Revert on error
-                    }
-                  }}
-                  className="sr-only peer"
-                />
-                <div className="w-10 h-5 bg-slate-700 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary-500 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary-500"></div>
-              </label>
+              
+              {autoAddToCalendar && (
+                <div className="space-y-3 pt-2">
+                  <div>
+                    <p className="text-[10px] text-slate-400 mb-2">Choose your calendar:</p>
+                    <div className="flex gap-2 flex-wrap">
+                      <button
+                        onClick={() => handleCalendarTypeChange('google')}
+                        disabled={isSavingCalendar}
+                        className={`px-2.5 py-1.5 text-[10px] rounded-lg transition-colors ${
+                          calendarType === 'google'
+                            ? 'bg-primary-500/20 border border-primary-500/50 text-primary-300'
+                            : 'bg-slate-800 border border-slate-700 text-slate-300 hover:bg-slate-700'
+                        } disabled:opacity-50`}
+                      >
+                        Google
+                      </button>
+                      <button
+                        onClick={() => handleCalendarTypeChange('outlook')}
+                        disabled={isSavingCalendar}
+                        className={`px-2.5 py-1.5 text-[10px] rounded-lg transition-colors ${
+                          calendarType === 'outlook'
+                            ? 'bg-primary-500/20 border border-primary-500/50 text-primary-300'
+                            : 'bg-slate-800 border border-slate-700 text-slate-300 hover:bg-slate-700'
+                        } disabled:opacity-50`}
+                      >
+                        Outlook
+                      </button>
+                      <button
+                        onClick={() => handleCalendarTypeChange('apple')}
+                        disabled={isSavingCalendar}
+                        className={`px-2.5 py-1.5 text-[10px] rounded-lg transition-colors ${
+                          calendarType === 'apple'
+                            ? 'bg-primary-500/20 border border-primary-500/50 text-primary-300'
+                            : 'bg-slate-800 border border-slate-700 text-slate-300 hover:bg-slate-700'
+                        } disabled:opacity-50`}
+                      >
+                        Apple
+                      </button>
+                    </div>
+                  </div>
+                  
+                  {isPaidUser ? (
+                    <div className="space-y-2">
+                      <button
+                        onClick={handleGetFeedUrl}
+                        disabled={isLoadingFeedUrl}
+                        className="w-full px-3 py-2 bg-primary-500 disabled:bg-primary-900 disabled:text-slate-400 text-slate-950 text-xs font-semibold rounded-lg hover:bg-primary-400 transition-colors disabled:cursor-default flex items-center justify-center gap-2"
+                      >
+                        {isLoadingFeedUrl ? (
+                          <>
+                            <span className="animate-spin">⏳</span>
+                            <span>Generating...</span>
+                          </>
+                        ) : (
+                          <>
+                            <span>🔗</span>
+                            <span>Get Calendar Subscription URL</span>
+                          </>
+                        )}
+                      </button>
+                      {showFeedUrl && feedUrl && (
+                        <div className="bg-slate-800 rounded-lg p-2.5 space-y-2">
+                          <p className="text-[10px] text-slate-300 font-medium">Your Calendar Feed URL:</p>
+                          <div className="flex gap-1.5">
+                            <input
+                              type="text"
+                              value={feedUrl}
+                              readOnly
+                              className="flex-1 px-2 py-1 bg-slate-900 border border-slate-700 rounded text-[10px] text-slate-200"
+                            />
+                            <button
+                              onClick={copyFeedUrl}
+                              className="px-2 py-1 bg-slate-700 hover:bg-slate-600 text-slate-200 text-[10px] rounded transition-colors"
+                            >
+                              Copy
+                            </button>
+                          </div>
+                          <div className="text-[9px] text-slate-400 space-y-0.5">
+                            <p><strong>Google:</strong> Settings → Add calendar → From URL → Paste URL</p>
+                            <p><strong>Outlook:</strong> Add calendar → Subscribe from web → Paste URL</p>
+                            <p><strong>Apple:</strong> File → New Calendar Subscription → Paste URL</p>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    <div>
+                      <button
+                        onClick={handleDownloadAllActions}
+                        disabled={isDownloading}
+                        className="w-full px-3 py-2 bg-primary-500 disabled:bg-primary-900 disabled:text-slate-400 text-slate-950 text-xs font-semibold rounded-lg hover:bg-primary-400 transition-colors disabled:cursor-default flex items-center justify-center gap-2"
+                      >
+                        {isDownloading ? (
+                          <>
+                            <span className="animate-spin">⏳</span>
+                            <span>Generating...</span>
+                          </>
+                        ) : (
+                          <>
+                            <span>📥</span>
+                            <span>Download Next 7 Days</span>
+                          </>
+                        )}
+                      </button>
+                      <p className="text-[9px] text-slate-500 mt-1 text-center">
+                        Import into {calendarType === 'google' ? 'Google' : calendarType === 'outlook' ? 'Outlook' : 'Apple'} Calendar. New actions added daily via email.
+                      </p>
+                      <p className="text-[9px] text-primary-400 mt-1 text-center font-medium">
+                        💡 Upgrade for automatic syncing (no manual clicks!)
+                      </p>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
             <div className="flex flex-col gap-2">
               <SocialShare
