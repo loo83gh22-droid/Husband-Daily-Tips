@@ -77,6 +77,10 @@ export default function OnboardingTour({ onComplete }: OnboardingTourProps) {
       // Longer delay to ensure DOM is fully ready
       setTimeout(() => {
         setIsActive(true);
+        // Initialize highlightedElement immediately so tooltip can render
+        if (typeof document !== 'undefined') {
+          setHighlightedElement(document.body);
+        }
       }, 1000);
     }
   }, []);
@@ -195,6 +199,7 @@ export default function OnboardingTour({ onComplete }: OnboardingTourProps) {
     }
   };
 
+  // ALWAYS show tooltip when active - don't check highlightedElement
   if (!isActive || currentStep >= TOUR_STEPS.length) {
     return null;
   }
@@ -203,21 +208,37 @@ export default function OnboardingTour({ onComplete }: OnboardingTourProps) {
   const viewportWidth = typeof window !== 'undefined' ? window.innerWidth : 1024;
   const isMobile = viewportWidth < 768;
 
-  // Calculate tooltip position - ALWAYS show tooltip, even if element not found
+  // Calculate tooltip position - ALWAYS show tooltip
   let tooltipStyle: React.CSSProperties = {};
   
-  if (highlightedElement && highlightedElement.getBoundingClientRect) {
+  // Try to position tooltip relative to element if found and valid, otherwise center it
+  const hasValidElement = highlightedElement && 
+                          highlightedElement !== document.body && 
+                          typeof highlightedElement.getBoundingClientRect === 'function';
+  
+  if (hasValidElement) {
     try {
       const rect = highlightedElement.getBoundingClientRect();
-      const tooltipOffset = 16;
-      
-      // Always use bottom position for better visibility
-      tooltipStyle = {
-        top: `${rect.bottom + window.scrollY + tooltipOffset}px`,
-        left: `${Math.max(16, Math.min(rect.left + rect.width / 2, viewportWidth - 16))}px`,
-        transform: 'translate(-50%, 0)',
-        maxWidth: `${Math.min(viewportWidth - 32, 340)}px`,
-      };
+      // Only use element position if rect is valid (not all zeros)
+      if (rect.width > 0 || rect.height > 0) {
+        const tooltipOffset = 16;
+        
+        // Position tooltip below the element
+        tooltipStyle = {
+          top: `${rect.bottom + window.scrollY + tooltipOffset}px`,
+          left: `${Math.max(16, Math.min(rect.left + rect.width / 2, viewportWidth - 16))}px`,
+          transform: 'translate(-50%, 0)',
+          maxWidth: `${Math.min(viewportWidth - 32, 340)}px`,
+        };
+      } else {
+        // Invalid rect, center it
+        tooltipStyle = {
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          maxWidth: `${Math.min(viewportWidth - 32, 340)}px`,
+        };
+      }
     } catch (e) {
       // Fallback to center if getBoundingClientRect fails
       tooltipStyle = {
@@ -228,7 +249,7 @@ export default function OnboardingTour({ onComplete }: OnboardingTourProps) {
       };
     }
   } else {
-    // Floating tooltip in center if element not found - but STILL SHOW IT
+    // Floating tooltip in center - always show tooltip even if element not found
     tooltipStyle = {
       top: '50%',
       left: '50%',
