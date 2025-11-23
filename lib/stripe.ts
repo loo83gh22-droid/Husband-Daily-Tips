@@ -1,13 +1,14 @@
 import Stripe from 'stripe';
 
-if (!process.env.STRIPE_SECRET_KEY) {
-  throw new Error('STRIPE_SECRET_KEY is not set in environment variables');
-}
+// Initialize Stripe - allow it to be undefined during build time
+// It will be checked at runtime in API routes
+const stripeSecretKey = process.env.STRIPE_SECRET_KEY || '';
 
-export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-  apiVersion: '2024-12-18.acacia',
-  typescript: true,
-});
+export const stripe = stripeSecretKey
+  ? new Stripe(stripeSecretKey, {
+      apiVersion: '2025-11-17.clover',
+    })
+  : (null as unknown as Stripe);
 
 // Stripe Price IDs - These need to be created in your Stripe Dashboard
 // For now, we'll use environment variables so you can set them after creating products in Stripe

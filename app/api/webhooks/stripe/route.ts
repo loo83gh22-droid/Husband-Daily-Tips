@@ -7,6 +7,13 @@ import Stripe from 'stripe';
 export const dynamic = 'force-dynamic';
 
 export async function POST(request: NextRequest) {
+  if (!process.env.STRIPE_SECRET_KEY || !stripe) {
+    return NextResponse.json(
+      { error: 'Stripe is not configured' },
+      { status: 500 }
+    );
+  }
+
   const body = await request.text();
   const headersList = await headers();
   const signature = headersList.get('stripe-signature');
@@ -43,46 +50,60 @@ export async function POST(request: NextRequest) {
         const session = event.data.object as Stripe.Checkout.Session;
         const customerId = session.customer as string;
         const subscriptionId = session.subscription as string;
+        const userId = session.metadata?.user_id;
+
+        if (!subscriptionId || typeof subscriptionId !== 'string') {
+          console.error('Invalid subscription ID in checkout session');
+          break;
+        }
+
+        if (!userId) {
+          console.error('No user ID in checkout session metadata');
+          break;
+        }
 
         // Get subscription details
         const subscription = await stripe.subscriptions.retrieve(subscriptionId);
-        const userId = session.metadata?.user_id;
 
-        if (userId) {
-          // Update user subscription
-          await adminSupabase
-            .from('users')
-            .update({
-              subscription_tier: 'premium',
-              stripe_customer_id: customerId,
-              stripe_subscription_id: subscriptionId,
-              stripe_price_id: subscription.items.data[0]?.price.id,
-              subscription_status: subscription.status,
-              trial_ends_at: subscription.trial_end
-                ? new Date(subscription.trial_end * 1000).toISOString()
-                : null,
-              subscription_ends_at: subscription.current_period_end
-                ? new Date(subscription.current_period_end * 1000).toISOString()
-                : null,
-            })
-            .eq('id', userId);
+        // Extract subscription properties with type safety
+        const currentPeriodEnd = (subscription as any).current_period_end as number | undefined;
+        const currentPeriodStart = (subscription as any).current_period_start as number | undefined;
+        const trialEnd = (subscription as any).trial_end as number | undefined;
+        const cancelAtPeriodEnd = (subscription as any).cancel_at_period_end as boolean | undefined;
 
-          // Create subscription record
-          await adminSupabase.from('subscriptions').upsert({
-            user_id: userId,
-            stripe_subscription_id: subscriptionId,
+        // Update user subscription
+        await adminSupabase
+          .from('users')
+          .update({
+            subscription_tier: 'premium',
             stripe_customer_id: customerId,
+            stripe_subscription_id: subscriptionId,
             stripe_price_id: subscription.items.data[0]?.price.id,
-            status: subscription.status,
-            current_period_start: subscription.current_period_start
-              ? new Date(subscription.current_period_start * 1000).toISOString()
+            subscription_status: subscription.status,
+            trial_ends_at: trialEnd
+              ? new Date(trialEnd * 1000).toISOString()
               : null,
-            current_period_end: subscription.current_period_end
-              ? new Date(subscription.current_period_end * 1000).toISOString()
+            subscription_ends_at: currentPeriodEnd
+              ? new Date(currentPeriodEnd * 1000).toISOString()
               : null,
-            cancel_at_period_end: subscription.cancel_at_period_end || false,
-          });
-        }
+          })
+          .eq('id', userId);
+
+        // Create subscription record
+        await adminSupabase.from('subscriptions').upsert({
+          user_id: userId,
+          stripe_subscription_id: subscriptionId,
+          stripe_customer_id: customerId,
+          stripe_price_id: subscription.items.data[0]?.price.id,
+          status: subscription.status,
+          current_period_start: currentPeriodStart
+            ? new Date(currentPeriodStart * 1000).toISOString()
+            : null,
+          current_period_end: currentPeriodEnd
+            ? new Date(currentPeriodEnd * 1000).toISOString()
+            : null,
+          cancel_at_period_end: cancelAtPeriodEnd || false,
+        });
         break;
       }
 
@@ -90,6 +111,11 @@ export async function POST(request: NextRequest) {
       case 'customer.subscription.deleted': {
         const subscription = event.data.object as Stripe.Subscription;
         const customerId = subscription.customer as string;
+
+        // Extract subscription properties with type safety
+        const currentPeriodEnd = (subscription as any).current_period_end as number | undefined;
+        const currentPeriodStart = (subscription as any).current_period_start as number | undefined;
+        const cancelAtPeriodEnd = (subscription as any).cancel_at_period_end as boolean | undefined;
 
         // Find user by Stripe customer ID
         const { data: user } = await adminSupabase
@@ -108,8 +134,8 @@ export async function POST(request: NextRequest) {
             .update({
               subscription_tier: isDeleted ? 'free' : 'premium',
               subscription_status: newStatus,
-              subscription_ends_at: subscription.current_period_end
-                ? new Date(subscription.current_period_end * 1000).toISOString()
+              subscription_ends_at: currentPeriodEnd
+                ? new Date(currentPeriodEnd * 1000).toISOString()
                 : null,
             })
             .eq('id', user.id);
@@ -119,13 +145,13 @@ export async function POST(request: NextRequest) {
             .from('subscriptions')
             .update({
               status: newStatus,
-              current_period_start: subscription.current_period_start
-                ? new Date(subscription.current_period_start * 1000).toISOString()
+              current_period_start: currentPeriodStart
+                ? new Date(currentPeriodStart * 1000).toISOString()
                 : null,
-              current_period_end: subscription.current_period_end
-                ? new Date(subscription.current_period_end * 1000).toISOString()
+              current_period_end: currentPeriodEnd
+                ? new Date(currentPeriodEnd * 1000).toISOString()
                 : null,
-              cancel_at_period_end: subscription.cancel_at_period_end || false,
+              cancel_at_period_end: cancelAtPeriodEnd || false,
             })
             .eq('stripe_subscription_id', subscription.id);
         }
@@ -135,6 +161,10 @@ export async function POST(request: NextRequest) {
       case 'invoice.paid': {
         const invoice = event.data.object as Stripe.Invoice;
         const customerId = invoice.customer as string;
+
+        // Extract invoice properties with type safety
+        const paymentIntent = (invoice as any).payment_intent as string | Stripe.PaymentIntent | null | undefined;
+        const statusTransitions = (invoice as any).status_transitions as { paid_at?: number } | undefined;
 
         // Find user by Stripe customer ID
         const { data: user } = await adminSupabase
@@ -149,14 +179,14 @@ export async function POST(request: NextRequest) {
             user_id: user.id,
             stripe_invoice_id: invoice.id,
             stripe_payment_intent_id:
-              typeof invoice.payment_intent === 'string'
-                ? invoice.payment_intent
-                : invoice.payment_intent?.id || null,
+              typeof paymentIntent === 'string'
+                ? paymentIntent
+                : (paymentIntent as Stripe.PaymentIntent)?.id || null,
             amount: invoice.amount_paid,
             currency: invoice.currency,
             status: 'paid',
-            paid_at: invoice.status_transitions.paid_at
-              ? new Date(invoice.status_transitions.paid_at * 1000).toISOString()
+            paid_at: statusTransitions?.paid_at
+              ? new Date(statusTransitions.paid_at * 1000).toISOString()
               : null,
           });
         }
@@ -166,6 +196,9 @@ export async function POST(request: NextRequest) {
       case 'invoice.payment_failed': {
         const invoice = event.data.object as Stripe.Invoice;
         const customerId = invoice.customer as string;
+
+        // Extract invoice properties with type safety
+        const paymentIntent = (invoice as any).payment_intent as string | Stripe.PaymentIntent | null | undefined;
 
         // Find user by Stripe customer ID
         const { data: user } = await adminSupabase
@@ -180,9 +213,9 @@ export async function POST(request: NextRequest) {
             user_id: user.id,
             stripe_invoice_id: invoice.id,
             stripe_payment_intent_id:
-              typeof invoice.payment_intent === 'string'
-                ? invoice.payment_intent
-                : invoice.payment_intent?.id || null,
+              typeof paymentIntent === 'string'
+                ? paymentIntent
+                : (paymentIntent as Stripe.PaymentIntent)?.id || null,
             amount: invoice.amount_due,
             currency: invoice.currency,
             status: 'failed',
