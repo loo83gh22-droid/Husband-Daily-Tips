@@ -11,6 +11,15 @@ export default async function Home() {
     redirect('/dashboard');
   }
 
+  // Get a random pricing message for the landing page
+  let pricingMessage = null;
+  try {
+    pricingMessage = await getMarketingMessage('pricing', 'landing_page');
+  } catch (error) {
+    // Silently fail if marketing messages aren't available yet (migration not run)
+    console.error('Error fetching marketing message:', error);
+  }
+
   return (
     <div className="min-h-screen bg-slate-950">
       {/* Navigation */}
