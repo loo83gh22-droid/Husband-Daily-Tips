@@ -13,12 +13,16 @@ SELECT * FROM (VALUES
   ('Ask "What Do You Need From Me?"', 'When she''s upset or stressed, ask what she needs. Not what you think she needs—ask her. Then do that thing.', 'Communication', 'communication', 'daily', '🤔', 'Asking what she needs shows you care about her actual needs, not your assumptions.', 1),
   ('Share Your Day Without Complaining', 'Tell her about your day, but focus on what happened, not just what went wrong. Share the good stuff too.', 'Communication', 'communication', 'daily', '📖', 'Sharing positive aspects of your day creates connection and balances the conversation.', 1),
   ('Have a "No Problem Solving" Conversation', 'Set a timer for 20 minutes. Talk about anything—except problems. No solutions. No fixing. Just connection.', 'Communication', 'communication', 'daily', '💭', 'Problem-free conversations create space for intimacy without the pressure of solving things.', 1),
-  ('Tell Her Something You Appreciate', 'Tell her something specific you appreciate about her today. Not generic—be specific about what and why.', 'Communication', 'communication', 'daily', '💝', 'Specific appreciation makes her feel seen and valued for who she is, not just what she does.', 1)
+  ('Tell Her Something You Appreciate', 'Tell her something specific you appreciate about her today. Not generic—be specific about what and why.', 'Communication', 'communication', 'daily', '💝', 'Specific appreciation makes her feel seen and valued for who she is, not just what she does.', 1),
+  ('Don''t Interrupt Her', 'When she''s talking, let her finish. Don''t jump in with your story or solution. Just let her talk.', 'Communication', 'communication', 'daily', '🤐', 'Not interrupting shows respect and that you value what she has to say more than what you want to add.', 1),
+  ('Ask Follow-Up Questions', 'After she tells you something, ask a follow-up question. Show you''re actually listening and want to know more.', 'Communication', 'communication', 'daily', '❓', 'Follow-up questions prove you were listening and care about the details of her life.', 1),
+  ('Remember Something She Told You', 'Bring up something she mentioned days or weeks ago. Show you actually remember what she says.', 'Communication', 'communication', 'daily', '🧠', 'Remembering details shows you pay attention and that her words matter to you.', 1),
+  ('Have a Real Conversation', 'Sit down and have an actual conversation. Not while watching TV. Not while scrolling. Just talk. For real.', 'Communication', 'communication', 'daily', '💬', 'Real conversations without distractions create genuine connection and show you prioritize her.', 1)
 ) AS v(name, description, category, theme, requirement_type, icon, benefit, display_order)
 WHERE NOT EXISTS (
   SELECT 1 FROM actions WHERE theme = 'communication' AND name = v.name
 )
-AND (SELECT COUNT(*) FROM actions WHERE theme = 'communication') < 12;
+AND (SELECT COUNT(*) FROM actions WHERE theme = 'communication') < 15;
 
 -- ============================================================================
 -- INTIMACY ACTIONS (add to reach 12+)
@@ -70,12 +74,16 @@ SELECT * FROM (VALUES
   ('Tell Her She''s Beautiful', 'Tell her she''s beautiful. Not just when she''s dressed up—tell her when she''s in sweats too.', 'Romance', 'romance', 'daily', '💝', 'Complimenting her in everyday moments shows you find her attractive all the time, not just on special occasions.', 4),
   ('Recreate a Favorite Memory', 'Recreate your first date or a favorite early memory. Relive the magic. Remind yourselves why you fell in love.', 'Romance', 'romance', 'weekly', '💑', 'Recreating special moments reinforces your bond and reminds you of your love story.', 4),
   ('Give Her Your Full Attention', 'Spend 30 minutes giving her your complete, undivided attention. No phone. No TV. Just her.', 'Romance', 'romance', 'daily', '👁️', 'Full attention is one of the most romantic things you can give—it shows she''s your priority.', 4),
-  ('Tell Her Why You Love Her', 'Tell her something specific you love about her. Not just "I love you"—be specific about what and why.', 'Romance', 'romance', 'daily', '💕', 'Specific expressions of love make her feel deeply valued and understood.', 4)
+  ('Tell Her Why You Love Her', 'Tell her something specific you love about her. Not just "I love you"—be specific about what and why.', 'Romance', 'romance', 'daily', '💕', 'Specific expressions of love make her feel deeply valued and understood.', 4),
+  ('Flirt With Her', 'Flirt with her like you used to. Send a flirty text. Give her a look. Make her feel desired.', 'Romance', 'romance', 'daily', '😏', 'Flirting keeps the spark alive and reminds her you still find her attractive and fun.', 4),
+  ('Do Something She Loves', 'Do something she enjoys—even if it''s not your thing. Show you care about what makes her happy.', 'Romance', 'romance', 'daily', '🎯', 'Doing things she loves shows you value her happiness and are willing to step outside your comfort zone.', 4),
+  ('Make Her Laugh', 'Tell her a joke, share something funny, or just be goofy. Make her laugh. Laughter is romantic.', 'Romance', 'romance', 'daily', '😂', 'Laughter creates connection and reminds you both why you fell in love in the first place.', 4),
+  ('Surprise Her With Her Favorite', 'Get her favorite coffee, snack, or treat. Show you know what she likes and you''re thinking about her.', 'Romance', 'romance', 'daily', '🎁', 'Remembering and getting her favorites shows you pay attention to what makes her happy.', 4)
 ) AS v(name, description, category, theme, requirement_type, icon, benefit, display_order)
 WHERE NOT EXISTS (
   SELECT 1 FROM actions WHERE theme = 'romance' AND name = v.name
 )
-AND (SELECT COUNT(*) FROM actions WHERE theme = 'romance') < 12;
+AND (SELECT COUNT(*) FROM actions WHERE theme = 'romance') < 15;
 
 -- ============================================================================
 -- GRATITUDE ACTIONS (add to reach 12+)
@@ -89,12 +97,16 @@ SELECT * FROM (VALUES
   ('Thank Her for Who She Is', 'Thank her for who she is, not just what she does. Show you appreciate her as a person.', 'Gratitude', 'gratitude', 'daily', '💝', 'Appreciating her essence, not just her actions, makes her feel deeply valued.', 5),
   ('Notice the Small Things', 'Notice the small things she does—making coffee, picking up after you, whatever. Mention it. Show you see her.', 'Gratitude', 'gratitude', 'daily', '👀', 'Noticing small things shows you pay attention and don''t take her for granted.', 5),
   ('Express Gratitude Publicly', 'Tell someone else (friend, family) something you appreciate about her. Let her overhear or tell her about it.', 'Gratitude', 'gratitude', 'weekly', '📢', 'Public appreciation shows you''re proud of her and value her highly.', 5),
-  ('Send a Gratitude Text', 'Send her a text during the day telling her something you''re grateful for about her. Make her smile.', 'Gratitude', 'gratitude', 'daily', '📱', 'Unexpected gratitude messages brighten her day and show you think about her.', 5)
+  ('Send a Gratitude Text', 'Send her a text during the day telling her something you''re grateful for about her. Make her smile.', 'Gratitude', 'gratitude', 'daily', '📱', 'Unexpected gratitude messages brighten her day and show you think about her.', 5),
+  ('Thank Her for the Little Things', 'Thank her for the small stuff—making dinner, doing laundry, whatever. Don''t take it for granted.', 'Gratitude', 'gratitude', 'daily', '🙌', 'Thanking her for small things shows you notice and appreciate everything she does, not just the big stuff.', 5),
+  ('Tell Her What You''re Grateful For', 'Tell her one thing you''re grateful for about her or your relationship today. Be specific.', 'Gratitude', 'gratitude', 'daily', '💬', 'Verbalizing gratitude strengthens your appreciation and makes her feel valued.', 5),
+  ('Appreciate Her Uniqueness', 'Tell her something you appreciate about her that makes her unique. What makes her her?', 'Gratitude', 'gratitude', 'daily', '✨', 'Appreciating her uniqueness shows you love her for who she is, not just what she does.', 5),
+  ('Say Thank You Before Bed', 'Before you go to sleep, thank her for something she did today or just for being her.', 'Gratitude', 'gratitude', 'daily', '🌙', 'Ending the day with gratitude creates positive connection and sets a good tone for tomorrow.', 5)
 ) AS v(name, description, category, theme, requirement_type, icon, benefit, display_order)
 WHERE NOT EXISTS (
   SELECT 1 FROM actions WHERE theme = 'gratitude' AND name = v.name
 )
-AND (SELECT COUNT(*) FROM actions WHERE theme = 'gratitude') < 12;
+AND (SELECT COUNT(*) FROM actions WHERE theme = 'gratitude') < 15;
 
 -- ============================================================================
 -- CONFLICT RESOLUTION ACTIONS (add to reach 12+)

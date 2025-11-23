@@ -28,6 +28,10 @@ export function getGuideSlugForAction(actionName: string, actionTheme?: string):
     'share your day without complaining': 'share-your-feelings',
     'have a "no problem solving" conversation': 'have-hard-conversation',
     'tell her something you appreciate': 'express-gratitude-to-partner',
+    'don\'t interrupt her': 'listen-without-fixing',
+    'ask follow-up questions': 'ask-better-questions',
+    'remember something she told you': 'create-love-map',
+    'have a real conversation': 'have-20-minute-conversation',
 
     // Intimacy
     'speak her love language': 'practice-love-languages',
@@ -88,6 +92,10 @@ export function getGuideSlugForAction(actionName: string, actionTheme?: string):
     'recreate a favorite memory': 'do-something-you-used-to-enjoy',
     'give her your full attention': 'be-present-quality-time',
     'tell her why you love her': 'write-love-note',
+    'flirt with her': 'plan-perfect-date-night',
+    'do something she loves': 'plan-surprise-that-shows-you-know-her',
+    'make her laugh': 'plan-perfect-date-night',
+    'surprise her with her favorite': 'plan-surprise-that-shows-you-know-her',
 
     // Gratitude
     'express gratitude daily': 'express-gratitude-daily',
@@ -103,6 +111,10 @@ export function getGuideSlugForAction(actionName: string, actionTheme?: string):
     'notice the small things': 'express-gratitude-daily',
     'express gratitude publicly': 'express-gratitude-to-partner',
     'send a gratitude text': 'send-gratitude-text',
+    'thank her for the little things': 'express-gratitude-daily',
+    'tell her what you\'re grateful for': 'express-gratitude-to-partner',
+    'appreciate her uniqueness': 'share-gratitude-for-character',
+    'say thank you before bed': 'express-gratitude-daily',
 
     // Conflict
     'resolve disagreement': 'resolve-disagreement',
