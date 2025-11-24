@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server';
 import { getSession } from '@auth0/nextjs-auth0';
 import { supabase } from '@/lib/supabase';
+import { Resend } from 'resend';
+
+const resend = new Resend(process.env.RESEND_API_KEY || '');
 
 /**
  * Submit survey responses and calculate baseline health + category scores
@@ -20,10 +23,10 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
-    // Verify user
+    // Verify user (need email and name for notification)
     const { data: user, error: userError } = await supabase
       .from('users')
-      .select('id')
+      .select('id, email, name, created_at')
       .eq('auth0_id', auth0Id)
       .eq('id', userId)
       .single();
@@ -169,6 +172,151 @@ export async function POST(request: Request) {
     if (updateError) {
       console.error('Error updating user survey status:', updateError);
       // Don't fail the whole request if this fails
+    }
+
+    // Send email notification to admin with all responses
+    if (process.env.RESEND_API_KEY && process.env.ADMIN_EMAIL) {
+      try {
+        const userDisplayName = user.name || user.email?.split('@')[0] || 'User';
+        const daysSinceSignup = user.created_at 
+          ? Math.floor((new Date().getTime() - new Date(user.created_at).getTime()) / (1000 * 60 * 60 * 24))
+          : 0;
+
+        // Format responses for email
+        const formattedResponses = questions.map((question, index) => {
+          let responseValue: number = 0;
+          if (Array.isArray(responses)) {
+            const response = responses.find((r: any) => r.questionId === question.id);
+            responseValue = response?.responseValue ?? 0;
+          } else {
+            responseValue = responses[question.id] ?? 0;
+          }
+
+          let formattedValue = '';
+          if (question.response_type === 'scale') {
+            const labels: Record<number, string> = {
+              1: '1 (Strongly Disagree)',
+              2: '2 (Disagree)',
+              3: '3 (Neutral)',
+              4: '4 (Agree)',
+              5: '5 (Strongly Agree)',
+            };
+            formattedValue = labels[responseValue] || responseValue.toString();
+          } else if (question.response_type === 'yes_no') {
+            formattedValue = responseValue === 1 ? 'Yes' : 'No';
+          } else {
+            formattedValue = responseValue.toString();
+          }
+
+          return {
+            question: question.question_text,
+            answer: formattedValue,
+            category: question.category,
+          };
+        });
+
+        // Group by category for better readability
+        const responsesByCategory: Record<string, typeof formattedResponses> = {};
+        formattedResponses.forEach((item) => {
+          const category = item.category || 'other';
+          if (!responsesByCategory[category]) {
+            responsesByCategory[category] = [];
+          }
+          responsesByCategory[category].push(item);
+        });
+
+        const categoryLabels: Record<string, string> = {
+          communication: '💬 Communication',
+          romance: '💕 Romance',
+          partnership: '🤝 Partnership',
+          intimacy: '💝 Intimacy',
+          conflict: '⚡ Conflict',
+          connection: '🔗 Connection',
+        };
+
+        await resend.emails.send({
+          from: process.env.RESEND_FROM_EMAIL || 'Best Husband Ever <action@besthusbandever.com>',
+          to: process.env.ADMIN_EMAIL,
+          replyTo: user.email || undefined,
+          subject: `📊 Initial Survey Response from ${userDisplayName} (Baseline Health: ${baselineHealth})`,
+          html: `
+            <!DOCTYPE html>
+            <html>
+              <head>
+                <meta charset="utf-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              </head>
+              <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #1f2937; background-color: #f9fafb; margin: 0; padding: 0;">
+                <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 40px 20px;">
+                  <div style="text-align: center; margin-bottom: 30px;">
+                    <h1 style="color: #0ea5e9; font-size: 24px; margin: 0;">📊 Initial Survey Response</h1>
+                    <p style="color: #6b7280; font-size: 14px; margin: 5px 0 0 0;">Onboarding Survey</p>
+                  </div>
+                  
+                  <div style="background-color: #0f172a; border-radius: 8px; padding: 20px; margin-bottom: 30px;">
+                    <p style="color: #cbd5e1; font-size: 14px; margin: 0 0 10px 0;"><strong>User:</strong> ${userDisplayName}</p>
+                    <p style="color: #cbd5e1; font-size: 14px; margin: 0 0 10px 0;"><strong>Email:</strong> ${user.email || 'N/A'}</p>
+                    <p style="color: #cbd5e1; font-size: 14px; margin: 0 0 10px 0;"><strong>Days Since Signup:</strong> ${daysSinceSignup}</p>
+                    <p style="color: #0ea5e9; font-size: 18px; margin: 15px 0 0 0; font-weight: 600;"><strong>Baseline Health Score: ${baselineHealth}/100</strong></p>
+                  </div>
+                  
+                  <div style="background-color: #f3f4f6; border-radius: 8px; padding: 20px; margin-bottom: 20px;">
+                    <h2 style="color: #1f2937; font-size: 18px; margin: 0 0 15px 0;">Category Scores:</h2>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px;">
+                      <div style="background-color: #ffffff; padding: 10px; border-radius: 6px;">
+                        <p style="color: #6b7280; font-size: 12px; margin: 0;">Communication</p>
+                        <p style="color: #1f2937; font-size: 20px; font-weight: 600; margin: 5px 0 0 0;">${Math.round(communicationScore * 100) / 100}</p>
+                      </div>
+                      <div style="background-color: #ffffff; padding: 10px; border-radius: 6px;">
+                        <p style="color: #6b7280; font-size: 12px; margin: 0;">Romance</p>
+                        <p style="color: #1f2937; font-size: 20px; font-weight: 600; margin: 5px 0 0 0;">${Math.round(romanceScore * 100) / 100}</p>
+                      </div>
+                      <div style="background-color: #ffffff; padding: 10px; border-radius: 6px;">
+                        <p style="color: #6b7280; font-size: 12px; margin: 0;">Partnership</p>
+                        <p style="color: #1f2937; font-size: 20px; font-weight: 600; margin: 5px 0 0 0;">${Math.round(partnershipScore * 100) / 100}</p>
+                      </div>
+                      <div style="background-color: #ffffff; padding: 10px; border-radius: 6px;">
+                        <p style="color: #6b7280; font-size: 12px; margin: 0;">Intimacy</p>
+                        <p style="color: #1f2937; font-size: 20px; font-weight: 600; margin: 5px 0 0 0;">${Math.round(intimacyScore * 100) / 100}</p>
+                      </div>
+                      <div style="background-color: #ffffff; padding: 10px; border-radius: 6px;">
+                        <p style="color: #6b7280; font-size: 12px; margin: 0;">Conflict</p>
+                        <p style="color: #1f2937; font-size: 20px; font-weight: 600; margin: 5px 0 0 0;">${Math.round(finalConflictScore * 100) / 100}</p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div style="background-color: #f3f4f6; border-radius: 8px; padding: 20px; margin-bottom: 20px;">
+                    <h2 style="color: #1f2937; font-size: 18px; margin: 0 0 15px 0;">All Responses:</h2>
+                    ${Object.entries(responsesByCategory).map(([category, items]) => `
+                      <div style="margin-bottom: 25px;">
+                        <h3 style="color: #374151; font-size: 14px; font-weight: 600; margin: 0 0 10px 0;">${categoryLabels[category] || category}</h3>
+                        ${items.map((item, index) => `
+                          <div style="margin-bottom: 15px; padding-bottom: 15px; border-bottom: ${index < items.length - 1 ? '1px solid #e5e7eb' : 'none'};">
+                            <p style="color: #374151; font-size: 13px; font-weight: 500; margin: 0 0 5px 0;">${item.question}</p>
+                            <p style="color: #6b7280; font-size: 13px; margin: 0; padding-left: 15px; border-left: 3px solid #0ea5e9;">${item.answer}</p>
+                          </div>
+                        `).join('')}
+                      </div>
+                    `).join('')}
+                  </div>
+                  
+                  <div style="text-align: center; padding-top: 20px; border-top: 1px solid #e5e7eb;">
+                    <p style="color: #6b7280; font-size: 12px; margin: 0;">
+                      Survey completed at ${new Date().toLocaleString()}
+                    </p>
+                  </div>
+                </div>
+              </body>
+            </html>
+          `,
+        });
+
+        console.log(`✅ Initial survey response email sent to admin from ${user.email}`);
+      } catch (emailError: any) {
+        // Don't fail the request if email fails
+        console.error('Error sending initial survey response email:', emailError);
+      }
     }
 
     return NextResponse.json({
