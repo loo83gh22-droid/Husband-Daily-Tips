@@ -144,6 +144,32 @@ export async function POST(request: Request) {
       (communicationScore + romanceScore + partnershipScore + intimacyScore + finalConflictScore + connectionScore) / 6
     );
 
+    // Extract goal-setting responses (self-ratings and improvement desires)
+    // Questions 14-29 are the goal-setting questions
+    const goalResponses: Record<string, { selfRating?: number; wantsImprovement?: boolean }> = {};
+    
+    responseRecords.forEach((response) => {
+      const questionId = response.question_id;
+      const category = response.category.toLowerCase();
+      
+      // Self-rating questions (even numbers: 14, 16, 18, 20, 22, 24, 26, 28)
+      if (questionId % 2 === 0 && questionId >= 14 && questionId <= 28) {
+        if (!goalResponses[category]) {
+          goalResponses[category] = {};
+        }
+        goalResponses[category].selfRating = response.response_value;
+      }
+      
+      // Improvement desire questions (odd numbers: 15, 17, 19, 21, 23, 25, 27, 29)
+      if (questionId % 2 === 1 && questionId >= 15 && questionId <= 29) {
+        if (!goalResponses[category]) {
+          goalResponses[category] = {};
+        }
+        // yes_no: 1 = yes (wants improvement), 0 = no
+        goalResponses[category].wantsImprovement = response.response_value === 1;
+      }
+    });
+
     // Save survey summary (connection score stored in intimacy_score for now, or we can add a new column later)
     const { error: summaryError } = await supabase.from('survey_summary').upsert({
       user_id: userId,
@@ -154,6 +180,23 @@ export async function POST(request: Request) {
       intimacy_score: Math.round(intimacyScore * 100) / 100, // Note: We can add connection_score column later
       conflict_score: Math.round(finalConflictScore * 100) / 100,
       completed_at: new Date().toISOString(),
+      // Goal preferences
+      communication_self_rating: goalResponses.communication?.selfRating || null,
+      communication_wants_improvement: goalResponses.communication?.wantsImprovement ?? null,
+      intimacy_self_rating: goalResponses.intimacy?.selfRating || null,
+      intimacy_wants_improvement: goalResponses.intimacy?.wantsImprovement ?? null,
+      partnership_self_rating: goalResponses.partnership?.selfRating || null,
+      partnership_wants_improvement: goalResponses.partnership?.wantsImprovement ?? null,
+      romance_self_rating: goalResponses.romance?.selfRating || null,
+      romance_wants_improvement: goalResponses.romance?.wantsImprovement ?? null,
+      gratitude_self_rating: goalResponses.gratitude?.selfRating || null,
+      gratitude_wants_improvement: goalResponses.gratitude?.wantsImprovement ?? null,
+      conflict_resolution_self_rating: goalResponses.conflict_resolution?.selfRating || null,
+      conflict_resolution_wants_improvement: goalResponses.conflict_resolution?.wantsImprovement ?? null,
+      reconnection_self_rating: goalResponses.reconnection?.selfRating || null,
+      reconnection_wants_improvement: goalResponses.reconnection?.wantsImprovement ?? null,
+      quality_time_self_rating: goalResponses.quality_time?.selfRating || null,
+      quality_time_wants_improvement: goalResponses.quality_time?.wantsImprovement ?? null,
     }, {
       onConflict: 'user_id',
     });

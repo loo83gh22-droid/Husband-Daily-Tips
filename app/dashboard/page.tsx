@@ -115,6 +115,8 @@ async function getTomorrowAction(userId: string | null, subscriptionTier: string
   }
 
   // Personalize action selection based on survey results (areas needing improvement)
+  // Priority: Use goal preferences (self-rating + wants improvement) if available
+  // Fallback: Use category scores (lowest score = needs most improvement)
   if (actions && categoryScores && actions.length > 0) {
     // Map category names to match action categories
     const categoryMapping: Record<string, string> = {
@@ -122,33 +124,81 @@ async function getTomorrowAction(userId: string | null, subscriptionTier: string
       'romance': 'Romance',
       'partnership': 'Partnership',
       'intimacy': 'Intimacy',
-      'conflict': 'Communication', // Conflict is handled through Communication
-      'connection': 'Roommate Syndrome Recovery', // Connection issues → Roommate Syndrome Recovery
+      'conflict_resolution': 'Conflict Resolution',
+      'reconnection': 'Reconnection',
+      'quality_time': 'Quality Time',
+      'gratitude': 'Gratitude',
     };
 
-    // Find lowest scoring category (where they need most improvement)
-    // Note: connection score might be in intimacy_score if we haven't added connection_score column yet
-    const connectionScore = categoryScores.connection_score || categoryScores.intimacy_score || 50;
-    
-    const scores = [
-      { category: 'communication', score: categoryScores.communication_score || 50 },
-      { category: 'romance', score: categoryScores.romance_score || 50 },
-      { category: 'partnership', score: categoryScores.partnership_score || 50 },
-      { category: 'intimacy', score: categoryScores.intimacy_score || 50 },
-      { category: 'conflict', score: categoryScores.conflict_score || 50 },
-      { category: 'connection', score: connectionScore },
-    ];
-    
-    scores.sort((a, b) => a.score - b.score);
-    const lowestCategory = scores[0];
-    const targetCategory = categoryMapping[lowestCategory.category];
+    // Get goal preferences from survey summary
+    const { data: surveySummary } = await adminSupabase
+      .from('survey_summary')
+      .select('communication_self_rating, communication_wants_improvement, intimacy_self_rating, intimacy_wants_improvement, partnership_self_rating, partnership_wants_improvement, romance_self_rating, romance_wants_improvement, gratitude_self_rating, gratitude_wants_improvement, conflict_resolution_self_rating, conflict_resolution_wants_improvement, reconnection_self_rating, reconnection_wants_improvement, quality_time_self_rating, quality_time_wants_improvement')
+      .eq('user_id', userId)
+      .single();
 
-    // Prioritize actions in the category where they need most improvement
-    const priorityActions = actions.filter((a) => a.category === targetCategory);
-    if (priorityActions.length > 0) {
-      // 70% chance to pick from priority category, 30% random
-      if (Math.random() < 0.7) {
-        actions = priorityActions;
+    let targetCategory: string | null = null;
+
+    // Priority 1: Use goal preferences (low self-rating + wants improvement)
+    if (surveySummary) {
+      const priorityCategories: Array<{ category: string; priority: number }> = [];
+      
+      // Check each category for goal-based priority
+      const goalChecks = [
+        { key: 'communication', name: 'Communication' },
+        { key: 'intimacy', name: 'Intimacy' },
+        { key: 'partnership', name: 'Partnership' },
+        { key: 'romance', name: 'Romance' },
+        { key: 'gratitude', name: 'Gratitude' },
+        { key: 'conflict_resolution', name: 'Conflict Resolution' },
+        { key: 'reconnection', name: 'Reconnection' },
+        { key: 'quality_time', name: 'Quality Time' },
+      ];
+
+      goalChecks.forEach(({ key, name }) => {
+        const selfRating = surveySummary[`${key}_self_rating` as keyof typeof surveySummary] as number | null;
+        const wantsImprovement = surveySummary[`${key}_wants_improvement` as keyof typeof surveySummary] as boolean | null;
+        
+        // High priority: low self-rating (1-3) AND wants improvement
+        if (selfRating !== null && wantsImprovement === true && selfRating <= 3) {
+          // Lower rating = higher priority (1 is highest priority, 3 is lower)
+          priorityCategories.push({ category: name, priority: selfRating });
+        }
+      });
+
+      // Sort by priority (lowest rating = highest priority)
+      if (priorityCategories.length > 0) {
+        priorityCategories.sort((a, b) => a.priority - b.priority);
+        targetCategory = priorityCategories[0].category;
+      }
+    }
+
+    // Priority 2: Fallback to category scores (lowest score = needs most improvement)
+    if (!targetCategory) {
+      const connectionScore = categoryScores.connection_score || categoryScores.intimacy_score || 50;
+      
+      const scores = [
+        { category: 'communication', score: categoryScores.communication_score || 50 },
+        { category: 'romance', score: categoryScores.romance_score || 50 },
+        { category: 'partnership', score: categoryScores.partnership_score || 50 },
+        { category: 'intimacy', score: categoryScores.intimacy_score || 50 },
+        { category: 'conflict', score: categoryScores.conflict_score || 50 },
+        { category: 'connection', score: connectionScore },
+      ];
+      
+      scores.sort((a, b) => a.score - b.score);
+      const lowestCategory = scores[0];
+      targetCategory = categoryMapping[lowestCategory.category] || categoryMapping[lowestCategory.category.toLowerCase()];
+    }
+
+    // Prioritize actions in the target category
+    if (targetCategory) {
+      const priorityActions = actions.filter((a) => a.category === targetCategory);
+      if (priorityActions.length > 0) {
+        // 70% chance to pick from priority category, 30% random
+        if (Math.random() < 0.7) {
+          actions = priorityActions;
+        }
       }
     }
   }
@@ -295,31 +345,23 @@ async function getUserStats(userId: string | null) {
   const totalBadgeBonuses =
     userBadges?.reduce((sum: number, ub: any) => sum + (ub.badges?.health_bonus || 0), 0) || 0;
 
-  // Calculate health improvements from actions (this is improvement points, not total health)
+  // Calculate health score using new algorithm (async)
+  // TODO: Fully integrate new health algorithm with action points, daily/weekly caps, decay, etc.
   const { calculateHealthScore } = await import('@/lib/health');
-  const calculatedHealth = calculateHealthScore(
-    {
-      totalTips,
-      currentStreak: streak,
-      totalDays: uniqueDays,
-      lastActionDate,
-      uniqueActions,
-      totalDailyActionCompletions, // Days where daily action was completed (each day = up to 6 points)
-    },
-    totalBadgeBonuses, // Now 0 (badges are reference only)
-  );
-
-  // If user has baseline health, start from baseline and add improvements (capped at 100)
-  // Baseline represents their starting relationship health from the survey
-  // As they complete actions, health improves from baseline
-  // Formula: health = min(100, baseline + improvements)
-  // Improvements are scaled so they don't add too much (cap improvements at 40 points max)
-  const maxImprovementPoints = 40; // Maximum improvement from actions
-  const improvementPoints = Math.min(calculatedHealth, maxImprovementPoints);
+  let healthScore = baselineHealth || 50; // Default to 50 if no baseline
   
-  const healthScore = baselineHealth !== null
-    ? Math.min(100, baselineHealth + improvementPoints)
-    : calculatedHealth;
+  try {
+    // Use new async health calculation
+    healthScore = await calculateHealthScore({
+      baselineHealth,
+      userId,
+      supabase: adminSupabase,
+    });
+  } catch (error) {
+    console.error('Error calculating health score:', error);
+    // Fallback to baseline if calculation fails
+    healthScore = baselineHealth || 50;
+  }
 
   // Extract category scores for personalization
   const categoryScores = surveySummary ? {
