@@ -77,6 +77,9 @@ export default async function Home() {
               One small action a day. One moment where you actually show up. No grand gestures needed. 
               Just consistent, real effort. Become the husband you and your partner deserve.
             </p>
+            <p className="text-sm md:text-base text-slate-400 italic mb-8 max-w-2xl">
+              Daily actions that show you care. She&apos;ll notice. You&apos;ll both feel the difference.
+            </p>
 
             <div className="mb-8">
               <Link
