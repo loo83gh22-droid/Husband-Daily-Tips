@@ -18,6 +18,7 @@ import KeyboardShortcuts from '@/components/KeyboardShortcuts';
 import FollowUpSurveyChecker from '@/components/FollowUpSurveyChecker';
 import SurveyPromptChecker from '@/components/SurveyPromptChecker';
 import SurveyBanner from '@/components/SurveyBanner';
+import TrialExpirationBanner from '@/components/TrialExpirationBanner';
 import Link from 'next/link';
 
 async function getUserData(auth0Id: string) {
@@ -26,7 +27,7 @@ async function getUserData(auth0Id: string) {
   const adminSupabase = getSupabaseAdmin();
   const { data: user, error } = await adminSupabase
     .from('users')
-    .select('*, subscription_tier, username, name, email, has_kids, kids_live_with_you')
+    .select('*, subscription_tier, username, name, email, has_kids, kids_live_with_you, trial_started_at, trial_ends_at')
     .eq('auth0_id', auth0Id)
     .single();
 
@@ -608,6 +609,11 @@ export default async function Dashboard() {
         {/* Survey Banner - Show if survey not completed */}
         {!user.survey_completed && (
           <SurveyBanner surveyCompleted={user.survey_completed || false} />
+        )}
+        
+        {/* Trial Expiration Banner - Show if trial is expiring soon */}
+        {user.trial_ends_at && (
+          <TrialExpirationBanner trialEndsAt={user.trial_ends_at} />
         )}
         
         {/* Subscription Banner */}

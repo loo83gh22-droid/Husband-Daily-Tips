@@ -9,50 +9,102 @@ interface SubscriptionButtonProps {
     price: number;
     tier: string;
   };
+  currentTier?: string;
+  hasActiveTrial?: boolean | null;
+  trialEndsAt?: string | null;
 }
 
-export default function SubscriptionButton({ plan }: SubscriptionButtonProps) {
+export default function SubscriptionButton({ plan, currentTier, hasActiveTrial, trialEndsAt }: SubscriptionButtonProps) {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
-  const handleSubscribe = async () => {
+  const handleAction = async () => {
     setIsLoading(true);
 
     try {
-      const response = await fetch('/api/checkout/create-session', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+      // If user is on free tier and wants premium, start trial
+      if (currentTier === 'free' && plan.tier === 'premium') {
+        const response = await fetch('/api/trial/start', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
 
-      if (!response.ok) {
-        throw new Error('Failed to create checkout session');
+        if (!response.ok) {
+          const error = await response.json();
+          throw new Error(error.error || 'Failed to start trial');
+        }
+
+        const data = await response.json();
+        alert('7-day free trial started! Enjoy all premium features.');
+        router.refresh();
+        return;
       }
 
-      const data = await response.json();
+      // If user is on trial and wants to subscribe, go to Stripe checkout
+      if (hasActiveTrial && plan.tier === 'premium') {
+        const response = await fetch('/api/checkout/create-session', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
 
-      if (data.url) {
-        // Redirect to Stripe Checkout
-        window.location.href = data.url;
-      } else {
-        throw new Error('No checkout URL received');
+        if (!response.ok) {
+          throw new Error('Failed to create checkout session');
+        }
+
+        const data = await response.json();
+
+        if (data.url) {
+          // Redirect to Stripe Checkout
+          window.location.href = data.url;
+        } else {
+          throw new Error('No checkout URL received');
+        }
+        return;
+      }
+
+      // Downgrade to free (if on premium/paid)
+      if (plan.tier === 'free' && currentTier === 'premium') {
+        // This would need a downgrade endpoint - for now just show message
+        alert('To downgrade, please cancel your subscription in the billing section.');
+        setIsLoading(false);
+        return;
       }
     } catch (error: any) {
-      console.error('Error creating checkout session:', error);
-      alert('Failed to start checkout. Please try again.');
+      console.error('Error:', error);
+      alert(error.message || 'Failed to process request. Please try again.');
       setIsLoading(false);
     }
   };
 
   const isPopular = plan.tier === 'premium';
+  const isCurrent = plan.tier === currentTier;
+
+  // Determine button text
+  let buttonText = '';
+  if (isCurrent) {
+    buttonText = 'Current Plan';
+  } else if (plan.tier === 'premium' && currentTier === 'free') {
+    buttonText = 'Start Free Trial';
+  } else if (plan.tier === 'premium' && hasActiveTrial) {
+    buttonText = 'Join Premium ($7/month)';
+  } else if (plan.tier === 'free') {
+    buttonText = 'Downgrade';
+  } else {
+    buttonText = 'Select Plan';
+  }
 
   return (
     <button
-      onClick={handleSubscribe}
-      disabled={isLoading}
+      onClick={handleAction}
+      disabled={isLoading || isCurrent}
       className={`w-full px-6 py-3 rounded-lg font-semibold transition-colors ${
-        isPopular
+        isCurrent
+          ? 'bg-slate-800 text-slate-500 cursor-not-allowed border border-slate-700'
+          : isPopular
           ? 'bg-primary-500 text-slate-950 hover:bg-primary-400 disabled:bg-primary-500/50'
           : 'bg-slate-800 text-slate-200 hover:bg-slate-700 border border-slate-700 disabled:bg-slate-800/50'
       }`}
@@ -82,7 +134,7 @@ export default function SubscriptionButton({ plan }: SubscriptionButtonProps) {
           Loading...
         </span>
       ) : (
-        plan.price === 0 ? 'Downgrade' : 'Start Free Trial'
+        buttonText
       )}
     </button>
   );

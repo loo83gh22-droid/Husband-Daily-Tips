@@ -8,19 +8,44 @@ async function getUserSubscription(auth0Id: string) {
   try {
     const { data: user, error } = await supabase
       .from('users')
-      .select('subscription_tier')
+      .select('subscription_tier, trial_started_at, trial_ends_at, stripe_subscription_id')
       .eq('auth0_id', auth0Id)
       .single();
 
     if (error) {
       console.error('Error fetching subscription tier:', error);
-      return 'free'; // Default to free on error
+      return {
+        tier: 'free',
+        trial_started_at: null,
+        trial_ends_at: null,
+        hasActiveTrial: false,
+        hasSubscription: false,
+      };
     }
 
-    return user?.subscription_tier || 'free';
+    const trialEndsAt = user?.trial_ends_at ? new Date(user.trial_ends_at) : null;
+    const now = new Date();
+    const hasActiveTrial = user?.subscription_tier === 'premium' && 
+                          trialEndsAt && 
+                          trialEndsAt > now && 
+                          !user?.stripe_subscription_id;
+
+    return {
+      tier: user?.subscription_tier || 'free',
+      trial_started_at: user?.trial_started_at || null,
+      trial_ends_at: user?.trial_ends_at || null,
+      hasActiveTrial,
+      hasSubscription: !!user?.stripe_subscription_id,
+    };
   } catch (err) {
     console.error('Unexpected error fetching subscription:', err);
-    return 'free'; // Default to free on error
+    return {
+      tier: 'free',
+      trial_started_at: null,
+      trial_ends_at: null,
+      hasActiveTrial: false,
+      hasSubscription: false,
+    };
   }
 }
 
@@ -33,7 +58,8 @@ export default async function SubscriptionPage() {
 
   try {
     const auth0Id = session.user.sub;
-    const currentTier = await getUserSubscription(auth0Id);
+    const subscriptionInfo = await getUserSubscription(auth0Id);
+    const currentTier = subscriptionInfo.tier;
 
   const plans = [
     {
@@ -80,6 +106,11 @@ export default async function SubscriptionPage() {
             <p className="text-sm text-slate-300">
               Try everything free for 7 days. No credit card required. After the trial, choose Free or Paid.
             </p>
+            {subscriptionInfo.hasActiveTrial && subscriptionInfo.trial_ends_at && (
+              <p className="text-xs text-primary-400 mt-3">
+                Your trial ends {new Date(subscriptionInfo.trial_ends_at).toLocaleDateString()}
+              </p>
+            )}
           </div>
           <p className="text-center text-slate-400 mb-12 max-w-2xl mx-auto">
             You can upgrade or downgrade at any time. Cancel anytime.
@@ -150,16 +181,12 @@ export default async function SubscriptionPage() {
                     </li>
                   ))}
                 </ul>
-                {isCurrent ? (
-                  <button
-                    disabled
-                    className="w-full px-6 py-3 bg-slate-800 text-slate-500 rounded-lg font-semibold cursor-not-allowed border border-slate-700"
-                  >
-                    Current Plan
-                  </button>
-                ) : (
-                  <SubscriptionButton plan={plan} />
-                )}
+                <SubscriptionButton 
+                  plan={plan} 
+                  currentTier={currentTier}
+                  hasActiveTrial={subscriptionInfo.hasActiveTrial || undefined}
+                  trialEndsAt={subscriptionInfo.trial_ends_at}
+                />
               </div>
             );
           })}

@@ -16,6 +16,14 @@
     {
       "path": "/api/cron/send-30-and-90-day-survey-emails",
       "schedule": "0 10 * * *"
+    },
+    {
+      "path": "/api/cron/check-expiring-trials",
+      "schedule": "0 10 * * *"
+    },
+    {
+      "path": "/api/cron/downgrade-expired-trials",
+      "schedule": "0 2 * * *"
     }
   ]
 }
