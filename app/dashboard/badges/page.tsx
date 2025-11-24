@@ -255,8 +255,7 @@ export default async function BadgesPage() {
               Badges
             </h1>
             <p className="text-slate-300 text-base md:text-lg mb-6 font-medium">
-              Track your progress across different areas of relationship growth. Earn badges through
-              consistency and meaningful actions.
+              Earn badges. Show progress. Become legendary. That&apos;s the move.
             </p>
             <div className="flex items-center gap-4 text-sm">
               <span className="text-slate-300">
