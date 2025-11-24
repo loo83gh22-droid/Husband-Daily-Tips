@@ -138,7 +138,7 @@ export default function ActionCelebration({
                 transition={{ delay: 0.4 }}
                 className="text-sm text-slate-400"
               >
-                +{healthIncrease.toFixed(1)} Hit Points
+                +{healthIncrease.toFixed(1)} Health Points
               </motion.div>
             )}
           </div>
