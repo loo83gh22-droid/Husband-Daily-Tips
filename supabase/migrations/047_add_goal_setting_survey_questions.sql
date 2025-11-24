@@ -9,44 +9,60 @@
 -- ============================================================================
 
 -- Communication Goal Questions (14-15)
-INSERT INTO survey_questions (id, question_text, category, response_type, order_index) VALUES
+INSERT INTO survey_questions (id, question_text, category, response_type, order_index) 
+VALUES
 (14, 'How would you rate your communication skills in your relationship?', 'communication', 'scale', 14),
-(15, 'Would you like to improve your communication?', 'communication', 'yes_no', 15);
+(15, 'Would you like to improve your communication?', 'communication', 'yes_no', 15)
+ON CONFLICT (id) DO NOTHING;
 
 -- Intimacy Goal Questions (16-17)
-INSERT INTO survey_questions (id, question_text, category, response_type, order_index) VALUES
+INSERT INTO survey_questions (id, question_text, category, response_type, order_index) 
+VALUES
 (16, 'How would you rate the intimacy in your relationship?', 'intimacy', 'scale', 16),
-(17, 'Would you like to improve intimacy?', 'intimacy', 'yes_no', 17);
+(17, 'Would you like to improve intimacy?', 'intimacy', 'yes_no', 17)
+ON CONFLICT (id) DO NOTHING;
 
 -- Partnership Goal Questions (18-19)
-INSERT INTO survey_questions (id, question_text, category, response_type, order_index) VALUES
+INSERT INTO survey_questions (id, question_text, category, response_type, order_index) 
+VALUES
 (18, 'How would you rate your partnership skills (sharing responsibilities, working as a team)?', 'partnership', 'scale', 18),
-(19, 'Would you like to improve your partnership?', 'partnership', 'yes_no', 19);
+(19, 'Would you like to improve your partnership?', 'partnership', 'yes_no', 19)
+ON CONFLICT (id) DO NOTHING;
 
 -- Romance Goal Questions (20-21)
-INSERT INTO survey_questions (id, question_text, category, response_type, order_index) VALUES
+INSERT INTO survey_questions (id, question_text, category, response_type, order_index) 
+VALUES
 (20, 'How romantic are you in your relationship?', 'romance', 'scale', 20),
-(21, 'Would you like to improve romance?', 'romance', 'yes_no', 21);
+(21, 'Would you like to improve romance?', 'romance', 'yes_no', 21)
+ON CONFLICT (id) DO NOTHING;
 
 -- Gratitude Goal Questions (22-23)
-INSERT INTO survey_questions (id, question_text, category, response_type, order_index) VALUES
+INSERT INTO survey_questions (id, question_text, category, response_type, order_index) 
+VALUES
 (22, 'How well do you express gratitude and appreciation?', 'gratitude', 'scale', 22),
-(23, 'Would you like to improve gratitude?', 'gratitude', 'yes_no', 23);
+(23, 'Would you like to improve gratitude?', 'gratitude', 'yes_no', 23)
+ON CONFLICT (id) DO NOTHING;
 
 -- Conflict Resolution Goal Questions (24-25)
-INSERT INTO survey_questions (id, question_text, category, response_type, order_index) VALUES
+INSERT INTO survey_questions (id, question_text, category, response_type, order_index) 
+VALUES
 (24, 'How well do you handle conflicts and disagreements?', 'conflict_resolution', 'scale', 24),
-(25, 'Would you like to improve conflict resolution?', 'conflict_resolution', 'yes_no', 25);
+(25, 'Would you like to improve conflict resolution?', 'conflict_resolution', 'yes_no', 25)
+ON CONFLICT (id) DO NOTHING;
 
 -- Reconnection Goal Questions (26-27)
-INSERT INTO survey_questions (id, question_text, category, response_type, order_index) VALUES
+INSERT INTO survey_questions (id, question_text, category, response_type, order_index) 
+VALUES
 (26, 'How connected do you feel to your partner?', 'reconnection', 'scale', 26),
-(27, 'Would you like to improve your connection?', 'reconnection', 'yes_no', 27);
+(27, 'Would you like to improve your connection?', 'reconnection', 'yes_no', 27)
+ON CONFLICT (id) DO NOTHING;
 
 -- Quality Time Goal Questions (28-29)
-INSERT INTO survey_questions (id, question_text, category, response_type, order_index) VALUES
+INSERT INTO survey_questions (id, question_text, category, response_type, order_index) 
+VALUES
 (28, 'How much quality time do you spend together?', 'quality_time', 'scale', 28),
-(29, 'Would you like to improve quality time?', 'quality_time', 'yes_no', 29);
+(29, 'Would you like to improve quality time?', 'quality_time', 'yes_no', 29)
+ON CONFLICT (id) DO NOTHING;
 
 -- ============================================================================
 -- UPDATE SURVEY_SUMMARY TABLE TO STORE GOAL PREFERENCES
