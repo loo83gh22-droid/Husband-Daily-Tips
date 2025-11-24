@@ -204,14 +204,9 @@ export default function ChallengeCard({ challenge, userChallenge, userId, onJoin
             <p className="text-sm text-slate-400 mt-1">{challenge.description}</p>
           </div>
         </div>
-        {isActive && !isJoined && (
-          <span className="px-3 py-1 bg-gradient-to-r from-green-500/30 to-emerald-500/30 text-green-300 text-xs font-bold rounded-full border border-green-500/50 shadow-sm">
-            Available
-          </span>
-        )}
-        {isUpcoming && (
-          <span className="px-3 py-1 bg-blue-500/20 text-blue-400 text-xs font-semibold rounded-full">
-            Upcoming
+        {isInProgress && (
+          <span className="px-3 py-1 bg-gradient-to-r from-primary-500/30 to-primary-600/30 text-primary-300 text-xs font-bold rounded-full border border-primary-500/50 shadow-sm">
+            Active
           </span>
         )}
       </div>
