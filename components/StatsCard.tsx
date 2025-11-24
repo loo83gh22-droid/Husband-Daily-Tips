@@ -23,17 +23,19 @@ export default function StatsCard({ title, value, subtitle, icon, color, current
 
   const getEncouragement = () => {
     if (title === 'Current streak' && currentStreak !== undefined) {
+      if (currentStreak >= 30) return "🔥 You're a legend. No cap.";
       if (currentStreak >= 7) return "🔥 You're on fire!";
-      if (currentStreak >= 3) return "💪 Keep it going!";
-      if (currentStreak > 0) return "✨ Great start!";
+      if (currentStreak >= 3) return "💪 Look at you. Actually doing it.";
+      if (currentStreak > 0) return "✨ Great start. Keep going.";
     }
     if (title === 'Total actions' && value > 0) {
-      if (value >= 30) return "🎯 Consistency pays off!";
-      if (value >= 10) return "📈 Building momentum!";
+      if (value >= 50) return "🎯 You're not playing. You're winning.";
+      if (value >= 30) return "🎯 Consistency pays off. You're proof.";
+      if (value >= 10) return "📈 Building momentum. That's the move.";
     }
     if (title === 'Active days' && value > 0) {
-      if (value >= 30) return "🌟 You're committed!";
-      if (value >= 10) return "💯 Showing up!";
+      if (value >= 30) return "🌟 You're committed. She notices.";
+      if (value >= 10) return "💯 Showing up. That's what matters.";
     }
     return null;
   };

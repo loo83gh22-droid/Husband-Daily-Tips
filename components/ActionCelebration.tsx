@@ -12,13 +12,16 @@ interface ActionCelebrationProps {
 }
 
 const encouragingMessages = [
-  "Nice work. Keep it up.",
-  "That's how you do it.",
-  "You're building something real.",
+  "Look at you. Actually doing it.",
+  "That's how you do it. No cap.",
+  "You're building something real. Keep going.",
   "One action at a time. You got this.",
   "Consistency wins. You're doing it.",
-  "Small moves, big impact.",
+  "Small moves, big impact. That's you.",
   "You showed up. That's what matters.",
+  "Boom. That's how legends are made.",
+  "You're not just trying. You're doing.",
+  "That action? That's the move. Keep it up.",
 ];
 
 export default function ActionCelebration({
@@ -110,13 +113,13 @@ export default function ActionCelebration({
               {isMilestone ? '🎉' : '✅'}
             </motion.div>
             
-            <motion.h3
+              <motion.h3
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.2 }}
               className="text-2xl font-bold text-slate-50 mb-2"
             >
-              Action Complete!
+              {isMilestone ? "Legend Status Achieved!" : "Action Complete!"}
             </motion.h3>
             
             <motion.p

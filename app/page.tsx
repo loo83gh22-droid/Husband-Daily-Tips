@@ -159,9 +159,8 @@ export default async function Home() {
           <div className="max-w-4xl mx-auto">
             <div className="bg-gradient-to-r from-primary-500/10 via-slate-900/60 to-primary-500/10 border border-primary-500/20 rounded-2xl p-8 md:p-10 text-center">
               <p className="text-lg md:text-xl text-slate-200 leading-relaxed max-w-3xl mx-auto">
-                Your phone&apos;s already full of distractions. What&apos;s one more? 
-                <span className="text-primary-400 font-semibold"> Except this one actually makes your marriage better.</span> 
-                And yeah—it&apos;s fun.
+                Look at your phone. Now look at your marriage. Now back to your phone. 
+                <span className="text-primary-400 font-semibold"> Your phone is still a phone. But your marriage? That can be legendary.</span>
               </p>
             </div>
           </div>
@@ -192,7 +191,8 @@ export default async function Home() {
                 </h3>
                 <p className="text-sm text-slate-300">
                   No vague advice. No &quot;communicate better&quot; nonsense. Just one specific thing you can do 
-                  right now that actually makes a difference. Takes 5 minutes. No excuses.
+                  right now that actually makes a difference. Takes 5 minutes. No excuses. 
+                  <span className="text-primary-400 font-semibold"> You&apos;re welcome.</span>
                 </p>
               </div>
 
@@ -206,6 +206,7 @@ export default async function Home() {
                 <p className="text-sm text-slate-300">
                   When you show up, it goes up. When you don&apos;t, it goes down. Simple. 
                   No judgment, just truth. It&apos;s the accountability partner you didn&apos;t know you needed.
+                  <span className="text-primary-400 font-semibold"> And it never lies.</span>
                 </p>
               </div>
 
@@ -248,7 +249,8 @@ export default async function Home() {
                 <p className="text-sm text-slate-300 mb-4">
                   Every morning, you get one thing to do. Not a lecture. Not a theory. Just one concrete action 
                   that takes less than 5 minutes. Do it, mark it done, watch your health bar grow. 
-                  It&apos;s that simple—and that powerful.
+                  It&apos;s that simple—and that powerful. 
+                  <span className="text-primary-400 font-semibold"> You&apos;re about to become the husband your wife thought she married.</span>
                 </p>
                 <div className="space-y-2 text-xs text-slate-400">
                   <div className="flex items-center gap-2">

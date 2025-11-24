@@ -34,13 +34,21 @@ export default function NotificationSystem({
     );
 
     if (crossedMilestone) {
+      const messages: Record<number, string> = {
+        3: `🔥 3-day streak! Look at you. Actually doing it.`,
+        7: `🔥 7-day streak! You're on fire! Keep going.`,
+        14: `🔥 14 days! You're not playing. You're winning.`,
+        30: `🔥 30-day streak! You're a legend. No cap.`,
+        60: `🔥 60 days! You're the husband she thought she married.`,
+        100: `🔥 100 days! Absolute legend status.`,
+      };
       toast.success(
-        `🔥 ${currentStreak}-day streak! You're on fire!`,
+        messages[crossedMilestone] || `🔥 ${currentStreak}-day streak! You're on fire!`,
         5000
       );
     } else if (currentStreak > 0 && currentStreak % 7 === 0 && previousStreak < currentStreak) {
       // Weekly milestone
-      toast.info(`Week ${Math.floor(currentStreak / 7)} complete! Keep it going! 💪`, 4000);
+      toast.info(`Week ${Math.floor(currentStreak / 7)} complete! That's the move. Keep it going! 💪`, 4000);
     }
 
     // Check for outstanding actions warning
