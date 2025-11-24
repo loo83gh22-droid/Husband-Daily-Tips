@@ -216,63 +216,7 @@ export default function ChallengeCard({ challenge, userChallenge, userId, onJoin
         )}
       </div>
 
-      <div className="mb-4">
-        <div className="flex items-center justify-between text-xs text-slate-400 mb-2">
-          <span>
-            {startDate.toLocaleDateString()} - {endDate.toLocaleDateString()}
-          </span>
-          {userChallenge && (
-            <span>
-              Day {userChallenge.completed_days} of {userChallenge.totalDays}
-            </span>
-          )}
-        </div>
-        {userChallenge && (
-          <div className="h-2 w-full rounded-full bg-slate-800 overflow-hidden">
-            <div
-              className={`h-full transition-all ${
-                challenge.theme === 'romance' ? 'bg-rose-500' :
-                challenge.theme === 'intimacy' ? 'bg-pink-500' :
-                challenge.theme === 'partnership' ? 'bg-emerald-500' :
-                challenge.theme === 'gratitude' ? 'bg-amber-500' :
-                challenge.theme === 'conflict_resolution' ? 'bg-purple-500' :
-                challenge.theme === 'reconnection' ? 'bg-cyan-500' :
-                challenge.theme === 'quality_time' ? 'bg-green-500' :
-                challenge.theme === 'communication' ? 'bg-blue-500' :
-                'bg-primary-500'
-              }`}
-              style={{ width: `${userChallenge.progress}%` }}
-            />
-          </div>
-        )}
-      </div>
-
-      {challenge.challenge_actions && challenge.challenge_actions.length > 0 && (
-        <div className="mb-4">
-          <p className="text-xs text-slate-400 mb-2">7-Day Action Plan:</p>
-          <div className="grid grid-cols-7 gap-1">
-            {challenge.challenge_actions
-              .sort((a, b) => a.day_number - b.day_number)
-              .map((ca, index) => (
-                <div
-                  key={index}
-                  className={`aspect-square rounded-lg flex items-center justify-center text-xs ${
-                    userChallenge && index < userChallenge.completed_days
-                      ? 'bg-green-500/20 text-green-400'
-                      : userChallenge && index === userChallenge.completed_days
-                      ? 'bg-primary-500/20 text-primary-400 ring-2 ring-primary-500'
-                      : 'bg-slate-800 text-slate-500'
-                  }`}
-                  title={ca.actions.name}
-                >
-                  {userChallenge && index < userChallenge.completed_days ? '✓' : index + 1}
-                </div>
-              ))}
-          </div>
-        </div>
-      )}
-
-      <div className="flex gap-2">
+      <div className="flex gap-2 mt-4">
         {!userChallenge && !isJoined ? (
           <button
             onClick={handleJoin}
