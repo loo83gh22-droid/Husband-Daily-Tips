@@ -73,12 +73,9 @@ export default async function Home() {
               Make your marriage even better!
             </p>
             <p className="text-base md:text-lg text-slate-300 leading-relaxed mb-8 max-w-2xl">
-              Look, marriage is hard. You know it, we know it. But here&apos;s the thing—it doesn&apos;t have to be complicated. 
+              Marriage is hard. You know it, we know it. But here&apos;s the thing—it doesn&apos;t have to be complicated. 
               One small action a day. One moment where you actually show up. No grand gestures needed. 
               Just consistent, real effort. Become the husband you and your partner deserve.
-            </p>
-            <p className="text-sm md:text-base text-slate-400 italic mb-8 max-w-2xl">
-              Daily actions that show you care. She&apos;ll notice. You&apos;ll both feel the difference.
             </p>
 
             <div className="mb-8">
@@ -113,7 +110,7 @@ export default async function Home() {
             <div className="flex items-center justify-between mb-4">
               <div>
                 <p className="text-xs font-semibold text-slate-400 uppercase tracking-[0.2em]">
-                  HUSBAND HIT POINTS
+                  RELATIONSHIP HEALTH BAR
                 </p>
                 <p className="mt-1 text-sm text-slate-300">
                   Your honest, no-BS relationship meter. It tells you what you need to hear.

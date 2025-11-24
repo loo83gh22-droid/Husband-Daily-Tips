@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 
 interface HealthBarProps {
   /**
-   * 0–100 value representing current husband hit points.
+   * 0–100 value representing current relationship health.
    * We derive this from streak + recent activity.
    */
   value: number;
@@ -179,7 +179,7 @@ export default function HealthBar({ value, shouldPulse = false, onPulseComplete 
           <div className="flex items-center justify-between mb-5">
             <div className="flex-1">
               <h2 className="text-2xl md:text-3xl font-bold text-slate-100 mb-2">
-                Husband Hit Points
+                Health Bar
               </h2>
               <p className="text-sm text-slate-300 leading-relaxed">
                 A simple mirror of how consistently you&apos;re showing up.
