@@ -366,9 +366,6 @@ export default function ActionsPageClient({
 
   return (
     <>
-      {/* Featured 7-Day Events */}
-      <FeaturedEvents />
-
       {/* Category Cards Grid */}
       <section className="mb-8">
         <h2 className="text-2xl md:text-3xl font-semibold text-slate-50 mb-4">Categories</h2>
@@ -398,6 +395,9 @@ export default function ActionsPageClient({
           })}
         </div>
       </section>
+
+      {/* Featured 7-Day Events */}
+      <FeaturedEvents />
 
       {/* Search Button */}
       <div className="mb-6 flex items-center justify-between">
