@@ -174,23 +174,30 @@ export default function ChallengeCard({ challenge, userChallenge, userId, onJoin
     <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 border-2 border-primary-500/30 rounded-xl p-6 shadow-lg shadow-primary-500/10 hover:border-primary-500/50 hover:shadow-primary-500/20 transition-all">
       <div className="flex items-start justify-between mb-4">
         <div className="flex items-center gap-3">
-          <span className="text-3xl">{emoji}</span>
+          <div className="flex-shrink-0 relative">
+            <span className="text-3xl">{emoji}</span>
+            {(challenge.userCompletionCount || 0) > 0 && (
+              <div className="absolute -top-1 -right-1 w-6 h-6 rounded-full bg-primary-500 flex items-center justify-center">
+                <span className="text-xs font-bold text-slate-950">{challenge.userCompletionCount}</span>
+              </div>
+            )}
+          </div>
           <div>
             <div className="flex items-center gap-2 flex-wrap">
               <h3 className="text-lg font-semibold text-slate-50">{challenge.name}</h3>
+              {(challenge.userCompletionCount || 0) > 0 && (
+                <span className="text-xs text-primary-300 font-medium whitespace-nowrap">
+                  ({challenge.userCompletionCount}x)
+                </span>
+              )}
               {isInProgress && (
                 <span className="px-2 py-0.5 bg-primary-500/20 text-primary-400 text-xs font-semibold rounded-full border border-primary-500/30 whitespace-nowrap">
                   🎯 Active
                 </span>
               )}
-              {isJoined && userChallenge?.completed && (
+              {isJoined && userChallenge?.completed && !isInProgress && (
                 <span className="px-2 py-0.5 bg-green-500/20 text-green-400 text-xs font-semibold rounded-full whitespace-nowrap">
                   ✓ Completed
-                </span>
-              )}
-              {(challenge.userCompletionCount || 0) > 0 && !isInProgress && (
-                <span className="px-2 py-0.5 bg-amber-500/20 text-amber-400 text-xs font-semibold rounded-full whitespace-nowrap">
-                  ✓ Completed {challenge.userCompletionCount}x
                 </span>
               )}
             </div>

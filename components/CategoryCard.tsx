@@ -50,9 +50,23 @@ export default function CategoryCard({
       className={`border rounded-lg p-4 transition-all ${colorClasses}`}
     >
       <div className="flex items-center gap-3 mb-3">
-        <span className="text-2xl">{icon}</span>
+        <div className="flex-shrink-0 relative">
+          <span className="text-2xl">{icon}</span>
+          {completedCount > 0 && (
+            <div className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-primary-500 flex items-center justify-center">
+              <span className="text-xs font-bold text-slate-950">{completedCount}</span>
+            </div>
+          )}
+        </div>
         <div className="flex-1 min-w-0">
-          <h3 className="text-lg md:text-xl font-bold text-slate-50 truncate">{name}</h3>
+          <div className="flex items-center gap-2">
+            <h3 className="text-lg md:text-xl font-bold text-slate-50 truncate">{name}</h3>
+            {completedCount > 0 && (
+              <span className="text-xs text-primary-300 font-medium whitespace-nowrap">
+                ({completedCount}/{actionCount})
+              </span>
+            )}
+          </div>
         </div>
       </div>
 
