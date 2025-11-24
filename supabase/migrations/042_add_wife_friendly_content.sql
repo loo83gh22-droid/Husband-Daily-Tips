@@ -24,9 +24,9 @@ SELECT * FROM (VALUES
   ('Consistent Connection', 'Maintained a 30-day streak of daily actions. Consistency builds trust and shows you''re serious.', '🔥', 'consistency', 'streak', 30, 50, NULL),
   ('Emotional Intelligence', 'Completed 15 communication and intimacy actions. You''re learning to connect on a deeper level.', '🧠', 'big_idea', 'category_count', 15, 45, 'Communication'),
   ('Partner, Not Roommate', 'Completed 25 partnership and connection actions. You''re showing up as a true partner, not just a cohabitant.', '🤝', 'big_idea', 'category_count', 25, 50, 'Partnership'),
-  ('The Husband She Deserves', 'Completed 100 total actions. You''ve shown consistent effort and genuine care. She''ll feel the difference.', '👑', 'milestone', 'total_count', 100, 100, NULL),
+  ('The Husband She Deserves', 'Completed 100 total actions. You''ve shown consistent effort and genuine care. She''ll feel the difference.', '👑', 'big_idea', 'total_count', 100, 100, NULL),
   ('She Feels Seen', 'Completed 10 actions focused on truly seeing and understanding her. Emotional awareness matters.', '👀', 'big_idea', 'category_count', 10, 35, 'Intimacy'),
-  ('Genuine Effort', 'Completed 50 actions with genuine intention. Not performative—real. She''ll notice.', '💪', 'milestone', 'total_count', 50, 60, NULL)
+  ('Genuine Effort', 'Completed 50 actions with genuine intention. Not performative—real. She''ll notice.', '💪', 'big_idea', 'total_count', 50, 60, NULL)
 ) AS v(name, description, icon, badge_type, requirement_type, requirement_value, health_bonus, category)
 WHERE NOT EXISTS (
   SELECT 1 FROM badges WHERE name = v.name
