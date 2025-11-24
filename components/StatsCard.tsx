@@ -23,7 +23,7 @@ export default function StatsCard({ title, value, subtitle, icon, color, current
 
   const getEncouragement = () => {
     if (title === 'Current streak' && currentStreak !== undefined) {
-      if (currentStreak >= 30) return "🔥 You're a legend. No cap.";
+      if (currentStreak >= 30) return "🔥 You're a legend. Keep going.";
       if (currentStreak >= 7) return "🔥 You're on fire!";
       if (currentStreak >= 3) return "💪 Look at you. Actually doing it.";
       if (currentStreak > 0) return "✨ Great start. Keep going.";

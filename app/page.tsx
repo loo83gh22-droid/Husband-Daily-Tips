@@ -250,7 +250,7 @@ export default async function Home() {
                   Every morning, you get one thing to do. Not a lecture. Not a theory. Just one concrete action 
                   that takes less than 5 minutes. Do it, mark it done, watch your health bar grow. 
                   It&apos;s that simple—and that powerful. 
-                  <span className="text-primary-400 font-semibold"> You&apos;re about to become the husband your wife thought she married.</span>
+                  <span className="text-primary-400 font-semibold"> You&apos;re becoming the husband you want to be. Daily.</span>
                 </p>
                 <div className="space-y-2 text-xs text-slate-400">
                   <div className="flex items-center gap-2">

@@ -38,8 +38,8 @@ export default function NotificationSystem({
         3: `🔥 3-day streak! Look at you. Actually doing it.`,
         7: `🔥 7-day streak! You're on fire! Keep going.`,
         14: `🔥 14 days! You're not playing. You're winning.`,
-        30: `🔥 30-day streak! You're a legend. No cap.`,
-        60: `🔥 60 days! You're the husband she thought she married.`,
+        30: `🔥 30-day streak! You're a legend. Keep going.`,
+        60: `🔥 60 days! You're becoming the husband you want to be.`,
         100: `🔥 100 days! Absolute legend status.`,
       };
       toast.success(
