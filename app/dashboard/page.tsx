@@ -16,6 +16,7 @@ import NotificationSystem from '@/components/NotificationSystem';
 import ProgressCharts from '@/components/ProgressCharts';
 import KeyboardShortcuts from '@/components/KeyboardShortcuts';
 import FollowUpSurveyChecker from '@/components/FollowUpSurveyChecker';
+import SurveyPromptChecker from '@/components/SurveyPromptChecker';
 import Link from 'next/link';
 
 async function getUserData(auth0Id: string) {
@@ -418,10 +419,8 @@ export default async function Dashboard() {
     user = newUser;
   }
 
-  // Redirect to survey if not completed
-  if (!user.survey_completed) {
-    redirect('/dashboard/survey');
-  }
+  // Don't redirect - show optional survey prompt modal instead
+  // Survey is now optional and can be skipped
 
   const subscriptionTier = user.subscription_tier || 'free';
   
@@ -589,6 +588,7 @@ export default async function Dashboard() {
       <KeyboardShortcuts />
       <OnboardingTour />
       <TourButton />
+      <SurveyPromptChecker userId={user.id} surveyCompleted={user.survey_completed || false} />
       <NotificationSystem
         currentStreak={stats.currentStreak}
         healthScore={stats.healthScore}
