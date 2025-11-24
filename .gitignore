@@ -38,4 +38,8 @@ next-env.d.ts
 # other projects
 family-scheduler/
 
+# PowerShell scripts (may contain secrets)
+*.ps1
+GET_FULL_RESPONSE.ps1
+
 
