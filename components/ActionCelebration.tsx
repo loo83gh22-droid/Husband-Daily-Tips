@@ -13,7 +13,7 @@ interface ActionCelebrationProps {
 
 const encouragingMessages = [
   "Look at you. Actually doing it.",
-  "That's how you do it. No cap.",
+  "That's how you do it. Keep going.",
   "You're building something real. Keep going.",
   "One action at a time. You got this.",
   "Consistency wins. You're doing it.",
