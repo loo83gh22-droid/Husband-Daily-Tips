@@ -134,7 +134,7 @@ export default async function BadgesPage() {
   const { badges } = await getUserBadges(auth0Id);
 
   // Group badges by action theme/category (ordered by marriage importance)
-  // First, collect all badges that match specific themes
+  // Match the 8 categories from actions page + Consistency = 9 total
   const communicationBadges = badges.filter((b) =>
       b.name.toLowerCase().includes('communication') ||
       b.name.toLowerCase().includes('listener') ||
@@ -168,7 +168,7 @@ export default async function BadgesPage() {
     (b.category && b.category.toLowerCase().includes('gratitude'))
   );
   
-  const conflictBadges = badges.filter((b) =>
+  const conflictResolutionBadges = badges.filter((b) =>
     (b.name.toLowerCase().includes('conflict') ||
     b.name.toLowerCase().includes('peacemaker')) &&
     !communicationBadges.includes(b)
@@ -182,22 +182,21 @@ export default async function BadgesPage() {
                     b.category.toLowerCase().includes('roommate')))
   );
   
-  const outdoorBadges = badges.filter((b) =>
+  // Quality Time combines outdoor and active badges
+  const qualityTimeBadges = badges.filter((b) =>
     b.name.toLowerCase().includes('outdoor') ||
     b.name.toLowerCase().includes('adventure') ||
     b.name.toLowerCase().includes('nature') ||
     b.name.toLowerCase().includes('hiking') ||
     b.name.toLowerCase().includes('trail') ||
-    (b.category && (b.category.toLowerCase().includes('outdoor') || 
-                    b.category.toLowerCase().includes('adventure')))
-  );
-  
-  const activeBadges = badges.filter((b) =>
     b.name.toLowerCase().includes('active') ||
     b.name.toLowerCase().includes('fitness') ||
     b.name.toLowerCase().includes('run') ||
     b.name.toLowerCase().includes('sport') ||
-    (b.category && b.category.toLowerCase().includes('active'))
+    (b.category && (b.category.toLowerCase().includes('outdoor') || 
+                    b.category.toLowerCase().includes('adventure') ||
+                    b.category.toLowerCase().includes('active') ||
+                    b.category.toLowerCase().includes('quality_time')))
   );
   
   // Get all categorized badges
@@ -207,10 +206,9 @@ export default async function BadgesPage() {
     ...partnershipBadges,
     ...romanceBadges,
     ...gratitudeBadges,
-    ...conflictBadges,
+    ...conflictResolutionBadges,
     ...reconnectionBadges,
-    ...outdoorBadges,
-    ...activeBadges,
+    ...qualityTimeBadges,
   ].map(b => b.id));
   
   // Consistency badges are those that don't fit other categories
@@ -218,16 +216,28 @@ export default async function BadgesPage() {
     b.badge_type === 'consistency' && !categorizedBadgeIds.has(b.id)
   );
   
+  // Order matches actions page theme order
+  const badgeThemesOrder = [
+    'Communication',
+    'Intimacy',
+    'Partnership',
+    'Romance',
+    'Gratitude',
+    'Conflict Resolution',
+    'Reconnection',
+    'Quality Time',
+    'Consistency',
+  ];
+
   const badgeThemes: Record<string, typeof badges> = {
     Communication: communicationBadges,
     Intimacy: intimacyBadges,
     Partnership: partnershipBadges,
     Romance: romanceBadges,
     Gratitude: gratitudeBadges,
-    Conflict: conflictBadges,
+    'Conflict Resolution': conflictResolutionBadges,
     Reconnection: reconnectionBadges,
-    Outdoor: outdoorBadges,
-    Active: activeBadges,
+    'Quality Time': qualityTimeBadges,
     Consistency: consistencyBadges,
   };
 
@@ -241,10 +251,10 @@ export default async function BadgesPage() {
       <main className="container mx-auto px-4 py-8 md:py-10">
         <div className="max-w-6xl mx-auto">
           <div className="mb-8">
-            <h1 className="text-3xl md:text-4xl font-semibold text-slate-50 mb-2">
+            <h1 className="text-3xl md:text-4xl font-bold text-slate-50 mb-2 bg-gradient-to-r from-primary-400 to-primary-600 bg-clip-text text-transparent">
               Badges
             </h1>
-            <p className="text-slate-400 text-sm md:text-base mb-4">
+            <p className="text-slate-300 text-base md:text-lg mb-6 font-medium">
               Track your progress across different areas of relationship growth. Earn badges through
               consistency and meaningful actions.
             </p>
@@ -260,12 +270,13 @@ export default async function BadgesPage() {
             </div>
           </div>
 
-          <div className="space-y-12">
-            {Object.entries(badgeThemes).map(([theme, themeBadges]) => {
-              if (themeBadges.length === 0) return null;
+          <div className="space-y-8">
+            {badgeThemesOrder.map((theme) => {
+              const themeBadges = badgeThemes[theme];
+              if (!themeBadges || themeBadges.length === 0) return null;
 
               return (
-                <section key={theme} className="bg-slate-900/50 border border-slate-800 rounded-xl p-6 md:p-8">
+                <section key={theme} className="bg-slate-900/50 border border-slate-800 rounded-xl p-6 md:p-8 scroll-mt-24">
                   <h2 className="text-xl md:text-2xl font-semibold text-slate-50 mb-6 flex items-center gap-2">
                     <span>
                       {theme === 'Communication' ? '💬' : 
@@ -273,11 +284,11 @@ export default async function BadgesPage() {
                        theme === 'Partnership' ? '🤝' : 
                        theme === 'Romance' ? '💕' : 
                        theme === 'Gratitude' ? '🙏' :
-                       theme === 'Conflict' ? '⚖️' :
+                       theme === 'Conflict Resolution' ? '⚖️' :
                        theme === 'Reconnection' ? '🔗' :
-                       theme === 'Outdoor' ? '🌲' :
-                       theme === 'Active' ? '💪' :
-                       '🔥'}
+                       theme === 'Quality Time' ? '⏰' :
+                       theme === 'Consistency' ? '🔥' :
+                       '📋'}
                     </span>
                     {theme}
                   </h2>
