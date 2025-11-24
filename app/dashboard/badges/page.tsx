@@ -228,7 +228,7 @@ export default async function BadgesPage() {
     'Quality Time',
     'Consistency',
   ];
-
+  
   const badgeThemes: Record<string, typeof badges> = {
     Communication: communicationBadges,
     Intimacy: intimacyBadges,

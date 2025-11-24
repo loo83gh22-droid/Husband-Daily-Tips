@@ -19,6 +19,8 @@ import FollowUpSurveyChecker from '@/components/FollowUpSurveyChecker';
 import SurveyPromptChecker from '@/components/SurveyPromptChecker';
 import SurveyBanner from '@/components/SurveyBanner';
 import TrialExpirationBanner from '@/components/TrialExpirationBanner';
+import ReferralTracker from '@/components/ReferralTracker';
+import ReferralCard from '@/components/ReferralCard';
 import Link from 'next/link';
 
 async function getUserData(auth0Id: string) {
@@ -419,6 +421,9 @@ export default async function Dashboard() {
     }
 
     user = newUser;
+
+    // Check for referral code and track it (client-side will store it in sessionStorage)
+    // We'll handle this in a client component that calls the API
   }
 
   // Don't redirect - show optional survey prompt modal instead
@@ -590,6 +595,7 @@ export default async function Dashboard() {
       <KeyboardShortcuts />
       <OnboardingTour />
       <TourButton />
+      <ReferralTracker />
       <SurveyPromptChecker userId={user.id} surveyCompleted={user.survey_completed || false} />
       <NotificationSystem
         currentStreak={stats.currentStreak}
@@ -708,6 +714,10 @@ export default async function Dashboard() {
 
             <div data-tour="badges">
               <BadgesDisplay userId={user.id} />
+            </div>
+
+            <div>
+              <ReferralCard />
             </div>
           </div>
         </div>

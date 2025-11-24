@@ -1,8 +1,10 @@
 import Link from 'next/link';
 import { getSession } from '@auth0/nextjs-auth0';
 import { redirect } from 'next/navigation';
+import { Suspense } from 'react';
 import BrandLogo from '@/components/BrandLogo';
 import { getMarketingMessage } from '@/lib/marketing-messages';
+import ReferralCodeHandler from '@/components/ReferralCodeHandler';
 
 export default async function Home() {
   const session = await getSession();
@@ -22,6 +24,9 @@ export default async function Home() {
 
   return (
     <div className="min-h-screen bg-slate-950">
+      <Suspense fallback={null}>
+        <ReferralCodeHandler />
+      </Suspense>
       {/* Navigation */}
       <nav className="border-b border-slate-800 bg-slate-950/80 backdrop-blur">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">

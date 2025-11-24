@@ -110,6 +110,68 @@ export async function POST(request: NextRequest) {
             : null,
           cancel_at_period_end: cancelAtPeriodEnd || false,
         });
+
+        // Apply referral rewards if applicable
+        try {
+          // Find the referral for this user (referee)
+          const { data: referral } = await adminSupabase
+            .from('referrals')
+            .select('id, referrer_id, status')
+            .eq('referee_id', userId)
+            .eq('status', 'pending')
+            .single();
+
+          if (referral && referral.status === 'pending') {
+            // Update referral status to converted
+            await adminSupabase
+              .from('referrals')
+              .update({
+                status: 'converted',
+                converted_at: new Date().toISOString(),
+              })
+              .eq('id', referral.id);
+
+            // Give referrer 1 free month credit
+            const { data: referrer } = await adminSupabase
+              .from('users')
+              .select('referral_credits')
+              .eq('id', referral.referrer_id)
+              .single();
+
+            if (referrer) {
+              await adminSupabase
+                .from('users')
+                .update({
+                  referral_credits: (referrer.referral_credits || 0) + 1,
+                })
+                .eq('id', referral.referrer_id);
+            }
+
+            // Extend referee's subscription by 1 month
+            if (currentPeriodEnd) {
+              const newEnd = new Date(currentPeriodEnd * 1000);
+              newEnd.setMonth(newEnd.getMonth() + 1);
+
+              await adminSupabase
+                .from('users')
+                .update({
+                  subscription_ends_at: newEnd.toISOString(),
+                })
+                .eq('id', userId);
+            }
+
+            // Update referral status to rewarded
+            await adminSupabase
+              .from('referrals')
+              .update({
+                status: 'rewarded',
+                rewarded_at: new Date().toISOString(),
+              })
+              .eq('id', referral.id);
+          }
+        } catch (error) {
+          console.error('Error applying referral rewards:', error);
+        }
         break;
       }
 
