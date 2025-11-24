@@ -19,14 +19,26 @@ export async function POST(request: Request) {
     const auth0Id = session.user.sub;
     const { userId, responses, skip } = await request.json();
 
-    if (!userId) {
-      return NextResponse.json({ error: 'Missing userId' }, { status: 400 });
+    // If userId not provided, fetch it from the session
+    let finalUserId = userId;
+    if (!finalUserId) {
+      const { data: user, error: userLookupError } = await supabase
+        .from('users')
+        .select('id')
+        .eq('auth0_id', auth0Id)
+        .single();
+
+      if (userLookupError || !user) {
+        return NextResponse.json({ error: 'User not found. Please try logging in again.' }, { status: 404 });
+      }
+
+      finalUserId = user.id;
     }
 
     // Handle skip: set baseline to 50 and mark survey as completed
     if (skip || !responses || responses.length === 0) {
       const { error: summaryError } = await supabase.from('survey_summary').upsert({
-        user_id: userId,
+        user_id: finalUserId,
         baseline_health: 50, // Default baseline
         communication_score: 50,
         romance_score: 50,
@@ -47,7 +59,7 @@ export async function POST(request: Request) {
       const { error: updateError } = await supabase
         .from('users')
         .update({ survey_completed: true })
-        .eq('id', userId);
+        .eq('id', finalUserId);
 
       if (updateError) {
         console.error('Error updating user survey status:', updateError);
@@ -65,7 +77,7 @@ export async function POST(request: Request) {
       .from('users')
       .select('id, email, name, created_at')
       .eq('auth0_id', auth0Id)
-      .eq('id', userId)
+      .eq('id', finalUserId)
       .single();
 
     if (userError || !user) {
@@ -102,7 +114,7 @@ export async function POST(request: Request) {
           responseValue = responses[question.id] ?? 0;
         }
         return {
-          user_id: userId,
+          user_id: finalUserId,
           question_id: question.id,
           question_text: question.question_text,
           category: question.category,
@@ -220,7 +232,7 @@ export async function POST(request: Request) {
 
     // Save survey summary (connection score stored in intimacy_score for now, or we can add a new column later)
     const { error: summaryError } = await supabase.from('survey_summary').upsert({
-      user_id: userId,
+      user_id: finalUserId,
       baseline_health: baselineHealth,
       communication_score: Math.round(communicationScore * 100) / 100,
       romance_score: Math.round(romanceScore * 100) / 100,
@@ -258,7 +270,7 @@ export async function POST(request: Request) {
     const { error: updateError } = await supabase
       .from('users')
       .update({ survey_completed: true })
-      .eq('id', userId);
+      .eq('id', finalUserId);
 
     if (updateError) {
       console.error('Error updating user survey status:', updateError);

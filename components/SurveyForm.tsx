@@ -247,28 +247,49 @@ export default function SurveyForm({ userId, questions, isPublic = false }: Surv
         {/* Response Options */}
         {currentQuestion.response_type === 'scale' ? (
           <div className="space-y-3">
-            {[1, 2, 3, 4, 5].map((value) => (
-              <button
-                key={value}
-                onClick={() => handleResponse(value)}
-                className={`w-full p-4 rounded-lg border-2 transition-all text-left ${
-                  responses[currentQuestion.id] === value
-                    ? 'border-primary-500 bg-primary-500/20 text-slate-50'
-                    : 'border-slate-700 bg-slate-800/50 text-slate-300 hover:border-slate-600 hover:bg-slate-800'
-                }`}
-              >
-                <div className="flex items-center justify-between">
-                  <span className="font-medium">
-                    {value === 1 && 'Strongly Disagree'}
-                    {value === 2 && 'Disagree'}
-                    {value === 3 && 'Neutral'}
-                    {value === 4 && 'Agree'}
-                    {value === 5 && 'Strongly Agree'}
-                  </span>
-                  <span className="text-2xl">{value}</span>
-                </div>
-              </button>
-            ))}
+            {[1, 2, 3, 4, 5].map((value) => {
+              // Determine scale labels based on question text
+              const questionText = currentQuestion.question_text.toLowerCase();
+              const isRatingQuestion = questionText.includes('how would you rate') || 
+                                      questionText.includes('how well do you') ||
+                                      questionText.includes('how much') ||
+                                      questionText.includes('how romantic') ||
+                                      questionText.includes('how connected');
+              
+              let label = '';
+              if (isRatingQuestion) {
+                // Rating scale: Poor to Excellent
+                label = value === 1 ? 'Poor' : 
+                       value === 2 ? 'Fair' : 
+                       value === 3 ? 'Good' : 
+                       value === 4 ? 'Very Good' : 
+                       'Excellent';
+              } else {
+                // Agreement scale: Strongly Disagree to Strongly Agree
+                label = value === 1 ? 'Strongly Disagree' : 
+                       value === 2 ? 'Disagree' : 
+                       value === 3 ? 'Neutral' : 
+                       value === 4 ? 'Agree' : 
+                       'Strongly Agree';
+              }
+
+              return (
+                <button
+                  key={value}
+                  onClick={() => handleResponse(value)}
+                  className={`w-full p-4 rounded-lg border-2 transition-all text-left ${
+                    responses[currentQuestion.id] === value
+                      ? 'border-primary-500 bg-primary-500/20 text-slate-50'
+                      : 'border-slate-700 bg-slate-800/50 text-slate-300 hover:border-slate-600 hover:bg-slate-800'
+                  }`}
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="font-medium">{label}</span>
+                    <span className="text-2xl">{value}</span>
+                  </div>
+                </button>
+              );
+            })}
           </div>
         ) : (
           <div className="grid grid-cols-2 gap-4">
