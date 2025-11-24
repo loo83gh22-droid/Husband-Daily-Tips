@@ -1,30 +1,6 @@
--- Add 30-day check-in and 90-day NPS surveys
--- Extends the follow-up survey system
+-- Step 2: Add 30-day and 90-day survey questions and update functions
+-- This runs AFTER the enum values have been added in migration 040
 
--- IMPORTANT: Enum values must be added first, then used in separate statements
--- Step 1: Add new survey types to the enum
-DO $$ 
-BEGIN
-  -- Add day_30_checkin if it doesn't exist
-  IF NOT EXISTS (
-    SELECT 1 FROM pg_enum 
-    WHERE enumlabel = 'day_30_checkin' 
-    AND enumtypid = (SELECT oid FROM pg_type WHERE typname = 'follow_up_survey_type')
-  ) THEN
-    ALTER TYPE follow_up_survey_type ADD VALUE 'day_30_checkin';
-  END IF;
-  
-  -- Add day_90_nps if it doesn't exist
-  IF NOT EXISTS (
-    SELECT 1 FROM pg_enum 
-    WHERE enumlabel = 'day_90_nps' 
-    AND enumtypid = (SELECT oid FROM pg_type WHERE typname = 'follow_up_survey_type')
-  ) THEN
-    ALTER TYPE follow_up_survey_type ADD VALUE 'day_90_nps';
-  END IF;
-END $$;
-
--- Step 2: Now we can use the new enum values (must use explicit casting)
 -- Insert 30-day check-in survey questions
 INSERT INTO follow_up_survey_questions (survey_type, question_text, question_type, order_index, required, options) VALUES
   ('day_30_checkin'::follow_up_survey_type, 'How has your relationship improved since starting?', 'scale', 1, TRUE, NULL),
@@ -87,3 +63,4 @@ SELECT
 FROM users
 WHERE created_at < NOW() - INTERVAL '90 days'
 ON CONFLICT (user_id, survey_type) DO NOTHING;
+
