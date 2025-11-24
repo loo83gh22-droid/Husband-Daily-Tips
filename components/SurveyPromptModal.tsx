@@ -64,8 +64,8 @@ export default function SurveyPromptModal({ userId, onDismiss }: SurveyPromptMod
             <h2 className="text-2xl md:text-3xl font-bold text-slate-50 mb-3">
               Welcome! Let&apos;s personalize your experience
             </h2>
-            <p className="text-slate-300 text-base md:text-lg mb-2">
-              You don&apos;t need to complete the survey, but it will help establish your baseline health score and help personalize your actions and overall experience.
+            <p className="text-slate-300 text-base md:text-lg mb-4">
+              Completing this survey helps us develop your baseline score and personalize your experience.
             </p>
             <p className="text-slate-400 text-sm">
               Takes about 2 minutes • Your answers are private
@@ -86,13 +86,6 @@ export default function SurveyPromptModal({ userId, onDismiss }: SurveyPromptMod
               className="px-6 py-3 bg-slate-800 text-slate-200 font-medium rounded-lg border border-slate-700 hover:bg-slate-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isSubmitting ? 'Skipping...' : 'Skip for Now'}
-            </button>
-            <button
-              onClick={onDismiss}
-              disabled={isSubmitting}
-              className="px-6 py-2 text-slate-400 text-sm hover:text-slate-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              Maybe Later
             </button>
           </div>
         </motion.div>
