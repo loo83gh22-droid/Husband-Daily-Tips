@@ -132,25 +132,29 @@ export async function POST(request: Request) {
       tipData?.category,
     );
 
-    // Calculate total badge health bonuses
-    const { data: userBadges } = await supabase
-      .from('user_badges')
-      .select('badges(health_bonus)')
-      .eq('user_id', user.id);
+    // Get baseline health from survey
+    const { data: surveySummary } = await supabase
+      .from('survey_summary')
+      .select('baseline_health')
+      .eq('user_id', user.id)
+      .single();
 
-    const totalBadgeBonuses =
-      userBadges?.reduce((sum, ub: any) => sum + (ub.badges?.health_bonus || 0), 0) || 0;
+    const baselineHealth = surveySummary?.baseline_health || null;
 
-    // Calculate health with decay
-    const healthScore = calculateHealthScore(
-      {
-        totalTips,
-        currentStreak: streak,
-        totalDays: uniqueDays,
-        lastActionDate,
-      },
-      totalBadgeBonuses,
-    );
+    // Calculate health using new algorithm
+    let healthScore = baselineHealth || 50; // Default to 50 if no baseline
+    
+    try {
+      healthScore = await calculateHealthScore({
+        baselineHealth,
+        userId: user.id,
+        supabase,
+      });
+    } catch (error) {
+      console.error('Error calculating health score:', error);
+      // Fallback to baseline if calculation fails
+      healthScore = baselineHealth || 50;
+    }
 
     return NextResponse.json({
       success: true,
