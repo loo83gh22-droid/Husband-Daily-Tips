@@ -69,8 +69,8 @@ export default async function Home() {
               Your daily mission, delivered.
               <span className="block text-primary-400">one action at a time.</span>
             </h1>
-            <p className="text-lg md:text-xl text-primary-400 font-semibold mb-6 max-w-2xl">
-              Make your marriage even better!
+            <p className="text-lg md:text-xl text-primary-400 font-semibold mb-4 max-w-2xl">
+              Daily actions that show you care. She&apos;ll notice. You&apos;ll both feel the difference.
             </p>
             <p className="text-base md:text-lg text-slate-300 leading-relaxed mb-8 max-w-2xl">
               Marriage is hard. You know it, we know it. But here&apos;s the thing—it doesn&apos;t have to be complicated. 
