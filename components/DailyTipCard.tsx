@@ -478,6 +478,7 @@ END:VCALENDAR`;
         {/* Primary Action Button */}
         <button
           onClick={handleMarkDone}
+          data-mark-done-button="true"
           disabled={isSubmitting || isCompleted}
           className="px-8 py-4 bg-primary-500 disabled:bg-primary-900 disabled:text-slate-400 text-slate-950 text-base md:text-lg font-bold rounded-xl hover:bg-primary-400 active:bg-primary-600 transition-all disabled:cursor-default min-h-[56px] touch-manipulation shadow-lg shadow-primary-500/30 hover:shadow-xl hover:shadow-primary-500/40 hover:scale-[1.02] active:scale-[0.98]"
         >

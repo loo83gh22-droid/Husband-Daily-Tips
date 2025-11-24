@@ -60,14 +60,20 @@ export default function KeyboardShortcuts() {
         'm': () => {
           // Mark today's action done (if on dashboard)
           if (pathname === '/dashboard') {
-            // Try to find the mark done button
+            // First try to find the button with data attribute (most reliable)
+            const markDoneBtn = document.querySelector('button[data-mark-done-button="true"]') as HTMLButtonElement;
+            if (markDoneBtn && !markDoneBtn.disabled) {
+              markDoneBtn.click();
+              return;
+            }
+            // Fallback: Try to find by text content
             const buttons = Array.from(document.querySelectorAll('button'));
-            const markDoneBtn = buttons.find((btn) => 
+            const fallbackBtn = buttons.find((btn) => 
               btn.textContent?.includes('Mark as done') || 
               btn.textContent?.includes('Mark Done')
             );
-            if (markDoneBtn && !markDoneBtn.disabled) {
-              markDoneBtn.click();
+            if (fallbackBtn && !fallbackBtn.disabled) {
+              fallbackBtn.click();
             }
           }
         },
