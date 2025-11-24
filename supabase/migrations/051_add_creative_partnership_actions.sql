@@ -7,7 +7,7 @@
 -- ============================================================================
 
 -- Building/Creative Projects (accessible to most people)
-INSERT INTO actions (name, description, category, theme, action_type, icon, benefit, health_point_value)
+INSERT INTO actions (name, description, category, theme, requirement_type, icon, benefit, health_point_value)
 SELECT 
   'Build a Birdhouse Together',
   'Get some basic materials (wood, nails, paint) and build a birdhouse together. Work as a team to design, build, and decorate it.',
@@ -19,7 +19,7 @@ SELECT
   3
 WHERE NOT EXISTS (SELECT 1 FROM actions WHERE name = 'Build a Birdhouse Together' AND theme = 'partnership');
 
-INSERT INTO actions (name, description, category, theme, action_type, icon, benefit, health_point_value)
+INSERT INTO actions (name, description, category, theme, requirement_type, icon, benefit, health_point_value)
 SELECT 
   'Plant a Garden Together',
   'Choose a spot and plant a small garden together. Pick seeds, prepare the soil, and plant them as a team. Commit to watering and caring for it together.',
@@ -31,7 +31,7 @@ SELECT
   3
 WHERE NOT EXISTS (SELECT 1 FROM actions WHERE name = 'Plant a Garden Together' AND theme = 'partnership');
 
-INSERT INTO actions (name, description, category, theme, action_type, icon, benefit, health_point_value)
+INSERT INTO actions (name, description, category, theme, requirement_type, icon, benefit, health_point_value)
 SELECT 
   'Assemble Furniture Together',
   'Pick a piece of furniture (IKEA, Amazon, or any flat-pack) and assemble it together. Read instructions, organize parts, and build as a team.',
@@ -43,7 +43,7 @@ SELECT
   2
 WHERE NOT EXISTS (SELECT 1 FROM actions WHERE name = 'Assemble Furniture Together' AND theme = 'partnership');
 
-INSERT INTO actions (name, description, category, theme, action_type, icon, benefit, health_point_value)
+INSERT INTO actions (name, description, category, theme, requirement_type, icon, benefit, health_point_value)
 SELECT 
   'Create a Photo Album Together',
   'Gather photos (digital or printed) and create a photo album or scrapbook together. Choose photos, arrange them, and add captions or memories.',
@@ -56,7 +56,7 @@ SELECT
 WHERE NOT EXISTS (SELECT 1 FROM actions WHERE name = 'Create a Photo Album Together' AND theme = 'partnership');
 
 -- Cooking/Baking Projects
-INSERT INTO actions (name, description, category, theme, action_type, icon, benefit, health_point_value)
+INSERT INTO actions (name, description, category, theme, requirement_type, icon, benefit, health_point_value)
 SELECT 
   'Bake Something From Scratch Together',
   'Pick a recipe (bread, cookies, cake) and bake it together from scratch. Divide tasks, work together, and enjoy the results.',
@@ -68,7 +68,7 @@ SELECT
   2
 WHERE NOT EXISTS (SELECT 1 FROM actions WHERE name = 'Bake Something From Scratch Together' AND theme = 'partnership');
 
-INSERT INTO actions (name, description, category, theme, action_type, icon, benefit, health_point_value)
+INSERT INTO actions (name, description, category, theme, requirement_type, icon, benefit, health_point_value)
 SELECT 
   'Plan and Cook a 3-Course Meal Together',
   'Plan a 3-course meal together, shop for ingredients, and cook it as a team. One person can handle appetizer, one main, and work together on dessert.',
@@ -81,7 +81,7 @@ SELECT
 WHERE NOT EXISTS (SELECT 1 FROM actions WHERE name = 'Plan and Cook a 3-Course Meal Together' AND theme = 'partnership');
 
 -- Home Improvement Projects
-INSERT INTO actions (name, description, category, theme, action_type, icon, benefit, health_point_value)
+INSERT INTO actions (name, description, category, theme, requirement_type, icon, benefit, health_point_value)
 SELECT 
   'Paint a Room Together',
   'Choose a room, pick colors together, prep the space, and paint it as a team. Divide the work and help each other finish.',
@@ -93,7 +93,7 @@ SELECT
   3
 WHERE NOT EXISTS (SELECT 1 FROM actions WHERE name = 'Paint a Room Together' AND theme = 'partnership');
 
-INSERT INTO actions (name, description, category, theme, action_type, icon, benefit, health_point_value)
+INSERT INTO actions (name, description, category, theme, requirement_type, icon, benefit, health_point_value)
 SELECT 
   'Organize a Closet or Storage Space Together',
   'Pick a closet, garage, or storage area and organize it together. Sort items, decide what to keep/donate, and create an organized system.',
@@ -106,7 +106,7 @@ SELECT
 WHERE NOT EXISTS (SELECT 1 FROM actions WHERE name = 'Organize a Closet or Storage Space Together' AND theme = 'partnership');
 
 -- Creative/Artistic Projects
-INSERT INTO actions (name, description, category, theme, action_type, icon, benefit, health_point_value)
+INSERT INTO actions (name, description, category, theme, requirement_type, icon, benefit, health_point_value)
 SELECT 
   'Create Art Together',
   'Get some art supplies (paint, canvas, markers, or even just paper and pencils) and create something together. Collaborate on one piece or create side-by-side.',
@@ -118,7 +118,7 @@ SELECT
   2
 WHERE NOT EXISTS (SELECT 1 FROM actions WHERE name = 'Create Art Together' AND theme = 'partnership');
 
-INSERT INTO actions (name, description, category, theme, action_type, icon, benefit, health_point_value)
+INSERT INTO actions (name, description, category, theme, requirement_type, icon, benefit, health_point_value)
 SELECT 
   'Build a Puzzle Together',
   'Get a jigsaw puzzle (500-1000 pieces) and work on it together over a few days or weeks. Set it up in a common area and work on it together.',
@@ -131,7 +131,7 @@ SELECT
 WHERE NOT EXISTS (SELECT 1 FROM actions WHERE name = 'Build a Puzzle Together' AND theme = 'partnership');
 
 -- Planning/Organizing Projects
-INSERT INTO actions (name, description, category, theme, action_type, icon, benefit, health_point_value)
+INSERT INTO actions (name, description, category, theme, requirement_type, icon, benefit, health_point_value)
 SELECT 
   'Plan a Weekend Trip Together',
   'Research destinations, compare options, book accommodations, and plan activities together. Make all decisions as a team.',
@@ -143,7 +143,7 @@ SELECT
   3
 WHERE NOT EXISTS (SELECT 1 FROM actions WHERE name = 'Plan a Weekend Trip Together' AND theme = 'partnership');
 
-INSERT INTO actions (name, description, category, theme, action_type, icon, benefit, health_point_value)
+INSERT INTO actions (name, description, category, theme, requirement_type, icon, benefit, health_point_value)
 SELECT 
   'Create a Vision Board Together',
   'Get magazines, scissors, glue, and a poster board. Cut out images and words that represent your shared goals and dreams. Create it together.',
@@ -156,7 +156,7 @@ SELECT
 WHERE NOT EXISTS (SELECT 1 FROM actions WHERE name = 'Create a Vision Board Together' AND theme = 'partnership');
 
 -- Simple DIY Projects
-INSERT INTO actions (name, description, category, theme, action_type, icon, benefit, health_point_value)
+INSERT INTO actions (name, description, category, theme, requirement_type, icon, benefit, health_point_value)
 SELECT 
   'Build a Raised Garden Bed Together',
   'Build a simple raised garden bed using wood or cinder blocks. Work together to measure, cut, and assemble it.',
@@ -168,7 +168,7 @@ SELECT
   3
 WHERE NOT EXISTS (SELECT 1 FROM actions WHERE name = 'Build a Raised Garden Bed Together' AND theme = 'partnership');
 
-INSERT INTO actions (name, description, category, theme, action_type, icon, benefit, health_point_value)
+INSERT INTO actions (name, description, category, theme, requirement_type, icon, benefit, health_point_value)
 SELECT 
   'Make Homemade Gifts for Family Together',
   'Choose a family member or friend and create a homemade gift together. Could be baked goods, a craft, or something personalized.',
@@ -181,7 +181,7 @@ SELECT
 WHERE NOT EXISTS (SELECT 1 FROM actions WHERE name = 'Make Homemade Gifts for Family Together' AND theme = 'partnership');
 
 -- Tech/Organizational Projects
-INSERT INTO actions (name, description, category, theme, action_type, icon, benefit, health_point_value)
+INSERT INTO actions (name, description, category, theme, requirement_type, icon, benefit, health_point_value)
 SELECT 
   'Set Up a Home Organization System Together',
   'Choose an area (pantry, office, entryway) and create an organization system together. Buy or make organizers and set it up as a team.',
@@ -193,7 +193,7 @@ SELECT
   2
 WHERE NOT EXISTS (SELECT 1 FROM actions WHERE name = 'Set Up a Home Organization System Together' AND theme = 'partnership');
 
-INSERT INTO actions (name, description, category, theme, action_type, icon, benefit, health_point_value)
+INSERT INTO actions (name, description, category, theme, requirement_type, icon, benefit, health_point_value)
 SELECT 
   'Create a Shared Playlist Together',
   'Sit down and create a playlist of songs that are meaningful to your relationship. Add songs that remind you of each other or special moments.',
@@ -206,7 +206,7 @@ SELECT
 WHERE NOT EXISTS (SELECT 1 FROM actions WHERE name = 'Create a Shared Playlist Together' AND theme = 'partnership');
 
 -- Outdoor/Seasonal Projects
-INSERT INTO actions (name, description, category, theme, action_type, icon, benefit, health_point_value)
+INSERT INTO actions (name, description, category, theme, requirement_type, icon, benefit, health_point_value)
 SELECT 
   'Build a Fire Pit or Outdoor Seating Area Together',
   'Plan and build a simple fire pit or outdoor seating area. Research, gather materials, and build it together.',
@@ -218,7 +218,7 @@ SELECT
   3
 WHERE NOT EXISTS (SELECT 1 FROM actions WHERE name = 'Build a Fire Pit or Outdoor Seating Area Together' AND theme = 'partnership');
 
-INSERT INTO actions (name, description, category, theme, action_type, icon, benefit, health_point_value)
+INSERT INTO actions (name, description, category, theme, requirement_type, icon, benefit, health_point_value)
 SELECT 
   'Decorate for a Holiday Together',
   'Choose a holiday or season and decorate your home together. Plan the theme, shop for decorations, and set them up as a team.',
@@ -231,7 +231,7 @@ SELECT
 WHERE NOT EXISTS (SELECT 1 FROM actions WHERE name = 'Decorate for a Holiday Together' AND theme = 'partnership');
 
 -- Simple Repair/Maintenance Projects
-INSERT INTO actions (name, description, category, theme, action_type, icon, benefit, health_point_value)
+INSERT INTO actions (name, description, category, theme, requirement_type, icon, benefit, health_point_value)
 SELECT 
   'Fix Something Broken Together',
   'Identify something that needs fixing (leaky faucet, squeaky door, loose handle) and fix it together. Research the solution and work on it as a team.',
