@@ -17,6 +17,7 @@ import ProgressCharts from '@/components/ProgressCharts';
 import KeyboardShortcuts from '@/components/KeyboardShortcuts';
 import FollowUpSurveyChecker from '@/components/FollowUpSurveyChecker';
 import SurveyPromptChecker from '@/components/SurveyPromptChecker';
+import SurveyBanner from '@/components/SurveyBanner';
 import Link from 'next/link';
 
 async function getUserData(auth0Id: string) {
@@ -604,6 +605,11 @@ export default async function Dashboard() {
       <DashboardNav />
 
       <main className="container mx-auto px-4 py-8 md:py-12">
+        {/* Survey Banner - Show if survey not completed */}
+        {!user.survey_completed && (
+          <SurveyBanner surveyCompleted={user.survey_completed || false} />
+        )}
+        
         {/* Subscription Banner */}
         {subscriptionTier === 'free' && (
           <div className="mb-8">

@@ -13,38 +13,10 @@ export default function SurveyPromptModal({ userId, onDismiss }: SurveyPromptMod
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
 
-  const handleSkip = async () => {
-    setIsSubmitting(true);
-    try {
-      // Mark survey as skipped (set baseline to 50)
-      const response = await fetch('/api/survey/submit', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          userId,
-          responses: [],
-          skip: true,
-        }),
-      });
-
-      if (response.ok) {
-        onDismiss();
-        // Small delay before refresh to ensure state is updated
-        setTimeout(() => {
-          router.refresh();
-        }, 100);
-      } else {
-        console.error('Error skipping survey');
-        alert('Failed to skip survey. Please try again.');
-        setIsSubmitting(false);
-      }
-    } catch (error) {
-      console.error('Error skipping survey:', error);
-      alert('Failed to skip survey. Please try again.');
-      setIsSubmitting(false);
-    }
+  const handleSkip = () => {
+    // Just dismiss the modal - don't mark as completed
+    // User can take survey later via the banner or navigation
+    onDismiss();
   };
 
   const handleTakeSurvey = () => {
