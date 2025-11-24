@@ -124,12 +124,15 @@ export default function DailyTipCard({ tip, subscriptionTier = 'free' }: DailyTi
       setIsCompleted(true);
       setHealthIncrease(healthIncreaseAmount);
 
-      // Check if this might be a milestone (we'll trigger confetti for significant increases)
-      // For now, trigger confetti for any completion, but we could check actual health
-      setIsMilestone(false);
-
-      // Show celebration animation
-      setShowCelebration(true);
+      // Only show celebration for milestones (badges earned or significant achievements)
+      const hasNewBadges = data.newlyEarnedBadges && data.newlyEarnedBadges.length > 0;
+      if (hasNewBadges) {
+        setIsMilestone(true);
+        setShowCelebration(true);
+      } else {
+        setIsMilestone(false);
+        setShowCelebration(false);
+      }
 
       // Show success toast
       toast.success('Action completed! Keep it up! 🎉', 3000);
@@ -145,10 +148,18 @@ export default function DailyTipCard({ tip, subscriptionTier = 'free' }: DailyTi
         setTimeout(() => setNewlyEarnedBadges([]), 5000);
       }
 
-      // Show reflection modal after celebration completes
-      setTimeout(() => {
-        setShowReflection(true);
-      }, 3500); // Wait for celebration to finish
+      // Show reflection modal immediately (or after celebration if badges earned)
+      if (hasNewBadges) {
+        // Wait for celebration to finish if badges were earned
+        setTimeout(() => {
+          setShowReflection(true);
+        }, 3500);
+      } else {
+        // Show immediately for regular completions
+        setTimeout(() => {
+          setShowReflection(true);
+        }, 500); // Small delay to let the toast appear first
+      }
     } catch (error) {
       console.error(error);
       setErrorMessage('Could not save this action. You can try again in a moment.');
