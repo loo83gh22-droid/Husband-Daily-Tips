@@ -452,7 +452,7 @@ export default async function Home() {
               <div className="bg-primary-500/20 text-primary-300 text-[11px] font-bold px-3 py-1 rounded-full inline-block mb-4 tracking-[0.16em] uppercase">
                 MOST POPULAR
               </div>
-              <h3 className="text-2xl font-semibold text-slate-50 mb-2">Paid</h3>
+              <h3 className="text-2xl font-semibold text-slate-50 mb-2">Premium</h3>
               <div className="text-4xl font-bold text-slate-50 mb-2">
                 $7<span className="text-lg text-slate-300">/month</span>
               </div>

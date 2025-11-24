@@ -12,9 +12,10 @@ interface SubscriptionButtonProps {
   currentTier?: string;
   hasActiveTrial?: boolean | null;
   trialEndsAt?: string | null;
+  isOnPremium?: boolean;
 }
 
-export default function SubscriptionButton({ plan, currentTier, hasActiveTrial, trialEndsAt }: SubscriptionButtonProps) {
+export default function SubscriptionButton({ plan, currentTier, hasActiveTrial, trialEndsAt, isOnPremium }: SubscriptionButtonProps) {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
@@ -81,7 +82,8 @@ export default function SubscriptionButton({ plan, currentTier, hasActiveTrial, 
   };
 
   const isPopular = plan.tier === 'premium';
-  const isCurrent = plan.tier === currentTier;
+  // User is on current plan if tier matches, OR if they have premium subscription (not trial)
+  const isCurrent = plan.tier === currentTier || (plan.tier === 'premium' && isOnPremium);
 
   // Determine button text
   let buttonText = '';
@@ -91,6 +93,9 @@ export default function SubscriptionButton({ plan, currentTier, hasActiveTrial, 
     buttonText = 'Start Free Trial';
   } else if (plan.tier === 'premium' && hasActiveTrial) {
     buttonText = 'Join Premium ($7/month)';
+  } else if (plan.tier === 'premium' && currentTier === 'premium' && !hasActiveTrial) {
+    // User has active subscription (not trial)
+    buttonText = 'Current Plan';
   } else if (plan.tier === 'free') {
     buttonText = 'Downgrade';
   } else {

@@ -20,6 +20,7 @@ async function getUserSubscription(auth0Id: string) {
         trial_ends_at: null,
         hasActiveTrial: false,
         hasSubscription: false,
+        isOnPremium: false,
       };
     }
 
@@ -29,23 +30,28 @@ async function getUserSubscription(auth0Id: string) {
                           trialEndsAt && 
                           trialEndsAt > now && 
                           !user?.stripe_subscription_id;
+    const hasSubscription = !!user?.stripe_subscription_id;
+    // If user has subscription, they're on premium (not trial)
+    const isOnPremium = user?.subscription_tier === 'premium' && hasSubscription;
 
     return {
       tier: user?.subscription_tier || 'free',
       trial_started_at: user?.trial_started_at || null,
       trial_ends_at: user?.trial_ends_at || null,
       hasActiveTrial,
-      hasSubscription: !!user?.stripe_subscription_id,
+      hasSubscription,
+      isOnPremium,
     };
   } catch (err) {
     console.error('Unexpected error fetching subscription:', err);
-    return {
-      tier: 'free',
-      trial_started_at: null,
-      trial_ends_at: null,
-      hasActiveTrial: false,
-      hasSubscription: false,
-    };
+      return {
+        tier: 'free',
+        trial_started_at: null,
+        trial_ends_at: null,
+        hasActiveTrial: false,
+        hasSubscription: false,
+        isOnPremium: false,
+      };
   }
 }
 
@@ -77,7 +83,7 @@ export default async function SubscriptionPage() {
       ],
     },
     {
-      name: 'Paid',
+      name: 'Premium',
       price: 7,
       tier: 'premium',
       features: [
@@ -104,7 +110,7 @@ export default async function SubscriptionPage() {
           <div className="bg-primary-500/10 border border-primary-500/30 rounded-xl p-6 mb-8 max-w-2xl mx-auto text-center">
             <p className="text-primary-300 font-semibold mb-2">✨ 7-Day Free Trial</p>
             <p className="text-sm text-slate-300">
-              Try everything free for 7 days. No credit card required. After the trial, choose Free or Paid.
+              Try everything free for 7 days. No credit card required. After the trial, choose Free or Premium.
             </p>
             {subscriptionInfo.hasActiveTrial && subscriptionInfo.trial_ends_at && (
               <p className="text-xs text-primary-400 mt-3">
@@ -186,6 +192,7 @@ export default async function SubscriptionPage() {
                   currentTier={currentTier}
                   hasActiveTrial={subscriptionInfo.hasActiveTrial || undefined}
                   trialEndsAt={subscriptionInfo.trial_ends_at}
+                  isOnPremium={subscriptionInfo.isOnPremium}
                 />
               </div>
             );
