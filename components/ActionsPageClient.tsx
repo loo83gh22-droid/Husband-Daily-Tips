@@ -1,8 +1,9 @@
 'use client';
 
 import { useState, useMemo, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 import ActionsList from './ActionsList';
-import ActionsSearchFilter from './ActionsSearchFilter';
+import ActionsSearchModal from './ActionsSearchModal';
 import FeaturedEvents from './FeaturedChallenges';
 import CategoryCard from './CategoryCard';
 import Link from 'next/link';
@@ -67,12 +68,40 @@ export default function ActionsPageClient({
       }));
   }, [allActions]);
 
+  const pathname = usePathname();
   const [filteredActions, setFilteredActions] = useState<Action[]>(normalizedActions);
+  const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
   
   // Update filteredActions when normalizedActions changes
   useEffect(() => {
     setFilteredActions(normalizedActions);
   }, [normalizedActions]);
+
+  // Keyboard shortcut to open search (Ctrl/Cmd + K) - only on actions page
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      // Only work on actions page
+      if (pathname !== '/dashboard/actions') return;
+
+      // Don't trigger when typing in inputs
+      const target = event.target as HTMLElement;
+      if (
+        target.tagName === 'INPUT' ||
+        target.tagName === 'TEXTAREA' ||
+        target.isContentEditable
+      ) {
+        return;
+      }
+
+      if ((event.ctrlKey || event.metaKey) && event.key === 'k') {
+        event.preventDefault();
+        setIsSearchModalOpen(true);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [pathname]);
   
   // Convert completedMap to Map if it's a plain object (must be done in useMemo to avoid hydration issues)
   const completedMapInstance = useMemo(() => {
@@ -370,12 +399,42 @@ export default function ActionsPageClient({
         </div>
       </section>
 
-      {/* Search and Filter */}
-      <ActionsSearchFilter
+      {/* Search Button */}
+      <div className="mb-6 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => setIsSearchModalOpen(true)}
+            className="flex items-center gap-2 px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-slate-300 hover:bg-slate-700 hover:border-slate-600 transition-colors text-sm font-medium"
+          >
+            <svg
+              className="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            Search Actions
+            <kbd className="ml-2 px-1.5 py-0.5 bg-slate-900 border border-slate-600 rounded text-xs font-mono text-slate-400">
+              Ctrl+K
+            </kbd>
+          </button>
+          {filteredActions.length !== normalizedActions.length && (
+            <span className="text-sm text-slate-400">
+              Showing {filteredActions.length} of {normalizedActions.length} actions
+            </span>
+          )}
+        </div>
+      </div>
+
+      {/* Search Modal */}
+      <ActionsSearchModal
         actions={normalizedActions}
         onFilteredActionsChange={setFilteredActions}
         categories={categories}
         completedActionIds={completedActionIds}
+        isOpen={isSearchModalOpen}
+        onClose={() => setIsSearchModalOpen(false)}
       />
 
       {/* Favorited Actions Section */}
