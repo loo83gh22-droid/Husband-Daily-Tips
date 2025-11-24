@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getSession } from '@auth0/nextjs-auth0';
-import { supabase } from '@/lib/supabase';
+import { supabase, getSupabaseAdmin } from '@/lib/supabase';
 import { Resend } from 'resend';
 
 const resend = new Resend(process.env.RESEND_API_KEY || '');
@@ -19,16 +19,20 @@ export async function POST(request: Request) {
     const auth0Id = session.user.sub;
     const { userId, responses, skip } = await request.json();
 
+    // Use admin client for all database operations (bypasses RLS)
+    const adminSupabase = getSupabaseAdmin();
+
     // If userId not provided, fetch it from the session
     let finalUserId = userId;
     if (!finalUserId) {
-      const { data: user, error: userLookupError } = await supabase
+      const { data: user, error: userLookupError } = await adminSupabase
         .from('users')
         .select('id')
         .eq('auth0_id', auth0Id)
         .single();
 
       if (userLookupError || !user) {
+        console.error('User lookup error:', userLookupError);
         return NextResponse.json({ error: 'User not found. Please try logging in again.' }, { status: 404 });
       }
 
@@ -37,7 +41,7 @@ export async function POST(request: Request) {
 
     // Handle skip: set baseline to 50 and mark survey as completed
     if (skip || !responses || responses.length === 0) {
-      const { error: summaryError } = await supabase.from('survey_summary').upsert({
+      const { error: summaryError } = await adminSupabase.from('survey_summary').upsert({
         user_id: finalUserId,
         baseline_health: 50, // Default baseline
         communication_score: 50,
@@ -56,7 +60,7 @@ export async function POST(request: Request) {
       }
 
       // Mark user as survey completed
-      const { error: updateError } = await supabase
+      const { error: updateError } = await adminSupabase
         .from('users')
         .update({ survey_completed: true })
         .eq('id', finalUserId);
@@ -73,7 +77,7 @@ export async function POST(request: Request) {
     }
 
     // Verify user (need email and name for notification)
-    const { data: user, error: userError } = await supabase
+    const { data: user, error: userError } = await adminSupabase
       .from('users')
       .select('id, email, name, created_at')
       .eq('auth0_id', auth0Id)
@@ -85,7 +89,7 @@ export async function POST(request: Request) {
     }
 
     // Get all questions to map responses
-    const { data: questions, error: questionsError } = await supabase
+    const { data: questions, error: questionsError } = await adminSupabase
       .from('survey_questions')
       .select('*')
       .order('order_index', { ascending: true });
@@ -128,7 +132,7 @@ export async function POST(request: Request) {
     }
 
     // Insert all responses
-    const { error: insertError } = await supabase
+    const { error: insertError } = await adminSupabase
       .from('survey_responses')
       .insert(responseRecords);
 
@@ -231,7 +235,7 @@ export async function POST(request: Request) {
     });
 
     // Save survey summary (connection score stored in intimacy_score for now, or we can add a new column later)
-    const { error: summaryError } = await supabase.from('survey_summary').upsert({
+    const { error: summaryError } = await adminSupabase.from('survey_summary').upsert({
       user_id: finalUserId,
       baseline_health: baselineHealth,
       communication_score: Math.round(communicationScore * 100) / 100,
@@ -267,7 +271,7 @@ export async function POST(request: Request) {
     }
 
     // Mark user as survey completed
-    const { error: updateError } = await supabase
+    const { error: updateError } = await adminSupabase
       .from('users')
       .update({ survey_completed: true })
       .eq('id', finalUserId);

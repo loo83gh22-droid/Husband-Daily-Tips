@@ -33,13 +33,23 @@ export default function SurveyForm({ userId, questions, isPublic = false }: Surv
       ...prev,
       [currentQuestion.id]: value,
     }));
+    // Don't auto-advance - user must click Next or Complete button
+  };
 
-    // Auto-advance after a brief delay for better UX
-    setTimeout(() => {
-      if (!isLastQuestion) {
-        setCurrentQuestionIndex((prev) => prev + 1);
-      }
-    }, 300);
+  const handleNext = () => {
+    // Check if current question is answered
+    if (responses[currentQuestion.id] === undefined) {
+      setError('Please answer this question before continuing.');
+      return;
+    }
+
+    setError(null);
+    if (!isLastQuestion) {
+      setCurrentQuestionIndex((prev) => prev + 1);
+    } else {
+      // Last question - submit
+      handleSubmit();
+    }
   };
 
   const handlePrevious = () => {
@@ -331,17 +341,17 @@ export default function SurveyForm({ userId, questions, isPublic = false }: Surv
 
         {isLastQuestion ? (
           <button
-            onClick={handleSubmit}
+            onClick={handleNext}
             disabled={isSubmitting || responses[currentQuestion.id] === undefined}
-            className="px-6 py-2 bg-primary-500 disabled:bg-primary-900 disabled:text-slate-400 text-slate-950 text-sm font-semibold rounded-lg hover:bg-primary-400 transition-colors disabled:cursor-not-allowed"
+            className="px-6 py-2 bg-primary-500 text-slate-950 text-sm font-semibold rounded-lg hover:bg-primary-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isSubmitting ? 'Submitting...' : 'Complete Survey →'}
           </button>
         ) : (
           <button
-            onClick={() => setCurrentQuestionIndex((prev) => prev + 1)}
+            onClick={handleNext}
             disabled={responses[currentQuestion.id] === undefined}
-            className="px-4 py-2 bg-primary-500 disabled:bg-primary-900 disabled:text-slate-400 text-slate-950 text-sm font-semibold rounded-lg hover:bg-primary-400 transition-colors disabled:cursor-not-allowed"
+            className="px-6 py-2 bg-primary-500 text-slate-950 text-sm font-semibold rounded-lg hover:bg-primary-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Next →
           </button>
