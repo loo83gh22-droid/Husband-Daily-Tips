@@ -12,6 +12,10 @@
     {
       "path": "/api/cron/send-7-day-survey-email",
       "schedule": "0 10 * * *"
+    },
+    {
+      "path": "/api/cron/send-30-and-90-day-survey-emails",
+      "schedule": "0 10 * * *"
     }
   ]
 }

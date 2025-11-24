@@ -16,9 +16,9 @@ export async function GET(request: NextRequest) {
     }
 
     const { searchParams } = new URL(request.url);
-    const surveyType = searchParams.get('type') as 'day_3_feedback' | 'day_7_conversion' | null;
+    const surveyType = searchParams.get('type') as 'day_3_feedback' | 'day_7_conversion' | 'day_30_checkin' | 'day_90_nps' | null;
 
-    if (!surveyType || !['day_3_feedback', 'day_7_conversion'].includes(surveyType)) {
+    if (!surveyType || !['day_3_feedback', 'day_7_conversion', 'day_30_checkin', 'day_90_nps'].includes(surveyType)) {
       return NextResponse.json({ error: 'Invalid survey type' }, { status: 400 });
     }
 

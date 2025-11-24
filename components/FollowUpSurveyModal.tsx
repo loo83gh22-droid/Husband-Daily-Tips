@@ -12,7 +12,7 @@ interface FollowUpQuestion {
 }
 
 interface FollowUpSurveyModalProps {
-  surveyType: 'day_3_feedback' | 'day_7_conversion';
+  surveyType: 'day_3_feedback' | 'day_7_conversion' | 'day_30_checkin' | 'day_90_nps';
   onComplete: () => void;
   onDismiss: () => void;
 }
@@ -171,9 +171,22 @@ export default function FollowUpSurveyModal({ surveyType, onComplete, onDismiss 
     return null;
   }
 
-  const surveyTitle = surveyType === 'day_3_feedback' 
-    ? 'Quick Feedback (3 Days In)' 
-    : 'How\'s It Going? (7 Days In)';
+  const getSurveyTitle = () => {
+    switch (surveyType) {
+      case 'day_3_feedback':
+        return 'Quick Feedback (3 Days In)';
+      case 'day_7_conversion':
+        return 'How\'s It Going? (7 Days In)';
+      case 'day_30_checkin':
+        return '30-Day Check-In';
+      case 'day_90_nps':
+        return 'How Are We Doing? (90 Days In)';
+      default:
+        return 'Survey';
+    }
+  };
+
+  const surveyTitle = getSurveyTitle();
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
@@ -216,30 +229,46 @@ export default function FollowUpSurveyModal({ surveyType, onComplete, onDismiss 
 
           {/* Response Options */}
           <div className="space-y-3">
-            {currentQuestion.question_type === 'scale' && (
-              <div className="grid grid-cols-5 gap-3">
-                {[1, 2, 3, 4, 5].map((value) => {
-                  const isSelected = responses[currentQuestion.id]?.value === value.toString();
-                  return (
-                    <button
-                      key={value}
-                      onClick={() => handleResponse(value.toString())}
-                      disabled={submitting}
-                      className={`p-4 rounded-lg border-2 transition-all ${
-                        isSelected
-                          ? 'bg-primary-500 border-primary-400 text-slate-50 shadow-lg scale-105'
-                          : 'bg-slate-800/50 border-slate-700 text-slate-300 hover:border-slate-600 hover:bg-slate-800'
-                      } disabled:opacity-50 disabled:cursor-not-allowed`}
-                    >
-                      <div className="text-2xl font-bold mb-1">{value}</div>
-                      <div className="text-[10px] text-slate-400">
-                        {value === 1 ? 'Poor' : value === 2 ? 'Fair' : value === 3 ? 'Good' : value === 4 ? 'Very Good' : 'Excellent'}
-                      </div>
-                    </button>
-                  );
-                })}
-              </div>
-            )}
+            {currentQuestion.question_type === 'scale' && (() => {
+              // Check if this is an NPS question (0-10 scale)
+              const isNPS = surveyType === 'day_90_nps' && currentQuestion.order_index === 1;
+              const scaleMin = isNPS ? 0 : 1;
+              const scaleMax = isNPS ? 10 : 5;
+              const scaleValues = Array.from({ length: scaleMax - scaleMin + 1 }, (_, i) => i + scaleMin);
+              
+              return (
+                <div className={`grid gap-2 ${isNPS ? 'grid-cols-11' : 'grid-cols-5'}`}>
+                  {scaleValues.map((value) => {
+                    const isSelected = responses[currentQuestion.id]?.value === value.toString();
+                    return (
+                      <button
+                        key={value}
+                        onClick={() => handleResponse(value.toString())}
+                        disabled={submitting}
+                        className={`rounded-lg border-2 transition-all ${
+                          isSelected
+                            ? 'bg-primary-500 border-primary-400 text-slate-50 shadow-lg scale-105'
+                            : 'bg-slate-800/50 border-slate-700 text-slate-300 hover:border-slate-600 hover:bg-slate-800'
+                        } disabled:opacity-50 disabled:cursor-not-allowed ${isNPS ? 'p-2' : 'p-4'}`}
+                      >
+                        <div className={`font-bold mb-1 ${isNPS ? 'text-base' : 'text-2xl'}`}>{value}</div>
+                        {!isNPS && (
+                          <div className="text-[10px] text-slate-400">
+                            {value === 1 ? 'Poor' : value === 2 ? 'Fair' : value === 3 ? 'Good' : value === 4 ? 'Very Good' : 'Excellent'}
+                          </div>
+                        )}
+                        {isNPS && value === 0 && (
+                          <div className="text-[8px] text-slate-400">Not at all</div>
+                        )}
+                        {isNPS && value === 10 && (
+                          <div className="text-[8px] text-slate-400">Extremely</div>
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+              );
+            })()}
 
             {currentQuestion.question_type === 'yes_no' && (
               <div className="grid grid-cols-2 gap-4">

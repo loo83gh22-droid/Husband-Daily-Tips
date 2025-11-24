@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { survey_type, responses } = body;
 
-    if (!survey_type || !['day_3_feedback', 'day_7_conversion'].includes(survey_type)) {
+    if (!survey_type || !['day_3_feedback', 'day_7_conversion', 'day_30_checkin', 'day_90_nps'].includes(survey_type)) {
       return NextResponse.json({ error: 'Invalid survey type' }, { status: 400 });
     }
 
