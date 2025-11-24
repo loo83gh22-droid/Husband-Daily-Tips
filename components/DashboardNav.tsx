@@ -72,7 +72,13 @@ export default function DashboardNav() {
 
           <div className="flex items-center gap-1 md:gap-2">
             {navLinks.map((link) => {
-              const isActive = pathname === link.href || pathname?.startsWith(link.href + '/');
+              // For exact matches or sub-paths (but not for /dashboard matching /dashboard/badges)
+              const isExactMatch = pathname === link.href || pathname === link.href + '/';
+              const isSubPath = pathname?.startsWith(link.href + '/');
+              // Only use sub-path matching if it's not the dashboard root (to avoid highlighting dashboard when on sub-pages)
+              const isActive = link.href === '/dashboard' 
+                ? isExactMatch 
+                : (isExactMatch || isSubPath);
               return (
                 <Link
                   key={link.href}

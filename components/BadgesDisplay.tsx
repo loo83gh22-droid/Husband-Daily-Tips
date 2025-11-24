@@ -105,7 +105,7 @@ export default function BadgesDisplay({ userId }: BadgesDisplayProps) {
   return (
     <div className="bg-slate-900/70 border border-slate-800 rounded-xl p-4 md:p-6">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-sm font-semibold text-slate-200">Your Badges</h3>
+        <h3 className="text-sm font-semibold text-slate-200">Badges In Progress</h3>
         <span className="text-xs text-slate-400">
           {earnedBadges.length} / {badges.length}
         </span>
