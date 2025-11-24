@@ -103,10 +103,10 @@ export default function FeaturedEvents() {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h2 className="text-3xl md:text-4xl font-bold text-slate-50 bg-gradient-to-r from-primary-400 to-primary-600 bg-clip-text text-transparent">
-            Featured Events
+            7-Day Events
           </h2>
           <p className="text-base text-slate-300 mt-2 font-medium">
-            7 days. 7 chances to level up. Pick an event and get started.
+            7 days. 7 chances to level up. Pick a 7-day event and get started.
           </p>
         </div>
         {challenges.length > 3 && (

@@ -93,7 +93,7 @@ export default function CategoryCard({
                 : 'bg-primary-500/20 text-primary-300 border border-primary-500/30 hover:bg-primary-500/30'
             }`}
           >
-            {isEnrolled ? 'Active' : 'Start Event'}
+            {isEnrolled ? 'Active' : 'Start 7-Day Event'}
           </button>
         )}
       </div>

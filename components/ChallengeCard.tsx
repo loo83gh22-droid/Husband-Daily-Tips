@@ -279,7 +279,7 @@ export default function ChallengeCard({ challenge, userChallenge, userId, onJoin
             disabled={isJoining || isPast}
             className={getButtonClasses(challenge.theme, isJoining || isPast)}
           >
-            {isJoining ? 'Joining...' : isPast ? 'Event Ended' : 'Join Event'}
+            {isJoining ? 'Joining...' : isPast ? '7-Day Event Ended' : 'Join 7-Day Event'}
           </button>
         ) : (
           <Link

@@ -337,7 +337,7 @@ export default function ActionsPageClient({
 
   return (
     <>
-      {/* Featured Events */}
+      {/* Featured 7-Day Events */}
       <FeaturedEvents />
 
       {/* Category Cards Grid */}
