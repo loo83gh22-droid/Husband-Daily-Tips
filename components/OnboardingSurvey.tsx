@@ -133,9 +133,50 @@ export default function OnboardingSurvey({ userId, onComplete }: OnboardingSurve
     return null;
   }
 
+  const handleSkip = async () => {
+    if (confirm('Skip the survey? You can always complete it later. Your baseline health will start at 50.')) {
+      setSubmitting(true);
+      try {
+        // Mark survey as completed with default baseline of 50
+        const response = await fetch('/api/survey/submit', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            userId,
+            responses: [], // Empty responses = skip
+            skip: true,
+          }),
+        });
+
+        if (response.ok) {
+          onComplete();
+        } else {
+          console.error('Error skipping survey');
+          alert('Failed to skip survey. Please try again.');
+        }
+      } catch (error) {
+        console.error('Error skipping survey:', error);
+        alert('Failed to skip survey. Please try again.');
+      } finally {
+        setSubmitting(false);
+      }
+    }
+  };
+
   return (
     <div className="min-h-screen bg-slate-950 flex items-center justify-center p-4">
       <div className="max-w-2xl w-full">
+        {/* Optional Message */}
+        {currentQuestionIndex === 0 && (
+          <div className="mb-6 p-4 bg-slate-800/50 border border-slate-700/50 rounded-lg">
+            <p className="text-sm text-slate-300 text-center">
+              You don&apos;t need to complete the survey, but it will help establish your baseline health score and help personalize your actions and overall experience.
+            </p>
+          </div>
+        )}
+
         {/* Progress Bar */}
         <div className="mb-8">
           <div className="flex justify-between items-center mb-2">
@@ -221,14 +262,25 @@ export default function OnboardingSurvey({ userId, onComplete }: OnboardingSurve
           </div>
 
           {/* Navigation */}
-          <div className="flex justify-between mt-8">
-            <button
-              onClick={handlePrevious}
-              disabled={currentQuestionIndex === 0 || submitting}
-              className="px-6 py-2 text-slate-400 hover:text-slate-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-            >
-              ← Previous
-            </button>
+          <div className="flex justify-between items-center mt-8">
+            <div className="flex gap-4">
+              {currentQuestionIndex === 0 && (
+                <button
+                  onClick={handleSkip}
+                  disabled={submitting}
+                  className="px-4 py-2 text-slate-400 hover:text-slate-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm"
+                >
+                  Skip Survey
+                </button>
+              )}
+              <button
+                onClick={handlePrevious}
+                disabled={currentQuestionIndex === 0 || submitting}
+                className="px-6 py-2 text-slate-400 hover:text-slate-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              >
+                ← Previous
+              </button>
+            </div>
             {submitting && (
               <div className="flex items-center gap-2 text-slate-400">
                 <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary-500"></div>

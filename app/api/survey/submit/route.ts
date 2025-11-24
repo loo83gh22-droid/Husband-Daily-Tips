@@ -17,10 +17,47 @@ export async function POST(request: Request) {
     }
 
     const auth0Id = session.user.sub;
-    const { userId, responses } = await request.json();
+    const { userId, responses, skip } = await request.json();
 
-    if (!userId || !responses) {
-      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
+    if (!userId) {
+      return NextResponse.json({ error: 'Missing userId' }, { status: 400 });
+    }
+
+    // Handle skip: set baseline to 50 and mark survey as completed
+    if (skip || !responses || responses.length === 0) {
+      const { error: summaryError } = await supabase.from('survey_summary').upsert({
+        user_id: userId,
+        baseline_health: 50, // Default baseline
+        communication_score: 50,
+        romance_score: 50,
+        partnership_score: 50,
+        intimacy_score: 50,
+        conflict_score: 50,
+        completed_at: new Date().toISOString(),
+      }, {
+        onConflict: 'user_id',
+      });
+
+      if (summaryError) {
+        console.error('Error saving default survey summary:', summaryError);
+        return NextResponse.json({ error: 'Failed to save survey summary' }, { status: 500 });
+      }
+
+      // Mark user as survey completed
+      const { error: updateError } = await supabase
+        .from('users')
+        .update({ survey_completed: true })
+        .eq('id', userId);
+
+      if (updateError) {
+        console.error('Error updating user survey status:', updateError);
+      }
+
+      return NextResponse.json({
+        success: true,
+        baselineHealth: 50,
+        skipped: true,
+      });
     }
 
     // Verify user (need email and name for notification)
@@ -89,13 +126,17 @@ export async function POST(request: Request) {
     }
 
     // Calculate category scores (average of responses per category)
+    // Now includes: communication, intimacy, partnership, romance, gratitude, conflict_resolution, reconnection, quality_time, consistency
     const categoryScores: Record<string, { total: number; count: number }> = {
       communication: { total: 0, count: 0 },
-      romance: { total: 0, count: 0 },
-      partnership: { total: 0, count: 0 },
       intimacy: { total: 0, count: 0 },
-      conflict: { total: 0, count: 0 },
-      connection: { total: 0, count: 0 }, // Roommate Syndrome / Connection category
+      partnership: { total: 0, count: 0 },
+      romance: { total: 0, count: 0 },
+      gratitude: { total: 0, count: 0 },
+      conflict_resolution: { total: 0, count: 0 },
+      reconnection: { total: 0, count: 0 },
+      quality_time: { total: 0, count: 0 },
+      consistency: { total: 0, count: 0 },
     };
 
     responseRecords.forEach((response) => {
@@ -113,35 +154,42 @@ export async function POST(request: Request) {
     });
 
     // Calculate average scores per category (scale to 0-100)
-    // Handle division by zero for categories without questions
+    // Each category has 2 questions (except consistency which has 1)
+    // Scale: average (1-5) × 20 = score (0-100)
     const communicationScore = categoryScores.communication.count > 0
       ? (categoryScores.communication.total / categoryScores.communication.count) * 20
       : 50; // Default to 50 if no questions
-    const romanceScore = categoryScores.romance.count > 0
-      ? (categoryScores.romance.total / categoryScores.romance.count) * 20
-      : 50; // Default to 50 if no questions
-    const partnershipScore = categoryScores.partnership.count > 0
-      ? (categoryScores.partnership.total / categoryScores.partnership.count) * 20
-      : 50; // Default to 50 if no questions
     const intimacyScore = categoryScores.intimacy.count > 0
       ? (categoryScores.intimacy.total / categoryScores.intimacy.count) * 20
-      : 50; // Default to 50 if no questions
-    const conflictScore = categoryScores.conflict.count > 0
-      ? (categoryScores.conflict.total / categoryScores.conflict.count) * 20
-      : 50; // Default to 50 if no questions
-    const connectionScore = categoryScores.connection.count > 0
-      ? (categoryScores.connection.total / categoryScores.connection.count) * 20
-      : 50; // Default to 50 if no questions
+      : 50;
+    const partnershipScore = categoryScores.partnership.count > 0
+      ? (categoryScores.partnership.total / categoryScores.partnership.count) * 20
+      : 50;
+    const romanceScore = categoryScores.romance.count > 0
+      ? (categoryScores.romance.total / categoryScores.romance.count) * 20
+      : 50;
+    const gratitudeScore = categoryScores.gratitude.count > 0
+      ? (categoryScores.gratitude.total / categoryScores.gratitude.count) * 20
+      : 50;
+    const conflictResolutionScore = categoryScores.conflict_resolution.count > 0
+      ? (categoryScores.conflict_resolution.total / categoryScores.conflict_resolution.count) * 20
+      : 50;
+    const reconnectionScore = categoryScores.reconnection.count > 0
+      ? (categoryScores.reconnection.total / categoryScores.reconnection.count) * 20
+      : 50;
+    const qualityTimeScore = categoryScores.quality_time.count > 0
+      ? (categoryScores.quality_time.total / categoryScores.quality_time.count) * 20
+      : 50;
+    const consistencyScore = categoryScores.consistency.count > 0
+      ? (categoryScores.consistency.total / categoryScores.consistency.count) * 20
+      : 50;
 
-    // Calculate baseline health from all category scores
-    // For conflict: if no questions answered, use average of other categories
-    const finalConflictScore = categoryScores.conflict.count > 0
-      ? conflictScore
-      : (communicationScore + romanceScore + partnershipScore + intimacyScore) / 4;
-
-    // Baseline health is the average of all 6 category scores (including connection)
+    // Baseline health is the average of all 9 category scores
+    // 8 action categories (2 questions each) + 1 consistency category (1 question) = 17 questions total
     const baselineHealth = Math.round(
-      (communicationScore + romanceScore + partnershipScore + intimacyScore + finalConflictScore + connectionScore) / 6
+      (communicationScore + intimacyScore + partnershipScore + romanceScore + 
+       gratitudeScore + conflictResolutionScore + reconnectionScore + qualityTimeScore + 
+       consistencyScore) / 9
     );
 
     // Extract goal-setting responses (self-ratings and improvement desires)
@@ -177,8 +225,8 @@ export async function POST(request: Request) {
       communication_score: Math.round(communicationScore * 100) / 100,
       romance_score: Math.round(romanceScore * 100) / 100,
       partnership_score: Math.round(partnershipScore * 100) / 100,
-      intimacy_score: Math.round(intimacyScore * 100) / 100, // Note: We can add connection_score column later
-      conflict_score: Math.round(finalConflictScore * 100) / 100,
+      intimacy_score: Math.round(intimacyScore * 100) / 100,
+      conflict_score: Math.round(conflictResolutionScore * 100) / 100, // Now uses conflict_resolution category
       completed_at: new Date().toISOString(),
       // Goal preferences
       communication_self_rating: goalResponses.communication?.selfRating || null,
@@ -273,8 +321,11 @@ export async function POST(request: Request) {
           romance: '💕 Romance',
           partnership: '🤝 Partnership',
           intimacy: '💝 Intimacy',
-          conflict: '⚡ Conflict',
-          connection: '🔗 Connection',
+          conflict_resolution: '⚖️ Conflict Resolution',
+          gratitude: '🙏 Gratitude',
+          reconnection: '🔗 Reconnection',
+          quality_time: '⏰ Quality Time',
+          consistency: '🔥 Consistency',
         };
 
         await resend.emails.send({
@@ -305,26 +356,42 @@ export async function POST(request: Request) {
                   
                   <div style="background-color: #f3f4f6; border-radius: 8px; padding: 20px; margin-bottom: 20px;">
                     <h2 style="color: #1f2937; font-size: 18px; margin: 0 0 15px 0;">Category Scores:</h2>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 20px;">
                       <div style="background-color: #ffffff; padding: 10px; border-radius: 6px;">
                         <p style="color: #6b7280; font-size: 12px; margin: 0;">Communication</p>
                         <p style="color: #1f2937; font-size: 20px; font-weight: 600; margin: 5px 0 0 0;">${Math.round(communicationScore * 100) / 100}</p>
-                      </div>
-                      <div style="background-color: #ffffff; padding: 10px; border-radius: 6px;">
-                        <p style="color: #6b7280; font-size: 12px; margin: 0;">Romance</p>
-                        <p style="color: #1f2937; font-size: 20px; font-weight: 600; margin: 5px 0 0 0;">${Math.round(romanceScore * 100) / 100}</p>
-                      </div>
-                      <div style="background-color: #ffffff; padding: 10px; border-radius: 6px;">
-                        <p style="color: #6b7280; font-size: 12px; margin: 0;">Partnership</p>
-                        <p style="color: #1f2937; font-size: 20px; font-weight: 600; margin: 5px 0 0 0;">${Math.round(partnershipScore * 100) / 100}</p>
                       </div>
                       <div style="background-color: #ffffff; padding: 10px; border-radius: 6px;">
                         <p style="color: #6b7280; font-size: 12px; margin: 0;">Intimacy</p>
                         <p style="color: #1f2937; font-size: 20px; font-weight: 600; margin: 5px 0 0 0;">${Math.round(intimacyScore * 100) / 100}</p>
                       </div>
                       <div style="background-color: #ffffff; padding: 10px; border-radius: 6px;">
-                        <p style="color: #6b7280; font-size: 12px; margin: 0;">Conflict</p>
-                        <p style="color: #1f2937; font-size: 20px; font-weight: 600; margin: 5px 0 0 0;">${Math.round(finalConflictScore * 100) / 100}</p>
+                        <p style="color: #6b7280; font-size: 12px; margin: 0;">Partnership</p>
+                        <p style="color: #1f2937; font-size: 20px; font-weight: 600; margin: 5px 0 0 0;">${Math.round(partnershipScore * 100) / 100}</p>
+                      </div>
+                      <div style="background-color: #ffffff; padding: 10px; border-radius: 6px;">
+                        <p style="color: #6b7280; font-size: 12px; margin: 0;">Romance</p>
+                        <p style="color: #1f2937; font-size: 20px; font-weight: 600; margin: 5px 0 0 0;">${Math.round(romanceScore * 100) / 100}</p>
+                      </div>
+                      <div style="background-color: #ffffff; padding: 10px; border-radius: 6px;">
+                        <p style="color: #6b7280; font-size: 12px; margin: 0;">Gratitude</p>
+                        <p style="color: #1f2937; font-size: 20px; font-weight: 600; margin: 5px 0 0 0;">${Math.round(gratitudeScore * 100) / 100}</p>
+                      </div>
+                      <div style="background-color: #ffffff; padding: 10px; border-radius: 6px;">
+                        <p style="color: #6b7280; font-size: 12px; margin: 0;">Conflict Resolution</p>
+                        <p style="color: #1f2937; font-size: 20px; font-weight: 600; margin: 5px 0 0 0;">${Math.round(conflictResolutionScore * 100) / 100}</p>
+                      </div>
+                      <div style="background-color: #ffffff; padding: 10px; border-radius: 6px;">
+                        <p style="color: #6b7280; font-size: 12px; margin: 0;">Reconnection</p>
+                        <p style="color: #1f2937; font-size: 20px; font-weight: 600; margin: 5px 0 0 0;">${Math.round(reconnectionScore * 100) / 100}</p>
+                      </div>
+                      <div style="background-color: #ffffff; padding: 10px; border-radius: 6px;">
+                        <p style="color: #6b7280; font-size: 12px; margin: 0;">Quality Time</p>
+                        <p style="color: #1f2937; font-size: 20px; font-weight: 600; margin: 5px 0 0 0;">${Math.round(qualityTimeScore * 100) / 100}</p>
+                      </div>
+                      <div style="background-color: #ffffff; padding: 10px; border-radius: 6px;">
+                        <p style="color: #6b7280; font-size: 12px; margin: 0;">Consistency</p>
+                        <p style="color: #1f2937; font-size: 20px; font-weight: 600; margin: 5px 0 0 0;">${Math.round(consistencyScore * 100) / 100}</p>
                       </div>
                     </div>
                   </div>
@@ -370,7 +437,11 @@ export async function POST(request: Request) {
         romance: Math.round(romanceScore * 100) / 100,
         partnership: Math.round(partnershipScore * 100) / 100,
         intimacy: Math.round(intimacyScore * 100) / 100,
-        conflict: Math.round(finalConflictScore * 100) / 100,
+        conflict: Math.round(conflictResolutionScore * 100) / 100,
+        gratitude: Math.round(gratitudeScore * 100) / 100,
+        reconnection: Math.round(reconnectionScore * 100) / 100,
+        quality_time: Math.round(qualityTimeScore * 100) / 100,
+        consistency: Math.round(consistencyScore * 100) / 100,
       },
     });
   } catch (error) {
