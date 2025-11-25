@@ -24,10 +24,24 @@ export default function HiddenActionsManager() {
   const [isUnhiding, setIsUnhiding] = useState<string | null>(null);
   const [selectedAction, setSelectedAction] = useState<HiddenAction | null>(null);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
+  const [partnerName, setPartnerName] = useState<string | null>(null);
 
   useEffect(() => {
     fetchHiddenActions();
+    fetchPartnerName();
   }, []);
+
+  const fetchPartnerName = async () => {
+    try {
+      const response = await fetch('/api/user/profile');
+      if (response.ok) {
+        const data = await response.json();
+        setPartnerName(data.partner_name || null);
+      }
+    } catch (error) {
+      console.error('Error fetching partner name:', error);
+    }
+  };
 
   const fetchHiddenActions = async () => {
     setIsLoading(true);
@@ -146,6 +160,7 @@ export default function HiddenActionsManager() {
             setSelectedAction(null);
           }}
           action={selectedAction}
+          partnerName={partnerName}
         />
       )}
     </>

@@ -3,6 +3,7 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import { getGuideSlugForAction } from '@/lib/action-guide-mapping';
+import { personalizeText } from '@/lib/personalize-text';
 
 interface ActionDetailModalProps {
   isOpen: boolean;
@@ -19,6 +20,7 @@ interface ActionDetailModalProps {
   };
   onHide?: () => void;
   showHideButton?: boolean;
+  partnerName?: string | null;
 }
 
 export default function ActionDetailModal({
@@ -27,6 +29,7 @@ export default function ActionDetailModal({
   action,
   onHide,
   showHideButton = false,
+  partnerName,
 }: ActionDetailModalProps) {
   if (!isOpen) return null;
 
@@ -87,14 +90,14 @@ export default function ActionDetailModal({
                   </span>
                   <h3 className="text-2xl md:text-3xl font-bold text-slate-50 mb-2 flex items-center gap-3">
                     {action.icon && <span className="text-3xl">{action.icon}</span>}
-                    <span>{action.name}</span>
+                    <span>{personalizeText(action.name, partnerName)}</span>
                   </h3>
                 </div>
 
                 {/* Description */}
                 <div className="mb-6">
                   <p className="text-slate-200 text-base leading-relaxed whitespace-pre-line">
-                    {action.description}
+                    {personalizeText(action.description, partnerName)}
                   </p>
                 </div>
 

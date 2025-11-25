@@ -15,7 +15,7 @@ async function updateProfile(request: Request) {
     }
 
     const auth0Id = session.user.sub;
-    const { username, wedding_date, post_anonymously, timezone, profile_picture, has_kids, kids_live_with_you, country } = await request.json();
+    const { username, wedding_date, post_anonymously, timezone, profile_picture, has_kids, kids_live_with_you, country, partner_name } = await request.json();
 
     // Use admin client to bypass RLS (Auth0 context isn't set for RLS)
     const adminSupabase = getSupabaseAdmin();
@@ -100,6 +100,17 @@ async function updateProfile(request: Request) {
     if (country !== undefined) {
       updateData.country = country || null;
     }
+    if (partner_name !== undefined) {
+      // Trim and validate partner name
+      const trimmedName = partner_name?.trim() || null;
+      if (trimmedName && trimmedName.length > 50) {
+        return NextResponse.json(
+          { error: 'Partner name must be 50 characters or less' },
+          { status: 400 }
+        );
+      }
+      updateData.partner_name = trimmedName;
+    }
 
     const { error: updateError } = await adminSupabase
       .from('users')
@@ -144,7 +155,7 @@ export async function GET() {
     
     const { data: user, error: userError } = await adminSupabase
       .from('users')
-      .select('username, wedding_date, post_anonymously, name, timezone, profile_picture, has_kids, kids_live_with_you, country')
+      .select('username, wedding_date, post_anonymously, name, timezone, profile_picture, has_kids, kids_live_with_you, country, partner_name')
       .eq('auth0_id', auth0Id)
       .single();
 
@@ -162,6 +173,7 @@ export async function GET() {
           has_kids: user.has_kids,
           kids_live_with_you: user.kids_live_with_you,
           country: user.country,
+          partner_name: user.partner_name,
         });
   } catch (error) {
     console.error('Unexpected error fetching profile:', error);

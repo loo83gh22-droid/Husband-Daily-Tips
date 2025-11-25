@@ -30,6 +30,7 @@ interface ActionsListProps {
   completedMap: Map<string, ActionCompletion[]>; // Changed to array of completions
   userId: string;
   favoritedActionIds?: Set<string>; // IDs of favorited actions
+  partnerName?: string | null;
 }
 
 export default function ActionsList({
@@ -37,6 +38,7 @@ export default function ActionsList({
   completedMap,
   userId,
   favoritedActionIds = new Set(),
+  partnerName,
 }: ActionsListProps) {
   const [selectedAction, setSelectedAction] = useState<Action | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -242,6 +244,7 @@ export default function ActionsList({
           }}
           action={detailAction}
           showHideButton={true}
+          partnerName={partnerName}
           onHide={async () => {
             setIsHiding(true);
             try {

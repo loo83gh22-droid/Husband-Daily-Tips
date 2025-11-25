@@ -10,7 +10,7 @@ async function getActions(auth0Id: string) {
   const adminSupabase = getSupabaseAdmin();
   const { data: user } = await adminSupabase
     .from('users')
-    .select('id')
+    .select('id, partner_name')
     .eq('auth0_id', auth0Id)
     .single();
 
@@ -146,6 +146,7 @@ async function getActions(auth0Id: string) {
     currentStreak,
     actionsThisWeek,
     badgesEarned,
+    partnerName: user.partner_name || null,
   };
 }
 
@@ -157,7 +158,7 @@ export default async function ActionsPage() {
   }
 
   const auth0Id = session.user.sub;
-  const { actions, completedMap, userId, favoritedActions, currentStreak, actionsThisWeek, badgesEarned } = await getActions(auth0Id);
+  const { actions, completedMap, userId, favoritedActions, currentStreak, actionsThisWeek, badgesEarned, partnerName } = await getActions(auth0Id);
 
   // Filter out favorited actions from main actions list (they'll be shown separately)
   const favoritedActionIds = new Set(favoritedActions.map((fa: any) => fa.id));
@@ -325,6 +326,7 @@ export default async function ActionsPage() {
             completedMap={completedMap}
             userId={userId}
             favoritedActions={favoritedActions}
+            partnerName={partnerName}
           />
         </div>
       </main>

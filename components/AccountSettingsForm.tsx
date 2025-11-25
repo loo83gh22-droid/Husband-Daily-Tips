@@ -12,6 +12,7 @@ interface UserProfile {
   has_kids: boolean | null;
   kids_live_with_you: boolean | null;
   country: string | null;
+  partner_name: string | null;
 }
 
 interface AccountSettingsFormProps {
@@ -28,6 +29,7 @@ export default function AccountSettingsForm({ initialData }: AccountSettingsForm
     has_kids: initialData.has_kids ?? null,
     kids_live_with_you: initialData.kids_live_with_you ?? null,
     country: initialData.country || null,
+    partner_name: initialData.partner_name || '',
   });
   const [profilePicture, setProfilePicture] = useState<File | null>(null);
   const [profilePictureUrl, setProfilePictureUrl] = useState<string | null>(initialData.profile_picture);
@@ -125,6 +127,7 @@ export default function AccountSettingsForm({ initialData }: AccountSettingsForm
           has_kids: formData.has_kids,
           kids_live_with_you: formData.kids_live_with_you,
           country: formData.country,
+          partner_name: formData.partner_name || null,
         }),
       });
 
@@ -364,6 +367,35 @@ export default function AccountSettingsForm({ initialData }: AccountSettingsForm
               </div>
             </div>
           )}
+        </div>
+      </div>
+
+      {/* Partner Name */}
+      <div className="pt-4 border-t border-slate-800">
+        <div className="mb-4">
+          <p className="text-sm font-medium text-slate-300 mb-3">
+            Personalization
+          </p>
+          <p className="text-xs text-slate-400 mb-4 leading-relaxed">
+            Add your partner&apos;s name to personalize your action cards. Instead of &quot;Take your partner out...&quot;, you&apos;ll see &quot;Take Sarah out...&quot; (or whatever name you enter).
+          </p>
+        </div>
+
+        <div>
+          <label htmlFor="partner_name" className="block text-sm font-medium text-slate-300 mb-2">
+            Your Partner&apos;s Name
+          </label>
+          <input
+            type="text"
+            id="partner_name"
+            value={formData.partner_name}
+            onChange={(e) => setFormData({ ...formData, partner_name: e.target.value })}
+            placeholder="Enter your partner's name (optional)"
+            className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-slate-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+          />
+          <p className="mt-1 text-xs text-slate-500">
+            This will be used to personalize your daily action cards
+          </p>
         </div>
       </div>
 

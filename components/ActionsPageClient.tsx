@@ -25,6 +25,7 @@ interface ActionsPageClientProps {
   completedMap: Record<string, any[]> | Map<string, any[]>;
   userId: string;
   favoritedActions: Action[];
+  partnerName?: string | null;
 }
 
 export default function ActionsPageClient({
@@ -32,6 +33,7 @@ export default function ActionsPageClient({
   completedMap,
   userId,
   favoritedActions,
+  partnerName,
 }: ActionsPageClientProps) {
   // Scroll to category if hash is present in URL
   useEffect(() => {
@@ -456,6 +458,7 @@ export default function ActionsPageClient({
       <FavoritesModal
         isOpen={isFavoritesModalOpen}
         onClose={() => setIsFavoritesModalOpen(false)}
+        partnerName={partnerName}
       />
 
       {/* Filtered Actions by Theme */}
@@ -487,6 +490,7 @@ export default function ActionsPageClient({
                   completedMap={completedMapInstance}
                   userId={userId}
                   favoritedActionIds={favoritedActionIds}
+                  partnerName={partnerName}
                 />
 
                 {themeActions.length > 4 && (

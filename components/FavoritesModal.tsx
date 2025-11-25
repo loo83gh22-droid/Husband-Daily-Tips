@@ -21,9 +21,10 @@ interface FavoriteAction {
 interface FavoritesModalProps {
   isOpen: boolean;
   onClose: () => void;
+  partnerName?: string | null;
 }
 
-export default function FavoritesModal({ isOpen, onClose }: FavoritesModalProps) {
+export default function FavoritesModal({ isOpen, onClose, partnerName }: FavoritesModalProps) {
   const [favorites, setFavorites] = useState<FavoriteAction[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedAction, setSelectedAction] = useState<FavoriteAction | null>(null);
@@ -186,6 +187,7 @@ export default function FavoritesModal({ isOpen, onClose }: FavoritesModalProps)
             setSelectedAction(null);
           }}
           action={selectedAction}
+          partnerName={partnerName}
         />
       )}
     </>

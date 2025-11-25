@@ -8,6 +8,7 @@ import ReflectionModal from './ReflectionModal';
 import SocialShare from './SocialShare';
 import ActionCelebration from './ActionCelebration';
 import ShowMoreModal from './ShowMoreModal';
+import { personalizeText } from '@/lib/personalize-text';
 import { toast } from './Toast';
 import { getGuideSlugForAction } from '@/lib/action-guide-mapping';
 
@@ -33,9 +34,10 @@ interface DailyTipCardProps {
   tip: Tip;
   subscriptionTier?: string;
   onActionReplaced?: (newAction: Tip) => void;
+  partnerName?: string | null;
 }
 
-export default function DailyTipCard({ tip, subscriptionTier = 'free', onActionReplaced }: DailyTipCardProps) {
+export default function DailyTipCard({ tip, subscriptionTier = 'free', onActionReplaced, partnerName }: DailyTipCardProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isCompleted, setIsCompleted] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -541,7 +543,7 @@ END:VCALENDAR`;
               </span>
               <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-slate-50 mb-2 sm:mb-3 flex items-center gap-2 sm:gap-3">
                 {tip.icon && <span className="text-2xl sm:text-3xl">{tip.icon}</span>}
-                <span className="break-words">{tip.title || tip.name}</span>
+                <span className="break-words">{personalizeText(tip.title || tip.name, partnerName)}</span>
               </h3>
             </div>
             <div className="flex items-center gap-2 sm:gap-3 flex-wrap sm:flex-nowrap w-full sm:w-auto">
@@ -601,7 +603,7 @@ END:VCALENDAR`;
           
           <div className="prose max-w-none">
             <p className="text-slate-100 text-sm sm:text-base md:text-lg leading-relaxed whitespace-pre-line mb-3 sm:mb-4">
-              {tip.content || tip.description}
+              {personalizeText(tip.content || tip.description, partnerName)}
             </p>
             {tip.benefit && (
               <div className="mt-4 sm:mt-5 p-3 sm:p-4 md:p-5 bg-slate-800/60 border-l-4 border-primary-500/60 rounded-r-lg">

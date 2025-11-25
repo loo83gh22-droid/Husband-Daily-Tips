@@ -24,9 +24,10 @@ interface Tip {
 interface DailyActionCardProps {
   initialTip: Tip;
   subscriptionTier?: string;
+  partnerName?: string | null;
 }
 
-export default function DailyActionCard({ initialTip, subscriptionTier = 'free' }: DailyActionCardProps) {
+export default function DailyActionCard({ initialTip, subscriptionTier = 'free', partnerName }: DailyActionCardProps) {
   const [currentTip, setCurrentTip] = useState<Tip>(initialTip);
 
   const handleActionReplaced = (newAction: Tip) => {
@@ -38,6 +39,7 @@ export default function DailyActionCard({ initialTip, subscriptionTier = 'free' 
       tip={currentTip} 
       subscriptionTier={subscriptionTier}
       onActionReplaced={handleActionReplaced}
+      partnerName={partnerName}
     />
   );
 }

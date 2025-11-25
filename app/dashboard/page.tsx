@@ -29,7 +29,7 @@ async function getUserData(auth0Id: string) {
   const adminSupabase = getSupabaseAdmin();
   const { data: user, error } = await adminSupabase
     .from('users')
-    .select('*, subscription_tier, username, name, email, has_kids, kids_live_with_you, trial_started_at, trial_ends_at, country')
+    .select('*, subscription_tier, username, name, email, has_kids, kids_live_with_you, trial_started_at, trial_ends_at, country, partner_name')
     .eq('auth0_id', auth0Id)
     .single();
 
@@ -753,7 +753,11 @@ export default async function Dashboard() {
 
             {displayAction ? (
               <div data-tour="mission">
-                <DailyActionCard initialTip={displayAction} subscriptionTier={user.subscription_tier || 'free'} />
+                <DailyActionCard 
+                  initialTip={displayAction} 
+                  subscriptionTier={user.subscription_tier || 'free'}
+                  partnerName={user.partner_name || null}
+                />
               </div>
             ) : (
               <div className="bg-slate-900/80 rounded-xl shadow-lg p-8 text-center border border-slate-800">
