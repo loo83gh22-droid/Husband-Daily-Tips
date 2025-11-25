@@ -8,6 +8,7 @@ interface SubscriptionButtonProps {
     name: string;
     price: number;
     tier: string;
+    interval?: 'month' | 'year';
   };
   currentTier?: string;
   hasActiveTrial?: boolean | null;
@@ -50,6 +51,9 @@ export default function SubscriptionButton({ plan, currentTier, hasActiveTrial, 
           headers: {
             'Content-Type': 'application/json',
           },
+          body: JSON.stringify({
+            interval: plan.interval || 'month',
+          }),
         });
 
         if (!response.ok) {
@@ -92,7 +96,8 @@ export default function SubscriptionButton({ plan, currentTier, hasActiveTrial, 
   } else if (plan.tier === 'premium' && currentTier === 'free') {
     buttonText = 'Start Free Trial';
   } else if (plan.tier === 'premium' && hasActiveTrial) {
-    buttonText = 'Join Premium ($7/month)';
+    const priceText = plan.interval === 'year' ? '$71.40/year' : '$7/month';
+    buttonText = `Join Premium (${priceText})`;
   } else if (plan.tier === 'premium' && currentTier === 'premium' && !hasActiveTrial) {
     // User has active subscription (not trial)
     buttonText = 'Current Plan';

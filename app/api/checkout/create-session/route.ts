@@ -23,6 +23,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const body = await request.json().catch(() => ({}));
+    const billingInterval = (body.interval as 'month' | 'year') || 'month';
+
     const auth0Id = session.user.sub;
     const adminSupabase = getSupabaseAdmin();
 
@@ -62,8 +65,8 @@ export async function POST(request: NextRequest) {
         .eq('id', user.id);
     }
 
-    // Get the price ID for premium tier
-    const priceId = getStripePriceId('premium');
+    // Get the price ID for premium tier with the selected billing interval
+    const priceId = getStripePriceId('premium', billingInterval);
 
     // Create Stripe Checkout Session
     const checkoutSession = await stripe.checkout.sessions.create({
