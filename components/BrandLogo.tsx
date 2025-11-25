@@ -14,12 +14,12 @@ export default function BrandLogo({ variant = 'nav', showTagline = true }: Brand
   return (
     <Link href={isNav ? '/dashboard' : '/'} className="flex items-center gap-2 group">
       <div
-        className={`inline-flex items-center justify-center rounded-md bg-primary-600/10 border border-primary-500/40 group-hover:bg-primary-600/20 transition-colors ${
+        className={`inline-flex items-center justify-center rounded-md bg-primary-500 group-hover:bg-primary-400 transition-colors ${
           isHero ? 'h-12 w-12' : 'h-8 w-8'
         }`}
       >
-        <span className={`font-bold text-primary-400 ${isHero ? 'text-lg' : 'text-sm'}`}>
-          BHE
+        <span className={`font-bold text-slate-950 ${isHero ? 'text-2xl' : 'text-lg'}`}>
+          B
         </span>
       </div>
       <div>
