@@ -151,6 +151,9 @@ export default function PrivacyPage() {
                   action@besthusbandever.com
                 </a>
               </p>
+              <p className="text-sm leading-relaxed mt-2">
+                Business Number: 856744057
+              </p>
             </section>
           </div>
 

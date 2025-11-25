@@ -534,6 +534,9 @@ export default async function Home() {
           <p className="text-[11px] text-slate-600 text-center md:text-left">
             This is not therapy. It&apos;s a daily practice tool. Use it to support—not replace—honest conversations with your wife.
           </p>
+          <p className="text-[11px] text-slate-600 text-center md:text-left mt-2">
+            Business Number: 856744057
+          </p>
         </div>
       </footer>
     </div>
