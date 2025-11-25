@@ -6,6 +6,7 @@ import ActionsList from './ActionsList';
 import ActionsSearchModal from './ActionsSearchModal';
 import FeaturedEvents from './FeaturedChallenges';
 import CategoryCard from './CategoryCard';
+import FavoritesModal from './FavoritesModal';
 import Link from 'next/link';
 
 interface Action {
@@ -175,6 +176,7 @@ export default function ActionsPageClient({
   
   // Track which categories are expanded
   const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set());
+  const [isFavoritesModalOpen, setIsFavoritesModalOpen] = useState(false);
   
   const toggleCategory = (theme: string) => {
     setExpandedCategories((prev) => {
@@ -228,15 +230,16 @@ export default function ActionsPageClient({
     return icons[theme] || '📋';
   };
 
-  // Filter out favorited actions from main list
+  // Get favorited action IDs for star indicators
   const favoritedActionIds = useMemo(() => {
     if (!favoritedActions || !Array.isArray(favoritedActions)) return new Set<string>();
     return new Set(favoritedActions.filter(fa => fa && fa.id).map((fa) => fa.id));
   }, [favoritedActions]);
   
+  // Don't filter out favorited actions - show them in their categories with stars
   const nonFavoritedFiltered = useMemo(() => {
-    return filteredActions.filter((action) => !favoritedActionIds.has(action.id));
-  }, [filteredActions, favoritedActionIds]);
+    return filteredActions;
+  }, [filteredActions]);
 
   // Calculate category stats for category cards
   const categoryStats = useMemo(() => {
@@ -399,7 +402,7 @@ export default function ActionsPageClient({
       {/* Featured 7-Day Events */}
       <FeaturedEvents />
 
-      {/* Search Button */}
+      {/* Search and Favorites Buttons */}
       <div className="mb-6 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <button
@@ -419,6 +422,18 @@ export default function ActionsPageClient({
               Ctrl+K
             </kbd>
           </button>
+          <button
+            onClick={() => setIsFavoritesModalOpen(true)}
+            className="flex items-center gap-2 px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-slate-300 hover:bg-slate-700 hover:border-slate-600 transition-colors text-sm font-medium"
+          >
+            <span className="text-yellow-400">⭐</span>
+            Favorites
+            {favoritedActionIds.size > 0 && (
+              <span className="px-1.5 py-0.5 bg-yellow-500/20 text-yellow-400 rounded text-xs font-semibold">
+                {favoritedActionIds.size}
+              </span>
+            )}
+          </button>
           {filteredActions.length !== normalizedActions.length && (
             <span className="text-sm text-slate-400">
               Showing {filteredActions.length} of {normalizedActions.length} actions
@@ -437,23 +452,11 @@ export default function ActionsPageClient({
         onClose={() => setIsSearchModalOpen(false)}
       />
 
-      {/* Favorited Actions Section */}
-      {favoritedActions && Array.isArray(favoritedActions) && favoritedActions.length > 0 && favoritedActions.some(fa => fa && fa.id) && (
-        <section className="mb-8 bg-yellow-500/10 border border-yellow-500/30 rounded-xl p-6 md:p-8">
-          <div className="flex items-center gap-2 mb-6">
-            <span className="text-2xl">⭐</span>
-            <h2 className="text-xl md:text-2xl font-semibold text-slate-50">Favorites</h2>
-            <span className="text-sm text-slate-400">
-              ({favoritedActions.length} action{favoritedActions.length !== 1 ? 's' : ''})
-            </span>
-          </div>
-          <ActionsList 
-            actions={favoritedActions.filter(fa => fa && fa.id)} 
-            completedMap={completedMapInstance} 
-            userId={userId} 
-          />
-        </section>
-      )}
+      {/* Favorites Modal */}
+      <FavoritesModal
+        isOpen={isFavoritesModalOpen}
+        onClose={() => setIsFavoritesModalOpen(false)}
+      />
 
       {/* Filtered Actions by Theme */}
       {nonFavoritedFiltered.length > 0 ? (
@@ -483,6 +486,7 @@ export default function ActionsPageClient({
                   }
                   completedMap={completedMapInstance}
                   userId={userId}
+                  favoritedActionIds={favoritedActionIds}
                 />
 
                 {themeActions.length > 4 && (

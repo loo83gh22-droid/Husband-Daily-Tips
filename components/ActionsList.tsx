@@ -29,12 +29,14 @@ interface ActionsListProps {
   actions: Action[];
   completedMap: Map<string, ActionCompletion[]>; // Changed to array of completions
   userId: string;
+  favoritedActionIds?: Set<string>; // IDs of favorited actions
 }
 
 export default function ActionsList({
   actions,
   completedMap,
   userId,
+  favoritedActionIds = new Set(),
 }: ActionsListProps) {
   const [selectedAction, setSelectedAction] = useState<Action | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -178,7 +180,10 @@ export default function ActionsList({
                 <div className="flex-1 min-w-0">
                   <div className="flex items-start gap-2 mb-1">
                     {action.icon && <span className="text-lg">{action.icon}</span>}
-                    <h3 className="text-sm font-semibold text-slate-200">{action.name}</h3>
+                    <h3 className="text-sm font-semibold text-slate-200 flex-1">{action.name}</h3>
+                    {favoritedActionIds.has(action.id) && (
+                      <span className="text-yellow-400 text-sm" title="Favorited">⭐</span>
+                    )}
                   </div>
                   <p className="text-xs text-slate-400 leading-relaxed mb-2">
                     {action.description}
