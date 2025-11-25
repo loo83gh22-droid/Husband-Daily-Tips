@@ -17,12 +17,16 @@ interface ActionDetailModalProps {
     benefit?: string | null;
     requirement_type?: string | null;
   };
+  onHide?: () => void;
+  showHideButton?: boolean;
 }
 
 export default function ActionDetailModal({
   isOpen,
   onClose,
   action,
+  onHide,
+  showHideButton = false,
 }: ActionDetailModalProps) {
   if (!isOpen) return null;
 
@@ -125,11 +129,24 @@ export default function ActionDetailModal({
                   </div>
                 )}
 
-                {/* Action button */}
+                {/* Action buttons */}
                 <div className="mt-6 flex gap-3">
+                  {showHideButton && onHide && (
+                    <button
+                      onClick={() => {
+                        if (confirm('Hide this action? You won\'t see it again. You can unhide it later in your settings.')) {
+                          onHide();
+                          onClose();
+                        }
+                      }}
+                      className="px-6 py-3 border border-slate-700 text-slate-300 text-base font-medium rounded-xl hover:bg-slate-800 active:bg-slate-700 transition-all min-h-[48px] touch-manipulation"
+                    >
+                      Hide Action
+                    </button>
+                  )}
                   <button
                     onClick={onClose}
-                    className="flex-1 px-6 py-3 bg-primary-500 text-slate-950 text-base font-bold rounded-xl hover:bg-primary-400 active:bg-primary-600 transition-all min-h-[48px] touch-manipulation"
+                    className={`${showHideButton && onHide ? 'flex-1' : 'w-full'} px-6 py-3 bg-primary-500 text-slate-950 text-base font-bold rounded-xl hover:bg-primary-400 active:bg-primary-600 transition-all min-h-[48px] touch-manipulation`}
                   >
                     Got it! ✓
                   </button>

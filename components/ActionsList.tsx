@@ -5,6 +5,7 @@ import { format } from 'date-fns';
 import Link from 'next/link';
 import ActionCompletionModal from './ActionCompletionModal';
 import ActionDetailModal from './ActionDetailModal';
+import { toast } from './Toast';
 import { getGuideSlugForAction } from '@/lib/action-guide-mapping';
 
 interface Action {
@@ -40,6 +41,7 @@ export default function ActionsList({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [detailAction, setDetailAction] = useState<Action | null>(null);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
+  const [isHiding, setIsHiding] = useState(false);
   const [newlyEarnedBadges, setNewlyEarnedBadges] = useState<
     Array<{ name: string; description: string; icon: string; healthBonus: number }>
   >([]);
@@ -234,6 +236,32 @@ export default function ActionsList({
             setDetailAction(null);
           }}
           action={detailAction}
+          showHideButton={true}
+          onHide={async () => {
+            setIsHiding(true);
+            try {
+              const response = await fetch('/api/actions/hide', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ actionId: detailAction.id }),
+              });
+
+              if (!response.ok) {
+                throw new Error('Failed to hide action');
+              }
+
+              toast.success('Action hidden. You won\'t see this one again.');
+              // Remove from the list by refreshing
+              window.location.reload();
+            } catch (error) {
+              console.error('Error hiding action:', error);
+              toast.error('Failed to hide action. Please try again.');
+            } finally {
+              setIsHiding(false);
+            }
+          }}
         />
       )}
     </>

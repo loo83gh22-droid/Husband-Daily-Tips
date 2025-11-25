@@ -1,7 +1,7 @@
 import { getSession } from '@auth0/nextjs-auth0';
 import { redirect } from 'next/navigation';
 import { supabase, getSupabaseAdmin } from '@/lib/supabase';
-import DailyTipCard from '@/components/DailyTipCard';
+import DailyActionCard from '@/components/DailyActionCard';
 import StatsCard from '@/components/StatsCard';
 import SubscriptionBanner from '@/components/SubscriptionBanner';
 import HealthBar from '@/components/HealthBar';
@@ -716,7 +716,7 @@ export default async function Dashboard() {
 
             {displayAction ? (
               <div data-tour="mission">
-                <DailyTipCard tip={displayAction} subscriptionTier={user.subscription_tier || 'free'} />
+                <DailyActionCard initialTip={displayAction} subscriptionTier={user.subscription_tier || 'free'} />
               </div>
             ) : (
               <div className="bg-slate-900/80 rounded-xl shadow-lg p-8 text-center border border-slate-800">

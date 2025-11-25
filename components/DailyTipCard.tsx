@@ -32,9 +32,10 @@ interface Tip {
 interface DailyTipCardProps {
   tip: Tip;
   subscriptionTier?: string;
+  onActionReplaced?: (newAction: Tip) => void;
 }
 
-export default function DailyTipCard({ tip, subscriptionTier = 'free' }: DailyTipCardProps) {
+export default function DailyTipCard({ tip, subscriptionTier = 'free', onActionReplaced }: DailyTipCardProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isCompleted, setIsCompleted] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -248,7 +249,8 @@ export default function DailyTipCard({ tip, subscriptionTier = 'free' }: DailyTi
 
     setIsHiding(true);
     try {
-      const response = await fetch('/api/actions/hide', {
+      // Hide the action
+      const hideResponse = await fetch('/api/actions/hide', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -256,16 +258,41 @@ export default function DailyTipCard({ tip, subscriptionTier = 'free' }: DailyTi
         body: JSON.stringify({ actionId: tip.id }),
       });
 
-      if (!response.ok) {
+      if (!hideResponse.ok) {
         throw new Error('Failed to hide action');
       }
 
-      toast.success('Action hidden. You won\'t see this one again.');
-      // Refresh the page to get a new action
-      window.location.reload();
+      // Get a replacement action
+      const replacementResponse = await fetch('/api/actions/replacement', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ excludedActionId: tip.id }),
+      });
+
+      if (!replacementResponse.ok) {
+        // If no replacement available, just refresh
+        toast.success('Action hidden. You won\'t see this one again.');
+        window.location.reload();
+        return;
+      }
+
+      const replacementData = await replacementResponse.json();
+      const newAction = replacementData.action;
+
+      toast.success('Action hidden. Showing you a new one! 🎯');
+      
+      // Update the displayed action
+      if (onActionReplaced && newAction) {
+        onActionReplaced(newAction);
+      } else {
+        // Fallback: refresh page
+        window.location.reload();
+      }
     } catch (error) {
       console.error('Error hiding action:', error);
-      alert('Failed to hide action. Please try again.');
+      toast.error('Failed to hide action. Please try again.');
     } finally {
       setIsHiding(false);
     }
