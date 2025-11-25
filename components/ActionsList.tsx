@@ -7,6 +7,7 @@ import ActionCompletionModal from './ActionCompletionModal';
 import ActionDetailModal from './ActionDetailModal';
 import { toast } from './Toast';
 import { getGuideSlugForAction } from '@/lib/action-guide-mapping';
+import { personalizeText } from '@/lib/personalize-text';
 
 interface Action {
   id: string;
@@ -182,13 +183,13 @@ export default function ActionsList({
                 <div className="flex-1 min-w-0">
                   <div className="flex items-start gap-2 mb-1">
                     {action.icon && <span className="text-lg">{action.icon}</span>}
-                    <h3 className="text-sm font-semibold text-slate-200 flex-1">{action.name}</h3>
+                    <h3 className="text-sm font-semibold text-slate-200 flex-1">{personalizeText(action.name, partnerName)}</h3>
                     {favoritedActionIds.has(action.id) && (
                       <span className="text-yellow-400 text-sm" title="Favorited">⭐</span>
                     )}
                   </div>
                   <p className="text-xs text-slate-400 leading-relaxed mb-2">
-                    {action.description}
+                    {personalizeText(action.description, partnerName)}
                   </p>
                   {(() => {
                     const guideSlug = getGuideSlugForAction(action.name, action.theme);

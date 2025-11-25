@@ -23,7 +23,19 @@ export function personalizeText(text: string | null | undefined, partnerName: st
   // Match "her" at end of sentence or followed by punctuation/space
   personalizedText = personalizedText.replace(/\bher\b(?=\s|\.|,|!|\?|$)/gi, partnerName);
 
-  // Replace subject pronoun "she" with partner name
+  // Handle contractions first (before replacing "she")
+  // "she's" -> "Jodi's" or "Jodi is" (depending on context)
+  personalizedText = personalizedText.replace(/\bshe's\b/gi, `${partnerName} is`);
+  personalizedText = personalizedText.replace(/\bshe is\b/gi, `${partnerName} is`);
+  personalizedText = personalizedText.replace(/\bshe has\b/gi, `${partnerName} has`);
+  personalizedText = personalizedText.replace(/\bshe was\b/gi, `${partnerName} was`);
+  personalizedText = personalizedText.replace(/\bshe will\b/gi, `${partnerName} will`);
+  personalizedText = personalizedText.replace(/\bshe can\b/gi, `${partnerName} can`);
+  personalizedText = personalizedText.replace(/\bshe should\b/gi, `${partnerName} should`);
+  personalizedText = personalizedText.replace(/\bshe would\b/gi, `${partnerName} would`);
+  personalizedText = personalizedText.replace(/\bshe could\b/gi, `${partnerName} could`);
+  
+  // Replace subject pronoun "she" with partner name (after handling contractions)
   personalizedText = personalizedText.replace(/\bshe\b/gi, partnerName);
 
   // Replace possessive pronoun "hers" with "Partner's"
@@ -50,12 +62,18 @@ export function personalizeText(text: string | null | undefined, partnerName: st
   // Handle "Don't Interrupt Her" -> "Don't Interrupt Jodi"
   personalizedText = personalizedText.replace(/\binterrupt her\b/gi, `interrupt ${partnerName}`);
   
-  // Handle "When she's talking" -> "When Jodi's talking" or "When Jodi is talking"
-  personalizedText = personalizedText.replace(/\bwhen she's\b/gi, `when ${partnerName} is`);
-  personalizedText = personalizedText.replace(/\bwhen she is\b/gi, `when ${partnerName} is`);
+  // Handle "Validate Her Feelings" -> "Validate Jodi's Feelings"
+  personalizedText = personalizedText.replace(/\bvalidate her\b/gi, `validate ${partnerName}'s`);
   
-  // Handle "After she tells you" -> "After Jodi tells you"
-  personalizedText = personalizedText.replace(/\bafter she\b/gi, `after ${partnerName}`);
+  // Handle "ask her" -> "ask Jodi"
+  personalizedText = personalizedText.replace(/\bask her\b/gi, `ask ${partnerName}`);
+  
+  // Handle "tell her" -> "tell Jodi"
+  personalizedText = personalizedText.replace(/\btell her\b/gi, `tell ${partnerName}`);
+  
+  // Handle "When she's talking" -> "When Jodi is talking" (already handled above with contractions)
+  
+  // Handle "After she tells you" -> "After Jodi tells you" (already handled above)
 
   return personalizedText;
 }
