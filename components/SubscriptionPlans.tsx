@@ -84,7 +84,7 @@ export default function SubscriptionPlans({
               )}
               {plan.price > 0 && billingInterval === 'month' && (
                 <p className="text-sm text-primary-400 font-semibold mb-4">
-                  $7 a month. Less than $0.25 a day. A no-brainer to level up your biggest win.
+                  $7 a month. Roughly $0.25 per day. A no-brainer to level up your biggest win.
                 </p>
               )}
               {plan.price > 0 && billingInterval === 'year' && (
@@ -96,22 +96,39 @@ export default function SubscriptionPlans({
                 <p className="text-xs text-slate-400 mb-4">Free forever</p>
               )}
               <ul className="space-y-3 mb-6">
-                {plan.features.map((feature, index) => (
-                  <li key={index} className="flex items-center text-slate-300">
-                    <svg
-                      className="w-5 h-5 text-green-400 mr-2"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                    {feature}
-                  </li>
-                ))}
+                {plan.features.map((feature, index) => {
+                  const isIncluded = !feature.toLowerCase().startsWith('no ');
+                  return (
+                    <li key={index} className="flex items-center text-slate-300">
+                      {isIncluded ? (
+                        <svg
+                          className="w-5 h-5 text-green-400 mr-2 flex-shrink-0"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                      ) : (
+                        <svg
+                          className="w-5 h-5 text-red-400 mr-2 flex-shrink-0"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                      )}
+                      {feature}
+                    </li>
+                  );
+                })}
               </ul>
               <SubscriptionButton
                 plan={{
