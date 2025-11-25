@@ -29,7 +29,7 @@ async function getUserData(auth0Id: string) {
   const adminSupabase = getSupabaseAdmin();
   const { data: user, error } = await adminSupabase
     .from('users')
-    .select('*, subscription_tier, username, name, email, has_kids, kids_live_with_you, trial_started_at, trial_ends_at')
+    .select('*, subscription_tier, username, name, email, has_kids, kids_live_with_you, trial_started_at, trial_ends_at, country')
     .eq('auth0_id', auth0Id)
     .single();
 
@@ -40,7 +40,7 @@ async function getUserData(auth0Id: string) {
   return user;
 }
 
-async function getTomorrowAction(userId: string | null, subscriptionTier: string, categoryScores?: any, userProfile?: { has_kids?: boolean | null; kids_live_with_you?: boolean | null }) {
+async function getTomorrowAction(userId: string | null, subscriptionTier: string, categoryScores?: any, userProfile?: { has_kids?: boolean | null; kids_live_with_you?: boolean | null; country?: string | null }) {
   if (!userId) return null;
 
   // Use admin client to bypass RLS (Auth0 context isn't set)
@@ -106,11 +106,23 @@ async function getTomorrowAction(userId: string | null, subscriptionTier: string
     actions = actions.filter((action) => !hiddenActionIds.includes(action.id));
   }
 
-  // Filter out seasonal actions that aren't available today
+  // Filter out seasonal actions that aren't available today and match user's country
   if (actions) {
     const { isActionAvailableOnDate } = await import('@/lib/seasonal-dates');
     const today = new Date();
-    actions = actions.filter((action) => isActionAvailableOnDate(action, today));
+    const userCountry = userProfile?.country as 'US' | 'CA' | null || null;
+    actions = actions.filter((action) => {
+      // Filter by country: if action is country-specific, user must match
+      if (action.country && action.country !== userCountry) {
+        return false;
+      }
+      // If action is country-specific but user has no country, don't show it
+      if (action.country && !userCountry) {
+        return false;
+      }
+      // Check seasonal date availability
+      return isActionAvailableOnDate(action, today, userCountry);
+    });
   }
 
   // Filter out kid-related actions if user doesn't have kids (especially if they don't live with them)
@@ -279,10 +291,23 @@ async function getTomorrowAction(userId: string | null, subscriptionTier: string
       return null;
     }
 
-    // Filter out hidden actions even in fallback
-    const availableActions = hiddenActionIds.length > 0
-      ? allActions.filter((action) => !hiddenActionIds.includes(action.id))
-      : allActions;
+    // Filter out hidden actions and country-specific actions in fallback
+    const userCountry = userProfile?.country as 'US' | 'CA' | null || null;
+    const availableActions = allActions.filter((action) => {
+      // Filter out hidden actions
+      if (hiddenActionIds.includes(action.id)) {
+        return false;
+      }
+      // Filter by country: if action is country-specific, user must match
+      if (action.country && action.country !== userCountry) {
+        return false;
+      }
+      // If action is country-specific but user has no country, don't show it
+      if (action.country && !userCountry) {
+        return false;
+      }
+      return true;
+    });
 
     if (availableActions.length === 0) {
       return null; // All actions are hidden
@@ -620,7 +645,8 @@ export default async function Dashboard() {
       stats.categoryScores,
       { 
         has_kids: (user as any).has_kids ?? null, 
-        kids_live_with_you: (user as any).kids_live_with_you ?? null 
+        kids_live_with_you: (user as any).kids_live_with_you ?? null,
+        country: (user as any).country ?? null
       }
     );
   }

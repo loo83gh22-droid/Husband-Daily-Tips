@@ -27,13 +27,26 @@ export function calculateEaster(year: number): Date {
 }
 
 /**
- * Get seasonal date range for an action based on its name/type
+ * Get seasonal date range for an action based on its name/type and country
  * Returns { start: Date, end: Date } or null if not seasonal
  */
-export function getSeasonalDateRange(actionName: string, currentYear: number = new Date().getFullYear()): { start: Date; end: Date } | null {
+export function getSeasonalDateRange(
+  actionName: string, 
+  currentYear: number = new Date().getFullYear(),
+  country: 'US' | 'CA' | null = null
+): { start: Date; end: Date } | null {
   const name = actionName.toLowerCase();
   
-  // Christmas Tree (Nov 25 - Dec 14)
+  // First, check for country-specific holidays
+  if (country) {
+    const { getCountryHolidayDateRange } = require('./country-holidays');
+    const countryRange = getCountryHolidayDateRange(actionName, country, currentYear);
+    if (countryRange) {
+      return countryRange;
+    }
+  }
+  
+  // Christmas Tree (Nov 25 - Dec 14) - Universal
   if (name.includes('christmas tree')) {
     return {
       start: new Date(currentYear, 10, 25), // Nov 25 (month is 0-indexed)
@@ -41,7 +54,7 @@ export function getSeasonalDateRange(actionName: string, currentYear: number = n
     };
   }
   
-  // Easter Egg Hunt (1 week before Easter - Easter Sunday)
+  // Easter Egg Hunt (1 week before Easter - Easter Sunday) - Universal
   if (name.includes('easter egg')) {
     const easter = calculateEaster(currentYear);
     const oneWeekBefore = new Date(easter);
@@ -52,7 +65,7 @@ export function getSeasonalDateRange(actionName: string, currentYear: number = n
     };
   }
   
-  // Valentine's Day (Feb 1 - Feb 14)
+  // Valentine's Day (Feb 1 - Feb 14) - Universal
   if (name.includes('valentine')) {
     return {
       start: new Date(currentYear, 1, 1),   // Feb 1
@@ -60,15 +73,7 @@ export function getSeasonalDateRange(actionName: string, currentYear: number = n
     };
   }
   
-  // Thanksgiving (Nov 1 - Nov 25)
-  if (name.includes('gratitude') && name.includes('thanksgiving')) {
-    return {
-      start: new Date(currentYear, 10, 1),  // Nov 1
-      end: new Date(currentYear, 10, 25),    // Nov 25
-    };
-  }
-  
-  // New Year's (Dec 26 - Jan 5 of next year)
+  // New Year's (Dec 26 - Jan 5 of next year) - Universal
   if (name.includes('new year') || name.includes('relationship goals')) {
     return {
       start: new Date(currentYear, 11, 26),     // Dec 26
@@ -80,14 +85,24 @@ export function getSeasonalDateRange(actionName: string, currentYear: number = n
 }
 
 /**
- * Check if an action is available on a given date
+ * Check if an action is available on a given date and for a given country
  * If action has seasonal_start_date and seasonal_end_date in DB, use those
  * Otherwise, calculate from action name
  */
 export function isActionAvailableOnDate(
-  action: { name: string; seasonal_start_date?: string | null; seasonal_end_date?: string | null },
-  date: Date = new Date()
+  action: { name: string; seasonal_start_date?: string | null; seasonal_end_date?: string | null; country?: string | null },
+  date: Date = new Date(),
+  userCountry: 'US' | 'CA' | null = null
 ): boolean {
+  // Check country match - if action is country-specific, user must be in that country
+  if (action.country && action.country !== userCountry) {
+    return false;
+  }
+  
+  // If action is country-specific but user has no country, don't show it
+  if (action.country && !userCountry) {
+    return false;
+  }
   // If action has explicit seasonal dates in DB, use those
   if (action.seasonal_start_date || action.seasonal_end_date) {
     const today = new Date(date);
@@ -112,10 +127,10 @@ export function isActionAvailableOnDate(
     return true;
   }
   
-  // Otherwise, calculate from action name
-  const dateRange = getSeasonalDateRange(action.name, date.getFullYear());
+  // Otherwise, calculate from action name (with country context)
+  const dateRange = getSeasonalDateRange(action.name, date.getFullYear(), userCountry);
   if (!dateRange) {
-    // Not a seasonal action, always available
+    // Not a seasonal action, always available (if country matches)
     return true;
   }
   
@@ -132,9 +147,19 @@ export function isActionAvailableOnDate(
 /**
  * Update seasonal dates in database for actions that need dynamic calculation
  * This should be called periodically (e.g., via cron) to update dates for the current year
+ * Handles both universal and country-specific holidays
  */
 export async function updateSeasonalDates(supabase: any) {
   const currentYear = new Date().getFullYear();
+  const { 
+    calculateUSThanksgiving, 
+    calculateCanadianThanksgiving,
+    calculateMemorialDay,
+    calculateLaborDay,
+    calculateVictoriaDay
+  } = require('./country-holidays');
+  
+  // Universal holidays
   
   // Update Christmas Tree action
   await supabase
@@ -166,15 +191,6 @@ export async function updateSeasonalDates(supabase: any) {
     })
     .eq('name', 'Plan a Surprise Valentine''s Day Date');
   
-  // Update Thanksgiving action
-  await supabase
-    .from('actions')
-    .update({
-      seasonal_start_date: `${currentYear}-11-01`,
-      seasonal_end_date: `${currentYear}-11-25`,
-    })
-    .eq('name', 'Write a Gratitude List for Your Partner');
-  
   // Update New Year's action
   await supabase
     .from('actions')
@@ -183,5 +199,117 @@ export async function updateSeasonalDates(supabase: any) {
       seasonal_end_date: `${currentYear + 1}-01-05`,
     })
     .eq('name', 'Set Relationship Goals for the New Year Together');
+  
+  // US-specific holidays
+  
+  // US Thanksgiving
+  const usThanksgiving = calculateUSThanksgiving(currentYear);
+  const usThanksgivingWeekBefore = new Date(usThanksgiving);
+  usThanksgivingWeekBefore.setDate(usThanksgiving.getDate() - 7);
+  await supabase
+    .from('actions')
+    .update({
+      seasonal_start_date: usThanksgivingWeekBefore.toISOString().split('T')[0],
+      seasonal_end_date: usThanksgiving.toISOString().split('T')[0],
+    })
+    .eq('name', 'Plan a Special US Thanksgiving Together')
+    .eq('country', 'US');
+  
+  // Update existing US Thanksgiving action (the gratitude one)
+  await supabase
+    .from('actions')
+    .update({
+      seasonal_start_date: usThanksgivingWeekBefore.toISOString().split('T')[0],
+      seasonal_end_date: usThanksgiving.toISOString().split('T')[0],
+    })
+    .eq('name', 'Write a Gratitude List for Your Partner')
+    .eq('country', 'US');
+  
+  // US Independence Day
+  await supabase
+    .from('actions')
+    .update({
+      seasonal_start_date: `${currentYear}-07-01`,
+      seasonal_end_date: `${currentYear}-07-04`,
+    })
+    .eq('name', 'Celebrate Independence Day Together')
+    .eq('country', 'US');
+  
+  // US Memorial Day
+  const usMemorialDay = calculateMemorialDay(currentYear);
+  const usMemorialWeekBefore = new Date(usMemorialDay);
+  usMemorialWeekBefore.setDate(usMemorialDay.getDate() - 7);
+  await supabase
+    .from('actions')
+    .update({
+      seasonal_start_date: usMemorialWeekBefore.toISOString().split('T')[0],
+      seasonal_end_date: usMemorialDay.toISOString().split('T')[0],
+    })
+    .eq('name', 'Honor Memorial Day Together')
+    .eq('country', 'US');
+  
+  // US Labor Day
+  const usLaborDay = calculateLaborDay(currentYear);
+  const usLaborWeekBefore = new Date(usLaborDay);
+  usLaborWeekBefore.setDate(usLaborDay.getDate() - 7);
+  await supabase
+    .from('actions')
+    .update({
+      seasonal_start_date: usLaborWeekBefore.toISOString().split('T')[0],
+      seasonal_end_date: usLaborDay.toISOString().split('T')[0],
+    })
+    .eq('name', 'Enjoy a Labor Day Weekend Together')
+    .eq('country', 'US');
+  
+  // Canada-specific holidays
+  
+  // Canadian Thanksgiving
+  const caThanksgiving = calculateCanadianThanksgiving(currentYear);
+  const caThanksgivingWeekBefore = new Date(caThanksgiving);
+  caThanksgivingWeekBefore.setDate(caThanksgiving.getDate() - 7);
+  await supabase
+    .from('actions')
+    .update({
+      seasonal_start_date: caThanksgivingWeekBefore.toISOString().split('T')[0],
+      seasonal_end_date: caThanksgiving.toISOString().split('T')[0],
+    })
+    .eq('name', 'Plan a Special Canadian Thanksgiving Together')
+    .eq('country', 'CA');
+  
+  // Canada Day
+  await supabase
+    .from('actions')
+    .update({
+      seasonal_start_date: `${currentYear}-06-25`,
+      seasonal_end_date: `${currentYear}-07-01`,
+    })
+    .eq('name', 'Celebrate Canada Day Together')
+    .eq('country', 'CA');
+  
+  // Victoria Day
+  const caVictoriaDay = calculateVictoriaDay(currentYear);
+  const caVictoriaWeekBefore = new Date(caVictoriaDay);
+  caVictoriaWeekBefore.setDate(caVictoriaDay.getDate() - 7);
+  await supabase
+    .from('actions')
+    .update({
+      seasonal_start_date: caVictoriaWeekBefore.toISOString().split('T')[0],
+      seasonal_end_date: caVictoriaDay.toISOString().split('T')[0],
+    })
+    .eq('name', 'Enjoy Victoria Day Weekend Together')
+    .eq('country', 'CA');
+  
+  // Canadian Labor Day
+  const caLaborDay = calculateLaborDay(currentYear);
+  const caLaborWeekBefore = new Date(caLaborDay);
+  caLaborWeekBefore.setDate(caLaborDay.getDate() - 7);
+  await supabase
+    .from('actions')
+    .update({
+      seasonal_start_date: caLaborWeekBefore.toISOString().split('T')[0],
+      seasonal_end_date: caLaborDay.toISOString().split('T')[0],
+    })
+    .eq('name', 'Enjoy a Labour Day Weekend Together')
+    .eq('country', 'CA');
 }
 

@@ -81,11 +81,23 @@ export async function POST(request: NextRequest) {
       actions = actions.filter((action) => action.id !== excludedActionId);
     }
 
-    // Filter out seasonal actions that aren't available today
+    // Filter out seasonal actions that aren't available today and match user's country
     if (actions) {
       const { isActionAvailableOnDate } = await import('@/lib/seasonal-dates');
       const today = new Date();
-      actions = actions.filter((action) => isActionAvailableOnDate(action, today));
+      const userCountry = user.country as 'US' | 'CA' | null || null;
+      actions = actions.filter((action) => {
+        // Filter by country: if action is country-specific, user must match
+        if (action.country && action.country !== userCountry) {
+          return false;
+        }
+        // If action is country-specific but user has no country, don't show it
+        if (action.country && !userCountry) {
+          return false;
+        }
+        // Check seasonal date availability
+        return isActionAvailableOnDate(action, today, userCountry);
+      });
     }
 
     // Filter out kid-related actions if user doesn't have kids

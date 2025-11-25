@@ -15,7 +15,7 @@ async function updateProfile(request: Request) {
     }
 
     const auth0Id = session.user.sub;
-    const { username, wedding_date, post_anonymously, timezone, profile_picture, has_kids, kids_live_with_you } = await request.json();
+    const { username, wedding_date, post_anonymously, timezone, profile_picture, has_kids, kids_live_with_you, country } = await request.json();
 
     // Use admin client to bypass RLS (Auth0 context isn't set for RLS)
     const adminSupabase = getSupabaseAdmin();
@@ -97,6 +97,9 @@ async function updateProfile(request: Request) {
     if (kids_live_with_you !== undefined) {
       updateData.kids_live_with_you = kids_live_with_you;
     }
+    if (country !== undefined) {
+      updateData.country = country || null;
+    }
 
     const { error: updateError } = await adminSupabase
       .from('users')
@@ -141,7 +144,7 @@ export async function GET() {
     
     const { data: user, error: userError } = await adminSupabase
       .from('users')
-      .select('username, wedding_date, post_anonymously, name, timezone, profile_picture, has_kids, kids_live_with_you')
+      .select('username, wedding_date, post_anonymously, name, timezone, profile_picture, has_kids, kids_live_with_you, country')
       .eq('auth0_id', auth0Id)
       .single();
 
@@ -158,6 +161,7 @@ export async function GET() {
           profile_picture: user.profile_picture,
           has_kids: user.has_kids,
           kids_live_with_you: user.kids_live_with_you,
+          country: user.country,
         });
   } catch (error) {
     console.error('Unexpected error fetching profile:', error);

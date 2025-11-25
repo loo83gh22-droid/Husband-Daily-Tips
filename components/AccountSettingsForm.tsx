@@ -11,6 +11,7 @@ interface UserProfile {
   wedding_date: string | null;
   has_kids: boolean | null;
   kids_live_with_you: boolean | null;
+  country: string | null;
 }
 
 interface AccountSettingsFormProps {
@@ -26,6 +27,7 @@ export default function AccountSettingsForm({ initialData }: AccountSettingsForm
     wedding_date: initialData.wedding_date || '',
     has_kids: initialData.has_kids ?? null,
     kids_live_with_you: initialData.kids_live_with_you ?? null,
+    country: initialData.country || null,
   });
   const [profilePicture, setProfilePicture] = useState<File | null>(null);
   const [profilePictureUrl, setProfilePictureUrl] = useState<string | null>(initialData.profile_picture);
@@ -122,6 +124,7 @@ export default function AccountSettingsForm({ initialData }: AccountSettingsForm
           profile_picture: pictureUrl,
           has_kids: formData.has_kids,
           kids_live_with_you: formData.kids_live_with_you,
+          country: formData.country,
         }),
       });
 
@@ -361,6 +364,59 @@ export default function AccountSettingsForm({ initialData }: AccountSettingsForm
               </div>
             </div>
           )}
+        </div>
+      </div>
+
+      {/* Country Selection */}
+      <div className="pt-4 border-t border-slate-800">
+        <div className="mb-4">
+          <p className="text-sm font-medium text-slate-300 mb-3">
+            Location
+          </p>
+          <p className="text-xs text-slate-400 mb-4 leading-relaxed">
+            We use your country to serve you holiday actions that match your traditions (e.g., US vs Canadian Thanksgiving).
+          </p>
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-slate-300 mb-2">
+            Country
+          </label>
+          <div className="flex gap-4">
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="radio"
+                name="country"
+                value="US"
+                checked={formData.country === 'US'}
+                onChange={() => setFormData({ ...formData, country: 'US' })}
+                className="w-4 h-4 text-primary-500 border-slate-700 bg-slate-800 focus:ring-2 focus:ring-primary-500"
+              />
+              <span className="text-slate-200">United States</span>
+            </label>
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="radio"
+                name="country"
+                value="CA"
+                checked={formData.country === 'CA'}
+                onChange={() => setFormData({ ...formData, country: 'CA' })}
+                className="w-4 h-4 text-primary-500 border-slate-700 bg-slate-800 focus:ring-2 focus:ring-primary-500"
+              />
+              <span className="text-slate-200">Canada</span>
+            </label>
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="radio"
+                name="country"
+                value=""
+                checked={formData.country === null || formData.country === ''}
+                onChange={() => setFormData({ ...formData, country: null })}
+                className="w-4 h-4 text-primary-500 border-slate-700 bg-slate-800 focus:ring-2 focus:ring-primary-500"
+              />
+              <span className="text-slate-200">Other / Prefer not to say</span>
+            </label>
+          </div>
         </div>
       </div>
 
