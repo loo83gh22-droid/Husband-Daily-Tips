@@ -446,7 +446,7 @@ async function getUserStats(userId: string | null) {
     userBadges?.reduce((sum: number, ub: any) => sum + (ub.badges?.health_bonus || 0), 0) || 0;
 
   // Calculate health score using new algorithm (async)
-  // TODO: Fully integrate new health algorithm with action points, daily/weekly caps, decay, etc.
+  // Includes action points, daily/weekly caps, decay, and repetition penalties
   const { calculateHealthScore } = await import('@/lib/health');
   let healthScore = baselineHealth || 50; // Default to 50 if no baseline
   

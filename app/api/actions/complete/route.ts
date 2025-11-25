@@ -129,8 +129,6 @@ export async function POST(request: Request) {
             .from('health_decay_log')
             .delete()
             .eq('id', decayEntry.id);
-          
-          console.log(`Reversed decay of ${decayEntry.decay_applied} points for date ${actionDate}`);
         }
       }
 
