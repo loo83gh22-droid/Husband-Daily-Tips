@@ -17,15 +17,20 @@ export default function HamburgerMenu() {
   useEffect(() => {
     if (!isOpen) return;
 
-    const handleClickOutside = (event: MouseEvent) => {
+    const handleClickOutside = (event: MouseEvent | TouchEvent) => {
       const target = event.target as HTMLElement;
       if (!target.closest('[data-hamburger-menu]')) {
         setIsOpen(false);
       }
     };
 
-    document.addEventListener('click', handleClickOutside);
-    return () => document.removeEventListener('click', handleClickOutside);
+    // Use both mouse and touch events for mobile compatibility
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('touchstart', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside);
+    };
   }, [isOpen]);
 
   const navLinks = [
@@ -49,8 +54,14 @@ export default function HamburgerMenu() {
   return (
     <div className="relative" data-hamburger-menu>
       <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="p-2 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-900 transition-colors"
+        onClick={(e) => {
+          e.stopPropagation();
+          setIsOpen(!isOpen);
+        }}
+        onTouchStart={(e) => {
+          e.stopPropagation();
+        }}
+        className="p-2 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-900 transition-colors touch-manipulation"
         aria-label="Menu"
         aria-expanded={isOpen}
       >
@@ -79,7 +90,14 @@ export default function HamburgerMenu() {
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-64 bg-slate-900 border border-slate-800 rounded-lg shadow-xl z-50 overflow-hidden max-h-[90vh] overflow-y-auto">
+        <>
+          {/* Backdrop for mobile */}
+          <div 
+            className="fixed inset-0 bg-black/50 z-40 md:hidden"
+            onClick={() => setIsOpen(false)}
+            onTouchStart={() => setIsOpen(false)}
+          />
+          <div className="absolute right-0 mt-2 w-64 bg-slate-900 border border-slate-800 rounded-lg shadow-xl z-50 overflow-hidden max-h-[90vh] overflow-y-auto">
           <div className="py-2">
             {/* Navigation Links - Show on mobile, hidden on desktop (since they're in the nav bar) */}
             <div className="md:hidden border-b border-slate-800 pb-2 mb-2">
@@ -143,6 +161,7 @@ export default function HamburgerMenu() {
             </div>
           </div>
         </div>
+        </>
       )}
     </div>
   );
