@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { format } from 'date-fns';
 import Link from 'next/link';
 import ActionCompletionModal from './ActionCompletionModal';
+import ActionDetailModal from './ActionDetailModal';
 import { getGuideSlugForAction } from '@/lib/action-guide-mapping';
 
 interface Action {
@@ -14,6 +15,7 @@ interface Action {
   theme: string;
   requirement_type: string | null;
   icon: string | null;
+  benefit?: string | null;
 }
 
 interface ActionCompletion {
@@ -36,6 +38,8 @@ export default function ActionsList({
   const [selectedAction, setSelectedAction] = useState<Action | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [detailAction, setDetailAction] = useState<Action | null>(null);
+  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const [newlyEarnedBadges, setNewlyEarnedBadges] = useState<
     Array<{ name: string; description: string; icon: string; healthBonus: number }>
   >([]);
@@ -124,11 +128,20 @@ export default function ActionsList({
           return (
             <div
               key={`action-${action.id}`}
-              className={`p-4 rounded-lg border transition-all ${
+              className={`p-4 rounded-lg border transition-all cursor-pointer hover:border-primary-500/50 ${
                 completionCount > 0
                   ? 'bg-primary-500/10 border-primary-500/30'
                   : 'bg-slate-800/30 border-slate-700/50'
               }`}
+              onClick={(e) => {
+                // Don't trigger if clicking the + button or links
+                const target = e.target as HTMLElement;
+                if (target.closest('button') || target.closest('a')) {
+                  return;
+                }
+                setDetailAction(action);
+                setIsDetailModalOpen(true);
+              }}
             >
               <div className="flex items-start gap-3">
                 <div className="flex-shrink-0">
@@ -209,6 +222,18 @@ export default function ActionsList({
           }}
           action={selectedAction}
           onComplete={handleCompleteAction}
+        />
+      )}
+
+      {/* Detail Modal */}
+      {detailAction && (
+        <ActionDetailModal
+          isOpen={isDetailModalOpen}
+          onClose={() => {
+            setIsDetailModalOpen(false);
+            setDetailAction(null);
+          }}
+          action={detailAction}
         />
       )}
     </>
