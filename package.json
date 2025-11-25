@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test-email": "node scripts/send-test-email.js"
+    "test-email": "node scripts/send-test-email.js",
+    "migrations:status": "node scripts/run-migration-simple.js",
+    "migrations:run": "node scripts/run-migrations-cli.js"
   },
   "dependencies": {
     "@auth0/nextjs-auth0": "^3.0.0",

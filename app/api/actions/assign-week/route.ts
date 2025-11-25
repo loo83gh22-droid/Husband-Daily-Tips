@@ -109,6 +109,14 @@ async function generateActionForDate(
 
   const seenActionIds = recentActions?.map((ra: any) => ra.action_id) || [];
 
+  // Get hidden action IDs for this user
+  const { data: hiddenActions } = await adminSupabase
+    .from('user_hidden_actions')
+    .select('action_id')
+    .eq('user_id', userId);
+
+  const hiddenActionIds = hiddenActions?.map((ha: any) => ha.action_id) || [];
+
   // Get available actions
   let { data: actions } = await adminSupabase
     .from('actions')
@@ -120,43 +128,123 @@ async function generateActionForDate(
     actions = actions.filter((action: any) => !seenActionIds.includes(action.id));
   }
 
-  // Personalize action selection based on survey results
-  if (actions && categoryScores && actions.length > 0) {
-    const categoryMapping: Record<string, string> = {
-      'communication': 'Communication',
-      'romance': 'Romance',
-      'partnership': 'Partnership',
-      'intimacy': 'Intimacy',
-      'conflict': 'Communication',
-      'connection': 'Roommate Syndrome Recovery',
-    };
+  // Filter out hidden actions
+  if (actions && hiddenActionIds.length > 0) {
+    actions = actions.filter((action: any) => !hiddenActionIds.includes(action.id));
+  }
 
-    const connectionScore = categoryScores.connection_score || categoryScores.intimacy_score || 50;
+  // Combined action selection: Survey data + User preferences ("Show me more like this")
+  if (actions && actions.length > 0) {
+    // Get user category preferences
+    const { data: userPreferences } = await adminSupabase
+      .from('user_category_preferences')
+      .select('category, preference_weight')
+      .eq('user_id', userId);
 
-    const scores = [
-      { category: 'communication', score: categoryScores.communication_score || 50 },
-      { category: 'romance', score: categoryScores.romance_score || 50 },
-      { category: 'partnership', score: categoryScores.partnership_score || 50 },
-      { category: 'intimacy', score: categoryScores.intimacy_score || 50 },
-      { category: 'conflict', score: categoryScores.conflict_score || 50 },
-      { category: 'connection', score: connectionScore },
-    ];
+    const preferenceWeights: Record<string, number> = {};
+    userPreferences?.forEach((pref: any) => {
+      preferenceWeights[pref.category] = parseFloat(pref.preference_weight.toString());
+    });
 
-    scores.sort((a, b) => a.score - b.score);
-    const lowestCategory = scores[0];
-    const targetCategory = categoryMapping[lowestCategory.category];
+    // Get survey-based priorities
+    let surveyWeights: Record<string, number> = {};
+    if (categoryScores) {
+      const categoryMapping: Record<string, string> = {
+        'communication': 'Communication',
+        'romance': 'Romance',
+        'partnership': 'Partnership',
+        'intimacy': 'Intimacy',
+        'conflict_resolution': 'Conflict Resolution',
+        'reconnection': 'Reconnection',
+        'quality_time': 'Quality Time',
+        'gratitude': 'Gratitude',
+      };
 
-    const priorityActions = actions.filter((a: any) => a.category === targetCategory);
-    if (priorityActions.length > 0) {
-      // 70% chance to pick from priority category, 30% random
-      if (Math.random() < 0.7) {
-        actions = priorityActions;
+      const { data: surveySummary } = await adminSupabase
+        .from('survey_summary')
+        .select('communication_self_rating, communication_wants_improvement, intimacy_self_rating, intimacy_wants_improvement, partnership_self_rating, partnership_wants_improvement, romance_self_rating, romance_wants_improvement, gratitude_self_rating, gratitude_wants_improvement, conflict_resolution_self_rating, conflict_resolution_wants_improvement, reconnection_self_rating, reconnection_wants_improvement, quality_time_self_rating, quality_time_wants_improvement')
+        .eq('user_id', userId)
+        .single();
+
+      if (surveySummary) {
+        const goalChecks = [
+          { key: 'communication', name: 'Communication' },
+          { key: 'intimacy', name: 'Intimacy' },
+          { key: 'partnership', name: 'Partnership' },
+          { key: 'romance', name: 'Romance' },
+          { key: 'gratitude', name: 'Gratitude' },
+          { key: 'conflict_resolution', name: 'Conflict Resolution' },
+          { key: 'reconnection', name: 'Reconnection' },
+          { key: 'quality_time', name: 'Quality Time' },
+        ];
+
+        goalChecks.forEach(({ key, name }) => {
+          const selfRating = surveySummary[`${key}_self_rating` as keyof typeof surveySummary] as number | null;
+          const wantsImprovement = surveySummary[`${key}_wants_improvement` as keyof typeof surveySummary] as boolean | null;
+          if (selfRating !== null && wantsImprovement === true && selfRating <= 3) {
+            surveyWeights[name] = 2.0;
+          }
+        });
       }
+
+      if (Object.keys(surveyWeights).length === 0) {
+        const connectionScore = categoryScores.connection_score || categoryScores.intimacy_score || 50;
+        const scores = [
+          { category: 'communication', score: categoryScores.communication_score || 50 },
+          { category: 'romance', score: categoryScores.romance_score || 50 },
+          { category: 'partnership', score: categoryScores.partnership_score || 50 },
+          { category: 'intimacy', score: categoryScores.intimacy_score || 50 },
+          { category: 'conflict', score: categoryScores.conflict_score || 50 },
+          { category: 'connection', score: connectionScore },
+        ];
+        scores.sort((a, b) => a.score - b.score);
+        const lowestCategory = scores[0];
+        const targetCategory = categoryMapping[lowestCategory.category] || categoryMapping[lowestCategory.category.toLowerCase()];
+        if (targetCategory) {
+          surveyWeights[targetCategory] = 2.0;
+        }
+      }
+    }
+
+    // Combine weights and use weighted random selection
+    const allCategories = new Set<string>();
+    actions.forEach((a: any) => allCategories.add(a.category));
+    
+    const categoryWeights: Record<string, number> = {};
+    allCategories.forEach((category) => {
+      const baseWeight = 1.0;
+      const surveyWeight = surveyWeights[category] || 0;
+      const userPreferenceWeight = preferenceWeights[category] || 0;
+      categoryWeights[category] = baseWeight + surveyWeight + userPreferenceWeight;
+    });
+
+    const actionsByCategory: Record<string, typeof actions> = {};
+    actions.forEach((action: any) => {
+      if (!actionsByCategory[action.category]) {
+        actionsByCategory[action.category] = [];
+      }
+      actionsByCategory[action.category].push(action);
+    });
+
+    const totalWeight = Object.values(categoryWeights).reduce((sum, weight) => sum + weight, 0);
+    let randomValue = Math.random() * totalWeight;
+    let selectedCategory: string | null = null;
+
+    for (const [category, weight] of Object.entries(categoryWeights)) {
+      randomValue -= weight;
+      if (randomValue <= 0) {
+        selectedCategory = category;
+        break;
+      }
+    }
+
+    if (selectedCategory && actionsByCategory[selectedCategory]) {
+      actions = actionsByCategory[selectedCategory];
     }
   }
 
   if (!actions || actions.length === 0) {
-    // Fallback: get any action
+    // Fallback: get any action that's not hidden
     const { data: allActions } = await adminSupabase
       .from('actions')
       .select('*')
@@ -165,7 +253,17 @@ async function generateActionForDate(
     if (!allActions || allActions.length === 0) {
       return null;
     }
-    actions = allActions;
+
+    // Filter out hidden actions even in fallback
+    const availableActions = hiddenActionIds.length > 0
+      ? allActions.filter((action: any) => !hiddenActionIds.includes(action.id))
+      : allActions;
+
+    if (availableActions.length === 0) {
+      return null; // All actions are hidden
+    }
+
+    actions = availableActions;
   }
 
   const randomAction = actions[Math.floor(Math.random() * actions.length)];

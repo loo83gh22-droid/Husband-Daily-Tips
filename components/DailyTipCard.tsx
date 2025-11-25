@@ -7,6 +7,7 @@ import { motion } from 'framer-motion';
 import ReflectionModal from './ReflectionModal';
 import SocialShare from './SocialShare';
 import ActionCelebration from './ActionCelebration';
+import ShowMoreModal from './ShowMoreModal';
 import { toast } from './Toast';
 import { getGuideSlugForAction } from '@/lib/action-guide-mapping';
 
@@ -57,6 +58,9 @@ export default function DailyTipCard({ tip, subscriptionTier = 'free' }: DailyTi
   const [showFeedUrl, setShowFeedUrl] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
   const [showFullCalendarSettings, setShowFullCalendarSettings] = useState(false);
+  const [isHiding, setIsHiding] = useState(false);
+  const [isShowingMore, setIsShowingMore] = useState(false);
+  const [showMoreModal, setShowMoreModal] = useState(false);
 
   const isPaidUser = subscriptionTier === 'premium' || subscriptionTier === 'pro';
   // Show simplified view if auto-add is enabled and calendar type is set
@@ -232,6 +236,72 @@ export default function DailyTipCard({ tip, subscriptionTier = 'free' }: DailyTi
       alert('Failed to update favorite. Please try again.');
     } finally {
       setIsTogglingFavorite(false);
+    }
+  };
+
+  const handleHideAction = async () => {
+    if (!tip.isAction) return; // Only hide actions, not tips
+    
+    if (!confirm('Hide this action? You won\'t see it again. You can unhide it later in your settings.')) {
+      return;
+    }
+
+    setIsHiding(true);
+    try {
+      const response = await fetch('/api/actions/hide', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ actionId: tip.id }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to hide action');
+      }
+
+      toast.success('Action hidden. You won\'t see this one again.');
+      // Refresh the page to get a new action
+      window.location.reload();
+    } catch (error) {
+      console.error('Error hiding action:', error);
+      alert('Failed to hide action. Please try again.');
+    } finally {
+      setIsHiding(false);
+    }
+  };
+
+  const handleShowMore = async () => {
+    if (!tip.isAction) return; // Only for actions
+    
+    // Show modal first
+    setShowMoreModal(true);
+  };
+
+  const handleConfirmShowMore = async () => {
+    setIsShowingMore(true);
+    setShowMoreModal(false);
+    
+    try {
+      const response = await fetch('/api/actions/show-more', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ actionId: tip.id }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update preference');
+      }
+
+      const data = await response.json();
+      toast.success(`Got it! We'll show you more ${tip.category} actions. 🎯`);
+    } catch (error) {
+      console.error('Error updating preference:', error);
+      toast.error('Failed to update preference. Please try again.');
+    } finally {
+      setIsShowingMore(false);
     }
   };
 
@@ -417,6 +487,17 @@ END:VCALENDAR`;
         isMilestone={isMilestone}
         onComplete={() => setShowCelebration(false)}
       />
+      {tip.isAction && tip.benefit && (
+        <ShowMoreModal
+          isOpen={showMoreModal}
+          onClose={() => setShowMoreModal(false)}
+          onConfirm={handleConfirmShowMore}
+          actionName={tip.name || ''}
+          category={tip.category}
+          benefit={tip.benefit}
+          icon={tip.icon}
+        />
+      )}
       <motion.div
         initial={false}
         animate={isCompleted ? { scale: [1, 1.02, 1], boxShadow: ['0 0 0px rgba(251, 191, 36, 0)', '0 0 20px rgba(251, 191, 36, 0.5)', '0 0 0px rgba(251, 191, 36, 0)'] } : {}}
@@ -467,6 +548,23 @@ END:VCALENDAR`;
                   </>
                 )}
               </button>
+              {tip.isAction && (
+                <button
+                  onClick={handleHideAction}
+                  disabled={isHiding}
+                  className="px-3 py-1.5 border border-slate-700 text-slate-400 text-xs font-medium rounded-lg hover:bg-slate-800 hover:text-slate-300 transition-colors disabled:opacity-50 disabled:cursor-default flex items-center gap-1.5 active:scale-95"
+                  title="Don't show me this action again"
+                >
+                  {isHiding ? (
+                    '...'
+                  ) : (
+                    <>
+                      <span>✕</span>
+                      <span>Hide</span>
+                    </>
+                  )}
+                </button>
+              )}
               <div className="text-xs text-slate-500 text-right" suppressHydrationWarning>
                 {mounted ? displayDate : ''}
               </div>
@@ -495,6 +593,24 @@ END:VCALENDAR`;
         >
           {isCompleted ? '✓ Marked as done' : isSubmitting ? 'Saving…' : '✓ Mark as done'}
         </button>
+
+        {/* Show me more like this button - only show after completion for actions */}
+        {isCompleted && tip.isAction && tip.benefit && (
+          <button
+            onClick={handleShowMore}
+            disabled={isShowingMore}
+            className="px-6 py-3 bg-emerald-500/20 border border-emerald-500/50 text-emerald-300 text-sm font-semibold rounded-xl hover:bg-emerald-500/30 active:bg-emerald-500/40 transition-all disabled:opacity-50 disabled:cursor-default flex items-center justify-center gap-2 min-h-[48px] touch-manipulation"
+          >
+            {isShowingMore ? (
+              '...'
+            ) : (
+              <>
+                <span>🎯</span>
+                <span>Show me more like this</span>
+              </>
+            )}
+          </button>
+        )}
 
             <div className="flex flex-wrap gap-2 pt-4 border-t border-slate-700/50">
               <a

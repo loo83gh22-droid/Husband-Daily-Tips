@@ -82,6 +82,14 @@ async function getTomorrowAction(userId: string | null, subscriptionTier: string
 
   const seenActionIds = recentActions?.map((ra) => ra.action_id) || [];
 
+  // Get hidden action IDs for this user
+  const { data: hiddenActions } = await adminSupabase
+    .from('user_hidden_actions')
+    .select('action_id')
+    .eq('user_id', userId);
+
+  const hiddenActionIds = hiddenActions?.map((ha) => ha.action_id) || [];
+
   // Get available actions - all actions are available to all tiers
   let { data: actions, error } = await adminSupabase
     .from('actions')
@@ -91,6 +99,11 @@ async function getTomorrowAction(userId: string | null, subscriptionTier: string
   // Filter out actions seen in last 30 days
   if (actions && seenActionIds.length > 0) {
     actions = actions.filter((action) => !seenActionIds.includes(action.id));
+  }
+
+  // Filter out hidden actions
+  if (actions && hiddenActionIds.length > 0) {
+    actions = actions.filter((action) => !hiddenActionIds.includes(action.id));
   }
 
   // Filter out kid-related actions if user doesn't have kids (especially if they don't live with them)
@@ -119,97 +132,137 @@ async function getTomorrowAction(userId: string | null, subscriptionTier: string
     }
   }
 
-  // Personalize action selection based on survey results (areas needing improvement)
-  // Priority: Use goal preferences (self-rating + wants improvement) if available
-  // Fallback: Use category scores (lowest score = needs most improvement)
-  if (actions && categoryScores && actions.length > 0) {
-    // Map category names to match action categories
-    const categoryMapping: Record<string, string> = {
-      'communication': 'Communication',
-      'romance': 'Romance',
-      'partnership': 'Partnership',
-      'intimacy': 'Intimacy',
-      'conflict_resolution': 'Conflict Resolution',
-      'reconnection': 'Reconnection',
-      'quality_time': 'Quality Time',
-      'gratitude': 'Gratitude',
-    };
+  // Combined action selection: Survey data + User preferences ("Show me more like this")
+  if (actions && actions.length > 0) {
+    // Get user category preferences (from "Show me more like this" clicks)
+    const { data: userPreferences } = await adminSupabase
+      .from('user_category_preferences')
+      .select('category, preference_weight')
+      .eq('user_id', userId);
 
-    // Get goal preferences from survey summary
-    const { data: surveySummary } = await adminSupabase
-      .from('survey_summary')
-      .select('communication_self_rating, communication_wants_improvement, intimacy_self_rating, intimacy_wants_improvement, partnership_self_rating, partnership_wants_improvement, romance_self_rating, romance_wants_improvement, gratitude_self_rating, gratitude_wants_improvement, conflict_resolution_self_rating, conflict_resolution_wants_improvement, reconnection_self_rating, reconnection_wants_improvement, quality_time_self_rating, quality_time_wants_improvement')
-      .eq('user_id', userId)
-      .single();
+    // Convert preferences to map
+    const preferenceWeights: Record<string, number> = {};
+    userPreferences?.forEach((pref) => {
+      preferenceWeights[pref.category] = parseFloat(pref.preference_weight.toString());
+    });
 
-    let targetCategory: string | null = null;
+    // Get survey-based priorities
+    let surveyWeights: Record<string, number> = {};
+    if (categoryScores) {
+      const categoryMapping: Record<string, string> = {
+        'communication': 'Communication',
+        'romance': 'Romance',
+        'partnership': 'Partnership',
+        'intimacy': 'Intimacy',
+        'conflict_resolution': 'Conflict Resolution',
+        'reconnection': 'Reconnection',
+        'quality_time': 'Quality Time',
+        'gratitude': 'Gratitude',
+      };
 
-    // Priority 1: Use goal preferences (low self-rating + wants improvement)
-    if (surveySummary) {
-      const priorityCategories: Array<{ category: string; priority: number }> = [];
-      
-      // Check each category for goal-based priority
-      const goalChecks = [
-        { key: 'communication', name: 'Communication' },
-        { key: 'intimacy', name: 'Intimacy' },
-        { key: 'partnership', name: 'Partnership' },
-        { key: 'romance', name: 'Romance' },
-        { key: 'gratitude', name: 'Gratitude' },
-        { key: 'conflict_resolution', name: 'Conflict Resolution' },
-        { key: 'reconnection', name: 'Reconnection' },
-        { key: 'quality_time', name: 'Quality Time' },
-      ];
+      // Get goal preferences from survey summary
+      const { data: surveySummary } = await adminSupabase
+        .from('survey_summary')
+        .select('communication_self_rating, communication_wants_improvement, intimacy_self_rating, intimacy_wants_improvement, partnership_self_rating, partnership_wants_improvement, romance_self_rating, romance_wants_improvement, gratitude_self_rating, gratitude_wants_improvement, conflict_resolution_self_rating, conflict_resolution_wants_improvement, reconnection_self_rating, reconnection_wants_improvement, quality_time_self_rating, quality_time_wants_improvement')
+        .eq('user_id', userId)
+        .single();
 
-      goalChecks.forEach(({ key, name }) => {
-        const selfRating = surveySummary[`${key}_self_rating` as keyof typeof surveySummary] as number | null;
-        const wantsImprovement = surveySummary[`${key}_wants_improvement` as keyof typeof surveySummary] as boolean | null;
+      // Priority 1: Use goal preferences (low self-rating + wants improvement)
+      if (surveySummary) {
+        const goalChecks = [
+          { key: 'communication', name: 'Communication' },
+          { key: 'intimacy', name: 'Intimacy' },
+          { key: 'partnership', name: 'Partnership' },
+          { key: 'romance', name: 'Romance' },
+          { key: 'gratitude', name: 'Gratitude' },
+          { key: 'conflict_resolution', name: 'Conflict Resolution' },
+          { key: 'reconnection', name: 'Reconnection' },
+          { key: 'quality_time', name: 'Quality Time' },
+        ];
+
+        goalChecks.forEach(({ key, name }) => {
+          const selfRating = surveySummary[`${key}_self_rating` as keyof typeof surveySummary] as number | null;
+          const wantsImprovement = surveySummary[`${key}_wants_improvement` as keyof typeof surveySummary] as boolean | null;
+          
+          // High priority: low self-rating (1-3) AND wants improvement
+          // Give survey priority category a base weight of 2.0
+          if (selfRating !== null && wantsImprovement === true && selfRating <= 3) {
+            surveyWeights[name] = 2.0;
+          }
+        });
+      }
+
+      // Priority 2: Fallback to category scores (lowest score = needs most improvement)
+      if (Object.keys(surveyWeights).length === 0) {
+        const connectionScore = categoryScores.connection_score || categoryScores.intimacy_score || 50;
         
-        // High priority: low self-rating (1-3) AND wants improvement
-        if (selfRating !== null && wantsImprovement === true && selfRating <= 3) {
-          // Lower rating = higher priority (1 is highest priority, 3 is lower)
-          priorityCategories.push({ category: name, priority: selfRating });
+        const scores = [
+          { category: 'communication', score: categoryScores.communication_score || 50 },
+          { category: 'romance', score: categoryScores.romance_score || 50 },
+          { category: 'partnership', score: categoryScores.partnership_score || 50 },
+          { category: 'intimacy', score: categoryScores.intimacy_score || 50 },
+          { category: 'conflict', score: categoryScores.conflict_score || 50 },
+          { category: 'connection', score: connectionScore },
+        ];
+        
+        scores.sort((a, b) => a.score - b.score);
+        const lowestCategory = scores[0];
+        const targetCategory = categoryMapping[lowestCategory.category] || categoryMapping[lowestCategory.category.toLowerCase()];
+        if (targetCategory) {
+          surveyWeights[targetCategory] = 2.0;
         }
-      });
-
-      // Sort by priority (lowest rating = highest priority)
-      if (priorityCategories.length > 0) {
-        priorityCategories.sort((a, b) => a.priority - b.priority);
-        targetCategory = priorityCategories[0].category;
       }
     }
 
-    // Priority 2: Fallback to category scores (lowest score = needs most improvement)
-    if (!targetCategory) {
-      const connectionScore = categoryScores.connection_score || categoryScores.intimacy_score || 50;
-      
-      const scores = [
-        { category: 'communication', score: categoryScores.communication_score || 50 },
-        { category: 'romance', score: categoryScores.romance_score || 50 },
-        { category: 'partnership', score: categoryScores.partnership_score || 50 },
-        { category: 'intimacy', score: categoryScores.intimacy_score || 50 },
-        { category: 'conflict', score: categoryScores.conflict_score || 50 },
-        { category: 'connection', score: connectionScore },
-      ];
-      
-      scores.sort((a, b) => a.score - b.score);
-      const lowestCategory = scores[0];
-      targetCategory = categoryMapping[lowestCategory.category] || categoryMapping[lowestCategory.category.toLowerCase()];
+    // Combine weights: base (1.0) + survey weight + user preference weight
+    const allCategories = new Set<string>();
+    actions.forEach((a) => allCategories.add(a.category));
+    
+    const categoryWeights: Record<string, number> = {};
+    allCategories.forEach((category) => {
+      const baseWeight = 1.0;
+      const surveyWeight = surveyWeights[category] || 0;
+      const userPreferenceWeight = preferenceWeights[category] || 0;
+      categoryWeights[category] = baseWeight + surveyWeight + userPreferenceWeight;
+    });
+
+    // Group actions by category
+    const actionsByCategory: Record<string, typeof actions> = {};
+    actions.forEach((action) => {
+      if (!actionsByCategory[action.category]) {
+        actionsByCategory[action.category] = [];
+      }
+      actionsByCategory[action.category].push(action);
+    });
+
+    // Calculate total weight for weighted random selection
+    const totalWeight = Object.values(categoryWeights).reduce((sum, weight) => sum + weight, 0);
+
+    // Weighted random selection
+    let randomValue = Math.random() * totalWeight;
+    let selectedCategory: string | null = null;
+
+    for (const [category, weight] of Object.entries(categoryWeights)) {
+      randomValue -= weight;
+      if (randomValue <= 0) {
+        selectedCategory = category;
+        break;
+      }
     }
 
-    // Prioritize actions in the target category
-    if (targetCategory) {
-      const priorityActions = actions.filter((a) => a.category === targetCategory);
-      if (priorityActions.length > 0) {
-        // 70% chance to pick from priority category, 30% random
-        if (Math.random() < 0.7) {
-          actions = priorityActions;
-        }
-      }
+    // Fallback to random if something went wrong
+    if (!selectedCategory || !actionsByCategory[selectedCategory]) {
+      selectedCategory = Object.keys(actionsByCategory)[Math.floor(Math.random() * Object.keys(actionsByCategory).length)];
+    }
+
+    // Filter actions to selected category
+    if (selectedCategory && actionsByCategory[selectedCategory]) {
+      actions = actionsByCategory[selectedCategory];
     }
   }
 
   if (error || !actions || actions.length === 0) {
-    // Fallback: if no actions available (all seen), get any action anyway
+    // Fallback: if no actions available (all seen or hidden), get any action that's not hidden
     const { data: allActions } = await adminSupabase
       .from('actions')
       .select('*')
@@ -218,7 +271,17 @@ async function getTomorrowAction(userId: string | null, subscriptionTier: string
     if (!allActions || allActions.length === 0) {
       return null;
     }
-    const randomAction = allActions[Math.floor(Math.random() * allActions.length)];
+
+    // Filter out hidden actions even in fallback
+    const availableActions = hiddenActionIds.length > 0
+      ? allActions.filter((action) => !hiddenActionIds.includes(action.id))
+      : allActions;
+
+    if (availableActions.length === 0) {
+      return null; // All actions are hidden
+    }
+
+    const randomAction = availableActions[Math.floor(Math.random() * availableActions.length)];
 
     await adminSupabase.from('user_daily_actions').insert({
       user_id: userId,
