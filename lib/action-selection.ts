@@ -22,7 +22,7 @@ export async function calculateCategoryWeights(
   adminSupabase: any,
   userId: string,
   categoryScores?: any
-): Promise<CategoryWeights> {
+): Promise<{ preferenceWeights: Record<string, number>; surveyWeights: Record<string, number> }> {
   // Get user category preferences (from "Show me more like this" clicks)
   const { data: userPreferences } = await adminSupabase
     .from('user_category_preferences')
@@ -103,7 +103,7 @@ export async function calculateCategoryWeights(
     }
   }
 
-  // Return empty weights (will be calculated per action set)
+  // Return preference and survey weights separately (will be combined per action set)
   return { preferenceWeights, surveyWeights };
 }
 
