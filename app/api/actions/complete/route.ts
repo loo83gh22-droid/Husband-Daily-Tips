@@ -94,7 +94,7 @@ export async function POST(request: Request) {
     // This allows users to catch up on missed days - they can complete past actions
     const { data: dailyActions } = await supabase
       .from('user_daily_actions')
-      .select('id, date')
+      .select('id, date, dnc')
       .eq('user_id', user.id)
       .eq('action_id', actionId)
       .eq('completed', false)

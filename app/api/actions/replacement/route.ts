@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
     // Get user ID
     const { data: user, error: userError } = await adminSupabase
       .from('users')
-      .select('id, subscription_tier, has_kids, kids_live_with_you')
+      .select('id, subscription_tier, has_kids, kids_live_with_you, country')
       .eq('auth0_id', auth0Id)
       .single();
 

@@ -3,6 +3,15 @@
  * These dates vary by year, so we calculate them dynamically
  */
 
+import {
+  calculateUSThanksgiving,
+  calculateCanadianThanksgiving,
+  calculateMemorialDay,
+  calculateLaborDay,
+  calculateVictoriaDay,
+  getCountryHolidayDateRange,
+} from './country-holidays';
+
 /**
  * Calculate Easter Sunday date for a given year
  * Uses the Computus algorithm
@@ -39,7 +48,6 @@ export function getSeasonalDateRange(
   
   // First, check for country-specific holidays
   if (country) {
-    const { getCountryHolidayDateRange } = require('./country-holidays');
     const countryRange = getCountryHolidayDateRange(actionName, country, currentYear);
     if (countryRange) {
       return countryRange;
@@ -151,13 +159,6 @@ export function isActionAvailableOnDate(
  */
 export async function updateSeasonalDates(supabase: any) {
   const currentYear = new Date().getFullYear();
-  const { 
-    calculateUSThanksgiving, 
-    calculateCanadianThanksgiving,
-    calculateMemorialDay,
-    calculateLaborDay,
-    calculateVictoriaDay
-  } = require('./country-holidays');
   
   // Universal holidays
   
@@ -189,7 +190,7 @@ export async function updateSeasonalDates(supabase: any) {
       seasonal_start_date: `${currentYear}-02-01`,
       seasonal_end_date: `${currentYear}-02-14`,
     })
-    .eq('name', 'Plan a Surprise Valentine''s Day Date');
+    .eq('name', "Plan a Surprise Valentine's Day Date");
   
   // Update New Year's action
   await supabase
