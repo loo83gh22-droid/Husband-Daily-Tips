@@ -111,16 +111,74 @@ export async function POST(request: Request) {
         .update({ completed: true })
         .eq('id', dailyAction.id);
 
-      // Track daily health points (capped at 6 per day)
-      // Each daily action completion gives exactly 6 points (one-time per day)
-      // This ensures maximum health accrual is 6 points per day
-      // Use the date of the action being completed, not today (allows catch-up)
+      // REVERSE DECAY: If this action was assigned on a past date and decay was applied,
+      // remove the decay entry to restore the health points
+      // Only reverse if action is NOT marked as DNC (Did Not Complete)
+      if (dailyAction.dnc === false || dailyAction.dnc === null) {
+        // Check if decay was applied for this date
+        const { data: decayEntry } = await supabase
+          .from('health_decay_log')
+          .select('id, decay_applied')
+          .eq('user_id', user.id)
+          .eq('missed_date', actionDate)
+          .single();
+
+        if (decayEntry) {
+          // Remove the decay entry to restore health points
+          await supabase
+            .from('health_decay_log')
+            .delete()
+            .eq('id', decayEntry.id);
+          
+          console.log(`Reversed decay of ${decayEntry.decay_applied} points for date ${actionDate}`);
+        }
+      }
+
+      // Calculate action points using the new health algorithm
+      // Get action point value (1, 2, or 3)
+      const actionPointValue = action.health_point_value || 2;
+      
+      // Calculate points with repetition penalty
+      const { calculateActionPoints } = await import('@/lib/health');
+      const { pointsEarned, penaltyApplied } = await calculateActionPoints(
+        supabase,
+        user.id,
+        actionId,
+        actionPointValue
+      );
+
+      // Record in action_completion_history
+      await supabase
+        .from('action_completion_history')
+        .insert({
+          user_id: user.id,
+          action_id: actionId,
+          completed_at: new Date().toISOString(),
+          points_earned: pointsEarned,
+          base_points: actionPointValue,
+          penalty_applied: penaltyApplied,
+        });
+
+      // Track daily health points with the new algorithm
+      // Get existing daily points for this date
+      const { data: existingDailyPoints } = await supabase
+        .from('daily_health_points')
+        .select('action_points, total_points')
+        .eq('user_id', user.id)
+        .eq('date', actionDate)
+        .single();
+
+      const currentActionPoints = existingDailyPoints?.action_points || 0;
+      const newActionPoints = Math.min(currentActionPoints + pointsEarned, 3); // Daily cap of 3
+      const totalPoints = newActionPoints + (existingDailyPoints?.total_points || 0) - (currentActionPoints || 0);
+
       await supabase
         .from('daily_health_points')
         .upsert({
           user_id: user.id,
-          date: actionDate, // Use actionDate from the daily action, not today's date
-          points_earned: 6, // Always 6 points for completing daily action (capped)
+          date: actionDate,
+          action_points: newActionPoints,
+          total_points: totalPoints,
         }, {
           onConflict: 'user_id,date',
         });

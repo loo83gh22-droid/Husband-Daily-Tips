@@ -81,6 +81,13 @@ export async function POST(request: NextRequest) {
       actions = actions.filter((action) => action.id !== excludedActionId);
     }
 
+    // Filter out seasonal actions that aren't available today
+    if (actions) {
+      const { isActionAvailableOnDate } = await import('@/lib/seasonal-dates');
+      const today = new Date();
+      actions = actions.filter((action) => isActionAvailableOnDate(action, today));
+    }
+
     // Filter out kid-related actions if user doesn't have kids
     if (actions && user) {
       const hasKids = user.has_kids === true;
