@@ -13,13 +13,12 @@ export default function DashboardNav() {
   const [displayName, setDisplayName] = useState<string | null>(null);
 
   const navLinks = [
-    { href: '/dashboard', label: 'Dashboard', icon: '📊' },
-    { href: '/dashboard/actions', label: 'Actions', icon: '🎯' },
-    { href: '/dashboard/badges', label: 'Badges', icon: '🏆' },
-    { href: '/dashboard/journal', label: 'Journal', icon: '✒️' },
-    { href: '/dashboard/team-wins', label: 'Team Wins', icon: '💪' },
-    { href: '/dashboard/referrals', label: 'Referrals', icon: '🎁' },
-    { href: '/dashboard/how-to-guides', label: 'How To Guides', icon: '🔧' },
+    { href: '/dashboard', label: 'Dashboard' },
+    { href: '/dashboard/actions', label: 'Actions' },
+    { href: '/dashboard/badges', label: 'Badges' },
+    { href: '/dashboard/journal', label: 'Journal' },
+    { href: '/dashboard/team-wins', label: 'Team Wins' },
+    { href: '/dashboard/how-to-guides', label: 'How To Guides' },
   ];
 
   useEffect(() => {
@@ -89,7 +88,6 @@ export default function DashboardNav() {
                       : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900 active:bg-slate-800'
                   }`}
                 >
-                  <span className="hidden md:inline mr-1.5">{link.icon}</span>
                   {link.label}
                 </Link>
               );

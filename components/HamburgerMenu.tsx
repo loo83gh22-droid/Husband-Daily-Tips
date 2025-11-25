@@ -29,11 +29,12 @@ export default function HamburgerMenu() {
   }, [isOpen]);
 
   const menuItems = [
-    { href: '/dashboard/about', label: 'About', icon: '📖' },
-    { href: '/dashboard/subscription', label: 'Pricing & Subscriptions', icon: '💰' },
-    { href: '/dashboard/payments', label: 'Payments', icon: '💳' },
-    { href: '/dashboard/account', label: 'Profile & Account Settings', icon: '⚙️' },
-    { href: '/dashboard/feedback', label: 'Share Your Thoughts', icon: '💬', highlight: true },
+    { href: '/dashboard/referrals', label: 'Referrals' },
+    { href: '/dashboard/about', label: 'About' },
+    { href: '/dashboard/subscription', label: 'Pricing & Subscriptions' },
+    { href: '/dashboard/payments', label: 'Payments' },
+    { href: '/dashboard/account', label: 'Profile & Account Settings' },
+    { href: '/dashboard/feedback', label: 'Share Your Thoughts', highlight: true },
   ];
 
   return (
@@ -72,7 +73,7 @@ export default function HamburgerMenu() {
         <div className="absolute right-0 mt-2 w-64 bg-slate-900 border border-slate-800 rounded-lg shadow-xl z-50 overflow-hidden">
           <div className="py-2">
             {menuItems.map((item) => {
-              const isActive = pathname === item.href;
+              const isActive = pathname === item.href || pathname?.startsWith(item.href + '/');
               return (
                 <Link
                   key={item.href}
@@ -85,7 +86,6 @@ export default function HamburgerMenu() {
                       : 'text-slate-300 hover:bg-slate-800 hover:text-slate-100'
                   }`}
                 >
-                  <span className="text-lg">{item.icon}</span>
                   <span>{item.label}</span>
                 </Link>
               );
@@ -95,14 +95,12 @@ export default function HamburgerMenu() {
                 href="/legal/terms"
                 className="flex items-center gap-3 px-4 py-3 text-sm text-slate-400 hover:bg-slate-800 hover:text-slate-200 transition-colors"
               >
-                <span className="text-lg">📄</span>
                 <span>Terms of Service</span>
               </Link>
               <Link
                 href="/legal/privacy"
                 className="flex items-center gap-3 px-4 py-3 text-sm text-slate-400 hover:bg-slate-800 hover:text-slate-200 transition-colors"
               >
-                <span className="text-lg">🔒</span>
                 <span>Privacy Policy</span>
               </Link>
               <Link
@@ -110,7 +108,6 @@ export default function HamburgerMenu() {
                 prefetch={false}
                 className="flex items-center gap-3 px-4 py-3 text-sm text-slate-300 hover:bg-slate-800 hover:text-slate-100 transition-colors"
               >
-                <span className="text-lg">🚪</span>
                 <span>Sign Out</span>
               </Link>
             </div>
