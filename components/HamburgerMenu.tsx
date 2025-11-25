@@ -93,11 +93,11 @@ export default function HamburgerMenu() {
         <>
           {/* Backdrop for mobile */}
           <div 
-            className="fixed inset-0 bg-black/50 z-40 md:hidden"
+            className="fixed inset-0 bg-black/50 z-[100] md:hidden"
             onClick={() => setIsOpen(false)}
             onTouchStart={() => setIsOpen(false)}
           />
-          <div className="absolute right-0 mt-2 w-64 bg-slate-900 border border-slate-800 rounded-lg shadow-xl z-50 overflow-hidden max-h-[90vh] overflow-y-auto">
+          <div className="absolute right-0 mt-2 w-64 bg-slate-900 border border-slate-800 rounded-lg shadow-xl z-[110] overflow-hidden max-h-[90vh] overflow-y-auto md:relative md:z-50">
           <div className="py-2">
             {/* Navigation Links - Show on mobile, hidden on desktop (since they're in the nav bar) */}
             <div className="md:hidden border-b border-slate-800 pb-2 mb-2">
