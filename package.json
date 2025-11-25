@@ -25,7 +25,7 @@
     "react-dom": "^18.2.0",
     "resend": "^6.5.0",
     "stripe": "^20.0.0",
-    "zod": "^4.1.13"
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@types/canvas-confetti": "^1.9.0",

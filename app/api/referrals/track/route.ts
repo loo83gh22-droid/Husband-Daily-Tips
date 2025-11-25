@@ -53,8 +53,6 @@ export async function POST(request: NextRequest) {
     }
 
     const { referralCode } = validationResult.data;
-
-    const auth0Id = session.user.sub;
     const adminSupabase = getSupabaseAdmin();
 
     // Get current user (referee)

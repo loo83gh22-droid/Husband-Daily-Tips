@@ -148,9 +148,18 @@ export async function POST(request: Request) {
         let responseValue: number;
         if (Array.isArray(responses)) {
           const response = responses.find((r: any) => r.questionId === question.id);
-          responseValue = response?.responseValue ?? 0;
+          const answer = response?.answer;
+          // Convert answer to number if needed
+          if (typeof answer === 'number') {
+            responseValue = answer;
+          } else if (typeof answer === 'boolean') {
+            responseValue = answer ? 1 : 0;
+          } else {
+            responseValue = 0;
+          }
         } else {
-          responseValue = responses[question.id] ?? 0;
+          const answer = responses[question.id];
+          responseValue = typeof answer === 'number' ? answer : 0;
         }
         return {
           user_id: finalUserId,
@@ -329,9 +338,18 @@ export async function POST(request: Request) {
           let responseValue: number = 0;
           if (Array.isArray(responses)) {
             const response = responses.find((r: any) => r.questionId === question.id);
-            responseValue = response?.responseValue ?? 0;
+            const answer = response?.answer;
+            // Convert answer to number if needed
+            if (typeof answer === 'number') {
+              responseValue = answer;
+            } else if (typeof answer === 'boolean') {
+              responseValue = answer ? 1 : 0;
+            } else {
+              responseValue = 0;
+            }
           } else {
-            responseValue = responses[question.id] ?? 0;
+            const answer = responses[question.id];
+            responseValue = typeof answer === 'number' ? answer : 0;
           }
 
           let formattedValue = '';
