@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSession } from '@auth0/nextjs-auth0';
 import { getSupabaseAdmin } from '@/lib/supabase';
+import { logger } from '@/lib/logger';
+import { checkRateLimit, referralRateLimiter } from '@/lib/rate-limit';
+import { referralCodeSchema } from '@/lib/validations';
 
 export const dynamic = 'force-dynamic';
 
@@ -16,14 +19,40 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { referralCode } = await request.json();
+    const auth0Id = session.user.sub;
 
-    if (!referralCode || typeof referralCode !== 'string') {
+    // Add rate limiting
+    const rateLimitResult = await checkRateLimit(
+      referralRateLimiter,
+      auth0Id
+    );
+
+    if (!rateLimitResult.success) {
       return NextResponse.json(
-        { error: 'Invalid referral code' },
+        {
+          error: 'Too many requests. Please try again later.',
+          retryAfter: Math.ceil((rateLimitResult.resetTime || 60000) / 1000),
+        },
+        { status: 429 }
+      );
+    }
+
+    const body = await request.json();
+
+    // Validate referral code
+    const validationResult = referralCodeSchema.safeParse(body);
+    
+    if (!validationResult.success) {
+      return NextResponse.json(
+        {
+          error: 'Invalid referral code format',
+          details: validationResult.error.errors,
+        },
         { status: 400 }
       );
     }
+
+    const { referralCode } = validationResult.data;
 
     const auth0Id = session.user.sub;
     const adminSupabase = getSupabaseAdmin();
@@ -36,7 +65,7 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (refereeError || !referee) {
-      console.error('Error fetching referee:', refereeError);
+      logger.error('Error fetching referee:', refereeError);
       return NextResponse.json(
         { error: 'Failed to fetch user' },
         { status: 500 }
@@ -84,7 +113,7 @@ export async function POST(request: NextRequest) {
       });
 
     if (referralError) {
-      console.error('Error creating referral:', referralError);
+      logger.error('Error creating referral:', referralError);
       // Check if it's a duplicate (user already referred)
       if (referralError.code === '23505') {
         return NextResponse.json(
@@ -109,7 +138,7 @@ export async function POST(request: NextRequest) {
       message: 'Referral tracked successfully',
     });
   } catch (error: any) {
-    console.error('Error in track referral endpoint:', error);
+    logger.error('Error in track referral endpoint:', error);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

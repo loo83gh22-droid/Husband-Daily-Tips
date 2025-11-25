@@ -2,16 +2,17 @@ import { NextRequest, NextResponse } from 'next/server';
 import { headers } from 'next/headers';
 import { stripe, STRIPE_WEBHOOK_SECRET } from '@/lib/stripe';
 import { getSupabaseAdmin } from '@/lib/supabase';
+import { logger } from '@/lib/logger';
 import Stripe from 'stripe';
 
 export const dynamic = 'force-dynamic';
 
 export async function POST(request: NextRequest) {
   // Log that we received the request
-  console.log('Webhook received at:', new Date().toISOString());
+  logger.log('Webhook received at:', new Date().toISOString());
   
   if (!process.env.STRIPE_SECRET_KEY || !stripe) {
-    console.error('Stripe not configured');
+    logger.error('Stripe not configured');
     return NextResponse.json(
       { error: 'Stripe is not configured' },
       { status: 500 }
@@ -22,10 +23,10 @@ export async function POST(request: NextRequest) {
   const headersList = await headers();
   const signature = headersList.get('stripe-signature');
   
-  console.log('Webhook signature present:', !!signature);
+  logger.log('Webhook signature present:', !!signature);
 
   if (!signature || !STRIPE_WEBHOOK_SECRET) {
-    console.error('Missing Stripe signature or webhook secret');
+    logger.error('Missing Stripe signature or webhook secret');
     return NextResponse.json(
       { error: 'Missing signature or webhook secret' },
       { status: 400 }
@@ -39,9 +40,9 @@ export async function POST(request: NextRequest) {
       signature,
       STRIPE_WEBHOOK_SECRET
     );
-    console.log('Webhook event verified:', event.type);
+    logger.log('Webhook event verified:', event.type);
   } catch (err: any) {
-    console.error('Webhook signature verification failed:', err.message);
+    logger.error('Webhook signature verification failed:', err.message);
     return NextResponse.json(
       { error: `Webhook Error: ${err.message}` },
       { status: 400 }
@@ -59,12 +60,12 @@ export async function POST(request: NextRequest) {
         const userId = session.metadata?.user_id;
 
         if (!subscriptionId || typeof subscriptionId !== 'string') {
-          console.error('Invalid subscription ID in checkout session');
+          logger.error('Invalid subscription ID in checkout session');
           break;
         }
 
         if (!userId) {
-          console.error('No user ID in checkout session metadata');
+          logger.error('No user ID in checkout session metadata');
           break;
         }
 
@@ -161,7 +162,7 @@ export async function POST(request: NextRequest) {
               .eq('id', referral.id);
           }
         } catch (error) {
-          console.error('Error applying referral rewards:', error);
+          logger.error('Error applying referral rewards:', error);
         }
         break;
       }
@@ -284,13 +285,13 @@ export async function POST(request: NextRequest) {
       }
 
       default:
-        console.log(`Unhandled event type: ${event.type}`);
+        logger.log(`Unhandled event type: ${event.type}`);
     }
 
-    console.log('Webhook processed successfully');
+    logger.log('Webhook processed successfully');
     return NextResponse.json({ received: true }, { status: 200 });
   } catch (error: any) {
-    console.error('Error processing webhook:', error);
+    logger.error('Error processing webhook:', error);
     return NextResponse.json(
       { error: `Webhook handler failed: ${error.message}` },
       { status: 500 }

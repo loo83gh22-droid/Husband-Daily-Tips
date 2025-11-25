@@ -2,6 +2,9 @@ import { NextResponse } from 'next/server';
 import { getSession } from '@auth0/nextjs-auth0';
 import { supabase, getSupabaseAdmin } from '@/lib/supabase';
 import { Resend } from 'resend';
+import { logger } from '@/lib/logger';
+import { checkRateLimit, surveyRateLimiter } from '@/lib/rate-limit';
+import { surveyResponseSchema } from '@/lib/validations';
 
 const resend = new Resend(process.env.RESEND_API_KEY || '');
 
@@ -17,7 +20,39 @@ export async function POST(request: Request) {
     }
 
     const auth0Id = session.user.sub;
-    const { userId, responses, skip } = await request.json();
+
+    // Add rate limiting
+    const rateLimitResult = await checkRateLimit(
+      surveyRateLimiter,
+      auth0Id // Use Auth0 ID as identifier
+    );
+
+    if (!rateLimitResult.success) {
+      return NextResponse.json(
+        {
+          error: 'Too many requests. Please try again later.',
+          retryAfter: Math.ceil((rateLimitResult.resetTime || 60000) / 1000),
+        },
+        { status: 429 }
+      );
+    }
+
+    const body = await request.json();
+
+    // Validate input
+    const validationResult = surveyResponseSchema.safeParse(body);
+    
+    if (!validationResult.success) {
+      return NextResponse.json(
+        {
+          error: 'Invalid request data',
+          details: validationResult.error.errors,
+        },
+        { status: 400 }
+      );
+    }
+
+    const { userId, responses, skip } = validationResult.data;
 
     // Use admin client for all database operations (bypasses RLS)
     const adminSupabase = getSupabaseAdmin();
@@ -32,7 +67,7 @@ export async function POST(request: Request) {
         .single();
 
       if (userLookupError || !user) {
-        console.error('User lookup error:', userLookupError);
+        logger.error('User lookup error:', userLookupError);
         return NextResponse.json({ error: 'User not found. Please try logging in again.' }, { status: 404 });
       }
 
@@ -55,7 +90,7 @@ export async function POST(request: Request) {
       });
 
       if (summaryError) {
-        console.error('Error saving default survey summary:', summaryError);
+        logger.error('Error saving default survey summary:', summaryError);
         return NextResponse.json({ error: 'Failed to save survey summary' }, { status: 500 });
       }
 
@@ -66,7 +101,7 @@ export async function POST(request: Request) {
         .eq('id', finalUserId);
 
       if (updateError) {
-        console.error('Error updating user survey status:', updateError);
+        logger.error('Error updating user survey status:', updateError);
       }
 
       return NextResponse.json({
@@ -137,7 +172,7 @@ export async function POST(request: Request) {
       .insert(responseRecords);
 
     if (insertError) {
-      console.error('Error inserting survey responses:', insertError);
+      logger.error('Error inserting survey responses:', insertError);
       return NextResponse.json({ error: 'Failed to save survey responses' }, { status: 500 });
     }
 
@@ -266,7 +301,7 @@ export async function POST(request: Request) {
     });
 
     if (summaryError) {
-      console.error('Error saving survey summary:', summaryError);
+      logger.error('Error saving survey summary:', summaryError);
       return NextResponse.json({ error: 'Failed to save survey summary' }, { status: 500 });
     }
 
@@ -438,10 +473,10 @@ export async function POST(request: Request) {
           `,
         });
 
-        console.log(`✅ Initial survey response email sent to admin from ${user.email}`);
+        logger.log(`✅ Initial survey response email sent to admin from ${user.email}`);
       } catch (emailError: any) {
         // Don't fail the request if email fails
-        console.error('Error sending initial survey response email:', emailError);
+        logger.error('Error sending initial survey response email:', emailError);
       }
     }
 
@@ -461,7 +496,7 @@ export async function POST(request: Request) {
       },
     });
   } catch (error) {
-    console.error('Unexpected error submitting survey:', error);
+    logger.error('Unexpected error submitting survey:', error);
     return NextResponse.json({ error: 'Unexpected error' }, { status: 500 });
   }
 }

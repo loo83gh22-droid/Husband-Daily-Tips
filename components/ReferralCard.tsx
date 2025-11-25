@@ -58,47 +58,49 @@ export default function ReferralCard() {
   }
 
   return (
-    <div className="bg-gradient-to-br from-primary-500/20 to-primary-600/10 border border-primary-500/30 rounded-xl p-5">
+    <div className="bg-gradient-to-br from-primary-500/20 to-primary-600/10 border border-primary-500/30 rounded-xl p-4 sm:p-5">
       <div className="flex items-center justify-between mb-3">
-        <h3 className="text-lg font-bold text-slate-50 flex items-center gap-2">
+        <h3 className="text-base sm:text-lg font-bold text-slate-50 flex items-center gap-2">
           <span>🎁</span>
-          Referral Program
+          <span className="hidden sm:inline">Referral Program</span>
+          <span className="sm:hidden">Referrals</span>
         </h3>
         <Link
           href="/dashboard/referrals"
           className="text-xs text-primary-300 hover:text-primary-200 font-medium"
         >
-          View All →
+          <span className="hidden sm:inline">View All →</span>
+          <span className="sm:hidden">→</span>
         </Link>
       </div>
 
-      <p className="text-sm text-slate-300 mb-4">
-        Share your link and get <span className="font-semibold text-primary-300">1 free month</span> when they subscribe! (Up to 12 months)
+      <p className="text-xs sm:text-sm text-slate-300 mb-3 sm:mb-4">
+        Share your link and get <span className="font-semibold text-primary-300">1 free month</span> when they subscribe! <span className="hidden sm:inline">(Up to 12 months)</span>
       </p>
 
-      <div className="flex gap-2 mb-4">
-        <div className="flex-1 bg-slate-800/50 border border-slate-700 rounded-lg px-3 py-2 font-mono text-sm text-slate-50">
+      <div className="flex gap-2 mb-3 sm:mb-4">
+        <div className="flex-1 bg-slate-800/50 border border-slate-700 rounded-lg px-2 sm:px-3 py-2 font-mono text-xs sm:text-sm text-slate-50 truncate">
           {stats.referralCode || 'Loading...'}
         </div>
         <button
           onClick={copyReferralLink}
-          className="px-4 py-2 bg-primary-500 text-slate-950 font-semibold rounded-lg hover:bg-primary-400 transition-colors text-sm"
+          className="px-3 sm:px-4 py-2 bg-primary-500 text-slate-950 font-semibold rounded-lg hover:bg-primary-400 transition-colors text-xs sm:text-sm min-w-[60px] sm:min-w-[80px]"
         >
           {copied ? '✓' : 'Copy'}
         </button>
       </div>
 
-      <div className="grid grid-cols-3 gap-3 text-center">
+      <div className="grid grid-cols-3 gap-2 sm:gap-3 text-center">
         <div>
-          <div className="text-xl font-bold text-slate-50">{stats.totalReferrals}</div>
+          <div className="text-lg sm:text-xl font-bold text-slate-50">{stats.totalReferrals}</div>
           <div className="text-xs text-slate-400">Total</div>
         </div>
         <div>
-          <div className="text-xl font-bold text-green-400">{stats.convertedReferrals}</div>
+          <div className="text-lg sm:text-xl font-bold text-green-400">{stats.convertedReferrals}</div>
           <div className="text-xs text-slate-400">Converted</div>
         </div>
         <div>
-          <div className="text-xl font-bold text-primary-400">{stats.referralCredits}</div>
+          <div className="text-lg sm:text-xl font-bold text-primary-400">{stats.referralCredits}</div>
           <div className="text-xs text-slate-400">Free Months</div>
         </div>
       </div>

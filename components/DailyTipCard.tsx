@@ -529,38 +529,39 @@ END:VCALENDAR`;
         initial={false}
         animate={isCompleted ? { scale: [1, 1.02, 1], boxShadow: ['0 0 0px rgba(251, 191, 36, 0)', '0 0 20px rgba(251, 191, 36, 0.5)', '0 0 0px rgba(251, 191, 36, 0)'] } : {}}
         transition={{ duration: 0.6, ease: 'easeOut' }}
-        className="bg-gradient-to-br from-slate-900/95 via-amber-950/10 to-slate-900/95 rounded-2xl shadow-2xl p-8 md:p-10 mb-6 border-2 border-primary-500/20 hover:border-primary-500/30 transition-all relative overflow-hidden"
+        className="bg-gradient-to-br from-slate-900/95 via-amber-950/10 to-slate-900/95 rounded-xl sm:rounded-2xl shadow-2xl p-4 sm:p-6 md:p-8 lg:p-10 mb-4 sm:mb-6 border-2 border-primary-500/20 hover:border-primary-500/30 transition-all relative overflow-hidden"
       >
         {/* Subtle glow effect */}
         <div className="absolute inset-0 bg-gradient-to-r from-primary-500/0 via-primary-500/5 to-primary-500/0 opacity-50 pointer-events-none" />
         <div className="relative z-10">
-          <div className="flex items-start justify-between mb-6">
-            <div className="flex-1">
-              <span className="inline-block px-4 py-1.5 bg-primary-500/20 text-primary-300 text-sm font-semibold rounded-full mb-3 border border-primary-500/30">
+          <div className="flex flex-col sm:flex-row items-start sm:items-start justify-between mb-4 sm:mb-6 gap-3 sm:gap-0">
+            <div className="flex-1 min-w-0 w-full sm:w-auto">
+              <span className="inline-block px-3 sm:px-4 py-1 sm:py-1.5 bg-primary-500/20 text-primary-300 text-xs sm:text-sm font-semibold rounded-full mb-2 sm:mb-3 border border-primary-500/30">
                 {tip.category}
               </span>
-              <h3 className="text-2xl md:text-3xl font-bold text-slate-50 mb-3 flex items-center gap-3">
-                {tip.icon && <span className="text-3xl">{tip.icon}</span>}
-                <span>{tip.title || tip.name}</span>
+              <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-slate-50 mb-2 sm:mb-3 flex items-center gap-2 sm:gap-3">
+                {tip.icon && <span className="text-2xl sm:text-3xl">{tip.icon}</span>}
+                <span className="break-words">{tip.title || tip.name}</span>
               </h3>
             </div>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 sm:gap-3 flex-wrap sm:flex-nowrap w-full sm:w-auto">
               {tip.isAction && (() => {
                 const guideSlug = getGuideSlugForAction(tip.name || '', tip.theme);
                 return guideSlug ? (
                   <Link
                     href={`/dashboard/how-to-guides/${guideSlug}`}
-                    className="px-3 py-1.5 border border-emerald-500/50 text-emerald-300 text-xs font-medium rounded-lg hover:bg-emerald-500/10 transition-colors flex items-center gap-1.5"
+                    className="px-2 sm:px-3 py-1.5 border border-emerald-500/50 text-emerald-300 text-xs font-medium rounded-lg hover:bg-emerald-500/10 transition-colors flex items-center gap-1 sm:gap-1.5"
                   >
                     <span>📚</span>
-                    <span>How-To Guide</span>
+                    <span className="hidden sm:inline">How-To Guide</span>
+                    <span className="sm:hidden">Guide</span>
                   </Link>
                 ) : null;
               })()}
               <button
                 onClick={handleToggleFavorite}
                 disabled={isTogglingFavorite}
-                className={`px-3 py-1.5 border text-xs font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-default flex items-center gap-1.5 active:scale-95 ${
+                className={`px-2 sm:px-3 py-1.5 border text-xs font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-default flex items-center gap-1 sm:gap-1.5 active:scale-95 ${
                   isFavorited
                     ? 'border-yellow-500/50 bg-yellow-500/10 text-yellow-300 hover:bg-yellow-500/20'
                     : 'border-slate-700 text-slate-300 hover:bg-slate-800'
@@ -571,7 +572,7 @@ END:VCALENDAR`;
                 ) : (
                   <>
                     <span>{isFavorited ? '⭐' : '☆'}</span>
-                    <span>{isFavorited ? 'Favorited' : 'Favorite'}</span>
+                    <span className="hidden sm:inline">{isFavorited ? 'Favorited' : 'Favorite'}</span>
                   </>
                 )}
               </button>
@@ -579,7 +580,7 @@ END:VCALENDAR`;
                 <button
                   onClick={handleHideAction}
                   disabled={isHiding}
-                  className="px-3 py-1.5 border border-slate-700 text-slate-400 text-xs font-medium rounded-lg hover:bg-slate-800 hover:text-slate-300 transition-colors disabled:opacity-50 disabled:cursor-default flex items-center gap-1.5 active:scale-95"
+                  className="px-2 sm:px-3 py-1.5 border border-slate-700 text-slate-400 text-xs font-medium rounded-lg hover:bg-slate-800 hover:text-slate-300 transition-colors disabled:opacity-50 disabled:cursor-default flex items-center gap-1 sm:gap-1.5 active:scale-95"
                   title="Don't show me this action again"
                 >
                   {isHiding ? (
@@ -587,25 +588,25 @@ END:VCALENDAR`;
                   ) : (
                     <>
                       <span>✕</span>
-                      <span>Hide</span>
+                      <span className="hidden sm:inline">Hide</span>
                     </>
                   )}
                 </button>
               )}
-              <div className="text-xs text-slate-500 text-right" suppressHydrationWarning>
+              <div className="text-xs text-slate-500 text-right hidden sm:block" suppressHydrationWarning>
                 {mounted ? displayDate : ''}
               </div>
             </div>
           </div>
           
           <div className="prose max-w-none">
-            <p className="text-slate-100 text-base md:text-lg leading-relaxed whitespace-pre-line mb-4">
+            <p className="text-slate-100 text-sm sm:text-base md:text-lg leading-relaxed whitespace-pre-line mb-3 sm:mb-4">
               {tip.content || tip.description}
             </p>
             {tip.benefit && (
-              <div className="mt-5 p-5 bg-slate-800/60 border-l-4 border-primary-500/60 rounded-r-lg">
-                <p className="text-sm font-bold text-primary-300 mb-2">Why this matters:</p>
-                <p className="text-slate-200 text-base leading-relaxed">{tip.benefit}</p>
+              <div className="mt-4 sm:mt-5 p-3 sm:p-4 md:p-5 bg-slate-800/60 border-l-4 border-primary-500/60 rounded-r-lg">
+                <p className="text-xs sm:text-sm font-bold text-primary-300 mb-1 sm:mb-2">Why this matters:</p>
+                <p className="text-slate-200 text-sm sm:text-base leading-relaxed">{tip.benefit}</p>
               </div>
             )}
           </div>
@@ -616,7 +617,7 @@ END:VCALENDAR`;
           onClick={handleMarkDone}
           data-mark-done-button="true"
           disabled={isSubmitting || isCompleted}
-          className="px-8 py-4 bg-primary-500 disabled:bg-primary-900 disabled:text-slate-400 text-slate-950 text-base md:text-lg font-bold rounded-xl hover:bg-primary-400 active:bg-primary-600 transition-all disabled:cursor-default min-h-[56px] touch-manipulation shadow-lg shadow-primary-500/30 hover:shadow-xl hover:shadow-primary-500/40 hover:scale-[1.02] active:scale-[0.98]"
+          className="px-6 sm:px-8 py-3 sm:py-4 bg-primary-500 disabled:bg-primary-900 disabled:text-slate-400 text-slate-950 text-sm sm:text-base md:text-lg font-bold rounded-xl hover:bg-primary-400 active:bg-primary-600 transition-all disabled:cursor-default min-h-[56px] touch-manipulation shadow-lg shadow-primary-500/30 hover:shadow-xl hover:shadow-primary-500/40 hover:scale-[1.02] active:scale-[0.98] w-full"
         >
           {isCompleted ? '✓ Marked as done' : isSubmitting ? 'Saving…' : '✓ Mark as done'}
         </button>

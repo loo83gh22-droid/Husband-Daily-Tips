@@ -43,15 +43,15 @@ export default function StatsCard({ title, value, subtitle, icon, color, current
   const encouragement = getEncouragement();
 
   return (
-    <div className={`${getColorClasses()} rounded-xl shadow-lg p-6 md:p-7 border transition-all duration-200 backdrop-blur-sm hover:shadow-xl`}>
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-sm font-semibold text-slate-300 tracking-normal">
+    <div className={`${getColorClasses()} rounded-xl shadow-lg p-4 sm:p-5 md:p-6 lg:p-7 border transition-all duration-200 backdrop-blur-sm hover:shadow-xl`}>
+      <div className="flex items-center justify-between mb-3 sm:mb-4">
+        <h3 className="text-xs sm:text-sm font-semibold text-slate-300 tracking-normal">
           {title}
         </h3>
-        <span className="text-2xl md:text-3xl opacity-90">{icon}</span>
+        <span className="text-xl sm:text-2xl md:text-3xl opacity-90">{icon}</span>
       </div>
-      <div className="text-4xl md:text-5xl font-bold text-slate-50 mb-2 drop-shadow-sm">{value}</div>
-      <p className="text-sm md:text-base text-slate-400 mb-1">{subtitle}</p>
+      <div className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-50 mb-1 sm:mb-2 drop-shadow-sm">{value}</div>
+      <p className="text-xs sm:text-sm md:text-base text-slate-400 mb-1">{subtitle}</p>
       {encouragement && (
         <p className="text-xs text-slate-500 mt-2 font-medium">{encouragement}</p>
       )}

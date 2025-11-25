@@ -707,33 +707,37 @@ export default async function Dashboard() {
       />
       <DashboardNav />
 
-      <main className="container mx-auto px-4 py-8 md:py-12">
+      <main className="container mx-auto px-3 sm:px-4 py-4 sm:py-6 md:py-8 lg:py-12">
         {/* Survey Banner - Show if survey not completed */}
         {!user.survey_completed && (
-          <SurveyBanner surveyCompleted={user.survey_completed || false} />
+          <div className="mb-4 sm:mb-6">
+            <SurveyBanner surveyCompleted={user.survey_completed || false} />
+          </div>
         )}
         
         {/* Trial Expiration Banner - Show if trial is expiring soon */}
         {user.trial_ends_at && (
-          <TrialExpirationBanner trialEndsAt={user.trial_ends_at} />
+          <div className="mb-4 sm:mb-6">
+            <TrialExpirationBanner trialEndsAt={user.trial_ends_at} />
+          </div>
         )}
         
         {/* Subscription Banner */}
         {subscriptionTier === 'free' && (
-          <div className="mb-8">
+          <div className="mb-4 sm:mb-6 md:mb-8">
             <SubscriptionBanner />
           </div>
         )}
 
-        <div className="grid lg:grid-cols-[1.4fr,1fr] gap-8 md:gap-12 items-start">
+        <div className="grid lg:grid-cols-[1.4fr,1fr] gap-4 sm:gap-6 md:gap-8 lg:gap-12 items-start">
           {/* Left column: Daily tip + health bar */}
-          <div className="max-w-3xl">
-            <div className="flex items-center justify-between mb-6" data-tour="mission-header">
+          <div className="max-w-3xl w-full">
+            <div className="flex items-center justify-between mb-4 sm:mb-6" data-tour="mission-header">
               <div>
-                <h2 className="text-3xl md:text-4xl font-bold text-slate-50 mb-2">
+                <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-slate-50 mb-1 sm:mb-2">
                   Today&apos;s Mission
                 </h2>
-                <p className="text-sm md:text-base text-slate-300 font-medium">
+                <p className="text-xs sm:text-sm md:text-base text-slate-300 font-medium">
                   {displayAction?.isChallengeAction ? (
                     <>
                       <span className="font-semibold text-primary-400">{displayAction.challengeName}</span> - Day {displayAction.challengeDay} of 7
@@ -761,15 +765,15 @@ export default async function Dashboard() {
 
 
             {/* Outstanding Actions */}
-            <div className="mt-8">
+            <div className="mt-4 sm:mt-6 md:mt-8">
               <OutstandingActions userId={user.id} />
             </div>
 
             {/* Previous Actions Link */}
-            <div className="mt-8 text-center">
+            <div className="mt-4 sm:mt-6 md:mt-8 text-center">
               <Link
                 href="/dashboard/journal"
-                className="text-primary-300 hover:text-primary-200 text-base font-semibold transition-colors"
+                className="text-primary-300 hover:text-primary-200 text-sm sm:text-base font-semibold transition-colors"
               >
                 View your previous actions →
               </Link>
@@ -777,13 +781,13 @@ export default async function Dashboard() {
           </div>
 
           {/* Right column: Health bar + stats */}
-          <div className="space-y-6 md:space-y-8">
+          <div className="space-y-4 sm:space-y-6 md:space-y-8">
             <div data-tour="hit-points">
               <HealthBar value={stats.healthScore} />
             </div>
 
 
-            <div className="grid md:grid-cols-3 gap-5 md:gap-6" data-tour="stats">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4 md:gap-5 lg:gap-6" data-tour="stats">
               <StatsCard
                 title="Current streak"
                 value={stats.currentStreak}

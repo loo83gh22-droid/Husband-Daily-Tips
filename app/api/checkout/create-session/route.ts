@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getSession } from '@auth0/nextjs-auth0';
 import { stripe, getStripePriceId } from '@/lib/stripe';
 import { getSupabaseAdmin } from '@/lib/supabase';
+import { logger } from '@/lib/logger';
+import { checkRateLimit, checkoutRateLimiter } from '@/lib/rate-limit';
 
 export const dynamic = 'force-dynamic';
 
@@ -23,10 +25,27 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const auth0Id = session.user.sub;
+
+    // Add rate limiting
+    const rateLimitResult = await checkRateLimit(
+      checkoutRateLimiter,
+      auth0Id
+    );
+
+    if (!rateLimitResult.success) {
+      return NextResponse.json(
+        {
+          error: 'Too many requests. Please try again later.',
+          retryAfter: Math.ceil((rateLimitResult.resetTime || 60000) / 1000),
+        },
+        { status: 429 }
+      );
+    }
+
     const body = await request.json().catch(() => ({}));
     const billingInterval = (body.interval as 'month' | 'year') || 'month';
 
-    const auth0Id = session.user.sub;
     const adminSupabase = getSupabaseAdmin();
 
     // Get user from database
@@ -99,7 +118,7 @@ export async function POST(request: NextRequest) {
       url: checkoutSession.url,
     });
   } catch (error: any) {
-    console.error('Error creating checkout session:', error);
+    logger.error('Error creating checkout session:', error);
     return NextResponse.json(
       { error: error.message || 'Failed to create checkout session' },
       { status: 500 }
