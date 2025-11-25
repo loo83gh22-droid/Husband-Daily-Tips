@@ -249,8 +249,8 @@ export default async function ActionsPage() {
         badgesEarned={badgesEarned}
       />
 
-      <main className="container mx-auto px-4 py-8 md:py-10">
-        <div className="max-w-6xl mx-auto">
+      <main className="container mx-auto px-4 py-8 md:py-10 max-w-full overflow-x-hidden">
+        <div className="max-w-6xl mx-auto w-full">
           <div className="mb-8">
             <h1 className="text-3xl md:text-4xl font-bold text-slate-50 mb-2 bg-gradient-to-r from-primary-400 to-primary-600 bg-clip-text text-transparent">
               Actions

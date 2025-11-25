@@ -33,7 +33,7 @@ export default async function AccountPage() {
   return (
     <div className="min-h-screen bg-slate-950">
       <DashboardNav />
-      <main className="container mx-auto px-4 py-8 md:py-12">
+      <main className="container mx-auto px-4 py-8 md:py-12 max-w-full overflow-x-hidden">
         <div className="max-w-4xl mx-auto">
           <h1 className="text-3xl md:text-4xl font-bold text-slate-50 mb-8">
             Account Settings

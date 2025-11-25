@@ -28,6 +28,15 @@ export default function HamburgerMenu() {
     return () => document.removeEventListener('click', handleClickOutside);
   }, [isOpen]);
 
+  const navLinks = [
+    { href: '/dashboard', label: 'Dashboard' },
+    { href: '/dashboard/actions', label: 'Actions' },
+    { href: '/dashboard/badges', label: 'Badges' },
+    { href: '/dashboard/journal', label: 'Journal' },
+    { href: '/dashboard/team-wins', label: 'Team Wins' },
+    { href: '/dashboard/how-to-guides', label: 'How To Guides' },
+  ];
+
   const menuItems = [
     { href: '/dashboard/referrals', label: 'Referrals' },
     { href: '/dashboard/about', label: 'About' },
@@ -70,8 +79,29 @@ export default function HamburgerMenu() {
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-64 bg-slate-900 border border-slate-800 rounded-lg shadow-xl z-50 overflow-hidden">
+        <div className="absolute right-0 mt-2 w-64 bg-slate-900 border border-slate-800 rounded-lg shadow-xl z-50 overflow-hidden max-h-[90vh] overflow-y-auto">
           <div className="py-2">
+            {/* Navigation Links - Show on mobile, hidden on desktop (since they're in the nav bar) */}
+            <div className="md:hidden border-b border-slate-800 pb-2 mb-2">
+              {navLinks.map((link) => {
+                const isActive = pathname === link.href || pathname?.startsWith(link.href + '/');
+                return (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className={`flex items-center gap-3 px-4 py-3 text-sm transition-colors ${
+                      isActive
+                        ? 'bg-primary-500/20 text-primary-300 border-l-2 border-primary-500'
+                        : 'text-slate-300 hover:bg-slate-800 hover:text-slate-100'
+                    }`}
+                  >
+                    <span>{link.label}</span>
+                  </Link>
+                );
+              })}
+            </div>
+            
+            {/* Menu Items */}
             {menuItems.map((item) => {
               const isActive = pathname === item.href || pathname?.startsWith(item.href + '/');
               return (
