@@ -52,7 +52,7 @@ export default function HamburgerMenu() {
   ];
 
   return (
-    <div className="relative" data-hamburger-menu>
+    <div className="relative z-[110]" data-hamburger-menu>
       <button
         onClick={(e) => {
           e.stopPropagation();
