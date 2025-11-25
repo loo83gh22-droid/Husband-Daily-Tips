@@ -73,7 +73,7 @@ export default function ReferralCard() {
       </div>
 
       <p className="text-sm text-slate-300 mb-4">
-        Share your link and both you and your friend get <span className="font-semibold text-primary-300">1 free month</span> when they subscribe!
+        Share your link and get <span className="font-semibold text-primary-300">1 free month</span> when they subscribe! (Up to 12 months)
       </p>
 
       <div className="flex gap-2 mb-4">

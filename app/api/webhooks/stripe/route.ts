@@ -131,7 +131,7 @@ export async function POST(request: NextRequest) {
               })
               .eq('id', referral.id);
 
-            // Give referrer 1 free month credit
+            // Give referrer 1 free month credit (capped at 12 months)
             const { data: referrer } = await adminSupabase
               .from('users')
               .select('referral_credits')
@@ -139,25 +139,16 @@ export async function POST(request: NextRequest) {
               .single();
 
             if (referrer) {
+              const currentCredits = referrer.referral_credits || 0;
+              // Cap at 12 months total
+              const newCredits = Math.min(currentCredits + 1, 12);
+              
               await adminSupabase
                 .from('users')
                 .update({
-                  referral_credits: (referrer.referral_credits || 0) + 1,
+                  referral_credits: newCredits,
                 })
                 .eq('id', referral.referrer_id);
-            }
-
-            // Extend referee's subscription by 1 month
-            if (currentPeriodEnd) {
-              const newEnd = new Date(currentPeriodEnd * 1000);
-              newEnd.setMonth(newEnd.getMonth() + 1);
-
-              await adminSupabase
-                .from('users')
-                .update({
-                  subscription_ends_at: newEnd.toISOString(),
-                })
-                .eq('id', userId);
             }
 
             // Update referral status to rewarded

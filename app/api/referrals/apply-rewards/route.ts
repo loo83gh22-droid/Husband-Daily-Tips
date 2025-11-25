@@ -51,16 +51,8 @@ export async function POST(request: NextRequest) {
       })
       .eq('id', referral.id);
 
-    // Apply rewards to both referrer and referee
-    // 1. Give referrer 1 free month credit
-    await adminSupabase.rpc('increment', {
-      table_name: 'users',
-      column_name: 'referral_credits',
-      row_id: referral.referrer_id,
-      increment_value: 1,
-    });
-
-    // If increment function doesn't exist, use update
+    // Apply reward to referrer only
+    // Give referrer 1 free month credit (capped at 12 months)
     const { data: referrer } = await adminSupabase
       .from('users')
       .select('referral_credits')
@@ -68,35 +60,16 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (referrer) {
+      const currentCredits = referrer.referral_credits || 0;
+      // Cap at 12 months total
+      const newCredits = Math.min(currentCredits + 1, 12);
+      
       await adminSupabase
         .from('users')
         .update({
-          referral_credits: (referrer.referral_credits || 0) + 1,
+          referral_credits: newCredits,
         })
         .eq('id', referral.referrer_id);
-    }
-
-    // 2. Give referee 1 free month (extend subscription or apply credit)
-    // For now, we'll extend their subscription by 1 month
-    // This will be handled by applying a credit that extends their subscription period
-    const { data: referee } = await adminSupabase
-      .from('users')
-      .select('subscription_ends_at, stripe_subscription_id')
-      .eq('id', userId)
-      .single();
-
-    if (referee && referee.subscription_ends_at) {
-      // Extend subscription by 1 month (30 days)
-      const currentEnd = new Date(referee.subscription_ends_at);
-      const newEnd = new Date(currentEnd);
-      newEnd.setMonth(newEnd.getMonth() + 1);
-
-      await adminSupabase
-        .from('users')
-        .update({
-          subscription_ends_at: newEnd.toISOString(),
-        })
-        .eq('id', userId);
     }
 
     // Update referral status to rewarded

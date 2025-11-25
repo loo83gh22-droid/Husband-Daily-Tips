@@ -69,7 +69,7 @@ export default function ReferralDashboard() {
 
       <div className="mb-6">
         <p className="text-slate-300 mb-4">
-          Share your referral link and both you and your friend get <span className="font-semibold text-primary-400">1 free month of Premium</span> when they subscribe!
+          Share your referral link and get <span className="font-semibold text-primary-400">1 free month of Premium</span> when they subscribe! (Up to 12 months total)
         </p>
       </div>
 
@@ -124,9 +124,9 @@ export default function ReferralDashboard() {
         <h3 className="text-sm font-semibold text-primary-300 mb-2">How It Works</h3>
         <ol className="text-xs text-slate-300 space-y-1 list-decimal list-inside">
           <li>Share your referral link with friends</li>
-          <li>When they sign up using your link, they get 1 free month of Premium</li>
-          <li>When they subscribe to Premium, you both get 1 free month credit</li>
-          <li>Free months are automatically applied to your subscription</li>
+          <li>When they sign up using your link, they get a 7-day free trial</li>
+          <li>When they subscribe to Premium (monthly or annual), you get 1 free month credit</li>
+          <li>You can earn up to 12 free months total</li>
         </ol>
       </div>
     </div>
