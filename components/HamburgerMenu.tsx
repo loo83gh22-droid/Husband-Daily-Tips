@@ -17,19 +17,33 @@ export default function HamburgerMenu() {
   useEffect(() => {
     if (!isOpen) return;
 
-    const handleClickOutside = (event: MouseEvent | TouchEvent) => {
-      const target = event.target as HTMLElement;
-      if (!target.closest('[data-hamburger-menu]')) {
+    // Add a small delay to prevent immediate closing when opening
+    const timeoutId = setTimeout(() => {
+      const handleClickOutside = (event: MouseEvent | TouchEvent) => {
+        const target = event.target as HTMLElement;
+        // Don't close if clicking inside the menu
+        if (target.closest('[data-hamburger-menu]')) {
+          return;
+        }
+        // Don't close if clicking on a link (let navigation happen)
+        if (target.closest('a')) {
+          return;
+        }
         setIsOpen(false);
-      }
-    };
+      };
 
-    // Use both mouse and touch events for mobile compatibility
-    document.addEventListener('mousedown', handleClickOutside);
-    document.addEventListener('touchstart', handleClickOutside);
+      // Use both mouse and touch events for mobile compatibility
+      document.addEventListener('mousedown', handleClickOutside, true);
+      document.addEventListener('touchstart', handleClickOutside, true);
+      
+      return () => {
+        document.removeEventListener('mousedown', handleClickOutside, true);
+        document.removeEventListener('touchstart', handleClickOutside, true);
+      };
+    }, 100);
+
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-      document.removeEventListener('touchstart', handleClickOutside);
+      clearTimeout(timeoutId);
     };
   }, [isOpen]);
 
@@ -55,15 +69,19 @@ export default function HamburgerMenu() {
     <div className="relative z-[110]" data-hamburger-menu>
       <button
         onClick={(e) => {
+          e.preventDefault();
           e.stopPropagation();
-          setIsOpen(!isOpen);
+          setIsOpen((prev) => !prev);
         }}
-        onTouchStart={(e) => {
+        onTouchEnd={(e) => {
+          e.preventDefault();
           e.stopPropagation();
+          setIsOpen((prev) => !prev);
         }}
         className="p-2 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-900 transition-colors touch-manipulation"
         aria-label="Menu"
         aria-expanded={isOpen}
+        type="button"
       >
         <svg
           className="w-6 h-6"
@@ -94,10 +112,16 @@ export default function HamburgerMenu() {
           {/* Backdrop for mobile */}
           <div 
             className="fixed inset-0 bg-black/50 z-[100] md:hidden"
-            onClick={() => setIsOpen(false)}
-            onTouchStart={() => setIsOpen(false)}
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsOpen(false);
+            }}
+            onTouchStart={(e) => {
+              e.stopPropagation();
+              setIsOpen(false);
+            }}
           />
-          <div className="absolute right-0 mt-2 w-64 bg-slate-900 border border-slate-800 rounded-lg shadow-xl z-[110] overflow-hidden max-h-[90vh] overflow-y-auto md:relative md:z-50">
+          <div className="fixed top-16 right-2 w-64 bg-slate-900 border border-slate-800 rounded-lg shadow-xl z-[110] overflow-hidden max-h-[calc(100vh-5rem)] overflow-y-auto md:absolute md:right-0 md:mt-2 md:top-auto md:max-h-[90vh] md:relative md:z-50">
           <div className="py-2">
             {/* Navigation Links - Show on mobile, hidden on desktop (since they're in the nav bar) */}
             <div className="md:hidden border-b border-slate-800 pb-2 mb-2">
