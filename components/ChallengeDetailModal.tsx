@@ -1,7 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useEffect, useMemo } from 'react';
 
 interface Challenge {
   id: string;
@@ -39,16 +38,18 @@ export default function ChallengeDetailModal({
 }: ChallengeDetailModalProps) {
   const [isJoining, setIsJoining] = useState(false);
 
+  // Memoize challenge data to prevent unnecessary re-renders
+  const stableChallenge = useMemo(() => challenge, [challenge?.id]);
+
   // Prevent body scroll when modal is open
   useEffect(() => {
     if (isOpen) {
+      const originalOverflow = document.body.style.overflow;
       document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
+      return () => {
+        document.body.style.overflow = originalOverflow;
+      };
     }
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
   }, [isOpen]);
 
   // Close on Escape key
@@ -65,14 +66,17 @@ export default function ChallengeDetailModal({
     return () => window.removeEventListener('keydown', handleEscape);
   }, [isOpen, onClose]);
 
-  if (!isOpen || !challenge) return null;
+  // Don't render if not open or no challenge
+  if (!isOpen || !stableChallenge) {
+    return null;
+  }
 
   const handleJoin = async () => {
-    if (isEnrolled || isJoining || !onJoin) return;
+    if (isEnrolled || isJoining || !onJoin || !stableChallenge) return;
     
     setIsJoining(true);
     try {
-      await onJoin(challenge.id);
+      await onJoin(stableChallenge.id);
       onClose();
     } catch (error) {
       console.error('Error joining challenge:', error);
@@ -81,13 +85,21 @@ export default function ChallengeDetailModal({
     }
   };
 
-  const duration = challenge.duration_days || challenge.challenge_actions?.length || 7;
-  const startDate = new Date(challenge.start_date);
-  const endDate = new Date(challenge.end_date);
-  const today = new Date();
-  const isActive = today >= startDate && today <= endDate;
-  const isUpcoming = today < startDate;
-  const isPast = today > endDate;
+  // Memoize computed values
+  const duration = useMemo(() => 
+    stableChallenge.duration_days || stableChallenge.challenge_actions?.length || 7,
+    [stableChallenge]
+  );
+
+  const { isPast, isUpcoming } = useMemo(() => {
+    const startDate = new Date(stableChallenge.start_date);
+    const endDate = new Date(stableChallenge.end_date);
+    const today = new Date();
+    return {
+      isPast: today > endDate,
+      isUpcoming: today < startDate,
+    };
+  }, [stableChallenge.start_date, stableChallenge.end_date]);
 
   const getThemeColor = (theme: string) => {
     const colors: Record<string, string> = {
@@ -109,29 +121,26 @@ export default function ChallengeDetailModal({
     return theme.charAt(0).toUpperCase() + theme.slice(1).replace(/_/g, ' ');
   };
 
-  return (
-    <AnimatePresence mode="wait">
-      {isOpen && (
-        <>
-          {/* Backdrop */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={onClose}
-            className="fixed inset-0 bg-black/70 backdrop-blur-md z-[9998]"
-          />
+  const themeColor = useMemo(() => getThemeColor(stableChallenge.theme), [stableChallenge.theme]);
 
-          {/* Modal */}
-          <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 pointer-events-none">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              transition={{ type: 'spring', duration: 0.3 }}
-              className={`bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 rounded-2xl shadow-2xl border-2 ${getThemeColor(challenge.theme)} max-w-2xl w-full p-6 md:p-8 relative overflow-hidden max-h-[90vh] overflow-y-auto pointer-events-auto`}
-              onClick={(e) => e.stopPropagation()}
-            >
+  return (
+    <>
+      {/* Backdrop */}
+      <div
+        onClick={onClose}
+        className="fixed inset-0 bg-black/70 backdrop-blur-md z-[9998] transition-opacity"
+        style={{ opacity: isOpen ? 1 : 0, pointerEvents: isOpen ? 'auto' : 'none' }}
+      />
+
+      {/* Modal */}
+      <div 
+        className="fixed inset-0 z-[9999] flex items-center justify-center p-4 pointer-events-none"
+        style={{ display: isOpen ? 'flex' : 'none' }}
+      >
+        <div
+          className={`bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 rounded-2xl shadow-2xl border-2 ${themeColor} max-w-2xl w-full p-6 md:p-8 relative overflow-hidden max-h-[90vh] overflow-y-auto pointer-events-auto`}
+          onClick={(e) => e.stopPropagation()}
+        >
               {/* Close button */}
               <button
                 onClick={onClose}
@@ -153,18 +162,18 @@ export default function ChallengeDetailModal({
                 </svg>
               </button>
 
-              {/* Header */}
-              <div className="mb-6">
-                <span className="inline-block px-4 py-1.5 bg-primary-500/20 text-primary-300 text-sm font-semibold rounded-full mb-3 border border-primary-500/30">
-                  {formatThemeName(challenge.theme)}
-                </span>
-                <h3 className="text-2xl md:text-3xl font-bold text-slate-50 mb-2">
-                  {challenge.name}
-                </h3>
-                <p className="text-slate-300 text-base leading-relaxed">
-                  {challenge.description}
-                </p>
-              </div>
+          {/* Header */}
+          <div className="mb-6">
+            <span className="inline-block px-4 py-1.5 bg-primary-500/20 text-primary-300 text-sm font-semibold rounded-full mb-3 border border-primary-500/30">
+              {formatThemeName(stableChallenge.theme)}
+            </span>
+            <h3 className="text-2xl md:text-3xl font-bold text-slate-50 mb-2">
+              {stableChallenge.name}
+            </h3>
+            <p className="text-slate-300 text-base leading-relaxed">
+              {stableChallenge.description}
+            </p>
+          </div>
 
               {/* Event Details */}
               <div className="mb-6 space-y-4">
@@ -191,12 +200,12 @@ export default function ChallengeDetailModal({
                   </div>
                 </div>
 
-                {/* Challenge Actions Preview */}
-                {challenge.challenge_actions && challenge.challenge_actions.length > 0 && (
-                  <div>
-                    <p className="text-sm font-semibold text-slate-300 mb-3">What you'll do:</p>
-                    <div className="space-y-2 max-h-64 overflow-y-auto">
-                      {challenge.challenge_actions.slice(0, 7).map((ca, index) => (
+          {/* Challenge Actions Preview */}
+          {stableChallenge.challenge_actions && stableChallenge.challenge_actions.length > 0 && (
+            <div>
+              <p className="text-sm font-semibold text-slate-300 mb-3">What you'll do:</p>
+              <div className="space-y-2 max-h-64 overflow-y-auto">
+                {stableChallenge.challenge_actions.slice(0, 7).map((ca, index) => (
                         <div
                           key={index}
                           className="bg-slate-800/40 rounded-lg p-3 border border-slate-700/50"
@@ -224,48 +233,46 @@ export default function ChallengeDetailModal({
                             </div>
                           </div>
                         </div>
-                      ))}
-                      {challenge.challenge_actions.length > 7 && (
-                        <p className="text-xs text-slate-500 text-center mt-2">
-                          ...and {challenge.challenge_actions.length - 7} more days
-                        </p>
-                      )}
-                    </div>
-                  </div>
+                ))}
+                {stableChallenge.challenge_actions.length > 7 && (
+                  <p className="text-xs text-slate-500 text-center mt-2">
+                    ...and {stableChallenge.challenge_actions.length - 7} more days
+                  </p>
                 )}
               </div>
+            </div>
+          )}
+        </div>
 
-              {/* Action buttons */}
-              <div className="mt-6 flex gap-3">
-                <button
-                  onClick={onClose}
-                  className="px-6 py-3 border border-slate-700 text-slate-300 text-base font-medium rounded-xl hover:bg-slate-800 active:bg-slate-700 transition-all min-h-[48px] touch-manipulation"
-                >
-                  Close
-                </button>
-                {!isEnrolled && !isPast && (
-                  <button
-                    onClick={handleJoin}
-                    disabled={isJoining}
-                    className="flex-1 px-6 py-3 bg-primary-500 text-slate-950 text-base font-bold rounded-xl hover:bg-primary-400 active:bg-primary-600 transition-all min-h-[48px] touch-manipulation disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    {isJoining ? 'Joining...' : 'Join 7-Day Event'}
-                  </button>
-                )}
-                {isEnrolled && (
-                  <button
-                    disabled
-                    className="flex-1 px-6 py-3 bg-slate-700/30 text-slate-500 border border-slate-700 text-base font-medium rounded-xl cursor-not-allowed min-h-[48px]"
-                  >
-                    Already Active
-                  </button>
-                )}
-              </div>
-            </motion.div>
-          </div>
-        </>
-      )}
-    </AnimatePresence>
+        {/* Action buttons */}
+        <div className="mt-6 flex gap-3">
+          <button
+            onClick={onClose}
+            className="px-6 py-3 border border-slate-700 text-slate-300 text-base font-medium rounded-xl hover:bg-slate-800 active:bg-slate-700 transition-all min-h-[48px] touch-manipulation"
+          >
+            Close
+          </button>
+          {!isEnrolled && !isPast && (
+            <button
+              onClick={handleJoin}
+              disabled={isJoining}
+              className="flex-1 px-6 py-3 bg-primary-500 text-slate-950 text-base font-bold rounded-xl hover:bg-primary-400 active:bg-primary-600 transition-all min-h-[48px] touch-manipulation disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isJoining ? 'Joining...' : 'Join 7-Day Event'}
+            </button>
+          )}
+          {isEnrolled && (
+            <button
+              disabled
+              className="flex-1 px-6 py-3 bg-slate-700/30 text-slate-500 border border-slate-700 text-base font-medium rounded-xl cursor-not-allowed min-h-[48px]"
+            >
+              Already Active
+            </button>
+          )}
+        </div>
+      </div>
+    </div>
+    </>
   );
 }
 
