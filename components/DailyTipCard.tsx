@@ -71,6 +71,7 @@ export default function DailyTipCard({ tip, subscriptionTier = 'free', onActionR
   const [isShowingMore, setIsShowingMore] = useState(false);
   const [showMoreModal, setShowMoreModal] = useState(false);
   const [isLeavingEvent, setIsLeavingEvent] = useState(false);
+  const [showHideTip, setShowHideTip] = useState(false);
 
   const isPaidUser = subscriptionTier === 'premium' || subscriptionTier === 'pro';
   // Show simplified view if auto-add is enabled and calendar type is set
@@ -80,6 +81,12 @@ export default function DailyTipCard({ tip, subscriptionTier = 'free', onActionR
   useEffect(() => {
     setMounted(true);
     setDisplayDate(format(new Date(), 'MMM d, yyyy'));
+    
+    // Check if hide tip has been dismissed
+    const hideTipDismissed = localStorage.getItem('hide_action_tip_dismissed') === 'true';
+    if (tip.isAction && !hideTipDismissed) {
+      setShowHideTip(true);
+    }
     
     // Fetch calendar preferences
     fetch('/api/user/preferences', {
@@ -252,7 +259,7 @@ export default function DailyTipCard({ tip, subscriptionTier = 'free', onActionR
   const handleHideAction = async () => {
     if (!tip.isAction) return; // Only hide actions, not tips
     
-    if (!confirm('Hide this action? You won\'t see it again. You can unhide it later in your settings.')) {
+    if (!confirm('Hide this action? A new action will be generated for you, and you won\'t see this one again. You can find and unhide hidden actions in Account Settings.')) {
       return;
     }
 
@@ -623,7 +630,7 @@ END:VCALENDAR`;
                   onClick={handleHideAction}
                   disabled={isHiding}
                   className="px-2 sm:px-3 py-1.5 border border-slate-700 text-slate-400 text-xs font-medium rounded-lg hover:bg-slate-800 hover:text-slate-300 transition-colors disabled:opacity-50 disabled:cursor-default flex items-center gap-1 sm:gap-1.5 active:scale-95"
-                  title="Don't show me this action again"
+                  title="Hide this action. A new one will be generated and you won't see this again. Find hidden actions in Account Settings."
                 >
                   {isHiding ? (
                     '...'
@@ -640,6 +647,25 @@ END:VCALENDAR`;
               </div>
               </div>
             </div>
+            {tip.isAction && showHideTip && (
+              <div className="mb-3 p-2 bg-slate-800/30 border border-slate-700/50 rounded-lg relative">
+                <button
+                  onClick={() => {
+                    setShowHideTip(false);
+                    localStorage.setItem('hide_action_tip_dismissed', 'true');
+                  }}
+                  className="absolute top-1 right-1 p-1 text-slate-500 hover:text-slate-300 transition-colors"
+                  aria-label="Dismiss tip"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+                <p className="text-xs text-slate-400 leading-relaxed pr-6">
+                  <span className="font-medium text-slate-300">Tip:</span> If this action doesn&apos;t suit your situation, click &quot;Hide&quot; and a new one will be generated. Find hidden actions in <Link href="/dashboard/account" className="text-primary-400 hover:text-primary-300 underline">Account Settings</Link>.
+                </p>
+              </div>
+            )}
               <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-slate-50 mb-2 sm:mb-3 flex items-center gap-2 sm:gap-3 w-full">
                 {tip.icon && <span className="text-2xl sm:text-3xl flex-shrink-0">{tip.icon}</span>}
                 <div className="flex items-center gap-2 flex-1 min-w-0">

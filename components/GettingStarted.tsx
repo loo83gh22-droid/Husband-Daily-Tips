@@ -103,9 +103,9 @@ export default function GettingStarted({ userId, totalCompletions }: GettingStar
             3
           </div>
           <div>
-            <h3 className="text-lg font-semibold text-slate-50 mb-1">Explore All Actions</h3>
+            <h3 className="text-lg font-semibold text-slate-50 mb-1">Hide Actions That Don&apos;t Fit</h3>
             <p className="text-slate-300 text-sm leading-relaxed">
-              Visit the <Link href="/dashboard/actions" className="text-primary-400 hover:text-primary-300 underline font-medium">Actions page</Link> to browse hundreds of actions organized by category. Favorite the ones you want to try, or hide ones that don&apos;t fit your situation.
+              If an action doesn&apos;t suit your situation (like &quot;take lunch to your wife at work&quot; but you can&apos;t do that), simply click the &quot;Hide&quot; button. A new action will be generated for you, and you won&apos;t see that one again. You can find and unhide hidden actions in <Link href="/dashboard/account" className="text-primary-400 hover:text-primary-300 underline font-medium">Account Settings</Link>.
             </p>
           </div>
         </div>
@@ -113,6 +113,18 @@ export default function GettingStarted({ userId, totalCompletions }: GettingStar
         <div className="flex items-start gap-3">
           <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary-500/20 flex items-center justify-center text-primary-300 font-bold text-sm">
             4
+          </div>
+          <div>
+            <h3 className="text-lg font-semibold text-slate-50 mb-1">Explore All Actions</h3>
+            <p className="text-slate-300 text-sm leading-relaxed">
+              Visit the <Link href="/dashboard/actions" className="text-primary-400 hover:text-primary-300 underline font-medium">Actions page</Link> to browse hundreds of actions organized by category. Favorite the ones you want to try.
+            </p>
+          </div>
+        </div>
+
+        <div className="flex items-start gap-3">
+          <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary-500/20 flex items-center justify-center text-primary-300 font-bold text-sm">
+            5
           </div>
           <div>
             <h3 className="text-lg font-semibold text-slate-50 mb-1">Track Your Progress</h3>
