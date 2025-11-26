@@ -26,14 +26,16 @@ export async function GET(request: Request) {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
       }
       
-      const { supabase } = await import('@/lib/supabase');
-      const { data: user } = await supabase
+      // Use admin client to bypass RLS (Auth0 context isn't set)
+      const adminSupabase = getSupabaseAdmin();
+      const { data: user, error: userError } = await adminSupabase
         .from('users')
         .select('id, email, name, calendar_preferences')
         .eq('auth0_id', session.user.sub)
         .single();
       
-      if (!user) {
+      if (userError || !user) {
+        console.error('[Calendar Download] User lookup error:', userError);
         return NextResponse.json({ error: 'User not found' }, { status: 404 });
       }
 
