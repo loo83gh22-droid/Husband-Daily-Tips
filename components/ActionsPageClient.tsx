@@ -149,7 +149,33 @@ export default function ActionsPageClient({
     return Array.from(cats).sort();
   }, [normalizedActions]);
 
-  // Group filtered actions by theme and randomize per category (once per page load)
+  // Get or create session seed for consistent randomization
+  const getSessionSeed = (): number => {
+    if (typeof window === 'undefined') return Math.random();
+    
+    const storageKey = 'actions_randomization_seed';
+    const stored = sessionStorage.getItem(storageKey);
+    
+    if (stored) {
+      return parseFloat(stored);
+    }
+    
+    // Generate new seed and store it
+    const newSeed = Math.random();
+    sessionStorage.setItem(storageKey, newSeed.toString());
+    return newSeed;
+  };
+
+  // Seeded random number generator
+  const seededRandom = (seed: number): () => number => {
+    let currentSeed = seed;
+    return () => {
+      currentSeed = (currentSeed * 9301 + 49297) % 233280;
+      return currentSeed / 233280;
+    };
+  };
+
+  // Group filtered actions by theme and randomize per category (persistent during session)
   const actionsByTheme = useMemo(() => {
     const grouped: Record<string, Action[]> = {};
     filteredActions.forEach((action) => {
@@ -160,13 +186,17 @@ export default function ActionsPageClient({
       grouped[theme].push(action);
     });
     
-    // Randomize actions within each category (shuffle once per memoization)
+    // Get session seed for consistent randomization
+    const sessionSeed = getSessionSeed();
+    const random = seededRandom(sessionSeed);
+    
+    // Randomize actions within each category (shuffle using seeded random)
     const randomized: Record<string, Action[]> = {};
     Object.keys(grouped).forEach((theme) => {
       const actions = [...grouped[theme]];
-      // Fisher-Yates shuffle for randomization
+      // Fisher-Yates shuffle for randomization using seeded random
       for (let i = actions.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
+        const j = Math.floor(random() * (i + 1));
         [actions[i], actions[j]] = [actions[j], actions[i]];
       }
       randomized[theme] = actions;
