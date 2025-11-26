@@ -66,28 +66,6 @@ async function getTeamWins() {
   return thoughts || [];
 }
 
-async function getActiveChallenge() {
-  // Use admin client to bypass RLS (Auth0 context isn't set)
-  const adminSupabase = getSupabaseAdmin();
-  const today = new Date().toISOString().split('T')[0];
-  
-  const { data: challenge, error } = await adminSupabase
-    .from('challenges')
-    .select('*')
-    .eq('is_active', true)
-    .lte('start_date', today)
-    .gte('end_date', today)
-    .order('start_date', { ascending: false })
-    .limit(1)
-    .single();
-
-  if (error || !challenge) {
-    return null;
-  }
-
-  return challenge;
-}
-
 export default async function TeamWinsPage() {
   const session = await getSession();
 
@@ -98,7 +76,6 @@ export default async function TeamWinsPage() {
   const auth0Id = session.user.sub;
   const subscriptionTier = await getUserSubscription(auth0Id);
   const thoughts = await getTeamWins();
-  const activeChallenge = await getActiveChallenge();
   const isFree = subscriptionTier === 'free';
 
   return (
@@ -115,28 +92,6 @@ export default async function TeamWinsPage() {
               Real wins from husbands who are showing up. Big or small, celebrate what worked, learn from what didn't, and keep moving forward together.
             </p>
           </div>
-
-          {activeChallenge && (
-            <div className="bg-amber-500/10 border border-amber-500/30 rounded-xl p-6 mb-8">
-              <div className="flex items-start gap-4">
-                <span className="text-2xl">🎯</span>
-                <div className="flex-1">
-                  <h3 className="text-lg font-semibold text-slate-50 mb-2">
-                    This Week&apos;s Challenge: {activeChallenge.name}
-                  </h3>
-                  <p className="text-sm text-slate-300 mb-4">
-                    {activeChallenge.description} Share your wins from this challenge to inspire others!
-                  </p>
-                  <Link
-                    href="/dashboard/challenges"
-                    className="inline-flex items-center px-4 py-2 bg-amber-500 text-slate-950 text-sm font-semibold rounded-lg hover:bg-amber-400 transition-colors"
-                  >
-                    View Challenge →
-                  </Link>
-                </div>
-              </div>
-            </div>
-          )}
 
           {isFree && (
             <div className="bg-primary-500/10 border border-primary-500/30 rounded-xl p-6 mb-8">

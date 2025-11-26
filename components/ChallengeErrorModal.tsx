@@ -28,7 +28,7 @@ export default function ChallengeErrorModal({
             "{challengeName}"
           </p>
           <p className="text-slate-400 text-sm">
-            Finish strong. One challenge at a time. It&apos;s not about speed—it&apos;s about actually doing it right. Dominate this one first, then we&apos;ll talk about the next.
+            Finish strong. One 7-day event at a time. It&apos;s not about speed—it&apos;s about actually doing it right. Dominate this one first, then we&apos;ll talk about the next.
           </p>
         </div>
 
@@ -37,7 +37,7 @@ export default function ChallengeErrorModal({
             <strong>💡 Here&apos;s why:</strong>
           </p>
           <p className="text-xs text-amber-200/80">
-            One challenge = full focus. Two challenges = half effort. You&apos;re better than half effort. Finish this challenge, then we&apos;ll launch the next one. Winners finish what they start.
+            One 7-day event = full focus. Two events = half effort. You&apos;re better than half effort. Finish this event, then we&apos;ll launch the next one. Winners finish what they start.
           </p>
         </div>
 
@@ -52,7 +52,7 @@ export default function ChallengeErrorModal({
           onClick={() => window.location.href = '/dashboard'}
           className="w-full mt-3 bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium py-2 px-4 rounded-lg transition-colors"
         >
-          View My Challenge →
+          View My 7-Day Event →
         </button>
       </div>
     </div>

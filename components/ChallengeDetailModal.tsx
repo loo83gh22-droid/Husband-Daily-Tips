@@ -74,14 +74,14 @@ export default function ChallengeDetailModal({
     return () => window.removeEventListener('keydown', handleEscape);
   }, [isOpen, onClose]);
 
-  // Fetch challenge actions if not already included
+  // Fetch 7-day event actions if not already included
   useEffect(() => {
     if (!isOpen || !challenge) {
       setChallengeActions([]);
       return;
     }
 
-    // If challenge_actions are already included, use them (sort by day_number)
+    // If event actions are already included, use them (sort by day_number)
     if (challenge.challenge_actions && challenge.challenge_actions.length > 0) {
       const sorted = [...challenge.challenge_actions].sort((a, b) => {
         const dayA = a.day_number || 0;
@@ -112,7 +112,7 @@ export default function ChallengeDetailModal({
           setChallengeActions(sorted);
         }
       } catch (error) {
-        console.error('Error fetching challenge actions:', error);
+        console.error('Error fetching event actions:', error);
       } finally {
         setIsLoadingActions(false);
       }
@@ -133,7 +133,7 @@ export default function ChallengeDetailModal({
       await onJoin(challenge.id);
       onClose();
     } catch (error) {
-      console.error('Error joining challenge:', error);
+      console.error('Error joining 7-day event:', error);
     } finally {
       setIsJoining(false);
     }
@@ -231,11 +231,11 @@ export default function ChallengeDetailModal({
             </p>
           </div>
 
-          {/* Challenge Actions - Show all 7 */}
+          {/* 7-Day Event Actions - Show all 7 */}
           {isLoadingActions ? (
             <div className="mb-6 p-4 bg-slate-800/50 rounded-lg border border-slate-700/50">
               <p className="text-sm text-slate-400 text-center">
-                Loading challenge actions...
+                Loading event actions...
               </p>
             </div>
           ) : challengeActions.length > 0 ? (
@@ -282,7 +282,7 @@ export default function ChallengeDetailModal({
           ) : (
             <div className="mb-6 p-4 bg-slate-800/50 rounded-lg border border-slate-700/50">
               <p className="text-sm text-slate-400 text-center">
-                No actions available for this challenge.
+                No actions available for this 7-day event.
               </p>
             </div>
           )}

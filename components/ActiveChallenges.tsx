@@ -87,7 +87,7 @@ export default function ActiveChallenges() {
       if (response.ok) {
         const data = await response.json();
         // Use allChallenges (includes completed) for enrollment detection
-        // This ensures we can detect if user is enrolled even if challenge is completed
+        // This ensures we can detect if user is enrolled even if 7-day event is completed
         setUserChallenges(data.allChallenges || data.challenges || []);
       } else if (response.status === 401) {
         // Silently handle auth errors
@@ -100,7 +100,7 @@ export default function ActiveChallenges() {
   };
 
   const handleJoin = (challengeId: string) => {
-    // Refresh both challenges and user challenges after joining
+    // Refresh both 7-day events and user events after joining
     fetchChallenges();
     fetchUserChallenges();
   };
@@ -108,13 +108,13 @@ export default function ActiveChallenges() {
   if (loading) {
     return (
       <div className="bg-slate-900/80 border border-slate-800 rounded-xl p-6">
-        <p className="text-slate-400">Loading challenges...</p>
+        <p className="text-slate-400">Loading 7-day events...</p>
       </div>
     );
   }
 
   if (challenges.length === 0) {
-    return null; // Don't show section if no challenges
+    return null; // Don't show section if no 7-day events
   }
 
   return (

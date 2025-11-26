@@ -530,7 +530,7 @@ export default async function Dashboard() {
   // Get stats first to get category scores for personalization
   const stats = await getUserStats(user.id);
   
-  // Check if user has an active challenge - if so, show challenge action instead of tomorrow's action
+  // Check if user has an active 7-day event - if so, show event action instead of tomorrow's action
   // Use admin client to bypass RLS (Auth0 context isn't set)
   const adminSupabase = getSupabaseAdmin();
   const { data: activeChallengeData } = await adminSupabase
@@ -563,7 +563,7 @@ export default async function Dashboard() {
   let activeChallenge = null;
 
   if (activeChallengeData && activeChallengeData.challenges) {
-    // User has an active challenge - show challenge action
+    // User has an active 7-day event - show event action
     isChallengeAction = true;
     activeChallenge = activeChallengeData;
     const challenge = activeChallengeData.challenges;
@@ -603,7 +603,7 @@ export default async function Dashboard() {
           challengeName: challenge.name,
         };
       } else {
-        // Assign challenge action for today
+        // Assign 7-day event action for today
         const { data: newAction } = await adminSupabase
           .from('user_daily_actions')
           .insert({
@@ -638,7 +638,7 @@ export default async function Dashboard() {
     }
   }
 
-  // If no active challenge action, get tomorrow's action
+  // If no active 7-day event action, get tomorrow's action
   if (!displayAction) {
     displayAction = await getTomorrowAction(
       user.id,
@@ -827,7 +827,7 @@ export default async function Dashboard() {
           </div>
         </div>
 
-        {/* Weekly Challenges Section */}
+        {/* 7-Day Events Section */}
         <ActiveChallenges />
       </main>
     </div>
