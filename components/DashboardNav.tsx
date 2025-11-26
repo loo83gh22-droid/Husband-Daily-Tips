@@ -53,16 +53,16 @@ export default function DashboardNav() {
 
   return (
     <nav className="bg-slate-950/80 border-b border-slate-900 backdrop-blur sticky top-0 z-50" data-tour="navigation">
-      <div className="container mx-auto px-2 sm:px-3 md:px-4 py-2 sm:py-3 max-w-full overflow-x-hidden">
-        <div className="flex items-center justify-between gap-2">
-          <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-shrink">
+      <div className="w-full px-2 sm:px-3 md:px-4 lg:px-6 py-2 sm:py-3 max-w-full overflow-x-hidden">
+        <div className="flex items-center justify-between gap-1 sm:gap-2">
+          <div className="flex items-center gap-1 sm:gap-2 md:gap-3 min-w-0 flex-shrink">
             <BrandLogo variant="nav" />
             {displayName && (
               <>
-                <span className="text-sm sm:text-base md:text-lg text-slate-300 font-semibold hidden sm:inline">
+                <span className="text-xs sm:text-sm md:text-base text-slate-300 font-semibold hidden sm:inline">
                   is
                 </span>
-                <span className="text-sm sm:text-base md:text-lg text-slate-300 font-semibold hidden sm:inline truncate max-w-[120px] sm:max-w-none">
+                <span className="text-xs sm:text-sm md:text-base text-slate-300 font-semibold hidden sm:inline truncate max-w-[100px] sm:max-w-[150px] md:max-w-none">
                   {displayName}
                 </span>
               </>

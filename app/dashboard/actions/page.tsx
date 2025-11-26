@@ -242,19 +242,19 @@ export default async function ActionsPage() {
     <div className="min-h-screen bg-slate-950">
       <DashboardNav />
 
-      <main className="container mx-auto px-4 py-8 md:py-10 max-w-full overflow-x-hidden">
+      <main className="w-full px-3 sm:px-4 md:px-6 lg:px-8 py-6 sm:py-8 md:py-10 overflow-x-hidden">
         <div className="max-w-6xl mx-auto w-full">
-          <div className="mb-8">
-            <h1 className="text-3xl md:text-4xl font-bold text-slate-50 mb-2 bg-gradient-to-r from-primary-400 to-primary-600 bg-clip-text text-transparent">
+          <div className="mb-6 sm:mb-8">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-slate-50 mb-1 sm:mb-2 bg-gradient-to-r from-primary-400 to-primary-600 bg-clip-text text-transparent">
               Actions
             </h1>
-            <p className="text-slate-300 text-base md:text-lg mb-6 font-medium">
+            <p className="text-slate-300 text-sm sm:text-base md:text-lg mb-4 sm:mb-6 font-medium">
               Do the thing. Get the badge. Become legendary. Become the Best Husband Ever.
             </p>
             
             {/* Quick Stats (visible when not sticky) - Focus on growth, not completion */}
-            <div className="bg-gradient-to-r from-slate-900/80 via-slate-800/80 to-slate-900/80 border border-slate-700/50 rounded-xl p-4 sm:p-6 mb-6 backdrop-blur-sm">
-              <div className="grid grid-cols-3 gap-2 sm:gap-4 md:gap-8">
+            <div className="bg-gradient-to-r from-slate-900/80 via-slate-800/80 to-slate-900/80 border border-slate-700/50 rounded-xl p-3 sm:p-4 md:p-6 mb-4 sm:mb-6 backdrop-blur-sm">
+              <div className="grid grid-cols-3 gap-2 sm:gap-3 md:gap-4 lg:gap-8">
                 {/* Actions This Week */}
                 <div className="flex flex-col items-center text-center gap-1 sm:flex-row sm:items-center sm:text-left sm:gap-3">
                   <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-gradient-to-br from-blue-500/20 to-blue-600/20 border border-blue-500/30 flex items-center justify-center">
@@ -299,13 +299,13 @@ export default async function ActionsPage() {
               </div>
 
               {/* Growth Message */}
-              <div className="mt-4 pt-4 border-t border-slate-700/50">
+              <div className="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-slate-700/50">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-semibold text-slate-200">
+                    <p className="text-xs sm:text-sm font-semibold text-slate-200">
                       {completedCount} total actions completed
                     </p>
-                    <p className="text-xs text-slate-400 mt-0.5">
+                    <p className="text-[10px] sm:text-xs text-slate-400 mt-0.5">
                       Consistency builds stronger relationships. Keep showing up! 💪
                     </p>
                   </div>
