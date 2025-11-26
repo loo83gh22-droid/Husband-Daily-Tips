@@ -72,6 +72,20 @@ export default async function SubscriptionPage({
     const currentTier = subscriptionInfo.tier;
     const upgradeReason = searchParams?.upgrade;
 
+    // Upgrade message based on reason
+    const upgradeMessages: Record<string, { title: string; description: string }> = {
+      actions: {
+        title: 'Upgrade to Complete Actions',
+        description: 'Free users can only complete the daily action served on the dashboard. Upgrade to Premium to complete any action from the Actions page.',
+      },
+      journal: {
+        title: 'Upgrade to Access Journal',
+        description: 'Journaling is a Premium feature. Upgrade to track your reflections and build a record of your relationship wins.',
+      },
+    };
+
+    const upgradeMessage = upgradeReason ? upgradeMessages[upgradeReason] : null;
+
   const plans = [
     {
       name: 'Free',
