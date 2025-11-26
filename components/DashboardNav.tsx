@@ -81,9 +81,8 @@ export default function DashboardNav() {
                 ? isExactMatch 
                 : (isExactMatch || isSubPath);
               
-              // On mobile, only show Dashboard. On desktop (md and up), show all links
-              const isMobileOnly = link.href === '/dashboard';
-              const shouldShow = isMobileOnly ? true : true; // Will use hidden/block classes
+              // On mobile, only show Dashboard. On desktop (md and up), show all links including Dashboard
+              const isDashboard = link.href === '/dashboard';
               
               return (
                 <Link
@@ -93,7 +92,7 @@ export default function DashboardNav() {
                     isActive
                       ? 'bg-primary-500/20 text-primary-300 border border-primary-500/30'
                       : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900 active:bg-slate-800'
-                  } ${isMobileOnly ? 'block md:hidden' : 'hidden md:block'}`}
+                  } ${isDashboard ? 'block' : 'hidden md:block'}`}
                 >
                   <span className="hidden sm:inline">{link.label}</span>
                   <span className="sm:hidden">{link.label.split(' ')[0]}</span>
