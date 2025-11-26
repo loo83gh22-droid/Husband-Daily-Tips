@@ -160,12 +160,23 @@ export default function ChallengeCard({ challenge, userChallenge, userId, onJoin
 
   const emoji = themeEmojis[challenge.theme] || '🎯';
 
-  // Map 7-day event name to badge slug for linking
+  // Helper function to replace "Challenge" with "Event" in display names
+  const formatEventName = (name: string): string => {
+    return name.replace(/Challenge/gi, 'Event');
+  };
+
+  // Map 7-day event name to badge slug for linking (handles both old and new names)
   const getChallengeBadgeSlug = (challengeName: string): string => {
     const badgeMap: Record<string, string> = {
       '7-Day Communication Challenge': 'communication-champion',
+      '7-Day Communication Event': 'communication-champion',
       '7-Day Roommate Syndrome Recovery': 'connection-restorer',
       '7-Day Romance Challenge': 'romance-reviver',
+      '7-Day Romance Event': 'romance-reviver',
+      '7-Day Conflict Resolution Challenge': 'conflict-resolver',
+      '7-Day Conflict Resolution Event': 'conflict-resolver',
+      '7-Day Reconnection Challenge': 'connection-restorer',
+      '7-Day Reconnection Event': 'connection-restorer',
     };
     return badgeMap[challengeName] || '';
   };
@@ -184,7 +195,7 @@ export default function ChallengeCard({ challenge, userChallenge, userId, onJoin
           </div>
           <div>
             <div className="flex items-center gap-2 flex-wrap">
-              <h3 className="text-lg font-semibold text-slate-50">{challenge.name}</h3>
+              <h3 className="text-lg font-semibold text-slate-50">{formatEventName(challenge.name)}</h3>
               {(challenge.userCompletionCount || 0) > 0 && (
                 <span className="text-xs text-primary-300 font-medium whitespace-nowrap">
                   ({challenge.userCompletionCount}x)
@@ -201,7 +212,7 @@ export default function ChallengeCard({ challenge, userChallenge, userId, onJoin
                 </span>
               )}
             </div>
-            <p className="text-sm text-slate-400 mt-1">{challenge.description}</p>
+            <p className="text-sm text-slate-400 mt-1">{challenge.description.replace(/\bchallenge\b/gi, '7-day event')}</p>
           </div>
         </div>
         {isInProgress && (
@@ -232,7 +243,7 @@ export default function ChallengeCard({ challenge, userChallenge, userId, onJoin
 
       {showSuccessModal && userId && (
         <ChallengeJoinSuccessModal
-          challengeName={challenge.name}
+          challengeName={formatEventName(challenge.name)}
           userId={userId}
           isOpen={showSuccessModal}
           onClose={() => setShowSuccessModal(false)}
@@ -241,7 +252,7 @@ export default function ChallengeCard({ challenge, userChallenge, userId, onJoin
       
       {showErrorModal && (
         <ChallengeErrorModal
-          challengeName={errorChallengeName}
+          challengeName={formatEventName(errorChallengeName)}
           isOpen={showErrorModal}
           onClose={() => setShowErrorModal(false)}
         />

@@ -569,7 +569,7 @@ export default async function Dashboard() {
     const challenge = activeChallengeData.challenges;
     const challengeActions = challenge?.challenge_actions || [];
     
-    // Calculate which day of the challenge (1-7)
+    // Calculate which day of the 7-day event (1-7)
     const today = new Date();
     const joinedDate = new Date(activeChallengeData.joined_date + 'T00:00:00');
     const daysSinceJoined = Math.floor((today.getTime() - joinedDate.getTime()) / (1000 * 60 * 60 * 24));

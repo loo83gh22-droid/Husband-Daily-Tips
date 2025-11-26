@@ -224,10 +224,10 @@ export default function ChallengeDetailModal({
               </div>
             </div>
             <h3 className="text-2xl md:text-3xl font-bold text-slate-50 mb-3">
-              {challenge.name}
+              {challenge.name.replace(/Challenge/gi, 'Event')}
             </h3>
             <p className="text-slate-200 text-base md:text-lg leading-relaxed">
-              {challenge.description}
+              {challenge.description.replace(/\bchallenge\b/gi, '7-day event')}
             </p>
           </div>
 
