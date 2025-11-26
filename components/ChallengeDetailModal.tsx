@@ -64,6 +64,37 @@ export default function ChallengeDetailModal({
     return () => window.removeEventListener('keydown', handleEscape);
   }, [isOpen, onClose]);
 
+  // Fetch challenge actions if not already included
+  useEffect(() => {
+    if (!isOpen || !challenge) {
+      setChallengeActions([]);
+      return;
+    }
+
+    // If challenge_actions are already included, use them
+    if (challenge.challenge_actions && challenge.challenge_actions.length > 0) {
+      setChallengeActions(challenge.challenge_actions);
+      return;
+    }
+
+    // Otherwise, fetch them separately
+    setIsLoadingActions(true);
+    async function fetchChallengeActions() {
+      try {
+        const response = await fetch(`/api/challenges/${challenge.id}/actions`, { credentials: 'include' });
+        if (response.ok) {
+          const data = await response.json();
+          setChallengeActions(data.challenge_actions || []);
+        }
+      } catch (error) {
+        console.error('Error fetching challenge actions:', error);
+      } finally {
+        setIsLoadingActions(false);
+      }
+    }
+    fetchChallengeActions();
+  }, [isOpen, challenge]);
+
   // Don't render if not open or no challenge
   if (!isOpen || !challenge) {
     return null;
@@ -176,11 +207,17 @@ export default function ChallengeDetailModal({
           </div>
 
           {/* Challenge Actions - Show all 7 */}
-          {challenge.challenge_actions && challenge.challenge_actions.length > 0 ? (
+          {isLoadingActions ? (
+            <div className="mb-6 p-4 bg-slate-800/50 rounded-lg border border-slate-700/50">
+              <p className="text-sm text-slate-400 text-center">
+                Loading challenge actions...
+              </p>
+            </div>
+          ) : challengeActions.length > 0 ? (
             <div className="mb-6">
               <h4 className="text-lg font-bold text-slate-200 mb-4">What you'll do:</h4>
               <div className="space-y-3">
-                {challenge.challenge_actions.map((ca, index) => {
+                {challengeActions.map((ca, index) => {
                   // Handle both nested structure (ca.actions) and flat structure
                   const action = ca.actions || ca;
                   const dayNumber = ca.day_number || index + 1;
@@ -220,7 +257,7 @@ export default function ChallengeDetailModal({
           ) : (
             <div className="mb-6 p-4 bg-slate-800/50 rounded-lg border border-slate-700/50">
               <p className="text-sm text-slate-400 text-center">
-                Challenge actions are being loaded...
+                No actions available for this challenge.
               </p>
             </div>
           )}
