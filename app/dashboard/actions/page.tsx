@@ -260,47 +260,47 @@ export default async function ActionsPage() {
             </p>
             
             {/* Quick Stats (visible when not sticky) - Focus on growth, not completion */}
-            <div className="bg-gradient-to-r from-slate-900/80 via-slate-800/80 to-slate-900/80 border border-slate-700/50 rounded-xl p-6 mb-6 backdrop-blur-sm">
-              <div className="grid grid-cols-3 gap-4 md:gap-8">
+            <div className="bg-gradient-to-r from-slate-900/80 via-slate-800/80 to-slate-900/80 border border-slate-700/50 rounded-xl p-4 sm:p-6 mb-6 backdrop-blur-sm">
+              <div className="grid grid-cols-3 gap-2 sm:gap-4 md:gap-8">
                 {/* Actions This Week */}
-                <div className="flex items-center gap-3">
-                  <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-gradient-to-br from-blue-500/20 to-blue-600/20 border border-blue-500/30 flex items-center justify-center">
-                    <span className="text-2xl">📈</span>
+                <div className="flex flex-col items-center text-center gap-1 sm:flex-row sm:items-center sm:text-left sm:gap-3">
+                  <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-gradient-to-br from-blue-500/20 to-blue-600/20 border border-blue-500/30 flex items-center justify-center">
+                    <span className="text-xl sm:text-2xl">📈</span>
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-xs text-slate-400 font-medium uppercase tracking-wide">This Week</p>
-                    <p className="text-xl md:text-2xl font-bold text-blue-400 mt-0.5">
+                    <p className="text-[10px] sm:text-xs text-slate-400 font-medium uppercase tracking-wide">Week</p>
+                    <p className="text-lg sm:text-xl md:text-2xl font-bold text-blue-400">
                       {actionsThisWeek}
                     </p>
-                    <p className="text-[10px] text-slate-500 mt-0.5">actions completed</p>
+                    <p className="text-[9px] sm:text-[10px] text-slate-500 hidden sm:block">actions</p>
                   </div>
                 </div>
 
                 {/* Current Streak */}
-                <div className="flex items-center gap-3">
-                  <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-gradient-to-br from-orange-500/20 to-orange-600/20 border border-orange-500/30 flex items-center justify-center">
-                    <span className="text-2xl">🔥</span>
+                <div className="flex flex-col items-center text-center gap-1 sm:flex-row sm:items-center sm:text-left sm:gap-3">
+                  <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-gradient-to-br from-orange-500/20 to-orange-600/20 border border-orange-500/30 flex items-center justify-center">
+                    <span className="text-xl sm:text-2xl">🔥</span>
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-xs text-slate-400 font-medium uppercase tracking-wide">Streak</p>
-                    <p className="text-xl md:text-2xl font-bold text-orange-400 mt-0.5">
-                      {currentStreak} {currentStreak === 1 ? 'day' : 'days'}
+                    <p className="text-[10px] sm:text-xs text-slate-400 font-medium uppercase tracking-wide">Streak</p>
+                    <p className="text-lg sm:text-xl md:text-2xl font-bold text-orange-400">
+                      {currentStreak}
                     </p>
-                    <p className="text-[10px] text-slate-500 mt-0.5">keep it going!</p>
+                    <p className="text-[9px] sm:text-[10px] text-slate-500 hidden sm:block">{currentStreak === 1 ? 'day' : 'days'}</p>
                   </div>
                 </div>
 
                 {/* Badges Earned */}
-                <div className="flex items-center gap-3">
-                  <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-gradient-to-br from-emerald-500/20 to-emerald-600/20 border border-emerald-500/30 flex items-center justify-center">
-                    <span className="text-2xl">🏆</span>
+                <div className="flex flex-col items-center text-center gap-1 sm:flex-row sm:items-center sm:text-left sm:gap-3">
+                  <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-gradient-to-br from-emerald-500/20 to-emerald-600/20 border border-emerald-500/30 flex items-center justify-center">
+                    <span className="text-xl sm:text-2xl">🏆</span>
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-xs text-slate-400 font-medium uppercase tracking-wide">Badges</p>
-                    <p className="text-xl md:text-2xl font-bold text-emerald-400 mt-0.5">
+                    <p className="text-[10px] sm:text-xs text-slate-400 font-medium uppercase tracking-wide">Badges</p>
+                    <p className="text-lg sm:text-xl md:text-2xl font-bold text-emerald-400">
                       {badgesEarned}
                     </p>
-                    <p className="text-[10px] text-slate-500 mt-0.5">achievements unlocked</p>
+                    <p className="text-[9px] sm:text-[10px] text-slate-500 hidden sm:block">earned</p>
                   </div>
                 </div>
               </div>

@@ -60,7 +60,7 @@ export default function ActionsQuickStats({ totalActions, completedActions, acti
         opacity: isSticky ? 1 : 0,
       }}
       transition={{ duration: 0.3 }}
-      className={`fixed top-16 left-0 right-0 z-50 ${
+      className={`fixed top-16 left-0 right-0 z-50 hidden md:block ${
         isSticky ? 'pointer-events-auto' : 'pointer-events-none'
       }`}
     >
