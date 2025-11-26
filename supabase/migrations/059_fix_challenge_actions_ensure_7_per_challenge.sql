@@ -17,7 +17,7 @@ BEGIN
   FOR challenge_record IN 
     SELECT id, theme, name FROM challenges 
     WHERE is_active = TRUE 
-    AND (name LIKE '%7-Day%' OR name LIKE '%7 Day%' OR duration_days = 7)
+    AND (name LIKE '%7-Day%' OR name LIKE '%7 Day%')
   LOOP
     -- Get the theme and map to category
     theme_name := challenge_record.theme;
@@ -121,7 +121,7 @@ BEGIN
   FOR challenge_record IN 
     SELECT id, name FROM challenges 
     WHERE is_active = TRUE 
-    AND (name LIKE '%7-Day%' OR name LIKE '%7 Day%' OR duration_days = 7)
+    AND (name LIKE '%7-Day%' OR name LIKE '%7 Day%')
   LOOP
     SELECT COUNT(*) INTO action_count
     FROM challenge_actions ca
