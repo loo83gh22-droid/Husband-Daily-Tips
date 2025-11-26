@@ -173,7 +173,7 @@ export default function JournalEntry({ reflection }: JournalEntryProps) {
 
   const isFavorite = isFavorited;
   
-  // Clean up content to remove any legacy "Action:" or "Completed on" prefixes
+  // Clean up content to remove any legacy "Action:", "Completed on", or "Completed:" prefixes
   const cleanContent = (content: string | null | undefined): string => {
     if (!content) return '';
     let cleaned = content.trim();
@@ -181,6 +181,8 @@ export default function JournalEntry({ reflection }: JournalEntryProps) {
     cleaned = cleaned.replace(/^Action:\s*[^\n]+\n\n?/i, '');
     // Remove "Completed on [date]" patterns
     cleaned = cleaned.replace(/^Completed\s+on\s+[^\n]+\n\n?/i, '');
+    // Remove "Completed: [action name]" patterns
+    cleaned = cleaned.replace(/^Completed:\s*[^\n]+$/i, '');
     return cleaned.trim();
   };
   

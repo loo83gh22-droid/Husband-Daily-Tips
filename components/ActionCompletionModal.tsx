@@ -78,7 +78,7 @@ export default function ActionCompletionModal({
 
     try {
       // Always link to journal - notes are required for journal entry
-      await onComplete(notes.trim() || `Completed: ${action.name}`, true);
+      await onComplete(notes.trim() || '', true);
       setNotes('');
       onClose();
     } catch (error) {
