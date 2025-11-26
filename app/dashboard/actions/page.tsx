@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import DashboardNav from '@/components/DashboardNav';
 import ActionsPageClient from '@/components/ActionsPageClient';
+import ActionTooltip from '@/components/ActionTooltip';
 import BackToTop from '@/components/BackToTop';
 
 async function getActions(auth0Id: string) {
@@ -323,6 +324,26 @@ export default async function ActionsPage() {
             favoritedActions={favoritedActions}
             partnerName={partnerName}
           />
+          
+          {/* Action Tooltips - Only show for new users */}
+          {completedCount === 0 && (
+            <>
+              <ActionTooltip
+                userId={userId}
+                targetSelector="[data-action-search]"
+                title="Search Actions"
+                content="Use the search bar to find specific actions by keyword or category. You can also use keyboard shortcut Ctrl+K (or Cmd+K on Mac) to quickly open search."
+                position="bottom"
+              />
+              <ActionTooltip
+                userId={userId}
+                targetSelector="[data-action-favorites]"
+                title="Favorite Actions"
+                content="Click the star icon on any action card to favorite it. Favorite actions are saved for easy access later. You can view all your favorites by clicking the Favorites button."
+                position="bottom"
+              />
+            </>
+          )}
         </div>
         <BackToTop />
       </main>

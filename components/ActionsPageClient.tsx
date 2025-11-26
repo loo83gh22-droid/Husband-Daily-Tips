@@ -446,6 +446,7 @@ export default function ActionsPageClient({
         <div className="flex items-center gap-3">
           <button
             onClick={() => setIsSearchModalOpen(true)}
+            data-action-search
             className="flex items-center gap-2 px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-slate-300 hover:bg-slate-700 hover:border-slate-600 transition-colors text-sm font-medium"
           >
             <svg

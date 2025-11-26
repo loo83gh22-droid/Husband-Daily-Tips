@@ -21,6 +21,7 @@ import SurveyBanner from '@/components/SurveyBanner';
 import TrialExpirationBanner from '@/components/TrialExpirationBanner';
 import ReferralTracker from '@/components/ReferralTracker';
 import ReferralCard from '@/components/ReferralCard';
+import GettingStarted from '@/components/GettingStarted';
 import Link from 'next/link';
 
 async function getUserData(auth0Id: string) {
@@ -736,6 +737,11 @@ export default async function Dashboard() {
         <div className="grid lg:grid-cols-[1.4fr,1fr] gap-4 sm:gap-6 md:gap-8 lg:gap-8 xl:gap-10 items-start">
           {/* Left column: Daily tip + health bar */}
           <div className="w-full min-w-0 max-w-full">
+            {/* Getting Started Section - Only show for users with 0 completions */}
+            {stats.totalTips === 0 && (
+              <GettingStarted userId={user.id} totalCompletions={stats.totalTips} />
+            )}
+            
             <div className="flex items-center justify-between mb-4 sm:mb-6" data-tour="action-header">
               <div>
                 <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-1 sm:mb-2 bg-gradient-to-r from-primary-400 to-primary-600 bg-clip-text text-transparent">
