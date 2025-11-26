@@ -188,12 +188,16 @@ export default function ActionsPageClient({
     
     // Get session seed for consistent randomization
     const sessionSeed = getSessionSeed();
-    const random = seededRandom(sessionSeed);
     
     // Randomize actions within each category (shuffle using seeded random)
+    // Each category gets its own random sequence based on theme name + session seed
     const randomized: Record<string, Action[]> = {};
     Object.keys(grouped).forEach((theme) => {
       const actions = [...grouped[theme]];
+      // Create a unique seed for this theme by combining session seed with theme name
+      const themeSeed = (sessionSeed + theme.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0)) % 1;
+      const random = seededRandom(themeSeed);
+      
       // Fisher-Yates shuffle for randomization using seeded random
       for (let i = actions.length - 1; i > 0; i--) {
         const j = Math.floor(random() * (i + 1));
