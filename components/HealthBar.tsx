@@ -320,7 +320,7 @@ export default function HealthBar({ value, shouldPulse = false, onPulseComplete 
 
             <div className="pt-4 border-t border-slate-700/50">
               <p className="text-sm text-slate-400 leading-relaxed">
-                Tried to make it like Street Fighter—it&apos;s for fun. Does it really mean anything? No. Is it a helpful tool for seeing how well you&apos;re being intentional based on the actions provided? Yes. This isn&apos;t a score about who you are as a person. It&apos;s a simple way to track one area of your life—your daily effort in your relationship. The goal? Help you, your partner, and your family experience a little more connection, a little more joy, one action at a time.
+                Tried to make it like Street Fighter. It&apos;s for fun. Does it really mean anything? No. Is it a helpful tool for seeing how well you&apos;re being intentional based on the actions provided? Yes. This isn&apos;t a score about who you are as a person. It&apos;s a simple way to track one area of your life: your daily effort in your relationship. The goal? Help you, your partner, and your family experience a little more connection, a little more joy, one action at a time.
               </p>
             </div>
           </div>
