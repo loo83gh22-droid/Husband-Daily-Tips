@@ -104,6 +104,21 @@ export default function DeepThoughtsPost({ thought }: DeepThoughtsPostProps) {
         </div>
       </div>
 
+      {/* Action name if available */}
+      {thought.action && (
+        <div className="mb-4 p-3 bg-slate-800/50 border border-slate-700/50 rounded-lg">
+          <div className="flex items-center gap-2">
+            {thought.action.icon && (
+              <span className="text-lg flex-shrink-0">{thought.action.icon}</span>
+            )}
+            <div>
+              <p className="text-xs text-slate-400 mb-0.5">Action completed:</p>
+              <p className="text-sm font-semibold text-slate-200">{thought.action.name}</p>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="prose prose-invert max-w-none">
         <p className="text-slate-200 leading-relaxed whitespace-pre-line">{thought.content}</p>
       </div>

@@ -38,6 +38,31 @@ async function getTeamWins() {
     return [];
   }
 
+  // Get action information for each thought via reflection -> action completion
+  if (thoughts && thoughts.length > 0) {
+    const reflectionIds = thoughts
+      .map((t: any) => t.reflection_id)
+      .filter((id: any) => id !== null);
+
+    if (reflectionIds.length > 0) {
+      // Get action completions linked to these reflections
+      const { data: actionCompletions } = await adminSupabase
+        .from('user_action_completions')
+        .select('journal_entry_id, actions(name, icon)')
+        .in('journal_entry_id', reflectionIds);
+
+      // Map action info to thoughts
+      thoughts.forEach((thought: any) => {
+        const completion = actionCompletions?.find(
+          (ac: any) => ac.journal_entry_id === thought.reflection_id,
+        );
+        if (completion) {
+          thought.action = completion.actions;
+        }
+      });
+    }
+  }
+
   return thoughts || [];
 }
 
