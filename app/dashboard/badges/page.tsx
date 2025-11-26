@@ -5,6 +5,7 @@ import DashboardNav from '@/components/DashboardNav';
 import { calculateBadgeProgress } from '@/lib/badges';
 import Link from 'next/link';
 import BackToTop from '@/components/BackToTop';
+import { isNewContent } from '@/lib/is-new-content';
 
 async function getUserStats(userId: string) {
   // Use admin client to bypass RLS (Auth0 context isn't set)
@@ -335,9 +336,16 @@ export default async function BadgesPage() {
                             <div className={`text-4xl mb-2 ${isEarned ? '' : 'grayscale opacity-50'}`}>
                               {badge.icon}
                             </div>
-                            <h3 className="text-sm font-semibold text-slate-200 mb-1">
-                              {badge.name}
-                            </h3>
+                            <div className="flex items-center justify-center gap-1.5 mb-1 flex-wrap">
+                              <h3 className="text-sm font-semibold text-slate-200">
+                                {badge.name}
+                              </h3>
+                              {isNewContent(badge.created_at) && (
+                                <span className="px-1.5 py-0.5 bg-emerald-500/20 text-emerald-300 text-[9px] font-bold rounded-full border border-emerald-500/30 uppercase tracking-wide">
+                                  New
+                                </span>
+                              )}
+                            </div>
                             <p className="text-xs text-slate-400 mb-2 leading-tight">
                               {badge.description}
                             </p>

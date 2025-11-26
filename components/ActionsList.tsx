@@ -9,6 +9,7 @@ import { toast } from './Toast';
 import { getGuideSlugForAction } from '@/lib/action-guide-mapping';
 import { personalizeText } from '@/lib/personalize-text';
 import { canCompleteFromActionsPage, type SubscriptionStatus } from '@/lib/subscription-utils';
+import { isNewContent } from '@/lib/is-new-content';
 
 interface Action {
   id: string;
@@ -19,6 +20,7 @@ interface Action {
   requirement_type: string | null;
   icon: string | null;
   benefit?: string | null;
+  created_at?: string;
 }
 
 interface ActionCompletion {
@@ -221,10 +223,17 @@ export default function ActionsList({
                 <div className="flex-1 min-w-0">
                   <div className="flex items-start gap-2 mb-2">
                     {action.icon && <span className="text-xl sm:text-2xl">{action.icon}</span>}
-                    <h3 className="text-base sm:text-lg font-semibold text-slate-200 flex-1">{personalizeText(action.name, partnerName)}</h3>
-                    {favoritedActionIds.has(action.id) && (
-                      <span className="text-yellow-400 text-base sm:text-lg" title="Favorited">⭐</span>
-                    )}
+                    <div className="flex-1 flex items-center gap-2 flex-wrap">
+                      <h3 className="text-base sm:text-lg font-semibold text-slate-200">{personalizeText(action.name, partnerName)}</h3>
+                      {isNewContent((action as any).created_at) && (
+                        <span className="px-2 py-0.5 bg-emerald-500/20 text-emerald-300 text-[10px] sm:text-xs font-bold rounded-full border border-emerald-500/30 uppercase tracking-wide">
+                          New
+                        </span>
+                      )}
+                      {favoritedActionIds.has(action.id) && (
+                        <span className="text-yellow-400 text-base sm:text-lg" title="Favorited">⭐</span>
+                      )}
+                    </div>
                   </div>
                   <p className="text-sm sm:text-base text-slate-400 leading-relaxed mb-2">
                     {personalizeText(action.description, partnerName)}

@@ -639,10 +639,17 @@ END:VCALENDAR`;
               </div>
               </div>
             </div>
-            <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-slate-50 mb-2 sm:mb-3 flex items-center gap-2 sm:gap-3 w-full">
-              {tip.icon && <span className="text-2xl sm:text-3xl flex-shrink-0">{tip.icon}</span>}
-              <span className="whitespace-nowrap overflow-hidden text-ellipsis flex-1 min-w-0">{personalizeText(tip.title || tip.name, partnerName)}</span>
-            </h3>
+              <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-slate-50 mb-2 sm:mb-3 flex items-center gap-2 sm:gap-3 w-full">
+                {tip.icon && <span className="text-2xl sm:text-3xl flex-shrink-0">{tip.icon}</span>}
+                <div className="flex items-center gap-2 flex-1 min-w-0">
+                  <span className="whitespace-nowrap overflow-hidden text-ellipsis">{personalizeText(tip.title || tip.name, partnerName)}</span>
+                  {tip.isAction && isNewContent((tip as any).created_at) && (
+                    <span className="px-2 py-0.5 bg-emerald-500/20 text-emerald-300 text-[10px] sm:text-xs font-bold rounded-full border border-emerald-500/30 uppercase tracking-wide flex-shrink-0">
+                      New
+                    </span>
+                  )}
+                </div>
+              </h3>
           </div>
           
           <div className="prose max-w-none">

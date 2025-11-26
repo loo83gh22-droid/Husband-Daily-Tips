@@ -27,10 +27,10 @@ async function getActions(auth0Id: string) {
 
   // Get all actions - use distinct to avoid duplicates
   // Order by display_order (marriage importance), then by name
-  // Include benefit field for detail modal
+  // Include benefit field for detail modal and created_at for "New" badge
   const { data: actions } = await adminSupabase
     .from('actions')
-    .select('*, benefit')
+    .select('*, benefit, created_at')
     .order('display_order', { ascending: true, nullsFirst: false })
     .order('name', { ascending: true });
 

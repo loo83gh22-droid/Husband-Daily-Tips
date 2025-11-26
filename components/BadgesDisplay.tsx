@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { isNewContent } from '@/lib/is-new-content';
 
 interface Badge {
   id: string;
@@ -9,6 +10,7 @@ interface Badge {
   icon: string;
   badge_type: 'consistency' | 'big_idea';
   earned_at?: string;
+  created_at?: string;
   progress?: {
     current: number;
     target: number;
@@ -129,9 +131,16 @@ export default function BadgesDisplay({ userId }: BadgesDisplayProps) {
                   <div className="flex items-center gap-2 mb-1.5">
                     <span className="text-lg grayscale flex-shrink-0">{badge.icon}</span>
                     <div className="flex-1 min-w-0">
-                      <p className="text-[11px] font-medium text-slate-300 leading-tight mb-1">
-                        {badge.name}
-                      </p>
+                      <div className="flex items-center gap-1.5 mb-1 flex-wrap">
+                        <p className="text-[11px] font-medium text-slate-300 leading-tight">
+                          {badge.name}
+                        </p>
+                        {isNewContent(badge.created_at) && (
+                          <span className="px-1.5 py-0.5 bg-emerald-500/20 text-emerald-300 text-[9px] font-bold rounded-full border border-emerald-500/30 uppercase tracking-wide">
+                            New
+                          </span>
+                        )}
+                      </div>
                       <div className="flex items-center gap-2">
                         <div className="flex-1 bg-slate-700/50 rounded-full h-1 overflow-hidden">
                           <div
