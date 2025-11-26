@@ -64,7 +64,7 @@ export default function ChallengeCard({ challenge, userChallenge, userId, onJoin
   const isActive = today >= startDate && today <= endDate;
   const isUpcoming = today < startDate;
   const isPast = today > endDate;
-  // A challenge is "in progress" if user has joined it and it's not completed
+  // A 7-day event is "in progress" if user has joined it and it's not completed
   const isInProgress = isJoined && userChallenge && !userChallenge.completed;
 
   const handleJoin = async () => {
@@ -83,8 +83,8 @@ export default function ChallengeCard({ challenge, userChallenge, userId, onJoin
         setIsJoined(true);
         if (onJoin) onJoin(challenge.id);
         
-        // Show success modal for 7-day challenges
-        // All challenges are 7 days, so show modal if we have userId
+        // Show success modal for 7-day events
+        // All events are 7 days, so show modal if we have userId
         // Check challenge_actions length if available, otherwise assume 7-day
         const challengeActions = challenge.challenge_actions || [];
         const is7DayChallenge = challengeActions.length >= 7 || challengeActions.length === 0 || challenge.duration_days === 7 || !challenge.duration_days;
@@ -95,14 +95,14 @@ export default function ChallengeCard({ challenge, userChallenge, userId, onJoin
         // Handle error response
         try {
           const errorData = await response.json();
-          const errorMessage = errorData.message || errorData.error || 'Failed to join challenge';
+          const errorMessage = errorData.message || errorData.error || 'Failed to join 7-day event';
           
-          // Always show modal for 400 errors (one challenge at a time)
+          // Always show modal for 400 errors (one 7-day event at a time)
           if (response.status === 400 || errorMessage.includes('currently participating') || errorData.error === 'You can only join one challenge at a time') {
-            // Extract challenge name from message
+            // Extract event name from message
             const match = errorMessage.match(/"([^"]+)"/);
             const challengeNameFromMatch = match ? match[1] : null;
-            const challengeNameFromData = errorData.challengeName || errorData.challenge_name || challengeNameFromMatch || 'a challenge';
+            const challengeNameFromData = errorData.challengeName || errorData.challenge_name || challengeNameFromMatch || 'a 7-day event';
             
             setErrorChallengeName(challengeNameFromData);
             setShowErrorModal(true);
@@ -111,14 +111,14 @@ export default function ChallengeCard({ challenge, userChallenge, userId, onJoin
           }
         } catch (parseError) {
           // If we can't parse JSON, show generic error modal
-          console.error('Error parsing challenge join response:', parseError);
-          setErrorChallengeName('a challenge');
+          console.error('Error parsing 7-day event join response:', parseError);
+          setErrorChallengeName('a 7-day event');
           setShowErrorModal(true);
         }
         // Don't set isJoined if there was an error
       }
     } catch (error) {
-      console.error('Error joining challenge:', error);
+      console.error('Error joining 7-day event:', error);
     } finally {
       setIsJoining(false);
     }
@@ -160,7 +160,7 @@ export default function ChallengeCard({ challenge, userChallenge, userId, onJoin
 
   const emoji = themeEmojis[challenge.theme] || '🎯';
 
-  // Map challenge name to badge slug for linking
+  // Map 7-day event name to badge slug for linking
   const getChallengeBadgeSlug = (challengeName: string): string => {
     const badgeMap: Record<string, string> = {
       '7-Day Communication Challenge': 'communication-champion',
