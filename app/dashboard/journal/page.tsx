@@ -188,12 +188,18 @@ export default async function JournalPage() {
             {/* Journal Summary */}
             <div className="bg-slate-900/80 border border-slate-800 rounded-xl p-6 mb-6">
               <h2 className="text-lg font-semibold text-slate-50 mb-3">
-                Journaling is Hard. That's Why It Works.
+                Journaling Can Be Hard, and It Works.
               </h2>
               <p className="text-sm text-slate-300 leading-relaxed mb-3">
                 Writing down what happened forces you to actually think about it. No shortcuts. 
                 No autopilot. Just you, being honest about what worked and what didn't. That's 
                 where the real change happens—not in doing the action, but in reflecting on it.
+              </p>
+              <p className="text-sm text-slate-300 leading-relaxed mb-3">
+                Capture the details. What did you enjoy? How did it feel? What made it work? 
+                When you write down the enjoyment and the details, you're creating a blueprint 
+                for the future. Revisit these entries later, and you can put those actions on 
+                autopilot—because you remember why they mattered and how good they felt.
               </p>
               <p className="text-sm text-slate-300 leading-relaxed mb-4">
                 We prompt you right after you complete an action. No blank page. No "I'll do it later." 
