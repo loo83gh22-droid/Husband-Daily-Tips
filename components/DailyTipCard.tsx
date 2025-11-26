@@ -11,6 +11,7 @@ import ShowMoreModal from './ShowMoreModal';
 import { personalizeText } from '@/lib/personalize-text';
 import { toast } from './Toast';
 import { getGuideSlugForAction } from '@/lib/action-guide-mapping';
+import { isNewContent } from '@/lib/is-new-content';
 
 interface Tip {
   id: string;
