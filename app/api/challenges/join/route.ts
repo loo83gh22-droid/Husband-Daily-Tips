@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getSession } from '@auth0/nextjs-auth0';
 import { getSupabaseAdmin } from '@/lib/supabase';
+import { logger } from '@/lib/logger';
 
 /**
  * Join a weekly challenge
@@ -424,7 +425,7 @@ async function sendChallengeEmail(
     const resend = new Resend(process.env.RESEND_API_KEY || '');
 
     if (!resend || !process.env.RESEND_API_KEY) {
-      console.log('Resend not configured, skipping challenge email');
+      logger.log('Resend not configured, skipping challenge email');
       return;
     }
 
@@ -567,12 +568,12 @@ async function sendChallengeEmail(
     });
 
     if (error) {
-      console.error('Resend error sending challenge email:', error);
+      logger.error('Resend error sending challenge email:', error);
     } else {
-      console.log(`Challenge email sent to ${user.email}`);
+      logger.log(`Challenge email sent to ${user.email}`);
     }
   } catch (error) {
-    console.error('Error sending challenge email:', error);
+    logger.error('Error sending challenge email:', error);
   }
 }
 

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getSession } from '@auth0/nextjs-auth0';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import { Resend } from 'resend';
+import { logger } from '@/lib/logger';
 
 const resend = new Resend(process.env.RESEND_API_KEY || '');
 
@@ -208,10 +209,10 @@ export async function POST(request: NextRequest) {
           `,
         });
 
-        console.log(`✅ Survey response email sent to admin for ${survey_type} from ${user.email}`);
+        logger.log(`✅ Survey response email sent to admin for ${survey_type} from ${user.email}`);
       } catch (emailError: any) {
         // Don't fail the request if email fails
-        console.error('Error sending survey response email:', emailError);
+        logger.error('Error sending survey response email:', emailError);
       }
     }
 

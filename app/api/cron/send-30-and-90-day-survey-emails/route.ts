@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import { Resend } from 'resend';
+import { logger } from '@/lib/logger';
 
 export const dynamic = 'force-dynamic';
 
@@ -71,7 +72,7 @@ export async function GET(request: Request) {
       .lte('eligible_at', now.toISOString());
 
     if (error30 || error90) {
-      console.error('Error fetching eligible users:', error30 || error90);
+      logger.error('Error fetching eligible users:', error30 || error90);
       return NextResponse.json({ error: 'Failed to fetch eligible users' }, { status: 500 });
     }
 
@@ -222,7 +223,7 @@ export async function GET(request: Request) {
       total_90_day: eligible90Day?.length || 0,
     });
   } catch (error: any) {
-    console.error('Error in 30/90-day survey email cron:', error);
+    logger.error('Error in 30/90-day survey email cron:', error);
     return NextResponse.json(
       { error: error.message || 'Unexpected error' },
       { status: 500 }

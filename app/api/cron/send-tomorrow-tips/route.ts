@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import { sendTomorrowTipEmail } from '@/lib/email';
+import { logger } from '@/lib/logger';
 
 /**
  * Cron endpoint to send tomorrow's tips at 5pm in each user's timezone
@@ -49,7 +50,7 @@ export async function GET(request: Request) {
   try {
     // Check environment variables
     if (!process.env.SUPABASE_SERVICE_ROLE_KEY) {
-      console.error('SUPABASE_SERVICE_ROLE_KEY not configured');
+      logger.error('SUPABASE_SERVICE_ROLE_KEY not configured');
       return NextResponse.json(
         { error: 'Database not configured', message: 'SUPABASE_SERVICE_ROLE_KEY missing' },
         { status: 500 }
@@ -57,7 +58,7 @@ export async function GET(request: Request) {
     }
 
     if (!process.env.RESEND_API_KEY) {
-      console.error('RESEND_API_KEY not configured');
+      logger.error('RESEND_API_KEY not configured');
       return NextResponse.json(
         { error: 'Email service not configured', message: 'RESEND_API_KEY missing' },
         { status: 500 }
@@ -74,7 +75,7 @@ export async function GET(request: Request) {
       .not('email', 'is', null);
 
     if (usersError) {
-      console.error('Error fetching users:', usersError);
+      logger.error('Error fetching users:', usersError);
       return NextResponse.json(
         { error: 'Failed to fetch users', details: usersError.message },
         { status: 500 }
@@ -107,7 +108,7 @@ export async function GET(request: Request) {
           usersToEmail.push(user);
         }
       } catch (error) {
-        console.error(`Error processing timezone for user ${user.id}:`, error);
+        logger.error(`Error processing timezone for user ${user.id}:`, error);
         // Skip this user if timezone is invalid
       }
     }
@@ -180,7 +181,7 @@ export async function GET(request: Request) {
               .limit(100);
 
             if (!allActions || allActions.length === 0) {
-              console.error(`No actions available for user ${user.id}`);
+              logger.error(`No actions available for user ${user.id}`);
               errorCount++;
               continue;
             }
@@ -239,7 +240,7 @@ export async function GET(request: Request) {
       message: `Sent ${sentCount} emails to users where it's 5pm in their timezone`,
     });
   } catch (error: any) {
-    console.error('Unexpected error in cron job:', error);
+    logger.error('Unexpected error in cron job:', error);
     return NextResponse.json(
       { 
         error: 'Unexpected error',
