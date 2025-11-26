@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { format } from 'date-fns';
 import Link from 'next/link';
+import ActionCompletionModal from './ActionCompletionModal';
 
 interface OutstandingAction {
   id: string;
@@ -24,6 +25,8 @@ export default function OutstandingActions({ userId }: OutstandingActionsProps) 
   const [loading, setLoading] = useState(true);
   const [markingComplete, setMarkingComplete] = useState<string | null>(null);
   const [markingDNC, setMarkingDNC] = useState<string | null>(null);
+  const [selectedAction, setSelectedAction] = useState<OutstandingAction | null>(null);
+  const [showCompletionModal, setShowCompletionModal] = useState(false);
 
   useEffect(() => {
     async function fetchOutstandingActions() {
@@ -49,19 +52,32 @@ export default function OutstandingActions({ userId }: OutstandingActionsProps) 
     }
   }, [userId]);
 
-  const handleMarkComplete = async (actionId: string, userDailyActionId: string) => {
-    setMarkingComplete(userDailyActionId);
+  const handleMarkCompleteClick = (action: OutstandingAction) => {
+    setSelectedAction(action);
+    setShowCompletionModal(true);
+  };
+
+  const handleComplete = async (notes?: string, linkToJournal?: boolean) => {
+    if (!selectedAction) return;
+
+    setMarkingComplete(selectedAction.user_daily_actions_id);
     try {
       const response = await fetch('/api/actions/complete', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
-        body: JSON.stringify({ actionId }),
+        body: JSON.stringify({ 
+          actionId: selectedAction.action_id,
+          notes: notes?.trim() || undefined,
+          linkToJournal: linkToJournal ?? true,
+        }),
       });
 
       if (response.ok) {
         // Remove from list
-        setActions((prev) => prev.filter((a) => a.user_daily_actions_id !== userDailyActionId));
+        setActions((prev) => prev.filter((a) => a.user_daily_actions_id !== selectedAction.user_daily_actions_id));
+        setShowCompletionModal(false);
+        setSelectedAction(null);
       }
     } catch (error) {
       console.error('Error marking action as complete:', error);
@@ -160,7 +176,7 @@ export default function OutstandingActions({ userId }: OutstandingActionsProps) 
 
               <div className="flex gap-2">
                 <button
-                  onClick={() => handleMarkComplete(action.action_id, action.user_daily_actions_id)}
+                  onClick={() => handleMarkCompleteClick(action)}
                   disabled={markingComplete === action.user_daily_actions_id || markingDNC === action.user_daily_actions_id}
                   className="flex-1 px-3 py-2.5 sm:py-1.5 text-xs font-medium bg-primary-500/20 border border-primary-500/30 text-primary-300 rounded hover:bg-primary-500/30 active:bg-primary-500/40 transition-colors disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] touch-manipulation"
                 >
@@ -188,6 +204,24 @@ export default function OutstandingActions({ userId }: OutstandingActionsProps) 
             View your previous actions →
           </Link>
         </div>
+      )}
+
+      {/* Action Completion Modal */}
+      {selectedAction && (
+        <ActionCompletionModal
+          isOpen={showCompletionModal}
+          onClose={() => {
+            setShowCompletionModal(false);
+            setSelectedAction(null);
+          }}
+          action={{
+            id: selectedAction.action_id,
+            name: selectedAction.name,
+            description: selectedAction.description,
+            icon: selectedAction.icon,
+          }}
+          onComplete={handleComplete}
+        />
       )}
     </div>
   );

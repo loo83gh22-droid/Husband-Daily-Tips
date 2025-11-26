@@ -7,6 +7,7 @@ interface JournalEntryProps {
     id: string;
     content: string;
     created_at: string;
+    completed_at?: string; // Completion date from action completion
     favorited: boolean;
     shared_to_forum: boolean;
     user_tips?: {
@@ -201,7 +202,7 @@ export default function JournalEntry({ reflection }: JournalEntryProps) {
             </div>
           )}
           <time className="text-xs text-slate-500">
-            {new Date(reflection.created_at).toLocaleDateString('en-US', {
+            {new Date(reflection.completed_at || reflection.created_at).toLocaleDateString('en-US', {
               month: 'short',
               day: 'numeric',
               year: 'numeric',

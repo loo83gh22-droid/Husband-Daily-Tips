@@ -124,16 +124,20 @@ async function getUserReflections(auth0Id: string) {
     const reflectionIds = reflections.map((r: any) => r.id);
     const { data: actionCompletions } = await adminSupabase
       .from('user_action_completions')
-      .select('journal_entry_id, actions(name, icon)')
+      .select('journal_entry_id, completed_at, actions(name, icon)')
       .in('journal_entry_id', reflectionIds);
 
-    // Map action info to reflections
+    // Map action info and completion date to reflections
     reflections.forEach((reflection: any) => {
       const completion = actionCompletions?.find(
         (ac: any) => ac.journal_entry_id === reflection.id,
       );
       if (completion) {
         reflection.action = completion.actions;
+        reflection.completed_at = completion.completed_at || reflection.created_at;
+      } else {
+        // If no completion date, use reflection created_at
+        reflection.completed_at = reflection.created_at;
       }
     });
   }
