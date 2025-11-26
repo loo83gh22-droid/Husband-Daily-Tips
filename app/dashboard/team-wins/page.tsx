@@ -99,7 +99,7 @@ export default async function TeamWinsPage() {
               Team Wins
             </h1>
             <p className="text-slate-300 text-base md:text-lg mb-4 font-medium">
-              Real wins from husbands who are showing up. Big or small, celebrate what worked, learn from what didn't, and keep moving forward together.
+              Share your wins Gents! Big or small, celebrate what worked, learn from what didn't, and keep moving forward together.
             </p>
           </div>
 
