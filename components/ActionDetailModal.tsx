@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import { getGuideSlugForAction } from '@/lib/action-guide-mapping';
@@ -21,6 +22,7 @@ interface ActionDetailModalProps {
   onHide?: () => void;
   showHideButton?: boolean;
   partnerName?: string | null;
+  isFavorited?: boolean;
 }
 
 export default function ActionDetailModal({
@@ -30,7 +32,43 @@ export default function ActionDetailModal({
   onHide,
   showHideButton = false,
   partnerName,
+  isFavorited: initialIsFavorited = false,
 }: ActionDetailModalProps) {
+  const [isFavorited, setIsFavorited] = useState(initialIsFavorited);
+  const [isTogglingFavorite, setIsTogglingFavorite] = useState(false);
+
+  // Update favorite status when modal opens or action changes
+  useEffect(() => {
+    if (isOpen) {
+      setIsFavorited(initialIsFavorited);
+    }
+  }, [isOpen, initialIsFavorited]);
+
+  const handleToggleFavorite = async () => {
+    setIsTogglingFavorite(true);
+    try {
+      const response = await fetch('/api/actions/favorite', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ actionId: action.id }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to toggle favorite');
+      }
+
+      const data = await response.json();
+      setIsFavorited(data.favorited);
+    } catch (error) {
+      console.error('Error toggling favorite:', error);
+      alert('Failed to update favorite. Please try again.');
+    } finally {
+      setIsTogglingFavorite(false);
+    }
+  };
+
   if (!isOpen) return null;
 
   const guideSlug = getGuideSlugForAction(action.name, action.theme);
@@ -133,23 +171,45 @@ export default function ActionDetailModal({
                 )}
 
                 {/* Action buttons */}
-                <div className="mt-6 flex gap-3">
-                  {showHideButton && onHide && (
+                <div className="mt-6 flex flex-col sm:flex-row gap-3">
+                  <div className="flex gap-3 flex-1">
+                    {/* Favorite button */}
                     <button
-                      onClick={() => {
-                        if (confirm('Hide this action? You won\'t see it again. You can unhide it later in your settings.')) {
-                          onHide();
-                          onClose();
-                        }
-                      }}
-                      className="px-6 py-3 border border-slate-700 text-slate-300 text-base font-medium rounded-xl hover:bg-slate-800 active:bg-slate-700 transition-all min-h-[48px] touch-manipulation"
+                      onClick={handleToggleFavorite}
+                      disabled={isTogglingFavorite}
+                      className={`px-4 sm:px-6 py-3 border text-base font-medium rounded-xl transition-all min-h-[48px] touch-manipulation disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 ${
+                        isFavorited
+                          ? 'border-yellow-500/50 bg-yellow-500/10 text-yellow-300 hover:bg-yellow-500/20'
+                          : 'border-slate-700 text-slate-300 hover:bg-slate-800 active:bg-slate-700'
+                      }`}
                     >
-                      Hide Action
+                      {isTogglingFavorite ? (
+                        '...'
+                      ) : (
+                        <>
+                          <span>{isFavorited ? '⭐' : '☆'}</span>
+                          <span className="hidden sm:inline">{isFavorited ? 'Favorited' : 'Favorite'}</span>
+                        </>
+                      )}
                     </button>
-                  )}
+
+                    {showHideButton && onHide && (
+                      <button
+                        onClick={() => {
+                          if (confirm('Hide this action? You won\'t see it again. You can unhide it later in your settings.')) {
+                            onHide();
+                            onClose();
+                          }
+                        }}
+                        className="px-4 sm:px-6 py-3 border border-slate-700 text-slate-300 text-base font-medium rounded-xl hover:bg-slate-800 active:bg-slate-700 transition-all min-h-[48px] touch-manipulation"
+                      >
+                        Hide Action
+                      </button>
+                    )}
+                  </div>
                   <button
                     onClick={onClose}
-                    className={`${showHideButton && onHide ? 'flex-1' : 'w-full'} px-6 py-3 bg-primary-500 text-slate-950 text-base font-bold rounded-xl hover:bg-primary-400 active:bg-primary-600 transition-all min-h-[48px] touch-manipulation`}
+                    className="px-6 py-3 bg-primary-500 text-slate-950 text-base font-bold rounded-xl hover:bg-primary-400 active:bg-primary-600 transition-all min-h-[48px] touch-manipulation flex-1 sm:flex-initial"
                   >
                     Got it! ✓
                   </button>

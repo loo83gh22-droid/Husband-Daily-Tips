@@ -188,6 +188,7 @@ export default function FavoritesModal({ isOpen, onClose, partnerName }: Favorit
           }}
           action={selectedAction}
           partnerName={partnerName}
+          isFavorited={true}
         />
       )}
     </>

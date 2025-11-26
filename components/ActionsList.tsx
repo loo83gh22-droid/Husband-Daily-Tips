@@ -181,28 +181,16 @@ export default function ActionsList({
                 </div>
 
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-start gap-2 mb-1">
-                    {action.icon && <span className="text-lg">{action.icon}</span>}
-                    <h3 className="text-sm font-semibold text-slate-200 flex-1">{personalizeText(action.name, partnerName)}</h3>
+                  <div className="flex items-start gap-2 mb-2">
+                    {action.icon && <span className="text-xl sm:text-2xl">{action.icon}</span>}
+                    <h3 className="text-base sm:text-lg font-semibold text-slate-200 flex-1">{personalizeText(action.name, partnerName)}</h3>
                     {favoritedActionIds.has(action.id) && (
-                      <span className="text-yellow-400 text-sm" title="Favorited">⭐</span>
+                      <span className="text-yellow-400 text-base sm:text-lg" title="Favorited">⭐</span>
                     )}
                   </div>
-                  <p className="text-xs text-slate-400 leading-relaxed mb-2">
+                  <p className="text-sm sm:text-base text-slate-400 leading-relaxed mb-2">
                     {personalizeText(action.description, partnerName)}
                   </p>
-                  {(() => {
-                    const guideSlug = getGuideSlugForAction(action.name, action.theme);
-                    return guideSlug ? (
-                      <Link
-                        href={`/dashboard/how-to-guides/${guideSlug}`}
-                        className="inline-flex items-center gap-1 text-[10px] text-emerald-400 hover:text-emerald-300 font-medium mb-2 transition-colors"
-                      >
-                        <span>📚</span>
-                        <span>How-To Guide</span>
-                      </Link>
-                    ) : null;
-                  })()}
                   {completionCount > 0 && (
                     <div className="space-y-1">
                       <p className="text-[10px] text-primary-300 font-medium">
@@ -246,6 +234,7 @@ export default function ActionsList({
           action={detailAction}
           showHideButton={true}
           partnerName={partnerName}
+          isFavorited={detailAction ? favoritedActionIds.has(detailAction.id) : false}
           onHide={async () => {
             setIsHiding(true);
             try {

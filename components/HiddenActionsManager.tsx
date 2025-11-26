@@ -161,6 +161,7 @@ export default function HiddenActionsManager() {
           }}
           action={selectedAction}
           partnerName={partnerName}
+          isFavorited={false}
         />
       )}
     </>
