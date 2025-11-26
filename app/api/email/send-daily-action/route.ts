@@ -166,7 +166,7 @@ export async function POST(request: Request) {
           <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f5f5f5;">
             <div style="background-color: #0f172a; padding: 30px; border-radius: 8px; margin-bottom: 20px;">
               <h1 style="color: #fbbf24; margin: 0; font-size: 24px;">Best Husband Ever</h1>
-              <p style="color: #cbd5e1; margin: 5px 0 0 0; font-size: 14px;">Your daily mission, delivered.</p>
+              <p style="color: #cbd5e1; margin: 5px 0 0 0; font-size: 14px;">Your daily action, delivered.</p>
             </div>
             
             <div style="background-color: #ffffff; padding: 30px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
@@ -229,7 +229,7 @@ export async function POST(request: Request) {
             </div>
             
             <div style="text-align: center; margin-top: 20px; color: #94a3b8; font-size: 12px;">
-              <p>You&apos;re getting this because you signed up for Best Husband Ever. Your daily mission, delivered.</p>
+              <p>You&apos;re getting this because you signed up for Best Husband Ever. Your daily action, delivered.</p>
               <p><a href="${process.env.AUTH0_BASE_URL || 'https://besthusbandever.com'}/dashboard/account" style="color: #64748b;">Manage email preferences</a></p>
             </div>
           </body>

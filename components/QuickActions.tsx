@@ -107,7 +107,7 @@ export default function QuickActions({
       icon: '📋',
       action: () => {
         // Scroll to outstanding actions section
-        const element = document.querySelector('[data-tour="mission"]');
+        const element = document.querySelector('[data-tour="action"]');
         if (element) {
           element.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }

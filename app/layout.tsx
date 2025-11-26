@@ -7,7 +7,7 @@ import { ToastProvider } from '@/components/Toast';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'Best Husband Ever - Your Daily Mission, Delivered',
+  title: 'Best Husband Ever - Your Daily Action, Delivered',
   description: 'Daily actions to level up your marriage game. One move today. One wife smile tomorrow. You got this.',
 };
 

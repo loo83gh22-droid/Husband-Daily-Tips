@@ -46,7 +46,7 @@ export async function sendTomorrowTipEmail(
             <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 40px 20px;">
               <div style="text-align: center; margin-bottom: 30px;">
                 <h1 style="color: #0ea5e9; font-size: 24px; margin: 0;">Best Husband Ever</h1>
-                <p style="color: #6b7280; font-size: 14px; margin: 5px 0 0 0;">Your daily mission, delivered.</p>
+                <p style="color: #6b7280; font-size: 14px; margin: 5px 0 0 0;">Your daily action, delivered.</p>
               </div>
               
               <div style="background-color: #0f172a; border-radius: 8px; padding: 30px; margin-bottom: 30px; border-left: 4px solid #0ea5e9;">
@@ -90,7 +90,7 @@ export async function sendTomorrowTipEmail(
                   </div>
                 ` : ''}
                 <p style="color: #6b7280; font-size: 12px; margin: 15px 0 0 0;">
-                  You&apos;re getting this because you signed up for Best Husband Ever. Your daily mission, delivered.
+                  You&apos;re getting this because you signed up for Best Husband Ever. Your daily action, delivered.
                 </p>
                 <p style="color: #9ca3af; font-size: 11px; margin: 10px 0 0 0;">
                   <a href="${baseUrl}/dashboard" style="color: #0ea5e9; text-decoration: none;">View Dashboard</a> | 

@@ -37,7 +37,7 @@ export default function ChallengeErrorModal({
             <strong>💡 Here&apos;s why:</strong>
           </p>
           <p className="text-xs text-amber-200/80">
-            One challenge = full focus. Two challenges = half effort. You&apos;re better than half effort. Finish this mission, then we&apos;ll launch the next one. Winners finish what they start.
+            One challenge = full focus. Two challenges = half effort. You&apos;re better than half effort. Finish this challenge, then we&apos;ll launch the next one. Winners finish what they start.
           </p>
         </div>
 

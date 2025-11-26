@@ -13,9 +13,9 @@ interface TourStep {
 
 const TOUR_STEPS: TourStep[] = [
   {
-    id: 'mission',
-    target: '[data-tour="mission"]',
-    title: "Today's Mission",
+    id: 'action',
+    target: '[data-tour="action"]',
+    title: "Today's Action",
     content: "This is your daily action. Complete it to boost your Health Bar. Each day you get a new action tailored to your situation.",
     position: 'bottom',
   },

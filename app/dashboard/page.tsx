@@ -732,10 +732,10 @@ export default async function Dashboard() {
         <div className="grid lg:grid-cols-[1.4fr,1fr] gap-4 sm:gap-6 md:gap-8 lg:gap-12 items-start">
           {/* Left column: Daily tip + health bar */}
           <div className="max-w-3xl w-full">
-            <div className="flex items-center justify-between mb-4 sm:mb-6" data-tour="mission-header">
+            <div className="flex items-center justify-between mb-4 sm:mb-6" data-tour="action-header">
               <div>
                 <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-slate-50 mb-1 sm:mb-2">
-                  Today&apos;s Mission
+                  Today&apos;s Action
                 </h2>
                 <p className="text-xs sm:text-sm md:text-base text-slate-300 font-medium">
                   {displayAction?.isChallengeAction ? (
@@ -752,7 +752,7 @@ export default async function Dashboard() {
             </div>
 
             {displayAction ? (
-              <div data-tour="mission">
+              <div data-tour="action">
                 <DailyActionCard 
                   initialTip={displayAction} 
                   subscriptionTier={user.subscription_tier || 'free'}

@@ -71,8 +71,8 @@ export default async function Home() {
               STOP WINGING IT. START WINNING IT.
             </p>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-slate-50 tracking-tight mb-4">
-              Your daily mission, delivered.
-              <span className="block text-primary-400">one action at a time.</span>
+              Your daily action, delivered.
+              <span className="block text-primary-400">one step at a time.</span>
             </h1>
             <p className="text-lg md:text-xl text-primary-400 font-semibold mb-4 max-w-2xl">
               Daily actions that show you care. She&apos;ll notice. You&apos;ll both feel the difference.
