@@ -46,11 +46,11 @@ export default function HamburgerMenu() {
   ];
 
   const menuItems = [
-    { href: '/dashboard/referrals', label: 'Referrals' },
-    { href: '/dashboard/about', label: 'About' },
+    { href: '/dashboard/about', label: 'Why Best Husband Ever' },
+    { href: '/dashboard/account', label: 'Profile & Account Settings' },
     { href: '/dashboard/subscription', label: 'Pricing & Subscriptions' },
     { href: '/dashboard/payments', label: 'Payments' },
-    { href: '/dashboard/account', label: 'Profile & Account Settings' },
+    { href: '/dashboard/referrals', label: 'Referrals' },
     { href: '/dashboard/feedback', label: 'Share Your Thoughts', highlight: true },
   ];
 
@@ -107,7 +107,30 @@ export default function HamburgerMenu() {
           />
           {/* Menu - fixed position overlay that doesn't affect layout */}
           <div className="fixed top-16 right-2 md:right-4 w-64 bg-slate-900 border border-slate-800 rounded-lg shadow-2xl z-[110] overflow-hidden max-h-[calc(100vh-5rem)] overflow-y-auto">
-          <div className="py-2">
+            {/* Close button - more prominent */}
+            <div className="flex items-center justify-between px-4 py-3 border-b border-slate-800">
+              <span className="text-sm font-semibold text-slate-200">Menu</span>
+              <button
+                onClick={() => setIsOpen(false)}
+                className="p-1.5 rounded-lg text-slate-400 hover:text-slate-100 hover:bg-slate-800 transition-colors"
+                aria-label="Close menu"
+              >
+                <svg
+                  className="w-6 h-6"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            </div>
+            <div className="py-2">
             {/* Navigation Links - Show on mobile, hidden on desktop (since they're in the nav bar) */}
             <div className="md:hidden border-b border-slate-800 pb-2 mb-2">
               {navLinks.map((link) => {
@@ -152,13 +175,7 @@ export default function HamburgerMenu() {
                 href="/legal/terms"
                 className="flex items-center gap-3 px-4 py-3 text-sm text-slate-400 hover:bg-slate-800 hover:text-slate-200 transition-colors"
               >
-                <span>Terms of Service</span>
-              </Link>
-              <Link
-                href="/legal/privacy"
-                className="flex items-center gap-3 px-4 py-3 text-sm text-slate-400 hover:bg-slate-800 hover:text-slate-200 transition-colors"
-              >
-                <span>Privacy Policy</span>
+                <span>Terms & Policies</span>
               </Link>
               <Link
                 href="/api/auth/logout"
