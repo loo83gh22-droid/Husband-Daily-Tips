@@ -203,7 +203,7 @@ export default async function JournalPage() {
                 <p className="text-sm text-slate-300 leading-relaxed mb-4">
                   We prompt you right after you complete an action. No blank page. No "I'll do it later." 
                   Just: "How'd it go?" Write one sentence. Write ten. Or skip it. Your call. But when 
-                  you write, you're building something real, your actual journey, not just a checklist.
+                  you write, you're building something real.
                 </p>
                 <div className="bg-slate-800/50 border border-slate-700/50 rounded-lg p-4 mt-4">
                   <p className="text-xs text-slate-400 leading-relaxed">
