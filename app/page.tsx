@@ -78,7 +78,7 @@ export default async function Home() {
               Daily actions that show you care. She&apos;ll notice. You&apos;ll both feel the difference.
             </p>
             <p className="text-base md:text-lg text-slate-300 leading-relaxed mb-4 max-w-2xl">
-              Marriage is hard. You know it, we know it. But here&apos;s the thing—it doesn&apos;t have to be complicated. 
+              Marriage is hard. You know it, we know it. But here&apos;s the thing, it doesn&apos;t have to be complicated. 
               One small action a day. One moment where you actually show up. No grand gestures needed. 
               Just consistent, real effort. Become the husband you and your partner deserve.
             </p>
@@ -258,7 +258,7 @@ export default async function Home() {
                 <p className="text-sm text-slate-300 mb-4">
                   Every morning, you get one thing to do. Not a lecture. Not a theory. Just one concrete action 
                   that takes less than 5 minutes. Do it, mark it done, watch your health bar grow. 
-                  It&apos;s that simple—and that powerful. 
+                  It&apos;s that simple, and that powerful. 
                   <span className="text-primary-400 font-semibold"> You&apos;re becoming the husband you want to be. Daily.</span>
                 </p>
                 <div className="space-y-2 text-xs text-slate-400">
@@ -536,7 +536,7 @@ export default async function Home() {
             </div>
           </div>
           <p className="text-[11px] text-slate-600 text-center md:text-left">
-            This is not therapy. It&apos;s a daily practice tool. Use it to support—not replace—honest conversations with your wife.
+            This is not therapy. It&apos;s a daily practice tool. Use it to support, not replace, honest conversations with your wife.
           </p>
           <p className="text-[11px] text-slate-600 text-center md:text-left mt-2">
             Business Number: 856744057

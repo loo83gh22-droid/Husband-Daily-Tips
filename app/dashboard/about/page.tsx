@@ -28,11 +28,11 @@ export default async function AboutPage() {
               </p>
 
               <p className="text-slate-300 leading-relaxed">
-                We've all been there. Things come up, distractions, kids—and though it can be good, it's great to inject some clear intentional daily effort back into your relationship.
+                We've all been there. Things come up, distractions, kids, and though it can be good, it's great to inject some clear intentional daily effort back into your relationship.
               </p>
 
               <p className="text-slate-300 leading-relaxed">
-                I started this because I wanted to improve myself as a husband. Simple as that. I've had trouble communicating—on big things and small things. I'd get defensive when my wife tried to tell me something wasn't working. I'd wait to be asked to help instead of just noticing what needed doing. I'd forget to express appreciation for all the things she does every single day.
+                I started this because I wanted to improve myself as a husband. Simple as that. I've had trouble communicating, on big things and small things. I'd get defensive when my wife tried to tell me something wasn't working. I'd wait to be asked to help instead of just noticing what needed doing. I'd forget to express appreciation for all the things she does every single day.
               </p>
 
               <p className="text-slate-300 leading-relaxed">
@@ -40,7 +40,7 @@ export default async function AboutPage() {
               </p>
 
               <p className="text-slate-300 leading-relaxed">
-                The thing is, I love being a husband. I love my wife. I love our family. But I realized I wasn't being the partner I wanted to be—the partner she deserved. I was coasting, assuming that showing up was enough. It's not.
+                The thing is, I love being a husband. I love my wife. I love our family. But I realized I wasn't being the partner I wanted to be, the partner she deserved. I was coasting, assuming that showing up was enough. It's not.
               </p>
 
               <p className="text-slate-300 leading-relaxed">
@@ -56,7 +56,7 @@ export default async function AboutPage() {
               </p>
 
               <p className="text-slate-300 leading-relaxed">
-                The idea is simple: <strong className="text-slate-100">small daily actions compound into big relationship improvements.</strong> One action today. Another tomorrow. Before you know it, you're the husband you want to be—and your relationship is stronger because of it.
+                The idea is simple: <strong className="text-slate-100">small daily actions compound into big relationship improvements.</strong> One action today. Another tomorrow. Before you know it, you're the husband you want to be, and your relationship is stronger because of it.
               </p>
 
               <p className="text-slate-300 leading-relaxed">
