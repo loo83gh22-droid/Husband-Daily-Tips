@@ -438,12 +438,30 @@ export default function DailyTipCard({ tip, subscriptionTier = 'free', onActionR
   const handleDownloadAllActions = async () => {
     setIsDownloading(true);
     try {
-      const response = await fetch('/api/calendar/actions/download?days=7');
+      const response = await fetch('/api/calendar/actions/download?days=7', {
+        credentials: 'include',
+      });
+
       if (!response.ok) {
-        throw new Error('Failed to download calendar');
+        const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
+        const errorMessage = errorData.error || `Server error: ${response.status}`;
+        throw new Error(errorMessage);
       }
 
-      const blob = await response.blob();
+      // Check if response is actually a calendar file (starts with BEGIN:VCALENDAR)
+      const text = await response.text();
+      if (!text.includes('BEGIN:VCALENDAR')) {
+        // If it's JSON error, parse it
+        try {
+          const errorData = JSON.parse(text);
+          throw new Error(errorData.error || 'Invalid calendar file');
+        } catch {
+          throw new Error('Invalid calendar file received');
+        }
+      }
+
+      // Get the blob and create download
+      const blob = new Blob([text], { type: 'text/calendar' });
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
@@ -454,7 +472,8 @@ export default function DailyTipCard({ tip, subscriptionTier = 'free', onActionR
       document.body.removeChild(a);
     } catch (error) {
       console.error('Error downloading calendar:', error);
-      alert('Failed to download calendar. Please try again.');
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      alert(`Failed to download calendar: ${errorMessage}. Please try again.`);
     } finally {
       setIsDownloading(false);
     }
