@@ -600,7 +600,7 @@ export default async function Dashboard() {
           isAction: true,
           isChallengeAction: true,
           challengeDay: currentDay,
-          challengeName: challenge.name,
+          challengeName: challenge.name.replace(/Challenge/gi, 'Event'),
           challengeId: challenge.id, // Add challenge ID for leave functionality
         };
       } else {
@@ -623,7 +623,7 @@ export default async function Dashboard() {
             isAction: true,
             isChallengeAction: true,
             challengeDay: currentDay,
-            challengeName: challenge.name,
+            challengeName: challenge.name.replace(/Challenge/gi, 'Event'),
             challengeId: challenge.id, // Add challenge ID for leave functionality
           };
         } else {
@@ -633,7 +633,7 @@ export default async function Dashboard() {
             isAction: true,
             isChallengeAction: true,
             challengeDay: currentDay,
-            challengeName: challenge.name,
+            challengeName: challenge.name.replace(/Challenge/gi, 'Event'),
             challengeId: challenge.id, // Add challenge ID for leave functionality
           };
         }
