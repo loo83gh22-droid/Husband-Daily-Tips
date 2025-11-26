@@ -16,19 +16,23 @@ export default async function AboutPage() {
       <main className="container mx-auto px-4 py-8 md:py-10">
         <div className="max-w-3xl mx-auto">
           <div className="mb-8">
-            <h1 className="text-3xl md:text-4xl font-semibold text-slate-50 mb-4">
-              About Best Husband Ever
+            <h1 className="text-3xl md:text-4xl font-bold text-slate-50 mb-2 bg-gradient-to-r from-primary-400 to-primary-600 bg-clip-text text-transparent">
+              About
             </h1>
           </div>
 
           <div className="bg-slate-900/80 border border-slate-800 rounded-xl p-6 md:p-8 space-y-6">
             <div className="prose prose-invert max-w-none">
               <p className="text-lg text-slate-200 leading-relaxed">
-                I started this because I wanted to improve myself as a husband. Simple as that.
+                I built this for myself but I see value in it for others so I'm building it out. It's a work in progress that I will stay engaged with and continue to bring you more value.
               </p>
 
               <p className="text-slate-300 leading-relaxed">
-                I've had trouble communicating—on big things and small things. I'd get defensive when my wife tried to tell me something wasn't working. I'd wait to be asked to help instead of just noticing what needed doing. I'd forget to express appreciation for all the things she does every single day.
+                We've all been there. Things come up, distractions, kids—and though it can be good, it's great to inject some clear intentional daily effort back into your relationship.
+              </p>
+
+              <p className="text-slate-300 leading-relaxed">
+                I started this because I wanted to improve myself as a husband. Simple as that. I've had trouble communicating—on big things and small things. I'd get defensive when my wife tried to tell me something wasn't working. I'd wait to be asked to help instead of just noticing what needed doing. I'd forget to express appreciation for all the things she does every single day.
               </p>
 
               <p className="text-slate-300 leading-relaxed">
