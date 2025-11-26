@@ -179,7 +179,7 @@ export default function HealthBar({ value, shouldPulse = false, onPulseComplete 
           <div className="flex items-center justify-between mb-5">
             <div className="flex-1">
               <h2 className="text-2xl md:text-3xl font-bold text-slate-100 mb-2">
-                Health Bar
+                Husband Health
               </h2>
               <p className="text-sm text-slate-300 leading-relaxed">
                 A simple mirror of how consistently you&apos;re showing up.
@@ -322,11 +322,8 @@ export default function HealthBar({ value, shouldPulse = false, onPulseComplete 
             </div>
 
             <div className="pt-4 border-t border-slate-700/50">
-              <p className="text-sm text-slate-200 mb-2 font-bold">
-                Big Husband Moves
-              </p>
               <p className="text-sm text-slate-400 leading-relaxed">
-                Meaningful gestures beyond daily tasks—surprise dates, major projects, heartfelt notes, special celebrations. Currently equal value; bonus points coming soon.
+                Some actions are worth more than others - stay consistent and enjoy.
               </p>
             </div>
           </div>

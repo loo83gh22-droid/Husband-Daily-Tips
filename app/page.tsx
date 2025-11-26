@@ -114,7 +114,7 @@ export default async function Home() {
             </div>
           </div>
 
-          {/* Hero Right: Health Bar Preview */}
+          {/* Hero Right: Husband Health Preview */}
           <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-6 md:p-7 shadow-xl shadow-black/40">
             <div className="flex items-center justify-between mb-4">
               <div>
@@ -207,7 +207,7 @@ export default async function Home() {
 
               <div className="bg-slate-900/60 border border-slate-800 rounded-xl p-6">
                 <p className="text-xs font-semibold text-primary-300 mb-2 uppercase tracking-[0.2em]">
-                  02. Health Bar
+                  02. Husband Health
                 </p>
                 <h3 className="text-lg font-semibold text-slate-50 mb-2">
                   See your consistency at a glance

@@ -221,7 +221,7 @@ export async function POST(request: Request) {
               </div>
               
               <p style="color: #94a3b8; font-size: 13px; margin-top: 30px; padding-top: 20px; border-top: 1px solid #e2e8f0;">
-                Completing this action boosts your Health Bar. Consistency is what moves the needle.
+                Completing this action boosts your Husband Health. Consistency is what moves the needle.
               </p>
               <p style="color: #64748b; font-size: 12px; margin-top: 10px;">
                 <strong>Tip:</strong> Download actions to your calendar to plan ahead and lock in your commitment! Pre-assigned actions take precedence over the daily algorithm.
