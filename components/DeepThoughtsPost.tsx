@@ -6,6 +6,7 @@ import DeepThoughtsCommentForm from './DeepThoughtsCommentForm';
 
 interface DeepThoughtsPostProps {
   thought: any;
+  currentUserId?: string | null;
 }
 
 // Helper function to calculate years married from wedding date
@@ -57,17 +58,90 @@ function getDisplayInfo(user: any) {
   return { displayName: 'Anonymous', yearsMarried: null };
 }
 
-export default function DeepThoughtsPost({ thought }: DeepThoughtsPostProps) {
+export default function DeepThoughtsPost({ thought, currentUserId }: DeepThoughtsPostProps) {
   const router = useRouter();
   const [showCommentForm, setShowCommentForm] = useState(false);
+  const [showReportModal, setShowReportModal] = useState(false);
+  const [isReporting, setIsReporting] = useState(false);
+  const [isRemoving, setIsRemoving] = useState(false);
+  const [reportReason, setReportReason] = useState('');
+  const [reportDetails, setReportDetails] = useState('');
   const user = thought.users;
   const { displayName, yearsMarried } = getDisplayInfo(user);
   const comments = thought.deep_thoughts_comments || [];
+  const isAuthor = currentUserId && thought.user_id === currentUserId;
 
   const handleCommentAdded = () => {
     // Refresh the page to show new comment
     router.refresh();
     setShowCommentForm(false);
+  };
+
+  const handleReport = async () => {
+    if (!reportReason.trim()) {
+      alert('Please select a reason for reporting this post.');
+      return;
+    }
+
+    setIsReporting(true);
+    try {
+      const response = await fetch('/api/posts/report', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          postId: thought.id,
+          reason: reportReason,
+          additionalDetails: reportDetails || null,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to report post');
+      }
+
+      alert('Thank you for reporting this post. We will review it promptly.');
+      setShowReportModal(false);
+      setReportReason('');
+      setReportDetails('');
+    } catch (error: any) {
+      console.error('Error reporting post:', error);
+      alert(error.message || 'Failed to report post. Please try again.');
+    } finally {
+      setIsReporting(false);
+    }
+  };
+
+  const handleRemove = async () => {
+    if (!confirm('Are you sure you want to remove this post? This action cannot be undone.')) {
+      return;
+    }
+
+    setIsRemoving(true);
+    try {
+      const response = await fetch('/api/posts/remove', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          postId: thought.id,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to remove post');
+      }
+
+      // Refresh the page to remove the post from view
+      router.refresh();
+    } catch (error: any) {
+      console.error('Error removing post:', error);
+      alert(error.message || 'Failed to remove post. Please try again.');
+    } finally {
+      setIsRemoving(false);
+    }
   };
 
   return (
@@ -101,6 +175,27 @@ export default function DeepThoughtsPost({ thought }: DeepThoughtsPostProps) {
               year: 'numeric',
             })}
           </time>
+        </div>
+        <div className="flex items-center gap-2">
+          {isAuthor && (
+            <button
+              onClick={handleRemove}
+              disabled={isRemoving}
+              className="text-xs text-slate-400 hover:text-red-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              title="Remove your post"
+            >
+              {isRemoving ? 'Removing...' : 'Remove'}
+            </button>
+          )}
+          {!isAuthor && (
+            <button
+              onClick={() => setShowReportModal(true)}
+              className="text-xs text-slate-400 hover:text-red-400 transition-colors"
+              title="Report inappropriate content"
+            >
+              Report
+            </button>
+          )}
         </div>
       </div>
 
@@ -170,6 +265,94 @@ export default function DeepThoughtsPost({ thought }: DeepThoughtsPostProps) {
           </div>
         )}
       </div>
+
+      {/* Report Modal */}
+      {showReportModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+          <div className="bg-slate-900 border border-slate-700 rounded-xl p-6 max-w-md w-full">
+            <h3 className="text-lg font-semibold text-slate-50 mb-4">Report Post</h3>
+            <p className="text-sm text-slate-300 mb-4">
+              Help us keep the community safe. Please select a reason for reporting this post.
+            </p>
+            
+            <div className="space-y-2 mb-4">
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="radio"
+                  name="reason"
+                  value="Inappropriate content"
+                  checked={reportReason === 'Inappropriate content'}
+                  onChange={(e) => setReportReason(e.target.value)}
+                  className="w-4 h-4 text-primary-500"
+                />
+                <span className="text-sm text-slate-300">Inappropriate content</span>
+              </label>
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="radio"
+                  name="reason"
+                  value="Harassment or bullying"
+                  checked={reportReason === 'Harassment or bullying'}
+                  onChange={(e) => setReportReason(e.target.value)}
+                  className="w-4 h-4 text-primary-500"
+                />
+                <span className="text-sm text-slate-300">Harassment or bullying</span>
+              </label>
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="radio"
+                  name="reason"
+                  value="Spam or misleading"
+                  checked={reportReason === 'Spam or misleading'}
+                  onChange={(e) => setReportReason(e.target.value)}
+                  className="w-4 h-4 text-primary-500"
+                />
+                <span className="text-sm text-slate-300">Spam or misleading</span>
+              </label>
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="radio"
+                  name="reason"
+                  value="Other"
+                  checked={reportReason === 'Other'}
+                  onChange={(e) => setReportReason(e.target.value)}
+                  className="w-4 h-4 text-primary-500"
+                />
+                <span className="text-sm text-slate-300">Other</span>
+              </label>
+            </div>
+
+            <textarea
+              value={reportDetails}
+              onChange={(e) => setReportDetails(e.target.value)}
+              placeholder="Additional details (optional)"
+              className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-slate-200 text-sm placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-primary-500 mb-4"
+              rows={3}
+            />
+
+            <div className="flex items-center justify-end gap-3">
+              <button
+                onClick={() => {
+                  setShowReportModal(false);
+                  setReportReason('');
+                  setReportDetails('');
+                }}
+                disabled={isReporting}
+                className="px-4 py-2 text-sm font-medium text-slate-300 hover:text-slate-100 transition-colors disabled:opacity-50"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleReport}
+                disabled={isReporting || !reportReason.trim()}
+                className="px-4 py-2 bg-red-600 text-white text-sm font-semibold rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isReporting ? 'Reporting...' : 'Report Post'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </article>
   );
 }

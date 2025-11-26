@@ -31,6 +31,7 @@ async function getTeamWins() {
         users:user_id (name, username, post_anonymously)
       )
     `)
+    .eq('is_removed', false) // Filter out removed posts
     .order('created_at', { ascending: false })
     .limit(50);
 
@@ -78,6 +79,14 @@ export default async function TeamWinsPage() {
   const subscriptionTier = await getUserSubscription(auth0Id);
   const thoughts = await getTeamWins();
   const isFree = subscriptionTier === 'free';
+
+  // Get current user ID for post ownership checks
+  const adminSupabase = getSupabaseAdmin();
+  const { data: currentUser } = await adminSupabase
+    .from('users')
+    .select('id')
+    .eq('auth0_id', auth0Id)
+    .single();
 
   return (
     <div className="min-h-screen bg-slate-950">
@@ -127,7 +136,11 @@ export default async function TeamWinsPage() {
           ) : (
             <div className="space-y-6">
               {thoughts.map((thought: any) => (
-                <DeepThoughtsPost key={thought.id} thought={thought} />
+                <DeepThoughtsPost 
+                  key={thought.id} 
+                  thought={thought} 
+                  currentUserId={currentUser?.id || null}
+                />
               ))}
             </div>
           )}
