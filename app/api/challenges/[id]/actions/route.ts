@@ -9,10 +9,10 @@ export const dynamic = 'force-dynamic';
  */
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const challengeId = params.id;
+    const { id: challengeId } = await params;
 
     if (!challengeId) {
       return NextResponse.json({ error: 'Challenge ID required' }, { status: 400 });
