@@ -3,7 +3,6 @@ import { redirect } from 'next/navigation';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import DashboardNav from '@/components/DashboardNav';
 import ActionsPageClient from '@/components/ActionsPageClient';
-import ActionsQuickStats from '@/components/ActionsQuickStats';
 
 async function getActions(auth0Id: string) {
   // Use admin client to bypass RLS (Auth0 context isn't set)
@@ -242,12 +241,6 @@ export default async function ActionsPage() {
   return (
     <div className="min-h-screen bg-slate-950">
       <DashboardNav />
-      <ActionsQuickStats 
-        totalActions={actions.length} 
-        completedActions={completedCount}
-        actionsThisWeek={actionsThisWeek}
-        badgesEarned={badgesEarned}
-      />
 
       <main className="container mx-auto px-4 py-8 md:py-10 max-w-full overflow-x-hidden">
         <div className="max-w-6xl mx-auto w-full">
