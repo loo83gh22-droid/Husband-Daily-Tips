@@ -176,7 +176,7 @@ export default async function JournalPage() {
           <div className="mb-8">
             <div className="flex items-start justify-between mb-6">
               <div>
-                <h1 className="text-3xl md:text-4xl font-semibold text-slate-50 mb-2">
+                <h1 className="text-3xl md:text-4xl font-bold text-slate-50 mb-2 bg-gradient-to-r from-primary-400 to-primary-600 bg-clip-text text-transparent">
                   Your Journal
                 </h1>
               </div>

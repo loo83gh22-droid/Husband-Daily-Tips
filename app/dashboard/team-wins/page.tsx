@@ -83,8 +83,8 @@ export default async function TeamWinsPage() {
       <main className="container mx-auto px-4 py-8 md:py-10">
         <div className="max-w-4xl mx-auto">
           <div className="mb-8">
-            <h1 className="text-3xl md:text-4xl font-bold text-slate-50 mb-2">
-              💪 Team Wins
+            <h1 className="text-3xl md:text-4xl font-bold text-slate-50 mb-2 bg-gradient-to-r from-primary-400 to-primary-600 bg-clip-text text-transparent">
+              Team Wins
             </h1>
             <p className="text-slate-400 text-sm md:text-base">
               Real wins from husbands who are showing up. Big or small, celebrate what worked, learn from what didn't, and keep moving forward together.
