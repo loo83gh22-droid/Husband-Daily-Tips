@@ -1,7 +1,28 @@
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import ChallengeDetailModal from './ChallengeDetailModal';
+
+interface Challenge {
+  id: string;
+  name: string;
+  description: string;
+  theme: string;
+  start_date: string;
+  end_date: string;
+  challenge_actions?: Array<{
+    day_number: number;
+    actions: {
+      id: string;
+      name: string;
+      description: string;
+      icon: string;
+    };
+  }>;
+  duration_days?: number;
+}
 
 interface CategoryCardProps {
   theme: string;
@@ -13,6 +34,7 @@ interface CategoryCardProps {
   eventName?: string;
   isEnrolled?: boolean;
   onJoinEvent?: (eventId: string) => void;
+  challenge?: Challenge | null;
 }
 
 const getThemeColor = (theme: string) => {
@@ -39,9 +61,17 @@ export default function CategoryCard({
   eventName,
   isEnrolled,
   onJoinEvent,
+  challenge,
 }: CategoryCardProps) {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const completionPercentage = actionCount > 0 ? Math.round((completedCount / actionCount) * 100) : 0;
   const colorClasses = getThemeColor(theme);
+
+  const handleSeeEvent = () => {
+    if (challenge) {
+      setIsModalOpen(true);
+    }
+  };
 
   return (
     <motion.div
@@ -84,17 +114,23 @@ export default function CategoryCard({
           View Actions
         </Link>
         {eventId && eventName && (
-          <button
-            onClick={() => eventId && onJoinEvent?.(eventId)}
-            disabled={isEnrolled}
-            className={`w-full px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${
-              isEnrolled
-                ? 'bg-slate-700/30 text-slate-500 border border-slate-700 cursor-not-allowed'
-                : 'bg-primary-500/20 text-primary-300 border border-primary-500/30 hover:bg-primary-500/30'
-            }`}
-          >
-            {isEnrolled ? 'Active' : 'Start 7-Day Event'}
-          </button>
+          <>
+            <button
+              onClick={handleSeeEvent}
+              className="w-full px-3 py-1.5 text-xs font-medium rounded-md transition-colors bg-primary-500/20 text-primary-300 border border-primary-500/30 hover:bg-primary-500/30"
+            >
+              {isEnrolled ? 'Active' : 'See 7 Day Event'}
+            </button>
+            {challenge && (
+              <ChallengeDetailModal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                challenge={challenge}
+                isEnrolled={isEnrolled}
+                onJoin={onJoinEvent}
+              />
+            )}
+          </>
         )}
       </div>
     </motion.div>

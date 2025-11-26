@@ -395,6 +395,7 @@ export default function ActionsPageClient({
                 eventName={event?.name}
                 isEnrolled={isEnrolled}
                 onJoinEvent={handleJoinChallenge}
+                challenge={event || null}
               />
             );
           })}
