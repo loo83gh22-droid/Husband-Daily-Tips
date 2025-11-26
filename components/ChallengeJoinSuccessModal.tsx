@@ -89,25 +89,33 @@ export default function ChallengeJoinSuccessModal({
 
   const handleDownloadiCal = async () => {
     try {
-      // If we don't have the link yet, fetch it first
-      if (!calendarLinks.icalDownload) {
-        await fetchCalendarLinks();
+      const baseUrl = process.env.NEXT_PUBLIC_APP_URL || window.location.origin;
+      const downloadUrl = calendarLinks.icalDownload || `${baseUrl}/api/calendar/actions/download?days=7&userId=${userId}`;
+      
+      // Use fetch to properly handle errors
+      const response = await fetch(downloadUrl, {
+        credentials: 'include',
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
+        throw new Error(errorData.error || `Server error: ${response.status}`);
       }
 
-      if (calendarLinks.icalDownload) {
-        window.location.href = calendarLinks.icalDownload;
-        setTimeout(() => {
-          onClose();
-        }, 1000);
-      } else {
-        // Fallback: try direct download URL
-        const baseUrl = process.env.NEXT_PUBLIC_APP_URL || window.location.origin;
-        const fallbackUrl = `${baseUrl}/api/calendar/actions/download?days=7&userId=${userId}`;
-        window.location.href = fallbackUrl;
-        setTimeout(() => {
-          onClose();
-        }, 1000);
-      }
+      // Get the blob and create download
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = '7-day-event-actions.ics';
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+      
+      setTimeout(() => {
+        onClose();
+      }, 500);
     } catch (error) {
       console.error('Error downloading calendar:', error);
       alert('Failed to download calendar. Please try again.');

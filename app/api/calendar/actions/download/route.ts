@@ -73,7 +73,7 @@ async function generateCalendarFile(userId: string, days: number, user: any) {
   const timezone = prefs.timezone ?? 'America/New_York';
 
   // Check if user has an active challenge
-  const { data: activeChallenge } = await adminSupabase
+  const { data: activeChallenge, error: challengeError } = await adminSupabase
     .from('user_challenges')
     .select(`
       *,
@@ -95,7 +95,7 @@ async function generateCalendarFile(userId: string, days: number, user: any) {
     .eq('completed', false)
     .order('joined_date', { ascending: false })
     .limit(1)
-    .single();
+    .maybeSingle(); // Use maybeSingle() instead of single() to avoid error if no challenge found
 
   const actions = [];
   const today = new Date();
@@ -205,11 +205,19 @@ END:VEVENT
 
   icalContent += `END:VCALENDAR`;
 
+  // If no actions were generated, return an error
+  if (actions.length === 0) {
+    return NextResponse.json(
+      { error: 'No actions available to download. Please try again later.' },
+      { status: 404 }
+    );
+  }
+
   // Return as iCal file
   return new NextResponse(icalContent, {
     headers: {
       'Content-Type': 'text/calendar; charset=utf-8',
-      'Content-Disposition': `attachment; filename="tomorrow-actions-${days}-days.ics"`,
+      'Content-Disposition': `attachment; filename="7-day-event-actions.ics"`,
     },
   });
 }
