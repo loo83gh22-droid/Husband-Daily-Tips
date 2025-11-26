@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import DashboardNav from '@/components/DashboardNav';
 import ActionsPageClient from '@/components/ActionsPageClient';
+import BackToTop from '@/components/BackToTop';
 
 async function getActions(auth0Id: string) {
   // Use admin client to bypass RLS (Auth0 context isn't set)
@@ -323,6 +324,7 @@ export default async function ActionsPage() {
             partnerName={partnerName}
           />
         </div>
+        <BackToTop />
       </main>
     </div>
   );

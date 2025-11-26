@@ -4,6 +4,7 @@ import { getSupabaseAdmin } from '@/lib/supabase';
 import DashboardNav from '@/components/DashboardNav';
 import { calculateBadgeProgress } from '@/lib/badges';
 import Link from 'next/link';
+import BackToTop from '@/components/BackToTop';
 
 async function getUserStats(userId: string) {
   // Use admin client to bypass RLS (Auth0 context isn't set)
@@ -395,6 +396,7 @@ export default async function BadgesPage() {
             })}
           </div>
         </div>
+        <BackToTop />
       </main>
     </div>
   );

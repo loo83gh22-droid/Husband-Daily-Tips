@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import DashboardNav from '@/components/DashboardNav';
 import { supabase } from '@/lib/supabase';
+import BackToTop from '@/components/BackToTop';
 
 async function getGuideVisitCounts() {
   try {
@@ -852,6 +853,7 @@ export default async function HowToGuidesPage() {
             </p>
           </div>
         </div>
+        <BackToTop />
       </main>
     </div>
   );

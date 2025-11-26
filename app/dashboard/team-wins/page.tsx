@@ -4,6 +4,7 @@ import { getSupabaseAdmin } from '@/lib/supabase';
 import DashboardNav from '@/components/DashboardNav';
 import DeepThoughtsPost from '@/components/DeepThoughtsPost';
 import Link from 'next/link';
+import BackToTop from '@/components/BackToTop';
 
 async function getUserSubscription(auth0Id: string) {
   // Use admin client to bypass RLS (Auth0 context isn't set)
@@ -131,6 +132,7 @@ export default async function TeamWinsPage() {
             </div>
           )}
         </div>
+        <BackToTop />
       </main>
     </div>
   );

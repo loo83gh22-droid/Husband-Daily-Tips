@@ -6,6 +6,7 @@ import JournalEntry from '@/components/JournalEntry';
 import JournalExportButton from '@/components/JournalExportButton';
 import ProgressCharts from '@/components/ProgressCharts';
 import CollapsibleSection from '@/components/CollapsibleSection';
+import BackToTop from '@/components/BackToTop';
 
 async function getUserData(auth0Id: string) {
   // Use admin client to bypass RLS (Auth0 context isn't set)
@@ -281,6 +282,7 @@ export default async function JournalPage() {
             </div>
           )}
         </div>
+        <BackToTop />
       </main>
     </div>
   );
