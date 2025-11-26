@@ -711,7 +711,7 @@ export default async function Dashboard() {
       />
       <DashboardNav />
 
-      <main className="container mx-auto px-3 sm:px-4 py-4 sm:py-6 md:py-8 lg:py-12 max-w-full overflow-x-hidden">
+      <main className="w-full px-3 sm:px-4 md:px-6 lg:px-8 py-4 sm:py-6 md:py-8 lg:py-12 max-w-7xl mx-auto overflow-x-hidden">
         {/* Survey Banner - Show if survey not completed */}
         {!user.survey_completed && (
           <div className="mb-4 sm:mb-6">
