@@ -237,14 +237,14 @@ export default async function JournalPage() {
               </p>
             </div>
           ) : (
-            <div className="space-y-6">
+            <div className="space-y-3">
               {favorites.length > 0 && (
-                <div className="mb-8">
-                  <h2 className="text-lg font-semibold text-slate-200 mb-4 flex items-center gap-2">
+                <div className="mb-6">
+                  <h2 className="text-base font-semibold text-slate-200 mb-3 flex items-center gap-2">
                     <span>⭐</span>
                     <span>Favorites</span>
                   </h2>
-                  <div className="space-y-6">
+                  <div className="space-y-3">
                     {favorites.map((reflection: any) => (
                       <JournalEntry key={reflection.id} reflection={reflection} />
                     ))}
@@ -255,9 +255,9 @@ export default async function JournalPage() {
               {regular.length > 0 && (
                 <div>
                   {favorites.length > 0 && (
-                    <h2 className="text-lg font-semibold text-slate-200 mb-4">All Entries</h2>
+                    <h2 className="text-base font-semibold text-slate-200 mb-3">All Entries</h2>
                   )}
-                  <div className="space-y-6">
+                  <div className="space-y-3">
                     {regular.map((reflection: any) => (
                       <JournalEntry key={reflection.id} reflection={reflection} />
                     ))}

@@ -178,25 +178,21 @@ export default function JournalEntry({ reflection }: JournalEntryProps) {
 
   return (
     <article
-      className={`bg-slate-900/80 border border-slate-800 rounded-xl p-6 md:p-8 ${
+      className={`bg-slate-900/80 border border-slate-800 rounded-lg p-4 ${
         isFavorite ? 'border-l-4 border-yellow-500/50' : ''
       }`}
     >
-      <div className="flex items-start justify-between mb-4">
-        <div className="flex-1">
+      <div className="flex items-start justify-between mb-3">
+        <div className="flex-1 min-w-0">
           {action && (
-            <div className="mb-2">
-              <span className="text-xs text-slate-500">Action completed:</span>
-              <div className="flex items-center gap-2 mt-1">
-                {action.icon && <span className="text-lg">{action.icon}</span>}
-                <p className="text-sm font-medium text-slate-200">{action.name}</p>
-              </div>
+            <div className="flex items-center gap-2 mb-1">
+              {action.icon && <span className="text-base flex-shrink-0">{action.icon}</span>}
+              <p className="text-sm font-semibold text-slate-200 truncate">{action.name}</p>
             </div>
           )}
           {tip && (
-            <div className="mb-2">
-              <span className="text-xs text-slate-500">Reflection on:</span>
-              <p className="text-sm font-medium text-slate-200 mt-1">{tip.title}</p>
+            <div className="mb-1">
+              <p className="text-sm font-semibold text-slate-200">{tip.title}</p>
               {tip.category && (
                 <span className="inline-block mt-1 px-2 py-0.5 bg-primary-500/10 text-primary-300 text-xs rounded-full">
                   {tip.category}
@@ -206,7 +202,7 @@ export default function JournalEntry({ reflection }: JournalEntryProps) {
           )}
           <time className="text-xs text-slate-500">
             {new Date(reflection.created_at).toLocaleDateString('en-US', {
-              month: 'long',
+              month: 'short',
               day: 'numeric',
               year: 'numeric',
               hour: 'numeric',
@@ -214,13 +210,13 @@ export default function JournalEntry({ reflection }: JournalEntryProps) {
             })}
           </time>
         </div>
-        <div className="flex items-center gap-2 ml-4">
+        <div className="flex items-center gap-1.5 ml-3 flex-shrink-0">
           {!isEditing && (
             <button
               onClick={() => setIsEditing(true)}
-              className="p-2 rounded-lg text-slate-400 hover:bg-slate-800 transition-colors"
+              className="p-1.5 rounded text-slate-400 hover:bg-slate-800 transition-colors"
               aria-label="Edit entry"
-              title="Edit this entry"
+              title="Edit"
             >
               <svg
                 className="w-4 h-4"
@@ -240,26 +236,26 @@ export default function JournalEntry({ reflection }: JournalEntryProps) {
           <button
             onClick={handleToggleFavorite}
             disabled={isTogglingFavorite}
-            className={`p-2 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-default ${
+            className={`p-1.5 rounded transition-colors disabled:opacity-50 disabled:cursor-default ${
               isFavorite
                 ? 'bg-yellow-500/10 text-yellow-300 hover:bg-yellow-500/20'
                 : 'text-slate-400 hover:bg-slate-800'
             }`}
             aria-label={isFavorite ? 'Unfavorite' : 'Favorite'}
-            title={isFavorite ? 'Unfavorite this entry' : 'Favorite this entry'}
+            title={isFavorite ? 'Unfavorite' : 'Favorite'}
           >
-            <span className="text-lg">{isFavorite ? '⭐' : '☆'}</span>
+            <span className="text-base">{isFavorite ? '⭐' : '☆'}</span>
           </button>
           <button
             onClick={handleToggleShare}
             disabled={isTogglingShare || isEditing}
-            className={`p-2 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-default ${
+            className={`p-1.5 rounded transition-colors disabled:opacity-50 disabled:cursor-default ${
               isShared
                 ? 'bg-primary-500/10 text-primary-300 hover:bg-primary-500/20'
                 : 'text-slate-400 hover:bg-slate-800'
             }`}
             aria-label={isShared ? 'Remove from Team Wins' : 'Share to Team Wins'}
-            title={isShared ? 'Remove from Team Wins' : 'Share to Team Wins'}
+            title={isShared ? 'Shared' : 'Share'}
           >
             {isShared ? (
               <svg
@@ -293,9 +289,9 @@ export default function JournalEntry({ reflection }: JournalEntryProps) {
             <button
               onClick={handleDelete}
               disabled={isDeleting}
-              className="p-2 rounded-lg text-red-400 hover:bg-red-500/10 transition-colors disabled:opacity-50 disabled:cursor-default"
+              className="p-1.5 rounded text-red-400 hover:bg-red-500/10 transition-colors disabled:opacity-50 disabled:cursor-default"
               aria-label="Delete entry"
-              title="Delete this entry"
+              title="Delete"
             >
               {isDeleting ? (
                 <svg
@@ -328,42 +324,44 @@ export default function JournalEntry({ reflection }: JournalEntryProps) {
               )}
             </button>
           )}
-          {isShared && !isEditing && (
-            <span className="text-xs px-2 py-1 bg-primary-500/20 text-primary-300 rounded-full border border-primary-500/30">
-              Shared to Team Wins
-            </span>
-          )}
         </div>
       </div>
+      {isShared && !isEditing && (
+        <div className="mb-2">
+          <span className="text-xs px-2 py-0.5 bg-primary-500/20 text-primary-300 rounded-full border border-primary-500/30">
+            Shared to Team Wins
+          </span>
+        </div>
+      )}
 
       <div className="prose prose-invert max-w-none">
         {isEditing ? (
-          <div className="space-y-4">
+          <div className="space-y-3">
             <textarea
               value={editedContent}
               onChange={(e) => setEditedContent(e.target.value)}
-              className="w-full min-h-[200px] p-4 bg-slate-800/50 border border-slate-700 rounded-lg text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500/50 resize-y"
+              className="w-full min-h-[150px] p-3 bg-slate-800/50 border border-slate-700 rounded-lg text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500/50 resize-y text-sm"
               placeholder="Write your reflection..."
             />
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
               <button
                 onClick={handleSaveEdit}
                 disabled={isSaving || !editedContent.trim()}
-                className="px-4 py-2 bg-primary-500 text-slate-950 rounded-lg hover:bg-primary-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-medium text-sm"
+                className="px-3 py-1.5 bg-primary-500 text-slate-950 rounded-lg hover:bg-primary-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-medium text-sm"
               >
                 {isSaving ? 'Saving...' : 'Save'}
               </button>
               <button
                 onClick={handleCancelEdit}
                 disabled={isSaving}
-                className="px-4 py-2 bg-slate-700 text-slate-200 rounded-lg hover:bg-slate-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-medium text-sm"
+                className="px-3 py-1.5 bg-slate-700 text-slate-200 rounded-lg hover:bg-slate-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-medium text-sm"
               >
                 Cancel
               </button>
             </div>
           </div>
         ) : (
-          <p className="text-slate-200 leading-relaxed whitespace-pre-line">
+          <p className="text-sm text-slate-200 leading-relaxed whitespace-pre-line">
             {currentContent}
           </p>
         )}
