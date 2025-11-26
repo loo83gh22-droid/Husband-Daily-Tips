@@ -43,9 +43,10 @@ interface ChallengeCardProps {
   userChallenge?: UserChallenge;
   userId?: string;
   onJoin?: (challengeId: string) => void;
+  subscriptionTier?: string;
 }
 
-export default function ChallengeCard({ challenge, userChallenge, userId, onJoin }: ChallengeCardProps) {
+export default function ChallengeCard({ challenge, userChallenge, userId, onJoin, subscriptionTier = 'free' }: ChallengeCardProps) {
   const [isJoining, setIsJoining] = useState(false);
   // Sync isJoined with userChallenge prop - update when prop changes
   const [isJoined, setIsJoined] = useState(!!userChallenge);
@@ -67,8 +68,10 @@ export default function ChallengeCard({ challenge, userChallenge, userId, onJoin
   // A 7-day event is "in progress" if user has joined it and it's not completed
   const isInProgress = isJoined && userChallenge && !userChallenge.completed;
 
+  const isPaidUser = subscriptionTier === 'premium' || subscriptionTier === 'pro';
+
   const handleJoin = async () => {
-    if (isJoined || isJoining) return;
+    if (isJoined || isJoining || !isPaidUser) return;
     
     setIsJoining(true);
     try {
@@ -96,6 +99,13 @@ export default function ChallengeCard({ challenge, userChallenge, userId, onJoin
         try {
           const errorData = await response.json();
           const errorMessage = errorData.message || errorData.error || 'Failed to join 7-day event';
+          
+          // Handle premium subscription required error
+          if (response.status === 403 || errorMessage.includes('Premium subscription required') || errorData.error === 'Premium subscription required') {
+            // Redirect to subscription page with upgrade message
+            window.location.href = '/dashboard/subscription?upgrade=7day-events';
+            return;
+          }
           
           // Always show modal for 400 errors (one 7-day event at a time)
           if (response.status === 400 || errorMessage.includes('currently participating') || errorData.error === 'You can only join one challenge at a time') {
@@ -224,13 +234,24 @@ export default function ChallengeCard({ challenge, userChallenge, userId, onJoin
 
       <div className="flex gap-2 mt-4">
         {!userChallenge && !isJoined ? (
-          <button
-            onClick={handleJoin}
-            disabled={isJoining || isPast}
-            className={getButtonClasses(challenge.theme, isJoining || isPast)}
-          >
-            {isJoining ? 'Joining...' : isPast ? '7-Day Event Ended' : 'Join 7-Day Event'}
-          </button>
+          <>
+            {!isPaidUser ? (
+              <Link
+                href="/dashboard/subscription?upgrade=7day-events"
+                className="flex-1 px-4 py-2.5 text-slate-950 text-sm font-bold rounded-lg transition-all shadow-md transform hover:scale-[1.02] bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-400 hover:to-primary-500 shadow-primary-500/30 hover:shadow-primary-500/50 text-center"
+              >
+                Upgrade to Join
+              </Link>
+            ) : (
+              <button
+                onClick={handleJoin}
+                disabled={isJoining || isPast}
+                className={getButtonClasses(challenge.theme, isJoining || isPast)}
+              >
+                {isJoining ? 'Joining...' : isPast ? '7-Day Event Ended' : 'Join 7-Day Event'}
+              </button>
+            )}
+          </>
         ) : (
           <Link
             href={`/dashboard/badges#${getChallengeBadgeSlug(challenge.name)}`}

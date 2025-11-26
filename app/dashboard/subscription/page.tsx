@@ -82,6 +82,10 @@ export default async function SubscriptionPage({
         title: 'Upgrade to Access Journal',
         description: 'Journaling is a Premium feature. Upgrade to track your reflections and build a record of your relationship wins.',
       },
+      '7day-events': {
+        title: 'Upgrade to Join 7-Day Events',
+        description: '7-day events are a Premium feature. Join structured 7-day challenges designed to level up your relationship skills. Upgrade to unlock this feature and more.',
+      },
     };
 
     const upgradeMessage = upgradeReason ? upgradeMessages[upgradeReason] : null;

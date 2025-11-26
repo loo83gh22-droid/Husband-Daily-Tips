@@ -33,7 +33,11 @@ interface UserChallenge {
   remainingDays: number;
 }
 
-export default function ActiveChallenges() {
+interface ActiveChallengesProps {
+  subscriptionTier?: string;
+}
+
+export default function ActiveChallenges({ subscriptionTier = 'free' }: ActiveChallengesProps) {
   const [allChallenges, setAllChallenges] = useState<Challenge[]>([]);
   const [displayedChallenges, setDisplayedChallenges] = useState<Challenge[]>([]);
   const [userChallenges, setUserChallenges] = useState<UserChallenge[]>([]);
@@ -185,6 +189,7 @@ export default function ActiveChallenges() {
               userChallenge={userChallenge}
               userId={userId || undefined}
               onJoin={handleJoin}
+              subscriptionTier={subscriptionTier}
             />
           );
         })}

@@ -27,12 +27,34 @@ export async function POST(request: Request) {
     // Get user
     const { data: user, error: userError } = await supabase
       .from('users')
-      .select('id')
+      .select('id, subscription_tier, trial_ends_at, stripe_subscription_id')
       .eq('auth0_id', auth0Id)
       .single();
 
     if (userError || !user) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
+    }
+
+    // Check if user is a paid user (premium or pro tier)
+    const isPaidUser = user.subscription_tier === 'premium' || user.subscription_tier === 'pro';
+    
+    // Check if user has an active trial
+    const trialEndsAt = user.trial_ends_at ? new Date(user.trial_ends_at) : null;
+    const now = new Date();
+    const hasActiveTrial = user.subscription_tier === 'premium' && 
+                          trialEndsAt && 
+                          trialEndsAt > now && 
+                          !user.stripe_subscription_id;
+    
+    // User must be a paid user (with active subscription or trial) to join 7-day events
+    if (!isPaidUser && !hasActiveTrial) {
+      return NextResponse.json(
+        { 
+          error: 'Premium subscription required',
+          message: '7-day events are available for premium subscribers only. Upgrade to join events and unlock all features.',
+        },
+        { status: 403 }
+      );
     }
 
     // Check if challenge exists and is active
