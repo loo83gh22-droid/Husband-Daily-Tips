@@ -738,13 +738,13 @@ export default async function Dashboard() {
           <div className="w-full min-w-0 max-w-full">
             <div className="flex items-center justify-between mb-4 sm:mb-6" data-tour="action-header">
               <div>
-                <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-slate-50 mb-1 sm:mb-2">
+                <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-1 sm:mb-2 bg-gradient-to-r from-primary-400 to-primary-600 bg-clip-text text-transparent">
                   Today&apos;s Action
                 </h2>
                 <p className="text-xs sm:text-sm md:text-base text-slate-300 font-medium">
                   {displayAction?.isChallengeAction ? (
                     <>
-                      <span className="font-semibold text-primary-400">{displayAction.challengeName}</span> - Day {displayAction.challengeDay} of 7
+                      <span className="font-semibold text-slate-50">{displayAction.challengeName}</span> - <span className="text-primary-400">Day {displayAction.challengeDay} of 7</span>
                     </>
                   ) : (
                     <>
