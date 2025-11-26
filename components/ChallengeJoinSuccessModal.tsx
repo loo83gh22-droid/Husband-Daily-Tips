@@ -39,9 +39,21 @@ export default function ChallengeJoinSuccessModal({
       if (response.ok) {
         const data = await response.json();
         setCalendarLinks(data);
+      } else {
+        // If the endpoint fails (e.g., no active challenge found), use fallback
+        const fallbackUrl = `${baseUrl}/api/calendar/actions/download?days=7&userId=${userId}`;
+        setCalendarLinks({
+          icalDownload: fallbackUrl,
+        });
       }
     } catch (error) {
       console.error('Error fetching calendar links:', error);
+      // Set fallback URL even on error
+      const baseUrl = process.env.NEXT_PUBLIC_APP_URL || window.location.origin;
+      const fallbackUrl = `${baseUrl}/api/calendar/actions/download?days=7&userId=${userId}`;
+      setCalendarLinks({
+        icalDownload: fallbackUrl,
+      });
     }
   };
 
@@ -75,12 +87,30 @@ export default function ChallengeJoinSuccessModal({
     }
   };
 
-  const handleDownloadiCal = () => {
-    if (calendarLinks.icalDownload) {
-      window.location.href = calendarLinks.icalDownload;
-      setTimeout(() => {
-        onClose();
-      }, 1000);
+  const handleDownloadiCal = async () => {
+    try {
+      // If we don't have the link yet, fetch it first
+      if (!calendarLinks.icalDownload) {
+        await fetchCalendarLinks();
+      }
+
+      if (calendarLinks.icalDownload) {
+        window.location.href = calendarLinks.icalDownload;
+        setTimeout(() => {
+          onClose();
+        }, 1000);
+      } else {
+        // Fallback: try direct download URL
+        const baseUrl = process.env.NEXT_PUBLIC_APP_URL || window.location.origin;
+        const fallbackUrl = `${baseUrl}/api/calendar/actions/download?days=7&userId=${userId}`;
+        window.location.href = fallbackUrl;
+        setTimeout(() => {
+          onClose();
+        }, 1000);
+      }
+    } catch (error) {
+      console.error('Error downloading calendar:', error);
+      alert('Failed to download calendar. Please try again.');
     }
   };
 

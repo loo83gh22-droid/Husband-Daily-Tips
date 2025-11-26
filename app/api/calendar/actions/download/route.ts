@@ -72,46 +72,95 @@ async function generateCalendarFile(userId: string, days: number, user: any) {
   const defaultTime = prefs.default_tip_time ?? '09:00'; // Default to 9am
   const timezone = prefs.timezone ?? 'America/New_York';
 
-  // Generate actions for the next N days
+  // Check if user has an active challenge
+  const { data: activeChallenge } = await adminSupabase
+    .from('user_challenges')
+    .select(`
+      *,
+      challenges (
+        *,
+        challenge_actions (
+          day_number,
+          actions (
+            id,
+            name,
+            description,
+            icon,
+            benefit
+          )
+        )
+      )
+    `)
+    .eq('user_id', userId)
+    .eq('completed', false)
+    .order('joined_date', { ascending: false })
+    .limit(1)
+    .single();
+
   const actions = [];
   const today = new Date();
 
-  // Get user's survey data for personalization
-  const { data: surveySummary } = await adminSupabase
-    .from('survey_summary')
-    .select('communication_score, romance_score, partnership_score, intimacy_score, conflict_score')
-    .eq('user_id', userId)
-    .single();
+  // If user has an active challenge, use challenge actions
+  if (activeChallenge?.challenges?.challenge_actions) {
+    const challenge = activeChallenge.challenges;
+    const challengeActions = challenge.challenge_actions || [];
+    const joinedDate = new Date(activeChallenge.joined_date);
 
-  const categoryScores = surveySummary || {};
+    for (let i = 0; i < days; i++) {
+      const targetDate = new Date(joinedDate);
+      targetDate.setDate(joinedDate.getDate() + i);
+      const dateStr = targetDate.toISOString().split('T')[0];
+      const dayNumber = i + 1;
 
-  for (let i = 0; i < days; i++) {
-    const targetDate = new Date(today);
-    targetDate.setDate(today.getDate() + i);
-    const dateStr = targetDate.toISOString().split('T')[0];
-
-    // Check if action already exists
-    const { data: existingAction } = await adminSupabase
-      .from('user_daily_actions')
-      .select('*, actions(*)')
-      .eq('user_id', userId)
-      .eq('date', dateStr)
-      .single();
-
-    if (existingAction && existingAction.actions) {
-      // Use existing action
-      actions.push({
-        ...existingAction.actions,
-        date: dateStr,
-      });
-    } else {
-      // Generate new action using same algorithm as getTomorrowAction
-      const action = await generateActionForDate(userId, dateStr, categoryScores, adminSupabase);
-      if (action) {
+      // Find challenge action for this day
+      const challengeAction = challengeActions.find((ca: any) => ca.day_number === dayNumber);
+      
+      if (challengeAction?.actions) {
         actions.push({
-          ...action,
+          ...challengeAction.actions,
           date: dateStr,
         });
+      }
+    }
+  } else {
+    // No active challenge - generate regular actions
+    // Get user's survey data for personalization
+    const { data: surveySummary } = await adminSupabase
+      .from('survey_summary')
+      .select('communication_score, romance_score, partnership_score, intimacy_score, conflict_score')
+      .eq('user_id', userId)
+      .single();
+
+    const categoryScores = surveySummary || {};
+
+    for (let i = 0; i < days; i++) {
+      const targetDate = new Date(today);
+      targetDate.setDate(today.getDate() + i);
+      const dateStr = targetDate.toISOString().split('T')[0];
+
+      // Check if action already exists
+      const { data: existingAction } = await adminSupabase
+        .from('user_daily_actions')
+        .select('*, actions(*)')
+        .eq('user_id', userId)
+        .eq('date', dateStr)
+        .single();
+
+      if (existingAction && existingAction.actions) {
+        // Use existing action
+        actions.push({
+          ...existingAction.actions,
+          date: dateStr,
+        });
+      } else {
+        // Generate new action using same algorithm as getTomorrowAction
+        const action = await generateActionForDate(userId, dateStr, categoryScores, adminSupabase);
+        if (action) {
+          actions.push({
+            ...action,
+            date: dateStr,
+          });
+        }
       }
     }
   }

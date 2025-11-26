@@ -47,8 +47,17 @@ export async function GET(request: Request) {
       .limit(1)
       .single();
 
+    // If no active challenge, return fallback links that will use regular actions
     if (!activeChallenge?.challenges) {
-      return NextResponse.json({ error: 'No active challenge found' }, { status: 404 });
+      const baseUrl = process.env.AUTH0_BASE_URL || 'https://besthusbandever.com';
+      const icalUrl = `${baseUrl}/api/calendar/actions/download?days=${days}&userId=${userId}`;
+      
+      return NextResponse.json({
+        googleCalendar: '',
+        outlookCalendar: '',
+        icalDownload: icalUrl,
+        events: [],
+      });
     }
 
     const challenge = activeChallenge.challenges;
