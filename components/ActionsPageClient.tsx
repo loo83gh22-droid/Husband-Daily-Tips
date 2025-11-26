@@ -4,7 +4,6 @@ import { useState, useMemo, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import ActionsList from './ActionsList';
 import ActionsSearchModal from './ActionsSearchModal';
-import FeaturedEvents from './FeaturedChallenges';
 import CategoryCard from './CategoryCard';
 import FavoritesModal from './FavoritesModal';
 import Link from 'next/link';
@@ -401,9 +400,6 @@ export default function ActionsPageClient({
           })}
         </div>
       </section>
-
-      {/* Featured 7-Day Events */}
-      <FeaturedEvents />
 
       {/* Search and Favorites Buttons */}
       <div className="mb-6 flex items-center justify-between">
