@@ -100,39 +100,33 @@ export default function FeaturedEvents() {
 
   return (
     <section className="mb-8">
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h2 className="text-3xl md:text-4xl font-bold text-slate-50 bg-gradient-to-r from-primary-400 to-primary-600 bg-clip-text text-transparent">
+      <div className="bg-gradient-to-br from-purple-950/30 via-slate-900/50 to-purple-950/30 border border-purple-500/30 rounded-xl p-6 md:p-8">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-xl md:text-2xl font-semibold text-slate-50 flex items-center gap-2">
+            <span>🎯</span>
             7-Day Events
           </h2>
-          <p className="text-base text-slate-300 mt-2 font-medium">
-            7 days. 7 chances to level up. Pick a 7-day event and get started.
-          </p>
         </div>
-        {challenges.length > 3 && (
-          <Link
-            href="/dashboard"
-            className="text-sm text-primary-300 hover:text-primary-200 transition-colors font-medium"
-          >
-            View All →
-          </Link>
-        )}
-      </div>
 
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {featuredChallenges.map((challenge) => {
-          const userChallenge = userChallenges.find((uc) => uc.challenge_id === challenge.id);
-          return (
-            <div key={challenge.id} className="transform transition-transform hover:scale-[1.02]">
-              <ChallengeCard
-                challenge={challenge}
-                userChallenge={userChallenge}
-                userId={userId || undefined}
-                onJoin={handleJoin}
-              />
-            </div>
-          );
-        })}
+        <p className="text-sm md:text-base text-slate-300 mb-6 font-medium">
+          7 days. 7 chances to level up. Pick a 7-day event and get started.
+        </p>
+
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+          {featuredChallenges.map((challenge) => {
+            const userChallenge = userChallenges.find((uc) => uc.challenge_id === challenge.id);
+            return (
+              <div key={challenge.id} className="transform transition-transform hover:scale-[1.02]">
+                <ChallengeCard
+                  challenge={challenge}
+                  userChallenge={userChallenge}
+                  userId={userId || undefined}
+                  onJoin={handleJoin}
+                />
+              </div>
+            );
+          })}
+        </div>
       </div>
     </section>
   );

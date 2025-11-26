@@ -171,7 +171,7 @@ export default function ChallengeCard({ challenge, userChallenge, userId, onJoin
   };
 
   return (
-    <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 border-2 border-primary-500/30 rounded-xl p-6 shadow-lg shadow-primary-500/10 hover:border-primary-500/50 hover:shadow-primary-500/20 transition-all">
+    <div className="bg-gradient-to-br from-slate-800/80 via-slate-800/60 to-slate-800/80 border border-purple-500/40 rounded-lg p-4 md:p-6 shadow-lg shadow-purple-500/10 hover:border-purple-500/60 hover:shadow-purple-500/20 transition-all">
       <div className="flex items-start justify-between mb-4">
         <div className="flex items-center gap-3">
           <div className="flex-shrink-0 relative">
