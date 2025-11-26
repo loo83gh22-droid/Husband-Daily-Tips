@@ -119,13 +119,36 @@ export default async function ActionsByThemePage({
               </svg>
               Back to All Actions
             </Link>
-            <h1 className="text-3xl md:text-4xl font-bold mb-2 bg-gradient-to-r from-primary-400 to-primary-600 bg-clip-text text-transparent flex items-center gap-3">
-              <span>{themeIcon}</span>
-              {themeName} Actions
-            </h1>
-            <p className="text-slate-300 text-base md:text-lg mb-4 font-medium">
-              {actions.length} action{actions.length !== 1 ? 's' : ''} available
-            </p>
+            <div className="flex items-start justify-between gap-4 mb-4">
+              <div className="flex-1">
+                <h1 className="text-3xl md:text-4xl font-bold mb-2 bg-gradient-to-r from-primary-400 to-primary-600 bg-clip-text text-transparent flex items-center gap-3">
+                  <span>{themeIcon}</span>
+                  {themeName} Actions
+                </h1>
+                <p className="text-slate-300 text-base md:text-lg font-medium">
+                  {actions.length} action{actions.length !== 1 ? 's' : ''} available
+                </p>
+              </div>
+              <Link
+                href="/dashboard/feedback"
+                className="px-4 py-2 bg-primary-500/10 border border-primary-500/30 text-primary-300 text-sm font-semibold rounded-lg hover:bg-primary-500/20 hover:border-primary-500/50 transition-colors whitespace-nowrap flex items-center gap-2"
+              >
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 4v16m8-8H4"
+                  />
+                </svg>
+                Submit an Action Idea
+              </Link>
+            </div>
           </div>
 
           <section className="bg-slate-900/50 border border-slate-800 rounded-xl p-6 md:p-8">
