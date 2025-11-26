@@ -155,69 +155,53 @@ export default function ChallengeDetailModal({
 
           {/* Header */}
           <div className="mb-6">
-            <span className="inline-block px-4 py-1.5 bg-primary-500/20 text-primary-300 text-sm font-semibold rounded-full mb-3 border border-primary-500/30">
-              {formatThemeName(challenge.theme)}
-            </span>
-            <h3 className="text-2xl md:text-3xl font-bold text-slate-50 mb-2">
+            <div className="flex items-center justify-between mb-3">
+              <span className="inline-block px-3 py-1 bg-primary-500/20 text-primary-300 text-xs font-semibold rounded-full border border-primary-500/30">
+                {formatThemeName(challenge.theme)}
+              </span>
+              <div className="flex items-center gap-3 text-xs text-slate-400">
+                <span>{duration} days</span>
+                <span>•</span>
+                <span className={isEnrolled ? 'text-primary-400' : isPast ? 'text-slate-500' : isUpcoming ? 'text-blue-400' : 'text-green-400'}>
+                  {isEnrolled ? 'Active' : isPast ? 'Ended' : isUpcoming ? 'Upcoming' : 'Available'}
+                </span>
+              </div>
+            </div>
+            <h3 className="text-2xl md:text-3xl font-bold text-slate-50 mb-3">
               {challenge.name}
             </h3>
-            <p className="text-slate-300 text-base leading-relaxed">
+            <p className="text-slate-200 text-base md:text-lg leading-relaxed">
               {challenge.description}
             </p>
           </div>
 
-              {/* Event Details */}
-              <div className="mb-6 space-y-4">
-                <div className="bg-slate-800/60 rounded-lg p-4">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <p className="text-xs text-slate-400 mb-1">Duration</p>
-                      <p className="text-sm font-semibold text-slate-200">{duration} days</p>
-                    </div>
-                    <div>
-                      <p className="text-xs text-slate-400 mb-1">Status</p>
-                      <p className="text-sm font-semibold text-slate-200">
-                        {isEnrolled ? (
-                          <span className="text-primary-400">Active</span>
-                        ) : isPast ? (
-                          <span className="text-slate-500">Ended</span>
-                        ) : isUpcoming ? (
-                          <span className="text-blue-400">Upcoming</span>
-                        ) : (
-                          <span className="text-green-400">Available</span>
-                        )}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-          {/* Challenge Actions Preview */}
+          {/* Challenge Actions - Show all 7 */}
           {challenge.challenge_actions && challenge.challenge_actions.length > 0 && (
-            <div>
-              <p className="text-sm font-semibold text-slate-300 mb-3">What you'll do:</p>
-              <div className="space-y-2 max-h-64 overflow-y-auto">
-                {challenge.challenge_actions.slice(0, 7).map((ca, index) => (
+            <div className="mb-6">
+              <h4 className="text-lg font-bold text-slate-200 mb-4">What you'll do:</h4>
+              <div className="space-y-3">
+                {challenge.challenge_actions.map((ca, index) => (
                   <div
-                    key={index}
-                    className="bg-slate-800/40 rounded-lg p-3 border border-slate-700/50"
+                    key={ca.day_number || index}
+                    className="bg-slate-800/50 rounded-lg p-4 border border-slate-700/50 hover:border-slate-600/50 transition-colors"
                   >
                     <div className="flex items-start gap-3">
-                      <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary-500/20 border border-primary-500/30 flex items-center justify-center">
-                        <span className="text-xs font-bold text-primary-300">
+                      <div className="flex-shrink-0 w-10 h-10 rounded-full bg-primary-500/20 border border-primary-500/30 flex items-center justify-center">
+                        <span className="text-sm font-bold text-primary-300">
                           {ca.day_number || index + 1}
                         </span>
                       </div>
                       <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-1">
+                        <div className="flex items-center gap-2 mb-2">
                           {ca.actions.icon && (
-                            <span className="text-lg">{ca.actions.icon}</span>
+                            <span className="text-xl">{ca.actions.icon}</span>
                           )}
-                          <h4 className="text-sm font-semibold text-slate-200">
+                          <h4 className="text-base font-semibold text-slate-100">
                             {ca.actions.name}
                           </h4>
                         </div>
                         {ca.actions.description && (
-                          <p className="text-xs text-slate-400 leading-relaxed">
+                          <p className="text-sm text-slate-300 leading-relaxed">
                             {ca.actions.description}
                           </p>
                         )}
@@ -225,15 +209,9 @@ export default function ChallengeDetailModal({
                     </div>
                   </div>
                 ))}
-                {challenge.challenge_actions.length > 7 && (
-                  <p className="text-xs text-slate-500 text-center mt-2">
-                    ...and {challenge.challenge_actions.length - 7} more days
-                  </p>
-                )}
               </div>
             </div>
           )}
-              </div>
 
           {/* Action buttons */}
           <div className="mt-6 flex gap-3">
