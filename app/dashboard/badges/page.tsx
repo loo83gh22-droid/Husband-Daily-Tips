@@ -255,7 +255,7 @@ export default async function BadgesPage() {
               Badges
             </h1>
             <p className="text-slate-300 text-base md:text-lg mb-4 font-medium">
-              Your journey to becoming the Best Husband Ever, one badge at a time.
+              Become the Best Husband Ever, one badge at a time.
             </p>
             <div className="flex items-center gap-4 text-sm mb-6">
               <span className="text-slate-300">
