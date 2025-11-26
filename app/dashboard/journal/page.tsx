@@ -209,7 +209,7 @@ export default async function JournalPage() {
                         autopilot because you remember why they mattered and how good they felt.
                       </p>
                       <p className="text-sm text-slate-300 leading-relaxed mb-4">
-                        We prompt you right after you complete an action. No blank page. No "I'll do it later." 
+                        You'll be prompted right after you complete an action. No blank page. No "I'll do it later." 
                         Just: "How'd it go?" Write one sentence. Write ten. Or skip it. Your call. But when 
                         you write, you're building something real.
                       </p>
