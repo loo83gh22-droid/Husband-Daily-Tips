@@ -28,6 +28,7 @@ interface Tip {
   userActionId?: string;
   isAction?: boolean; // Flag to indicate if this is an action
   icon?: string; // For actions
+  completed?: boolean; // Whether the action is already completed
 }
 
 interface DailyTipCardProps {
@@ -39,7 +40,7 @@ interface DailyTipCardProps {
 
 export default function DailyTipCard({ tip, subscriptionTier = 'free', onActionReplaced, partnerName }: DailyTipCardProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isCompleted, setIsCompleted] = useState(false);
+  const [isCompleted, setIsCompleted] = useState(tip.completed || false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [showReflection, setShowReflection] = useState(false);
   const [newlyEarnedBadges, setNewlyEarnedBadges] = useState<
@@ -621,7 +622,7 @@ END:VCALENDAR`;
           disabled={isSubmitting || isCompleted}
           className="px-6 sm:px-8 py-3 sm:py-4 bg-primary-500 disabled:bg-primary-900 disabled:text-slate-400 text-slate-950 text-sm sm:text-base md:text-lg font-bold rounded-xl hover:bg-primary-400 active:bg-primary-600 transition-all disabled:cursor-default min-h-[56px] touch-manipulation shadow-lg shadow-primary-500/30 hover:shadow-xl hover:shadow-primary-500/40 hover:scale-[1.02] active:scale-[0.98] w-full"
         >
-          {isCompleted ? '✓ Marked as done' : isSubmitting ? 'Saving…' : '✓ Mark as done'}
+          {isCompleted ? 'Action Done!' : isSubmitting ? 'Saving…' : '✓ Mark as done'}
         </button>
 
         {/* Show me more like this button - only show after completion for actions */}

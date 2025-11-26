@@ -65,6 +65,7 @@ async function getTomorrowAction(userId: string | null, subscriptionTier: string
       favorited: existingAction.favorited || false,
       userActionId: existingAction.id,
       isAction: true, // Flag to indicate this is an action, not a tip
+      completed: existingAction.completed || false, // Include completion status
     };
   }
 
