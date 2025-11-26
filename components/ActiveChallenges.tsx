@@ -34,7 +34,8 @@ interface UserChallenge {
 }
 
 export default function ActiveChallenges() {
-  const [challenges, setChallenges] = useState<Challenge[]>([]);
+  const [allChallenges, setAllChallenges] = useState<Challenge[]>([]);
+  const [displayedChallenges, setDisplayedChallenges] = useState<Challenge[]>([]);
   const [userChallenges, setUserChallenges] = useState<UserChallenge[]>([]);
   const [loading, setLoading] = useState(true);
   const [userId, setUserId] = useState<string | null>(null);
@@ -44,6 +45,49 @@ export default function ActiveChallenges() {
     fetchChallenges();
     fetchUserChallenges();
   }, []);
+
+  // Filter and display challenges when both are loaded
+  useEffect(() => {
+    if (allChallenges.length === 0) {
+      setDisplayedChallenges([]);
+      return;
+    }
+
+    // Get IDs of challenges user is already participating in (active or completed)
+    const userChallengeIds = new Set(
+      userChallenges.map((uc) => uc.challenge_id)
+    );
+
+    // Check if user has an active (incomplete) event
+    const hasActiveEvent = userChallenges.some((uc) => !uc.completed);
+
+    // Filter challenges
+    let filteredChallenges: Challenge[];
+
+    // If user has an active event, only show that event
+    if (hasActiveEvent) {
+      // Only show the active event(s) the user is participating in
+      filteredChallenges = allChallenges.filter((challenge) =>
+        userChallengeIds.has(challenge.id)
+      );
+    } else {
+      // User doesn't have an active event - show available events to join
+      // Filter out events user is already participating in
+      filteredChallenges = allChallenges.filter(
+        (challenge) => !userChallengeIds.has(challenge.id)
+      );
+    }
+
+    // Remove duplicates by challenge ID
+    const uniqueChallenges = Array.from(
+      new Map(filteredChallenges.map((challenge) => [challenge.id, challenge])).values()
+    );
+
+    // Randomly shuffle and limit to 3 (or 1 if user has active event)
+    const maxToShow = hasActiveEvent ? 1 : 3;
+    const shuffled = [...uniqueChallenges].sort(() => Math.random() - 0.5);
+    setDisplayedChallenges(shuffled.slice(0, maxToShow));
+  }, [allChallenges, userChallenges]);
 
   const fetchUserId = async () => {
     try {
@@ -66,14 +110,12 @@ export default function ActiveChallenges() {
       });
       if (response.ok) {
         const data = await response.json();
-        const allChallenges = data.challenges || [];
-        // Randomly shuffle and select 3 challenges
-        const shuffled = [...allChallenges].sort(() => Math.random() - 0.5);
-        setChallenges(shuffled.slice(0, 3));
+        const challenges = data.challenges || [];
+        setAllChallenges(challenges);
       }
     } catch (error) {
       // Silently handle errors
-      setChallenges([]);
+      setAllChallenges([]);
     } finally {
       setLoading(false);
     }
@@ -103,6 +145,7 @@ export default function ActiveChallenges() {
     // Refresh both 7-day events and user events after joining
     fetchChallenges();
     fetchUserChallenges();
+    // The useEffect will automatically filter and update displayedChallenges
   };
 
   if (loading) {
@@ -113,7 +156,7 @@ export default function ActiveChallenges() {
     );
   }
 
-  if (challenges.length === 0) {
+  if (displayedChallenges.length === 0) {
     return null; // Don't show section if no 7-day events
   }
 
@@ -131,7 +174,7 @@ export default function ActiveChallenges() {
       </div>
 
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {challenges.map((challenge) => {
+        {displayedChallenges.map((challenge) => {
           const userChallenge = userChallenges.find(
             (uc) => uc.challenge_id === challenge.id
           );
