@@ -23,53 +23,6 @@ export default function ActionTooltip({
   const tooltipRef = useRef<HTMLDivElement>(null);
   const targetRef = useRef<HTMLElement | null>(null);
 
-  useEffect(() => {
-    // Check if tooltip should be shown
-    const isHidden = localStorage.getItem(`action_tooltip_hidden_${targetSelector}_${userId}`) === 'true';
-    
-    if (!isHidden) {
-      // Wait for element to be available
-      const checkElement = () => {
-        const element = document.querySelector(targetSelector) as HTMLElement;
-        if (element) {
-          targetRef.current = element;
-          setIsVisible(true);
-          updatePosition(element);
-          
-          // Add a small indicator icon to the target element
-          if (!element.querySelector('[data-tooltip-indicator]')) {
-            const indicator = document.createElement('span');
-            indicator.setAttribute('data-tooltip-indicator', 'true');
-            indicator.className = 'absolute -top-1 -right-1 w-3 h-3 bg-primary-500 rounded-full border-2 border-slate-900 z-10';
-            indicator.style.pointerEvents = 'none';
-            element.style.position = 'relative';
-            element.appendChild(indicator);
-          }
-        } else {
-          // Retry after a short delay
-          setTimeout(checkElement, 200);
-        }
-      };
-      
-      checkElement();
-    }
-
-    // Update position on scroll/resize
-    const updatePositionOnEvent = () => {
-      if (targetRef.current && isVisible) {
-        updatePosition(targetRef.current);
-      }
-    };
-
-    window.addEventListener('scroll', updatePositionOnEvent, true);
-    window.addEventListener('resize', updatePositionOnEvent);
-
-    return () => {
-      window.removeEventListener('scroll', updatePositionOnEvent, true);
-      window.removeEventListener('resize', updatePositionOnEvent);
-    };
-  }, [targetSelector, userId, isVisible]);
-
   const updatePosition = (element: HTMLElement) => {
     if (!tooltipRef.current) return;
 
