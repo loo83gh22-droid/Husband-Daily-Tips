@@ -200,7 +200,7 @@ export default function SurveyForm({ userId, questions, isPublic = false }: Surv
             </li>
             <li className="flex items-center gap-2">
               <span className="text-primary-400">✓</span>
-              Access your health bar and track your progress
+              Access your Husband Health and track your progress
             </li>
           </ul>
         </div>

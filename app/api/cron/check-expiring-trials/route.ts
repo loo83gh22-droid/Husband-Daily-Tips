@@ -103,7 +103,7 @@ export async function GET(request: NextRequest) {
                     <h2 style="color: #1f2937; font-size: 18px; margin: 0 0 15px 0;">What you'll keep with Premium:</h2>
                     <ul style="color: #374151; font-size: 14px; margin: 0; padding-left: 20px;">
                       <li style="margin-bottom: 8px;">Daily personalized actions</li>
-                      <li style="margin-bottom: 8px;">Full health bar tracking</li>
+                      <li style="margin-bottom: 8px;">Full Husband Health tracking</li>
                       <li style="margin-bottom: 8px;">Achievement badges</li>
                       <li style="margin-bottom: 8px;">Private journal & Team Wins</li>
                       <li style="margin-bottom: 8px;">All features unlocked</li>

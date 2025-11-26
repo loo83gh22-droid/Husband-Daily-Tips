@@ -77,7 +77,7 @@ export default async function SubscriptionPage() {
         '1 action per week',
         'Basic action library',
         'Account access',
-        'No health bar tracking',
+        'No Husband Health tracking',
         'No badges',
         'No journal',
         'View Team Wins (read-only, cannot post)',
@@ -91,7 +91,7 @@ export default async function SubscriptionPage() {
       interval: 'month' as const,
       features: [
         'Daily personalized actions',
-        'Full health bar tracking',
+        'Full Husband Health tracking',
         'Achievement badges',
         'Private journal & Team Wins',
         'All features unlocked',
