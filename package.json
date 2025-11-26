@@ -9,7 +9,9 @@
     "lint": "next lint",
     "test-email": "node scripts/send-test-email.js",
     "migrations:status": "node scripts/run-migration-simple.js",
-    "migrations:run": "node scripts/run-migrations-cli.js"
+    "migrations:run": "node scripts/run-migrations-cli.js",
+    "check:env": "node scripts/check-env-vars.js",
+    "check:migrations": "node scripts/check-migrations-status.js"
   },
   "dependencies": {
     "@auth0/nextjs-auth0": "^3.0.0",
