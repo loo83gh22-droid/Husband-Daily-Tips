@@ -206,33 +206,33 @@ export default function ChallengeDetailModal({
               <p className="text-sm font-semibold text-slate-300 mb-3">What you'll do:</p>
               <div className="space-y-2 max-h-64 overflow-y-auto">
                 {stableChallenge.challenge_actions.slice(0, 7).map((ca, index) => (
-                        <div
-                          key={index}
-                          className="bg-slate-800/40 rounded-lg p-3 border border-slate-700/50"
-                        >
-                          <div className="flex items-start gap-3">
-                            <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary-500/20 border border-primary-500/30 flex items-center justify-center">
-                              <span className="text-xs font-bold text-primary-300">
-                                {ca.day_number || index + 1}
-                              </span>
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <div className="flex items-center gap-2 mb-1">
-                                {ca.actions.icon && (
-                                  <span className="text-lg">{ca.actions.icon}</span>
-                                )}
-                                <h4 className="text-sm font-semibold text-slate-200">
-                                  {ca.actions.name}
-                                </h4>
-                              </div>
-                              {ca.actions.description && (
-                                <p className="text-xs text-slate-400 leading-relaxed">
-                                  {ca.actions.description}
-                                </p>
-                              )}
-                            </div>
-                          </div>
+                  <div
+                    key={index}
+                    className="bg-slate-800/40 rounded-lg p-3 border border-slate-700/50"
+                  >
+                    <div className="flex items-start gap-3">
+                      <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary-500/20 border border-primary-500/30 flex items-center justify-center">
+                        <span className="text-xs font-bold text-primary-300">
+                          {ca.day_number || index + 1}
+                        </span>
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-1">
+                          {ca.actions.icon && (
+                            <span className="text-lg">{ca.actions.icon}</span>
+                          )}
+                          <h4 className="text-sm font-semibold text-slate-200">
+                            {ca.actions.name}
+                          </h4>
                         </div>
+                        {ca.actions.description && (
+                          <p className="text-xs text-slate-400 leading-relaxed">
+                            {ca.actions.description}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  </div>
                 ))}
                 {stableChallenge.challenge_actions.length > 7 && (
                   <p className="text-xs text-slate-500 text-center mt-2">
@@ -242,36 +242,36 @@ export default function ChallengeDetailModal({
               </div>
             </div>
           )}
-        </div>
+              </div>
 
-        {/* Action buttons */}
-        <div className="mt-6 flex gap-3">
-          <button
-            onClick={onClose}
-            className="px-6 py-3 border border-slate-700 text-slate-300 text-base font-medium rounded-xl hover:bg-slate-800 active:bg-slate-700 transition-all min-h-[48px] touch-manipulation"
-          >
-            Close
-          </button>
-          {!isEnrolled && !isPast && (
+          {/* Action buttons */}
+          <div className="mt-6 flex gap-3">
             <button
-              onClick={handleJoin}
-              disabled={isJoining}
-              className="flex-1 px-6 py-3 bg-primary-500 text-slate-950 text-base font-bold rounded-xl hover:bg-primary-400 active:bg-primary-600 transition-all min-h-[48px] touch-manipulation disabled:opacity-50 disabled:cursor-not-allowed"
+              onClick={onClose}
+              className="px-6 py-3 border border-slate-700 text-slate-300 text-base font-medium rounded-xl hover:bg-slate-800 active:bg-slate-700 transition-all min-h-[48px] touch-manipulation"
             >
-              {isJoining ? 'Joining...' : 'Join 7-Day Event'}
+              Close
             </button>
-          )}
-          {isEnrolled && (
-            <button
-              disabled
-              className="flex-1 px-6 py-3 bg-slate-700/30 text-slate-500 border border-slate-700 text-base font-medium rounded-xl cursor-not-allowed min-h-[48px]"
-            >
-              Already Active
-            </button>
-          )}
+            {!isEnrolled && !isPast && (
+              <button
+                onClick={handleJoin}
+                disabled={isJoining}
+                className="flex-1 px-6 py-3 bg-primary-500 text-slate-950 text-base font-bold rounded-xl hover:bg-primary-400 active:bg-primary-600 transition-all min-h-[48px] touch-manipulation disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isJoining ? 'Joining...' : 'Join 7-Day Event'}
+              </button>
+            )}
+            {isEnrolled && (
+              <button
+                disabled
+                className="flex-1 px-6 py-3 bg-slate-700/30 text-slate-500 border border-slate-700 text-base font-medium rounded-xl cursor-not-allowed min-h-[48px]"
+              >
+                Already Active
+              </button>
+            )}
+          </div>
         </div>
       </div>
-    </div>
     </>
   );
 }
