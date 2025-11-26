@@ -49,9 +49,8 @@ export async function POST(request: Request) {
     // Always create journal entry for action completions
     // This is the running record of all action completions
     let journalEntryId: string | null = null;
-    const journalContent = notes 
-      ? `Action: ${action.name}\n\n${notes}`
-      : `Action: ${action.name}\n\nCompleted on ${new Date().toLocaleDateString()}`;
+    // Only store the notes - action name is displayed separately in the journal entry
+    const journalContent = notes?.trim() || '';
     
     const { data: journalEntry, error: journalError } = await supabase
       .from('reflections')

@@ -172,6 +172,19 @@ export default function JournalEntry({ reflection }: JournalEntryProps) {
   };
 
   const isFavorite = isFavorited;
+  
+  // Clean up content to remove any legacy "Action:" or "Completed on" prefixes
+  const cleanContent = (content: string | null | undefined): string => {
+    if (!content) return '';
+    let cleaned = content.trim();
+    // Remove "Action: [name]" patterns
+    cleaned = cleaned.replace(/^Action:\s*[^\n]+\n\n?/i, '');
+    // Remove "Completed on [date]" patterns
+    cleaned = cleaned.replace(/^Completed\s+on\s+[^\n]+\n\n?/i, '');
+    return cleaned.trim();
+  };
+  
+  const displayContent = cleanContent(currentContent);
 
   if (isDeleted) {
     return null;
@@ -336,7 +349,7 @@ export default function JournalEntry({ reflection }: JournalEntryProps) {
       )}
 
       {/* Only show reflection content if notes were written */}
-      {(currentContent?.trim() || isEditing) && (
+      {(displayContent || isEditing) && (
         <div className="prose prose-invert max-w-none mt-3">
           {isEditing ? (
             <div className="space-y-3">
@@ -365,7 +378,7 @@ export default function JournalEntry({ reflection }: JournalEntryProps) {
             </div>
           ) : (
             <p className="text-sm text-slate-200 leading-relaxed whitespace-pre-line">
-              {currentContent}
+              {displayContent}
             </p>
           )}
         </div>
