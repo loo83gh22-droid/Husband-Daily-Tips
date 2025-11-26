@@ -148,7 +148,7 @@ export default async function Home() {
               </li>
               <li className="flex items-center gap-2">
                 <span className="inline-flex h-1.5 w-1.5 rounded-full bg-yellow-400" />
-                Miss days in a row and it slowly drains.
+                Missing Daily Actions slowly drains it.
               </li>
               <li className="flex items-center gap-2">
                 <span className="inline-flex h-1.5 w-1.5 rounded-full bg-sky-400" />
