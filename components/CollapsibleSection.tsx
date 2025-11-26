@@ -16,7 +16,7 @@ export default function CollapsibleSection({
   const [isExpanded, setIsExpanded] = useState(defaultExpanded);
 
   return (
-    <div className="mb-6">
+    <div className="mb-6 flex flex-col flex-1">
       <button
         onClick={() => setIsExpanded(!isExpanded)}
         className="w-full flex items-center justify-between p-4 bg-slate-900/80 border border-slate-800 rounded-xl hover:bg-slate-900 transition-colors"
@@ -37,7 +37,7 @@ export default function CollapsibleSection({
         </svg>
       </button>
       {isExpanded && (
-        <div className="mt-0">
+        <div className="mt-0 flex-1">
           {children}
         </div>
       )}
