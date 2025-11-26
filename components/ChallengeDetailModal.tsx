@@ -38,6 +38,16 @@ export default function ChallengeDetailModal({
   onJoin,
 }: ChallengeDetailModalProps) {
   const [isJoining, setIsJoining] = useState(false);
+  const [challengeActions, setChallengeActions] = useState<Array<{
+    day_number: number;
+    actions: {
+      id: string;
+      name: string;
+      description: string;
+      icon: string;
+    };
+  }>>([]);
+  const [isLoadingActions, setIsLoadingActions] = useState(false);
 
   // Prevent body scroll when modal is open
   useEffect(() => {
@@ -83,10 +93,13 @@ export default function ChallengeDetailModal({
     }
 
     // Otherwise, fetch them separately
+    if (!challenge.id) return;
+    
+    const challengeId = challenge.id;
     setIsLoadingActions(true);
     async function fetchChallengeActions() {
       try {
-        const response = await fetch(`/api/challenges/${challenge.id}/actions`, { credentials: 'include' });
+        const response = await fetch(`/api/challenges/${challengeId}/actions`, { credentials: 'include' });
         if (response.ok) {
           const data = await response.json();
           const actions = data.challenge_actions || [];
