@@ -646,7 +646,7 @@ END:VCALENDAR`;
           </div>
           
           <div className="prose max-w-none">
-            <p className="text-slate-100 text-sm sm:text-base md:text-lg leading-relaxed whitespace-pre-line mb-3 sm:mb-4">
+            <p className="text-slate-100 text-sm sm:text-base md:text-lg leading-relaxed line-clamp-2 mb-3 sm:mb-4">
               {personalizeText(tip.content || tip.description, partnerName)}
             </p>
             {tip.benefit && (
