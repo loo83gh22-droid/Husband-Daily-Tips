@@ -78,7 +78,7 @@ export default async function Home() {
               Daily actions that show you care. She&apos;ll notice. You&apos;ll both feel the difference.
             </p>
             <p className="text-base md:text-lg text-slate-300 leading-relaxed mb-4 max-w-2xl">
-              Marriage is hard. You know it, we know it. But here&apos;s the thing, it doesn&apos;t have to be complicated. 
+              Marriage is hard. You know it. But here&apos;s the thing, it doesn&apos;t have to be complicated. 
               One small action a day. One moment where you actually show up. No grand gestures needed. 
               Just consistent, real effort. Become the husband you and your partner deserve.
             </p>
@@ -152,7 +152,7 @@ export default async function Home() {
               </li>
               <li className="flex items-center gap-2">
                 <span className="inline-flex h-1.5 w-1.5 rounded-full bg-sky-400" />
-                Big husband moments give visible health boosts.
+                Consistent daily actions build your health over time.
               </li>
             </ul>
 
@@ -238,12 +238,12 @@ export default async function Home() {
         {/* Actions & Badges Section */}
         <section className="mt-24 border-t border-slate-800 pt-12">
           <div className="max-w-5xl mx-auto">
-            <div className="flex items-baseline justify-between mb-8">
-              <h2 className="text-2xl md:text-3xl font-semibold text-slate-50">
+            <div className="mb-8">
+              <h2 className="text-3xl md:text-4xl font-bold mb-2 bg-gradient-to-r from-primary-400 to-primary-600 bg-clip-text text-transparent">
                 Actions & Badges
               </h2>
-              <p className="text-xs text-slate-400 uppercase tracking-[0.2em]">
-                GAMIFIED GROWTH
+              <p className="text-slate-300 text-base md:text-lg mb-4 font-medium">
+                Gamified growth. Track your progress. Earn your wins.
               </p>
             </div>
 
@@ -285,7 +285,7 @@ export default async function Home() {
                   </h3>
                 </div>
                 <p className="text-sm text-slate-300 mb-4">
-                  Yeah, we gamified it. Because sometimes you need that little dopamine hit when you&apos;ve 
+                  Yeah, it&apos;s gamified. Because sometimes you need that little dopamine hit when you&apos;ve 
                   actually followed through for 7 days straight. Badges celebrate the small wins that add up 
                   to big changes. And honestly? It feels good to see that progress.
                 </p>
@@ -311,12 +311,12 @@ export default async function Home() {
         {/* Journal & Team Wins Section */}
         <section className="mt-24 border-t border-slate-800 pt-12">
           <div className="max-w-5xl mx-auto">
-            <div className="flex items-baseline justify-between mb-8">
-              <h2 className="text-2xl md:text-3xl font-semibold text-slate-50">
+            <div className="mb-8">
+              <h2 className="text-3xl md:text-4xl font-bold mb-2 bg-gradient-to-r from-primary-400 to-primary-600 bg-clip-text text-transparent">
                 Journal & Team Wins
               </h2>
-              <p className="text-xs text-slate-400 uppercase tracking-[0.2em]">
-                REFLECT & CONNECT
+              <p className="text-slate-300 text-base md:text-lg mb-4 font-medium">
+                Reflect on what worked. Connect with others who get it.
               </p>
             </div>
 
@@ -359,7 +359,7 @@ export default async function Home() {
                 <p className="text-sm text-slate-300 mb-4">
                   Sometimes you nail it. Sometimes you try something and it actually works. Share those moments 
                   with other guys who get it. Read their wins. Get inspired. Realize you&apos;re not the only one 
-                  trying to figure this marriage thing out. We&apos;re all in this together.
+                  trying to figure this marriage thing out. You&apos;re all in this together.
                 </p>
                 <div className="space-y-2 text-xs text-slate-400">
                   <div className="flex items-center gap-2">
@@ -383,13 +383,13 @@ export default async function Home() {
         {/* Pricing Section */}
         <section className="mt-24 border-t border-slate-800 pt-12">
           <div className="max-w-5xl mx-auto">
-            <h2 className="text-2xl md:text-3xl font-bold text-slate-50 mb-2 text-center">
+            <h2 className="text-3xl md:text-4xl font-bold mb-2 bg-gradient-to-r from-primary-400 to-primary-600 bg-clip-text text-transparent text-center">
               Try Everything Free for 7 Days
             </h2>
-            <p className="text-sm text-slate-400 text-center mb-4 max-w-2xl mx-auto">
+            <p className="text-slate-300 text-base md:text-lg mb-4 font-medium text-center max-w-2xl mx-auto">
               All features unlocked. No credit card required. After 7 days, choose what works for you.
             </p>
-            <p className="text-xs text-slate-500 text-center mb-10 max-w-2xl mx-auto">
+            <p className="text-sm text-slate-400 text-center mb-10 max-w-2xl mx-auto">
               No BS, no contracts. Cancel anytime.
             </p>
           <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
