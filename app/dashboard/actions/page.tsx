@@ -245,10 +245,10 @@ export default async function ActionsPage() {
       <main className="w-full px-3 sm:px-4 md:px-6 lg:px-8 py-6 sm:py-8 md:py-10 overflow-x-hidden">
         <div className="max-w-6xl mx-auto w-full">
           <div className="mb-6 sm:mb-8">
-            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-slate-50 mb-1 sm:mb-2 bg-gradient-to-r from-primary-400 to-primary-600 bg-clip-text text-transparent">
+            <h1 className="text-3xl md:text-4xl font-bold mb-2 bg-gradient-to-r from-primary-400 to-primary-600 bg-clip-text text-transparent">
               Actions
             </h1>
-            <p className="text-slate-300 text-sm sm:text-base md:text-lg mb-4 sm:mb-6 font-medium">
+            <p className="text-slate-300 text-base md:text-lg mb-4 font-medium">
               Do the thing. Get the badge. Become legendary. Become the Best Husband Ever.
             </p>
             

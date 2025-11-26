@@ -748,10 +748,10 @@ export default async function HowToGuidesPage() {
       <main className="container mx-auto px-4 py-8 md:py-10">
         <div className="max-w-5xl mx-auto">
           <div className="mb-8">
-            <h1 className="text-3xl md:text-4xl font-bold text-slate-50 mb-2 bg-gradient-to-r from-primary-400 to-primary-600 bg-clip-text text-transparent">
+            <h1 className="text-3xl md:text-4xl font-bold mb-2 bg-gradient-to-r from-primary-400 to-primary-600 bg-clip-text text-transparent">
               How To Guides
             </h1>
-            <p className="text-slate-400 text-sm md:text-base">
+            <p className="text-slate-300 text-base md:text-lg mb-4 font-medium">
               Practical guides organized by relationship priorities. Learn how to communicate better, build intimacy, show up as a partner, and strengthen your connection.
             </p>
           </div>

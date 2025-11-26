@@ -17,10 +17,10 @@ export default async function FeedbackPage() {
       <main className="container mx-auto px-4 py-8 md:py-10">
         <div className="max-w-3xl mx-auto">
           <div className="mb-8">
-            <h1 className="text-3xl md:text-4xl font-semibold text-slate-50 mb-3">
+            <h1 className="text-3xl md:text-4xl font-bold mb-2 bg-gradient-to-r from-primary-400 to-primary-600 bg-clip-text text-transparent">
               Share Your Thoughts
             </h1>
-            <p className="text-base text-slate-300 leading-relaxed">
+            <p className="text-slate-300 text-base md:text-lg mb-4 font-medium">
               We're building this for you. Your feedback, suggestions, and ideas help us make this better. 
               What's working? What's not? What do you need that we're missing? 
               <span className="text-primary-400 font-medium"> We're listening.</span>

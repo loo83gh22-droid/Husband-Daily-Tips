@@ -119,11 +119,11 @@ export default async function ActionsByThemePage({
               </svg>
               Back to All Actions
             </Link>
-            <h1 className="text-3xl md:text-4xl font-semibold text-slate-50 mb-2 flex items-center gap-3">
+            <h1 className="text-3xl md:text-4xl font-bold mb-2 bg-gradient-to-r from-primary-400 to-primary-600 bg-clip-text text-transparent flex items-center gap-3">
               <span>{themeIcon}</span>
               {themeName} Actions
             </h1>
-            <p className="text-slate-400 text-sm md:text-base">
+            <p className="text-slate-300 text-base md:text-lg mb-4 font-medium">
               {actions.length} action{actions.length !== 1 ? 's' : ''} available
             </p>
           </div>

@@ -61,7 +61,7 @@ export default function ReferralDashboard() {
   return (
     <div className="bg-slate-900/80 border border-slate-800 rounded-xl p-6 md:p-8">
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold text-slate-50">Referral Program</h2>
+        <h2 className="text-3xl md:text-4xl font-bold mb-2 bg-gradient-to-r from-primary-400 to-primary-600 bg-clip-text text-transparent">Referral Program</h2>
         <div className="bg-primary-500/20 border border-primary-500/40 px-3 py-1 rounded-full text-xs font-medium text-primary-300">
           Earn Free Months
         </div>

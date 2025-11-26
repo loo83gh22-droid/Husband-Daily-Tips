@@ -38,10 +38,10 @@ export default async function PaymentsPage() {
       <main className="container mx-auto px-4 py-8 md:py-10">
         <div className="max-w-4xl mx-auto">
           <div className="mb-8">
-            <h1 className="text-3xl md:text-4xl font-semibold text-slate-50 mb-2">
+            <h1 className="text-3xl md:text-4xl font-bold mb-2 bg-gradient-to-r from-primary-400 to-primary-600 bg-clip-text text-transparent">
               Payment Methods
             </h1>
-            <p className="text-slate-400 text-sm md:text-base">
+            <p className="text-slate-300 text-base md:text-lg mb-4 font-medium">
               Manage your payment methods and billing information.
             </p>
           </div>
