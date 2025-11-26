@@ -251,9 +251,12 @@ export default async function BadgesPage() {
       <main className="container mx-auto px-4 py-8 md:py-10">
         <div className="max-w-6xl mx-auto">
           <div className="mb-8">
-            <h1 className="text-3xl md:text-4xl font-bold text-slate-50 mb-4 bg-gradient-to-r from-primary-400 to-primary-600 bg-clip-text text-transparent">
+            <h1 className="text-3xl md:text-4xl font-bold text-slate-50 mb-2 bg-gradient-to-r from-primary-400 to-primary-600 bg-clip-text text-transparent">
               Badges
             </h1>
+            <p className="text-slate-300 text-base md:text-lg mb-4 font-medium">
+              Your journey to becoming the Best Husband Ever, one badge at a time.
+            </p>
             <div className="flex items-center gap-4 text-sm mb-6">
               <span className="text-slate-300">
                 <span className="font-semibold text-primary-300">{earnedCount}</span> / {totalCount}{' '}
