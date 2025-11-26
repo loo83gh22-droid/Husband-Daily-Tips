@@ -898,6 +898,7 @@ END:VCALENDAR`;
               window.location.reload();
             }}
             subscriptionTier={subscriptionTier}
+            isAction={tip.isAction}
           />
         </div>
       </motion.div>

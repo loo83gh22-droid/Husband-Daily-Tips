@@ -11,6 +11,7 @@ interface ReflectionModalProps {
   tipTitle: string;
   onSuccess: () => void;
   subscriptionTier?: string;
+  isAction?: boolean; // Whether this is an action (vs a tip)
 }
 
 export default function ReflectionModal({
@@ -20,12 +21,62 @@ export default function ReflectionModal({
   tipTitle,
   onSuccess,
   subscriptionTier = 'free',
+  isAction = false,
 }: ReflectionModalProps) {
   const [reflection, setReflection] = useState('');
   const [shareToForum, setShareToForum] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isFavorited, setIsFavorited] = useState(false);
+  const [isTogglingFavorite, setIsTogglingFavorite] = useState(false);
   const isFree = subscriptionTier === 'free';
+
+  // Fetch favorite status when modal opens (for actions only)
+  useEffect(() => {
+    if (isOpen && isAction) {
+      fetchFavoriteStatus();
+    }
+  }, [isOpen, isAction, tipId]);
+
+  const fetchFavoriteStatus = async () => {
+    try {
+      const response = await fetch('/api/actions/favorites');
+      if (response.ok) {
+        const data = await response.json();
+        const favoritedActionIds = new Set(data.favoritedActions?.map((a: any) => a.id) || []);
+        setIsFavorited(favoritedActionIds.has(tipId));
+      }
+    } catch (error) {
+      console.error('Error fetching favorite status:', error);
+    }
+  };
+
+  const handleToggleFavorite = async () => {
+    if (!isAction) return;
+    
+    setIsTogglingFavorite(true);
+    try {
+      const response = await fetch('/api/actions/favorite', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ actionId: tipId }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to toggle favorite');
+      }
+
+      const data = await response.json();
+      setIsFavorited(data.favorited);
+    } catch (error) {
+      console.error('Error toggling favorite:', error);
+      alert('Failed to update favorite. Please try again.');
+    } finally {
+      setIsTogglingFavorite(false);
+    }
+  };
 
   if (!isOpen) return null;
 
@@ -71,13 +122,30 @@ export default function ReflectionModal({
       <div className="bg-slate-900 border border-slate-800 rounded-xl p-6 md:p-8 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-xl font-semibold text-slate-50">Reflect on this action</h3>
-          <button
-            onClick={onClose}
-            className="text-slate-400 hover:text-slate-200 transition-colors"
-            aria-label="Close"
-          >
-            ✕
-          </button>
+          <div className="flex items-center gap-2">
+            {isAction && (
+              <button
+                onClick={handleToggleFavorite}
+                disabled={isTogglingFavorite}
+                className={`p-2 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-default ${
+                  isFavorited
+                    ? 'bg-yellow-500/10 text-yellow-300 hover:bg-yellow-500/20'
+                    : 'text-slate-400 hover:bg-slate-800'
+                }`}
+                aria-label={isFavorited ? 'Unfavorite' : 'Favorite'}
+                title={isFavorited ? 'Unfavorite this action' : 'Favorite this action'}
+              >
+                <span className="text-lg">{isFavorited ? '⭐' : '☆'}</span>
+              </button>
+            )}
+            <button
+              onClick={onClose}
+              className="text-slate-400 hover:text-slate-200 transition-colors"
+              aria-label="Close"
+            >
+              ✕
+            </button>
+          </div>
         </div>
 
         <p className="text-sm text-slate-400 mb-2">What you completed:</p>
