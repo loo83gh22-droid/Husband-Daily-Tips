@@ -121,7 +121,7 @@ export default function CategoryCard({
             >
               {isEnrolled ? 'Active' : 'See 7 Day Event'}
             </button>
-            {challenge && (
+            {challenge && isModalOpen && (
               <ChallengeDetailModal
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}

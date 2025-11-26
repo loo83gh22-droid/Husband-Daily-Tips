@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 
 interface Challenge {
   id: string;
@@ -112,20 +113,21 @@ export default function ChallengeDetailModal({
 
   const themeColor = getThemeColor(challenge.theme);
 
-  return (
+  // Use portal to render modal at root level
+  if (typeof window === 'undefined') {
+    return null;
+  }
+
+  const modalContent = (
     <>
       {/* Backdrop */}
       <div
         onClick={onClose}
-        className="fixed inset-0 bg-black/70 backdrop-blur-md z-[9998] transition-opacity"
-        style={{ opacity: isOpen ? 1 : 0, pointerEvents: isOpen ? 'auto' : 'none' }}
+        className="fixed inset-0 bg-black/70 backdrop-blur-md z-[9998]"
       />
 
       {/* Modal */}
-      <div 
-        className="fixed inset-0 z-[9999] flex items-center justify-center p-4 pointer-events-none"
-        style={{ display: isOpen ? 'flex' : 'none' }}
-      >
+      <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 pointer-events-none">
         <div
           className={`bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 rounded-2xl shadow-2xl border-2 ${themeColor} max-w-2xl w-full p-6 md:p-8 relative overflow-hidden max-h-[90vh] overflow-y-auto pointer-events-auto`}
           onClick={(e) => e.stopPropagation()}
@@ -263,5 +265,7 @@ export default function ChallengeDetailModal({
       </div>
     </>
   );
+
+  return createPortal(modalContent, document.body);
 }
 
