@@ -586,8 +586,8 @@ END:VCALENDAR`;
                 {tip.category}
               </span>
               <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-slate-50 mb-2 sm:mb-3 flex items-center gap-2 sm:gap-3">
-                {tip.icon && <span className="text-2xl sm:text-3xl">{tip.icon}</span>}
-                <span className="break-words">{personalizeText(tip.title || tip.name, partnerName)}</span>
+                {tip.icon && <span className="text-2xl sm:text-3xl flex-shrink-0">{tip.icon}</span>}
+                <span className="whitespace-nowrap truncate">{personalizeText(tip.title || tip.name, partnerName)}</span>
               </h3>
             </div>
             <div className="flex items-center gap-2 sm:gap-3 flex-wrap sm:flex-nowrap w-full sm:w-auto">
