@@ -733,9 +733,9 @@ export default async function Dashboard() {
           </div>
         )}
 
-        <div className="grid lg:grid-cols-[1.4fr,1fr] gap-4 sm:gap-6 md:gap-8 lg:gap-12 items-start">
+        <div className="grid lg:grid-cols-[1.4fr,1fr] gap-4 sm:gap-6 md:gap-8 lg:gap-8 xl:gap-10 items-start">
           {/* Left column: Daily tip + health bar */}
-          <div className="max-w-3xl w-full">
+          <div className="w-full min-w-0 max-w-full">
             <div className="flex items-center justify-between mb-4 sm:mb-6" data-tour="action-header">
               <div>
                 <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-slate-50 mb-1 sm:mb-2">
@@ -789,7 +789,7 @@ export default async function Dashboard() {
           </div>
 
           {/* Right column: Health bar + stats */}
-          <div className="space-y-4 sm:space-y-6 md:space-y-8">
+          <div className="w-full min-w-0 space-y-4 sm:space-y-6 md:space-y-8">
             <div data-tour="hit-points">
               <HealthBar value={stats.healthScore} />
             </div>
