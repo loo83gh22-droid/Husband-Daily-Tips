@@ -193,7 +193,7 @@ export default function ActionsList({
                   )}
                   <button
                     onClick={() => handleOpenModal(action)}
-                    disabled={isSubmitting || isLoadingSubscription || (subscriptionStatus && !canCompleteFromActionsPage(subscriptionStatus))}
+                    disabled={isSubmitting || isLoadingSubscription || (subscriptionStatus ? !canCompleteFromActionsPage(subscriptionStatus) : false)}
                     className={`w-6 h-6 rounded border-2 border-primary-500 bg-primary-500/20 hover:bg-primary-500/30 flex items-center justify-center transition-all disabled:opacity-50 ${
                       subscriptionStatus && !canCompleteFromActionsPage(subscriptionStatus)
                         ? 'cursor-not-allowed'
