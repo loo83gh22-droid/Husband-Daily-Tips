@@ -13,38 +13,27 @@ export default function HamburgerMenu() {
     setIsOpen(false);
   }, [pathname]);
 
-  // Close menu when clicking outside
+  // Prevent body scroll when menu is open and handle backdrop clicks
   useEffect(() => {
-    if (!isOpen) return;
-
-    // Add a small delay to prevent immediate closing when opening
-    const timeoutId = setTimeout(() => {
-      const handleClickOutside = (event: MouseEvent | TouchEvent) => {
-        const target = event.target as HTMLElement;
-        // Don't close if clicking inside the menu
-        if (target.closest('[data-hamburger-menu]')) {
-          return;
+    if (isOpen) {
+      // Prevent body scroll
+      document.body.style.overflow = 'hidden';
+      
+      // Close on Escape key
+      const handleEscape = (e: KeyboardEvent) => {
+        if (e.key === 'Escape') {
+          setIsOpen(false);
         }
-        // Don't close if clicking on a link (let navigation happen)
-        if (target.closest('a')) {
-          return;
-        }
-        setIsOpen(false);
       };
-
-      // Use both mouse and touch events for mobile compatibility
-      document.addEventListener('mousedown', handleClickOutside, true);
-      document.addEventListener('touchstart', handleClickOutside, true);
+      document.addEventListener('keydown', handleEscape);
       
       return () => {
-        document.removeEventListener('mousedown', handleClickOutside, true);
-        document.removeEventListener('touchstart', handleClickOutside, true);
+        document.body.style.overflow = '';
+        document.removeEventListener('keydown', handleEscape);
       };
-    }, 100);
-
-    return () => {
-      clearTimeout(timeoutId);
-    };
+    } else {
+      document.body.style.overflow = '';
+    }
   }, [isOpen]);
 
   const navLinks = [
@@ -109,19 +98,15 @@ export default function HamburgerMenu() {
 
       {isOpen && (
         <>
-          {/* Backdrop for mobile */}
+          {/* Backdrop - always show on all screen sizes */}
           <div 
-            className="fixed inset-0 bg-black/50 z-[100] md:hidden"
-            onClick={(e) => {
-              e.stopPropagation();
-              setIsOpen(false);
-            }}
-            onTouchStart={(e) => {
-              e.stopPropagation();
-              setIsOpen(false);
-            }}
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100]"
+            onClick={() => setIsOpen(false)}
+            onTouchStart={() => setIsOpen(false)}
+            aria-hidden="true"
           />
-          <div className="fixed top-16 right-2 w-64 bg-slate-900 border border-slate-800 rounded-lg shadow-xl z-[110] overflow-hidden max-h-[calc(100vh-5rem)] overflow-y-auto md:absolute md:right-0 md:mt-2 md:top-auto md:max-h-[90vh] md:relative md:z-50">
+          {/* Menu - fixed position overlay that doesn't affect layout */}
+          <div className="fixed top-16 right-2 md:right-4 w-64 bg-slate-900 border border-slate-800 rounded-lg shadow-2xl z-[110] overflow-hidden max-h-[calc(100vh-5rem)] overflow-y-auto">
           <div className="py-2">
             {/* Navigation Links - Show on mobile, hidden on desktop (since they're in the nav bar) */}
             <div className="md:hidden border-b border-slate-800 pb-2 mb-2">
