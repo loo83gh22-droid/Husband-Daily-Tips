@@ -177,12 +177,14 @@ export default function JournalEntry({ reflection }: JournalEntryProps) {
   const cleanContent = (content: string | null | undefined): string => {
     if (!content) return '';
     let cleaned = content.trim();
-    // Remove "Action: [name]" patterns
-    cleaned = cleaned.replace(/^Action:\s*[^\n]+\n\n?/i, '');
-    // Remove "Completed on [date]" patterns
-    cleaned = cleaned.replace(/^Completed\s+on\s+[^\n]+\n\n?/i, '');
-    // Remove "Completed: [action name]" patterns
-    cleaned = cleaned.replace(/^Completed:\s*[^\n]+$/i, '');
+    // Remove "Action: [name]" patterns (with optional newlines after)
+    cleaned = cleaned.replace(/^Action:\s*[^\n]+(\n\n?)?/i, '');
+    // Remove "Completed on [date]" patterns (with optional newlines after)
+    cleaned = cleaned.replace(/^Completed\s+on\s+[^\n]+(\n\n?)?/i, '');
+    // Remove "Completed: [action name]" patterns (standalone or with newlines)
+    cleaned = cleaned.replace(/^Completed:\s*[^\n]+(\n\n?)?$/i, '');
+    // Also catch any remaining "Completed: [anything]" at the start
+    cleaned = cleaned.replace(/^Completed:\s*[^\n]+/i, '');
     return cleaned.trim();
   };
   
