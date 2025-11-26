@@ -382,6 +382,12 @@ export default function ActionsPageClient({
             const event = challenges.find((c) => c.theme === theme);
             const isEnrolled = event ? userChallenges.some((uc) => uc.challenge_id === event.id) : false;
             
+            // Ensure challenge_actions are included in the challenge object
+            const challengeWithActions = event ? {
+              ...event,
+              challenge_actions: event.challenge_actions || [],
+            } : null;
+            
             return (
               <CategoryCard
                 key={theme}
@@ -394,7 +400,7 @@ export default function ActionsPageClient({
                 eventName={event?.name}
                 isEnrolled={isEnrolled}
                 onJoinEvent={handleJoinChallenge}
-                challenge={event || null}
+                challenge={challengeWithActions}
               />
             );
           })}

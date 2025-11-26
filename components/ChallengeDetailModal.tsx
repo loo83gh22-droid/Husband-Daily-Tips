@@ -176,40 +176,52 @@ export default function ChallengeDetailModal({
           </div>
 
           {/* Challenge Actions - Show all 7 */}
-          {challenge.challenge_actions && challenge.challenge_actions.length > 0 && (
+          {challenge.challenge_actions && challenge.challenge_actions.length > 0 ? (
             <div className="mb-6">
               <h4 className="text-lg font-bold text-slate-200 mb-4">What you'll do:</h4>
               <div className="space-y-3">
-                {challenge.challenge_actions.map((ca, index) => (
-                  <div
-                    key={ca.day_number || index}
-                    className="bg-slate-800/50 rounded-lg p-4 border border-slate-700/50 hover:border-slate-600/50 transition-colors"
-                  >
-                    <div className="flex items-start gap-3">
-                      <div className="flex-shrink-0 w-10 h-10 rounded-full bg-primary-500/20 border border-primary-500/30 flex items-center justify-center">
-                        <span className="text-sm font-bold text-primary-300">
-                          {ca.day_number || index + 1}
-                        </span>
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-2">
-                          {ca.actions.icon && (
-                            <span className="text-xl">{ca.actions.icon}</span>
-                          )}
-                          <h4 className="text-base font-semibold text-slate-100">
-                            {ca.actions.name}
-                          </h4>
+                {challenge.challenge_actions.map((ca, index) => {
+                  // Handle both nested structure (ca.actions) and flat structure
+                  const action = ca.actions || ca;
+                  const dayNumber = ca.day_number || index + 1;
+                  
+                  return (
+                    <div
+                      key={dayNumber}
+                      className="bg-slate-800/50 rounded-lg p-4 border border-slate-700/50 hover:border-slate-600/50 transition-colors"
+                    >
+                      <div className="flex items-start gap-3">
+                        <div className="flex-shrink-0 w-10 h-10 rounded-full bg-primary-500/20 border border-primary-500/30 flex items-center justify-center">
+                          <span className="text-sm font-bold text-primary-300">
+                            {dayNumber}
+                          </span>
                         </div>
-                        {ca.actions.description && (
-                          <p className="text-sm text-slate-300 leading-relaxed">
-                            {ca.actions.description}
-                          </p>
-                        )}
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 mb-2">
+                            {action.icon && (
+                              <span className="text-xl">{action.icon}</span>
+                            )}
+                            <h4 className="text-base font-semibold text-slate-100">
+                              {action.name}
+                            </h4>
+                          </div>
+                          {action.description && (
+                            <p className="text-sm text-slate-300 leading-relaxed">
+                              {action.description}
+                            </p>
+                          )}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
+            </div>
+          ) : (
+            <div className="mb-6 p-4 bg-slate-800/50 rounded-lg border border-slate-700/50">
+              <p className="text-sm text-slate-400 text-center">
+                Challenge actions are being loaded...
+              </p>
             </div>
           )}
 
