@@ -214,19 +214,19 @@ export async function GET(request: Request) {
 
         if (success) {
           sentCount++;
-          console.log(`✅ Email sent to ${user.email}`);
+          logger.log(`✅ Email sent to ${user.email}`);
         } else {
           errorCount++;
           // Check if it's a Resend domain verification issue
           const isDomainIssue = user.email !== process.env.RESEND_VERIFIED_EMAIL;
           if (isDomainIssue) {
-            console.warn(`⚠️  Skipped ${user.email} - Resend free tier only allows sending to verified email. Verify a domain to send to all users.`);
+            logger.warn(`⚠️  Skipped ${user.email} - Resend free tier only allows sending to verified email. Verify a domain to send to all users.`);
           } else {
-            console.error(`❌ Failed to send email to ${user.email}`);
+            logger.error(`❌ Failed to send email to ${user.email}`);
           }
         }
       } catch (error: any) {
-        console.error(`Error processing user ${user.id} (${user.email}):`, error?.message || error);
+        logger.error(`Error processing user ${user.id} (${user.email}):`, error?.message || error);
         errorCount++;
       }
     }

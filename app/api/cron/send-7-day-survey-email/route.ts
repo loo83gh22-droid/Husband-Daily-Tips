@@ -144,7 +144,7 @@ export async function GET(request: Request) {
         });
 
         if (emailError) {
-          console.error(`Error sending email to ${user.email}:`, emailError);
+          logger.error(`Error sending email to ${user.email}:`, emailError);
           errorCount++;
         } else {
           // Mark email as sent
@@ -154,10 +154,10 @@ export async function GET(request: Request) {
             .eq('id', surveyRecord.id);
 
           sentCount++;
-          console.log(`✅ 7-day survey email sent to ${user.email}`);
+          logger.log(`✅ 7-day survey email sent to ${user.email}`);
         }
       } catch (error: any) {
-        console.error(`Error processing user ${user.id}:`, error);
+        logger.error(`Error processing user ${user.id}:`, error);
         errorCount++;
       }
     }

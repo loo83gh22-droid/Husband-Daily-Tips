@@ -130,7 +130,7 @@ export async function GET(request: Request) {
           });
 
           if (emailError) {
-            console.error(`Error sending 30-day email to ${user.email}:`, emailError);
+            logger.error(`Error sending 30-day email to ${user.email}:`, emailError);
             errorCount++;
           } else {
             await adminSupabase
@@ -138,10 +138,10 @@ export async function GET(request: Request) {
               .update({ email_sent: true })
               .eq('id', surveyRecord.id);
             sentCount30++;
-            console.log(`✅ 30-day survey email sent to ${user.email}`);
+            logger.log(`✅ 30-day survey email sent to ${user.email}`);
           }
         } catch (error: any) {
-          console.error(`Error processing 30-day user ${user.id}:`, error);
+          logger.error(`Error processing 30-day user ${user.id}:`, error);
           errorCount++;
         }
       }
@@ -197,7 +197,7 @@ export async function GET(request: Request) {
           });
 
           if (emailError) {
-            console.error(`Error sending 90-day email to ${user.email}:`, emailError);
+            logger.error(`Error sending 90-day email to ${user.email}:`, emailError);
             errorCount++;
           } else {
             await adminSupabase
@@ -205,10 +205,10 @@ export async function GET(request: Request) {
               .update({ email_sent: true })
               .eq('id', surveyRecord.id);
             sentCount90++;
-            console.log(`✅ 90-day survey email sent to ${user.email}`);
+            logger.log(`✅ 90-day survey email sent to ${user.email}`);
           }
         } catch (error: any) {
-          console.error(`Error processing 90-day user ${user.id}:`, error);
+          logger.error(`Error processing 90-day user ${user.id}:`, error);
           errorCount++;
         }
       }
