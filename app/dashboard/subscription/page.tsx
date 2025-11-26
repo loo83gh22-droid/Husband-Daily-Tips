@@ -55,7 +55,11 @@ async function getUserSubscription(auth0Id: string) {
   }
 }
 
-export default async function SubscriptionPage() {
+export default async function SubscriptionPage({
+  searchParams,
+}: {
+  searchParams: { upgrade?: string };
+}) {
   const session = await getSession();
 
   if (!session?.user) {
@@ -66,6 +70,7 @@ export default async function SubscriptionPage() {
     const auth0Id = session.user.sub;
     const subscriptionInfo = await getUserSubscription(auth0Id);
     const currentTier = subscriptionInfo.tier;
+    const upgradeReason = searchParams?.upgrade;
 
   const plans = [
     {
@@ -121,6 +126,13 @@ export default async function SubscriptionPage() {
               </p>
             )}
           </div>
+          {upgradeMessage && (
+            <div className="bg-gradient-to-r from-primary-500/10 to-primary-600/10 border border-primary-500/30 rounded-xl p-6 mb-8 max-w-2xl mx-auto">
+              <h2 className="text-xl font-semibold text-primary-300 mb-2">{upgradeMessage.title}</h2>
+              <p className="text-slate-300">{upgradeMessage.description}</p>
+            </div>
+          )}
+
           <p className="text-center text-slate-400 mb-6 max-w-2xl mx-auto">
             You can upgrade or downgrade at any time. Cancel anytime.
           </p>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { format } from 'date-fns';
 import Link from 'next/link';
 import ActionCompletionModal from './ActionCompletionModal';
@@ -8,6 +8,7 @@ import ActionDetailModal from './ActionDetailModal';
 import { toast } from './Toast';
 import { getGuideSlugForAction } from '@/lib/action-guide-mapping';
 import { personalizeText } from '@/lib/personalize-text';
+import { canCompleteFromActionsPage, type SubscriptionStatus } from '@/lib/subscription-utils';
 
 interface Action {
   id: string;
@@ -50,6 +51,33 @@ export default function ActionsList({
   const [newlyEarnedBadges, setNewlyEarnedBadges] = useState<
     Array<{ name: string; description: string; icon: string; healthBonus: number }>
   >([]);
+  const [subscriptionStatus, setSubscriptionStatus] = useState<SubscriptionStatus | null>(null);
+  const [isLoadingSubscription, setIsLoadingSubscription] = useState(true);
+
+  // Fetch subscription status
+  useEffect(() => {
+    async function fetchSubscriptionStatus() {
+      try {
+        const response = await fetch('/api/user/subscription-status');
+        if (response.ok) {
+          const data = await response.json();
+          setSubscriptionStatus(data);
+        }
+      } catch (error) {
+        console.error('Error fetching subscription status:', error);
+        // Default to free tier on error
+        setSubscriptionStatus({
+          tier: 'free',
+          hasActiveTrial: false,
+          hasSubscription: false,
+          isOnPremium: false,
+        });
+      } finally {
+        setIsLoadingSubscription(false);
+      }
+    }
+    fetchSubscriptionStatus();
+  }, []);
 
   const handleCompleteAction = async (notes?: string, linkToJournal?: boolean) => {
     if (!selectedAction) return;
@@ -94,6 +122,12 @@ export default function ActionsList({
   };
 
   const handleOpenModal = (action: Action) => {
+    // Check if user can complete actions from this page
+    if (subscriptionStatus && !canCompleteFromActionsPage(subscriptionStatus)) {
+      // Redirect to subscription page with upgrade prompt
+      window.location.href = '/dashboard/subscription?upgrade=actions';
+      return;
+    }
     setSelectedAction(action);
     setIsModalOpen(true);
   };
@@ -159,10 +193,14 @@ export default function ActionsList({
                   )}
                   <button
                     onClick={() => handleOpenModal(action)}
-                    disabled={isSubmitting}
-                    className="w-6 h-6 rounded border-2 border-primary-500 bg-primary-500/20 hover:bg-primary-500/30 flex items-center justify-center transition-all disabled:opacity-50"
-                    aria-label="Mark as complete"
-                    title="Complete this action"
+                    disabled={isSubmitting || isLoadingSubscription || (subscriptionStatus && !canCompleteFromActionsPage(subscriptionStatus))}
+                    className={`w-6 h-6 rounded border-2 border-primary-500 bg-primary-500/20 hover:bg-primary-500/30 flex items-center justify-center transition-all disabled:opacity-50 ${
+                      subscriptionStatus && !canCompleteFromActionsPage(subscriptionStatus)
+                        ? 'cursor-not-allowed'
+                        : ''
+                    }`}
+                    aria-label={subscriptionStatus && !canCompleteFromActionsPage(subscriptionStatus) ? "Upgrade to complete actions" : "Mark as complete"}
+                    title={subscriptionStatus && !canCompleteFromActionsPage(subscriptionStatus) ? "Upgrade to Premium to complete actions from this page" : "Complete this action"}
                   >
                     <svg
                       className="w-4 h-4 text-primary-300"

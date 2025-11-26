@@ -24,10 +24,10 @@ export async function POST(request: Request) {
 
     const supabase = getSupabaseAdmin();
 
-    // Get user
+    // Get user with subscription info
     const { data: user, error: userError } = await supabase
       .from('users')
-      .select('id')
+      .select('id, subscription_tier, trial_started_at, trial_ends_at, stripe_subscription_id')
       .eq('auth0_id', auth0Id)
       .single();
 
@@ -44,6 +44,38 @@ export async function POST(request: Request) {
 
     if (actionError || !action) {
       return NextResponse.json({ error: 'Action not found' }, { status: 404 });
+    }
+
+    // Check subscription status for free users
+    const trialEndsAt = user?.trial_ends_at ? new Date(user.trial_ends_at) : null;
+    const now = new Date();
+    const hasActiveTrial = user?.subscription_tier === 'premium' && 
+                          trialEndsAt && 
+                          trialEndsAt > now && 
+                          !user?.stripe_subscription_id;
+    const hasSubscription = !!user?.stripe_subscription_id;
+    const isOnPremium = user?.subscription_tier === 'premium' && hasSubscription;
+    const hasPremiumAccess = isOnPremium || hasActiveTrial;
+
+    // Check if this action is the user's daily served action
+    const today = new Date().toISOString().split('T')[0];
+    const { data: dailyAction } = await supabase
+      .from('user_daily_actions')
+      .select('id')
+      .eq('user_id', user.id)
+      .eq('action_id', actionId)
+      .eq('date', today)
+      .single();
+
+    // If not the daily action and user doesn't have premium, block completion
+    if (!dailyAction && !hasPremiumAccess) {
+      return NextResponse.json(
+        { 
+          error: 'Premium required',
+          message: 'Free users can only complete the daily action served on the dashboard. Upgrade to Premium to complete any action from the Actions page.'
+        },
+        { status: 403 }
+      );
     }
 
     // Always create journal entry for action completions

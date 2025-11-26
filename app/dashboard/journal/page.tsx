@@ -7,6 +7,7 @@ import JournalExportButton from '@/components/JournalExportButton';
 import ProgressCharts from '@/components/ProgressCharts';
 import CollapsibleSection from '@/components/CollapsibleSection';
 import BackToTop from '@/components/BackToTop';
+import Link from 'next/link';
 
 async function getUserData(auth0Id: string) {
   // Use admin client to bypass RLS (Auth0 context isn't set)
@@ -161,6 +162,40 @@ async function getUserReflections(auth0Id: string) {
   return { favorites, regular };
 }
 
+async function getUserSubscriptionStatus(auth0Id: string) {
+  const adminSupabase = getSupabaseAdmin();
+  const { data: user } = await adminSupabase
+    .from('users')
+    .select('subscription_tier, trial_started_at, trial_ends_at, stripe_subscription_id')
+    .eq('auth0_id', auth0Id)
+    .single();
+
+  if (!user) {
+    return {
+      tier: 'free' as const,
+      hasActiveTrial: false,
+      hasSubscription: false,
+      isOnPremium: false,
+    };
+  }
+
+  const trialEndsAt = user?.trial_ends_at ? new Date(user.trial_ends_at) : null;
+  const now = new Date();
+  const hasActiveTrial = user?.subscription_tier === 'premium' && 
+                        trialEndsAt && 
+                        trialEndsAt > now && 
+                        !user?.stripe_subscription_id;
+  const hasSubscription = !!user?.stripe_subscription_id;
+  const isOnPremium = user?.subscription_tier === 'premium' && hasSubscription;
+
+  return {
+    tier: (user?.subscription_tier || 'free') as 'free' | 'premium',
+    hasActiveTrial,
+    hasSubscription,
+    isOnPremium,
+  };
+}
+
 export default async function JournalPage() {
   const session = await getSession();
 
@@ -169,6 +204,71 @@ export default async function JournalPage() {
   }
 
   const auth0Id = session.user.sub;
+  const subscriptionStatus = await getUserSubscriptionStatus(auth0Id);
+  
+  // Check if user has premium access
+  const hasPremiumAccess = subscriptionStatus.isOnPremium || subscriptionStatus.hasActiveTrial;
+  
+  // If free user, show upgrade message instead of journal
+  if (!hasPremiumAccess) {
+    return (
+      <div className="min-h-screen bg-slate-950">
+        <DashboardNav />
+        <main className="container mx-auto px-4 py-8 md:py-10">
+          <div className="max-w-4xl mx-auto">
+            <div className="bg-gradient-to-br from-slate-900/90 via-slate-800/80 to-slate-900/90 border border-slate-700/50 rounded-2xl p-8 md:p-12 text-center shadow-2xl">
+              <div className="mb-6">
+                <span className="text-6xl mb-4 block">📔</span>
+                <h1 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-primary-400 to-primary-600 bg-clip-text text-transparent">
+                  Journal Access
+                </h1>
+                <p className="text-lg text-slate-300 mb-2">
+                  Journaling is a Premium feature
+                </p>
+                <p className="text-sm text-slate-400 mb-8">
+                  Upgrade to Premium to access your journal, track your reflections, and build a record of your relationship wins.
+                </p>
+              </div>
+              
+              <div className="bg-slate-800/50 border border-slate-700/50 rounded-xl p-6 mb-8">
+                <h2 className="text-xl font-semibold text-slate-200 mb-4">What you get with Premium:</h2>
+                <ul className="text-left space-y-3 text-slate-300">
+                  <li className="flex items-start gap-3">
+                    <span className="text-primary-400 mt-1">✓</span>
+                    <span>Full journal access to reflect on your actions</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <span className="text-primary-400 mt-1">✓</span>
+                    <span>Complete any action from the Actions page</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <span className="text-primary-400 mt-1">✓</span>
+                    <span>Daily personalized actions</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <span className="text-primary-400 mt-1">✓</span>
+                    <span>Progress tracking and analytics</span>
+                  </li>
+                </ul>
+              </div>
+
+              <Link
+                href="/dashboard/subscription"
+                className="inline-block bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white font-semibold px-8 py-4 rounded-lg transition-all shadow-lg hover:shadow-xl transform hover:scale-105"
+              >
+                Upgrade to Premium
+              </Link>
+              
+              <p className="text-xs text-slate-500 mt-6">
+                Free users can still complete the daily action served on the dashboard
+              </p>
+            </div>
+          </div>
+        </main>
+      </div>
+    );
+  }
+
   const { favorites, regular } = await getUserReflections(auth0Id);
   const allReflections = [...favorites, ...regular];
   const { userId, stats } = await getUserData(auth0Id);
