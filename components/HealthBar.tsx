@@ -314,16 +314,13 @@ export default function HealthBar({ value, shouldPulse = false, onPulseComplete 
                 • Completing today&apos;s action nudges this up.
               </p>
               <p className="text-sm text-slate-300 font-medium">
-                • Missing days in a row slowly drains it.
-              </p>
-              <p className="text-sm text-slate-300 font-medium">
-                • Big husband moves give visible boosts.
+                • Missing Daily Actions slowly drains it.
               </p>
             </div>
 
             <div className="pt-4 border-t border-slate-700/50">
               <p className="text-sm text-slate-400 leading-relaxed">
-                Some actions are worth more than others - stay consistent and enjoy.
+                This isn&apos;t a score about who you are as a person. It&apos;s a simple way to track one area of your life—your daily effort in your relationship. The goal? Help you, your partner, and your family experience a little more connection, a little more joy, one action at a time.
               </p>
             </div>
           </div>
