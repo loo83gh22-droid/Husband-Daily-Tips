@@ -249,7 +249,7 @@ export default async function ActionsPage() {
               Actions
             </h1>
             <p className="text-slate-300 text-base md:text-lg mb-6 font-medium">
-              Do the thing. Get the badge. Become legendary. That&apos;s the move.
+              Do the thing. Get the badge. Become legendary. Become the Best Husband Ever.
             </p>
             
             {/* Quick Stats (visible when not sticky) - Focus on growth, not completion */}
