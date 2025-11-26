@@ -71,9 +71,14 @@ export default function ChallengeDetailModal({
       return;
     }
 
-    // If challenge_actions are already included, use them
+    // If challenge_actions are already included, use them (sort by day_number)
     if (challenge.challenge_actions && challenge.challenge_actions.length > 0) {
-      setChallengeActions(challenge.challenge_actions);
+      const sorted = [...challenge.challenge_actions].sort((a, b) => {
+        const dayA = a.day_number || 0;
+        const dayB = b.day_number || 0;
+        return dayA - dayB;
+      });
+      setChallengeActions(sorted);
       return;
     }
 
@@ -84,7 +89,14 @@ export default function ChallengeDetailModal({
         const response = await fetch(`/api/challenges/${challenge.id}/actions`, { credentials: 'include' });
         if (response.ok) {
           const data = await response.json();
-          setChallengeActions(data.challenge_actions || []);
+          const actions = data.challenge_actions || [];
+          // Sort by day_number
+          const sorted = actions.sort((a: any, b: any) => {
+            const dayA = a.day_number || 0;
+            const dayB = b.day_number || 0;
+            return dayA - dayB;
+          });
+          setChallengeActions(sorted);
         }
       } catch (error) {
         console.error('Error fetching challenge actions:', error);
