@@ -24,7 +24,7 @@ export default function ActionTooltip({
   const targetRef = useRef<HTMLElement | null>(null);
 
   const updatePosition = (element: HTMLElement) => {
-    if (!tooltipRef.current) return;
+    if (!tooltipRef.current || typeof window === 'undefined') return;
 
     const rect = element.getBoundingClientRect();
     const tooltipRect = tooltipRef.current.getBoundingClientRect();
@@ -55,6 +55,88 @@ export default function ActionTooltip({
 
     setTooltipPosition({ top, left });
   };
+
+  useEffect(() => {
+    // Check if tooltip should be shown
+    if (typeof window === 'undefined') return;
+    
+    const isHidden = localStorage.getItem(`action_tooltip_hidden_${targetSelector}_${userId}`) === 'true';
+    
+    if (!isHidden) {
+      // Wait for element to be available
+      const checkElement = () => {
+        const element = document.querySelector(targetSelector) as HTMLElement;
+        if (element) {
+          targetRef.current = element;
+          setIsVisible(true);
+          // Small delay to ensure tooltip is rendered
+          setTimeout(() => updatePosition(element), 100);
+          
+          // Add a small indicator icon to the target element
+          if (!element.querySelector('[data-tooltip-indicator]')) {
+            const indicator = document.createElement('span');
+            indicator.setAttribute('data-tooltip-indicator', 'true');
+            indicator.className = 'absolute -top-1 -right-1 w-3 h-3 bg-primary-500 rounded-full border-2 border-slate-900 z-10';
+            indicator.style.pointerEvents = 'none';
+            const currentPosition = window.getComputedStyle(element).position;
+            if (currentPosition === 'static') {
+              element.style.position = 'relative';
+            }
+            element.appendChild(indicator);
+          }
+        } else {
+          // Retry after a short delay (max 10 retries = 2 seconds)
+          let retries = 0;
+          const maxRetries = 10;
+          const retryInterval = setInterval(() => {
+            retries++;
+            const el = document.querySelector(targetSelector) as HTMLElement;
+            if (el || retries >= maxRetries) {
+              clearInterval(retryInterval);
+              if (el) {
+                targetRef.current = el;
+                setIsVisible(true);
+                setTimeout(() => updatePosition(el), 100);
+                
+                // Add indicator
+                if (!el.querySelector('[data-tooltip-indicator]')) {
+                  const indicator = document.createElement('span');
+                  indicator.setAttribute('data-tooltip-indicator', 'true');
+                  indicator.className = 'absolute -top-1 -right-1 w-3 h-3 bg-primary-500 rounded-full border-2 border-slate-900 z-10';
+                  indicator.style.pointerEvents = 'none';
+                  const currentPosition = window.getComputedStyle(el).position;
+                  if (currentPosition === 'static') {
+                    el.style.position = 'relative';
+                  }
+                  el.appendChild(indicator);
+                }
+              }
+            }
+          }, 200);
+          
+          return () => clearInterval(retryInterval);
+        }
+      };
+      
+      // Initial check after a short delay
+      setTimeout(checkElement, 500);
+    }
+
+    // Update position on scroll/resize
+    const updatePositionOnEvent = () => {
+      if (targetRef.current && isVisible) {
+        updatePosition(targetRef.current);
+      }
+    };
+
+    window.addEventListener('scroll', updatePositionOnEvent, true);
+    window.addEventListener('resize', updatePositionOnEvent);
+
+    return () => {
+      window.removeEventListener('scroll', updatePositionOnEvent, true);
+      window.removeEventListener('resize', updatePositionOnEvent);
+    };
+  }, [targetSelector, userId, isVisible, position]);
 
   const handleDontShowAgain = async () => {
     setIsHiding(true);
