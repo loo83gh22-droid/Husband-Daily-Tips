@@ -38,9 +38,6 @@ export default function ChallengeDetailModal({
 }: ChallengeDetailModalProps) {
   const [isJoining, setIsJoining] = useState(false);
 
-  // Memoize challenge data to prevent unnecessary re-renders
-  const stableChallenge = useMemo(() => challenge, [challenge?.id]);
-
   // Prevent body scroll when modal is open
   useEffect(() => {
     if (isOpen) {
@@ -67,16 +64,16 @@ export default function ChallengeDetailModal({
   }, [isOpen, onClose]);
 
   // Don't render if not open or no challenge
-  if (!isOpen || !stableChallenge) {
+  if (!isOpen || !challenge) {
     return null;
   }
 
   const handleJoin = async () => {
-    if (isEnrolled || isJoining || !onJoin || !stableChallenge) return;
+    if (isEnrolled || isJoining || !onJoin || !challenge) return;
     
     setIsJoining(true);
     try {
-      await onJoin(stableChallenge.id);
+      await onJoin(challenge.id);
       onClose();
     } catch (error) {
       console.error('Error joining challenge:', error);
@@ -85,21 +82,13 @@ export default function ChallengeDetailModal({
     }
   };
 
-  // Memoize computed values
-  const duration = useMemo(() => 
-    stableChallenge.duration_days || stableChallenge.challenge_actions?.length || 7,
-    [stableChallenge]
-  );
-
-  const { isPast, isUpcoming } = useMemo(() => {
-    const startDate = new Date(stableChallenge.start_date);
-    const endDate = new Date(stableChallenge.end_date);
-    const today = new Date();
-    return {
-      isPast: today > endDate,
-      isUpcoming: today < startDate,
-    };
-  }, [stableChallenge.start_date, stableChallenge.end_date]);
+  // Compute values directly without useMemo to avoid dependency issues
+  const duration = challenge.duration_days || challenge.challenge_actions?.length || 7;
+  const startDate = new Date(challenge.start_date);
+  const endDate = new Date(challenge.end_date);
+  const today = new Date();
+  const isPast = today > endDate;
+  const isUpcoming = today < startDate;
 
   const getThemeColor = (theme: string) => {
     const colors: Record<string, string> = {
@@ -121,7 +110,7 @@ export default function ChallengeDetailModal({
     return theme.charAt(0).toUpperCase() + theme.slice(1).replace(/_/g, ' ');
   };
 
-  const themeColor = useMemo(() => getThemeColor(stableChallenge.theme), [stableChallenge.theme]);
+  const themeColor = getThemeColor(challenge.theme);
 
   return (
     <>
@@ -165,13 +154,13 @@ export default function ChallengeDetailModal({
           {/* Header */}
           <div className="mb-6">
             <span className="inline-block px-4 py-1.5 bg-primary-500/20 text-primary-300 text-sm font-semibold rounded-full mb-3 border border-primary-500/30">
-              {formatThemeName(stableChallenge.theme)}
+              {formatThemeName(challenge.theme)}
             </span>
             <h3 className="text-2xl md:text-3xl font-bold text-slate-50 mb-2">
-              {stableChallenge.name}
+              {challenge.name}
             </h3>
             <p className="text-slate-300 text-base leading-relaxed">
-              {stableChallenge.description}
+              {challenge.description}
             </p>
           </div>
 
@@ -201,11 +190,11 @@ export default function ChallengeDetailModal({
                 </div>
 
           {/* Challenge Actions Preview */}
-          {stableChallenge.challenge_actions && stableChallenge.challenge_actions.length > 0 && (
+          {challenge.challenge_actions && challenge.challenge_actions.length > 0 && (
             <div>
               <p className="text-sm font-semibold text-slate-300 mb-3">What you'll do:</p>
               <div className="space-y-2 max-h-64 overflow-y-auto">
-                {stableChallenge.challenge_actions.slice(0, 7).map((ca, index) => (
+                {challenge.challenge_actions.slice(0, 7).map((ca, index) => (
                   <div
                     key={index}
                     className="bg-slate-800/40 rounded-lg p-3 border border-slate-700/50"
@@ -234,9 +223,9 @@ export default function ChallengeDetailModal({
                     </div>
                   </div>
                 ))}
-                {stableChallenge.challenge_actions.length > 7 && (
+                {challenge.challenge_actions.length > 7 && (
                   <p className="text-xs text-slate-500 text-center mt-2">
-                    ...and {stableChallenge.challenge_actions.length - 7} more days
+                    ...and {challenge.challenge_actions.length - 7} more days
                   </p>
                 )}
               </div>
