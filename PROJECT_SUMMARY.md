@@ -72,11 +72,10 @@ husband-daily-tips/
 - ✅ Progress statistics
 
 ### 4. Subscription Tiers
-- ✅ Free tier (1 tip/week)
-- ✅ Premium tier ($19.99/month)
-- ✅ Pro tier ($29.99/month)
+- ✅ Free tier (1 action/week)
+- ✅ Premium tier ($7/month)
 - ✅ Subscription management UI
-- ⚠️ Payment integration (Stripe) - needs implementation
+- ✅ Payment integration (Stripe) - fully implemented
 
 ### 5. User Interface
 - ✅ Beautiful, modern design
@@ -129,11 +128,11 @@ husband-daily-tips/
 - [ ] Add seasonal/holiday tips
 
 ### 4. Enhanced Features (Optional)
-- [ ] Email notifications
+- [x] Email notifications
 - [ ] Push notifications
-- [ ] Tip favorites functionality
-- [ ] Tip sharing with spouse
-- [ ] Achievement badges system
+- [x] Tip favorites functionality
+- [x] Tip sharing with spouse (Team Wins)
+- [x] Achievement badges system
 - [ ] Advanced analytics
 - [ ] Mobile app (React Native)
 
@@ -141,7 +140,7 @@ husband-daily-tips/
 - [ ] Set up analytics (Google Analytics, Mixpanel)
 - [ ] Create landing page SEO
 - [ ] Set up email marketing (Mailchimp, SendGrid)
-- [ ] Create referral program
+- [x] Create referral program
 - [ ] Social media integration
 - [ ] Content marketing strategy
 
