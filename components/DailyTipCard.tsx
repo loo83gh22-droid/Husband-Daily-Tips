@@ -580,17 +580,12 @@ END:VCALENDAR`;
         {/* Subtle glow effect */}
         <div className="absolute inset-0 bg-gradient-to-r from-primary-500/0 via-primary-500/5 to-primary-500/0 opacity-50 pointer-events-none" />
         <div className="relative z-10">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 sm:mb-6 gap-3 sm:gap-4">
-            <div className="flex-1 min-w-0 w-full sm:flex-1 sm:min-w-[200px]">
-              <span className="inline-block px-3 sm:px-4 py-1 sm:py-1.5 bg-primary-500/20 text-primary-300 text-xs sm:text-sm font-semibold rounded-full mb-2 sm:mb-3 border border-primary-500/30">
+          <div className="mb-4 sm:mb-6">
+            <div className="flex items-center justify-between mb-3 gap-3">
+              <span className="inline-block px-3 sm:px-4 py-1 sm:py-1.5 bg-primary-500/20 text-primary-300 text-xs sm:text-sm font-semibold rounded-full border border-primary-500/30">
                 {tip.category}
               </span>
-              <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-slate-50 mb-2 sm:mb-3 flex items-center gap-2 sm:gap-3">
-                {tip.icon && <span className="text-2xl sm:text-3xl flex-shrink-0">{tip.icon}</span>}
-                <span className="whitespace-nowrap overflow-hidden text-ellipsis">{personalizeText(tip.title || tip.name, partnerName)}</span>
-              </h3>
-            </div>
-            <div className="flex items-center gap-2 sm:gap-2 flex-wrap sm:flex-nowrap w-full sm:w-auto flex-shrink-0">
+              <div className="flex items-center gap-2 sm:gap-2 flex-shrink-0">
               {tip.isAction && (() => {
                 const guideSlug = getGuideSlugForAction(tip.name || '', tip.theme);
                 return guideSlug ? (
@@ -639,10 +634,15 @@ END:VCALENDAR`;
                   )}
                 </button>
               )}
-              <div className="text-xs text-slate-500 text-right hidden sm:block" suppressHydrationWarning>
+              <div className="text-xs text-slate-500 hidden sm:block" suppressHydrationWarning>
                 {mounted ? displayDate : ''}
               </div>
+              </div>
             </div>
+            <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-slate-50 mb-2 sm:mb-3 flex items-center gap-2 sm:gap-3 w-full">
+              {tip.icon && <span className="text-2xl sm:text-3xl flex-shrink-0">{tip.icon}</span>}
+              <span className="whitespace-nowrap overflow-hidden text-ellipsis flex-1 min-w-0">{personalizeText(tip.title || tip.name, partnerName)}</span>
+            </h3>
           </div>
           
           <div className="prose max-w-none">
