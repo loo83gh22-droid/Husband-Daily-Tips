@@ -27,21 +27,22 @@ export default function ActionCompletionModal({
 
   // Fetch favorite status when modal opens
   useEffect(() => {
-    if (isOpen && action.id) {
-      async function fetchFavoriteStatus() {
-        try {
-          const response = await fetch('/api/actions/favorites');
-          if (response.ok) {
-            const data = await response.json();
-            const favoritedActionIds = new Set(data.favoritedActions?.map((a: any) => a.id) || []);
-            setIsFavorited(favoritedActionIds.has(action.id));
-          }
-        } catch (error) {
-          console.error('Error fetching favorite status:', error);
+    if (!isOpen || !action.id) return;
+
+    const fetchFavoriteStatus = async () => {
+      try {
+        const response = await fetch('/api/actions/favorites');
+        if (response.ok) {
+          const data = await response.json();
+          const favoritedActionIds = new Set(data.favoritedActions?.map((a: any) => a.id) || []);
+          setIsFavorited(favoritedActionIds.has(action.id));
         }
+      } catch (error) {
+        console.error('Error fetching favorite status:', error);
       }
-      fetchFavoriteStatus();
-    }
+    };
+
+    fetchFavoriteStatus();
   }, [isOpen, action.id]);
 
   const handleToggleFavorite = async () => {
