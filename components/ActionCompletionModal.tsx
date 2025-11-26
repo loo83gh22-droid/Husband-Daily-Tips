@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 interface ActionCompletionModalProps {
   isOpen: boolean;
@@ -22,6 +22,52 @@ export default function ActionCompletionModal({
 }: ActionCompletionModalProps) {
   const [notes, setNotes] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isFavorited, setIsFavorited] = useState(false);
+  const [isTogglingFavorite, setIsTogglingFavorite] = useState(false);
+
+  // Fetch favorite status when modal opens
+  useEffect(() => {
+    if (isOpen && action.id) {
+      async function fetchFavoriteStatus() {
+        try {
+          const response = await fetch('/api/actions/favorites');
+          if (response.ok) {
+            const data = await response.json();
+            const favoritedActionIds = new Set(data.favoritedActions?.map((a: any) => a.id) || []);
+            setIsFavorited(favoritedActionIds.has(action.id));
+          }
+        } catch (error) {
+          console.error('Error fetching favorite status:', error);
+        }
+      }
+      fetchFavoriteStatus();
+    }
+  }, [isOpen, action.id]);
+
+  const handleToggleFavorite = async () => {
+    setIsTogglingFavorite(true);
+    try {
+      const response = await fetch('/api/actions/favorite', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ actionId: action.id }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to toggle favorite');
+      }
+
+      const data = await response.json();
+      setIsFavorited(data.favorited);
+    } catch (error) {
+      console.error('Error toggling favorite:', error);
+      alert('Failed to update favorite. Please try again.');
+    } finally {
+      setIsTogglingFavorite(false);
+    }
+  };
 
   if (!isOpen) return null;
 
@@ -45,27 +91,42 @@ export default function ActionCompletionModal({
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
       <div className="bg-slate-900 border border-slate-800 rounded-xl p-6 md:p-8 max-w-md w-full mx-4 shadow-2xl">
         <div className="flex items-start justify-between mb-4">
-          <div className="flex items-center gap-3">
-            {action.icon && <span className="text-3xl">{action.icon}</span>}
-            <div>
+          <div className="flex items-center gap-3 flex-1 min-w-0">
+            {action.icon && <span className="text-3xl flex-shrink-0">{action.icon}</span>}
+            <div className="min-w-0 flex-1">
               <h3 className="text-xl font-semibold text-slate-50">{action.name}</h3>
               <p className="text-sm text-slate-400 mt-1">{action.description}</p>
             </div>
           </div>
-          <button
-            onClick={onClose}
-            className="text-slate-400 hover:text-slate-200 transition-colors"
-            aria-label="Close"
-          >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
-          </button>
+          <div className="flex items-center gap-2 ml-3 flex-shrink-0">
+            <button
+              onClick={handleToggleFavorite}
+              disabled={isTogglingFavorite}
+              className={`p-2 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-default ${
+                isFavorited
+                  ? 'bg-yellow-500/10 text-yellow-300 hover:bg-yellow-500/20'
+                  : 'text-slate-400 hover:bg-slate-800'
+              }`}
+              aria-label={isFavorited ? 'Unfavorite' : 'Favorite'}
+              title={isFavorited ? 'Unfavorite this action' : 'Favorite this action'}
+            >
+              <span className="text-lg">{isFavorited ? '⭐' : '☆'}</span>
+            </button>
+            <button
+              onClick={onClose}
+              className="text-slate-400 hover:text-slate-200 transition-colors"
+              aria-label="Close"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+          </div>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
