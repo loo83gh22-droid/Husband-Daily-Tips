@@ -24,11 +24,11 @@ export default async function AboutPage() {
           <div className="bg-slate-900/80 border border-slate-800 rounded-xl p-6 md:p-8">
             <div className="prose prose-invert max-w-none">
               <p className="text-slate-300 leading-relaxed mb-4">
-                I built this for myself but I see value in it for others so I&apos;m building it out. It&apos;s a work in progress that I will stay engaged with and continue to bring you more value.
+                I built this for myself. Then I thought, &quot;holy shit, every husband could benefit from this.&quot;
               </p>
               
               <p className="text-slate-300 leading-relaxed mb-4">
-                We&apos;ve all been there. Things come up, distractions, kids, and though it can be good, it&apos;s great to inject some clear intentional daily effort back into your relationship.
+                So I wanted to make it available and affordable for everyone to enjoy. It&apos;s a work in progress that I will stay engaged with and continue to bring you more value.
               </p>
               
               <p className="text-slate-300 leading-relaxed mb-4">
@@ -37,10 +37,6 @@ export default async function AboutPage() {
               
               <p className="text-slate-300 leading-relaxed mb-4">
                 Sound familiar? Yeah, me too.
-              </p>
-              
-              <p className="text-slate-300 leading-relaxed mb-4">
-                The thing is, I love being a husband. I love my wife. I love our family. But I realized I wasn&apos;t being the partner I wanted to be, the partner she deserved. I was coasting, assuming that showing up was enough. It&apos;s not.
               </p>
               
               <p className="text-slate-300 leading-relaxed mb-4">
@@ -64,7 +60,7 @@ export default async function AboutPage() {
               </p>
               
               <p className="text-slate-300 leading-relaxed mb-4">
-                If you&apos;re here, you probably want the same thing I do: to be a better partner, to bring more joy to your marriage, and to make your family dynamic stronger. Welcome. Let&apos;s do this together.
+                I enjoy doing the daily prompts. They can be an awesome reminder about the things that sometimes slip over time.
               </p>
               
               <p className="text-slate-400 text-sm mt-6 pt-6 border-t border-slate-800">
