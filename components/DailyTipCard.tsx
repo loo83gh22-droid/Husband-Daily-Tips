@@ -581,13 +581,13 @@ END:VCALENDAR`;
         <div className="absolute inset-0 bg-gradient-to-r from-primary-500/0 via-primary-500/5 to-primary-500/0 opacity-50 pointer-events-none" />
         <div className="relative z-10">
           <div className="flex flex-col sm:flex-row items-start sm:items-start justify-between mb-4 sm:mb-6 gap-3 sm:gap-0">
-            <div className="flex-1 min-w-0 w-full sm:w-auto">
+            <div className="flex-1 min-w-0 w-full sm:flex-1">
               <span className="inline-block px-3 sm:px-4 py-1 sm:py-1.5 bg-primary-500/20 text-primary-300 text-xs sm:text-sm font-semibold rounded-full mb-2 sm:mb-3 border border-primary-500/30">
                 {tip.category}
               </span>
               <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-slate-50 mb-2 sm:mb-3 flex items-center gap-2 sm:gap-3">
                 {tip.icon && <span className="text-2xl sm:text-3xl flex-shrink-0">{tip.icon}</span>}
-                <span className="whitespace-nowrap truncate">{personalizeText(tip.title || tip.name, partnerName)}</span>
+                <span className="whitespace-nowrap overflow-hidden text-ellipsis">{personalizeText(tip.title || tip.name, partnerName)}</span>
               </h3>
             </div>
             <div className="flex items-center gap-2 sm:gap-3 flex-wrap sm:flex-nowrap w-full sm:w-auto">
