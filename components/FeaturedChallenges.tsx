@@ -100,7 +100,7 @@ export default function FeaturedEvents() {
 
   return (
     <section className="mb-8">
-      <div className="bg-gradient-to-br from-purple-950/30 via-slate-900/50 to-purple-950/30 border border-purple-500/30 rounded-xl p-6 md:p-8">
+      <div className="bg-gradient-to-br from-orange-950/30 via-slate-900/50 to-orange-950/30 border border-orange-500/30 rounded-xl p-6 md:p-8">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-xl md:text-2xl font-semibold text-slate-50 flex items-center gap-2">
             <span>🎯</span>
