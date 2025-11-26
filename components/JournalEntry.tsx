@@ -334,38 +334,41 @@ export default function JournalEntry({ reflection }: JournalEntryProps) {
         </div>
       )}
 
-      <div className="prose prose-invert max-w-none">
-        {isEditing ? (
-          <div className="space-y-3">
-            <textarea
-              value={editedContent}
-              onChange={(e) => setEditedContent(e.target.value)}
-              className="w-full min-h-[150px] p-3 bg-slate-800/50 border border-slate-700 rounded-lg text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500/50 resize-y text-sm"
-              placeholder="Write your reflection..."
-            />
-            <div className="flex items-center gap-2">
-              <button
-                onClick={handleSaveEdit}
-                disabled={isSaving || !editedContent.trim()}
-                className="px-3 py-1.5 bg-primary-500 text-slate-950 rounded-lg hover:bg-primary-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-medium text-sm"
-              >
-                {isSaving ? 'Saving...' : 'Save'}
-              </button>
-              <button
-                onClick={handleCancelEdit}
-                disabled={isSaving}
-                className="px-3 py-1.5 bg-slate-700 text-slate-200 rounded-lg hover:bg-slate-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-medium text-sm"
-              >
-                Cancel
-              </button>
+      {/* Only show reflection content if notes were written */}
+      {(currentContent?.trim() || isEditing) && (
+        <div className="prose prose-invert max-w-none mt-3">
+          {isEditing ? (
+            <div className="space-y-3">
+              <textarea
+                value={editedContent}
+                onChange={(e) => setEditedContent(e.target.value)}
+                className="w-full min-h-[150px] p-3 bg-slate-800/50 border border-slate-700 rounded-lg text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500/50 resize-y text-sm"
+                placeholder="Write your reflection..."
+              />
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={handleSaveEdit}
+                  disabled={isSaving || !editedContent.trim()}
+                  className="px-3 py-1.5 bg-primary-500 text-slate-950 rounded-lg hover:bg-primary-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-medium text-sm"
+                >
+                  {isSaving ? 'Saving...' : 'Save'}
+                </button>
+                <button
+                  onClick={handleCancelEdit}
+                  disabled={isSaving}
+                  className="px-3 py-1.5 bg-slate-700 text-slate-200 rounded-lg hover:bg-slate-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-medium text-sm"
+                >
+                  Cancel
+                </button>
+              </div>
             </div>
-          </div>
-        ) : (
-          <p className="text-sm text-slate-200 leading-relaxed whitespace-pre-line">
-            {currentContent}
-          </p>
-        )}
-      </div>
+          ) : (
+            <p className="text-sm text-slate-200 leading-relaxed whitespace-pre-line">
+              {currentContent}
+            </p>
+          )}
+        </div>
+      )}
     </article>
   );
 }
