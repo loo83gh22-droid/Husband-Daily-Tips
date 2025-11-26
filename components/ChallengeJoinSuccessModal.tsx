@@ -92,33 +92,73 @@ export default function ChallengeJoinSuccessModal({
       const baseUrl = process.env.NEXT_PUBLIC_APP_URL || window.location.origin;
       const downloadUrl = calendarLinks.icalDownload || `${baseUrl}/api/calendar/actions/download?days=7&userId=${userId}`;
       
-      // Use fetch to properly handle errors
-      const response = await fetch(downloadUrl, {
-        credentials: 'include',
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
-        throw new Error(errorData.error || `Server error: ${response.status}`);
-      }
-
-      // Get the blob and create download
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = '7-day-event-actions.ics';
-      document.body.appendChild(a);
-      a.click();
-      window.URL.revokeObjectURL(url);
-      document.body.removeChild(a);
+      // Retry logic: if challenge was just joined, wait a moment for DB to sync
+      let retries = 3;
+      let lastError: Error | null = null;
       
-      setTimeout(() => {
-        onClose();
-      }, 500);
+      while (retries > 0) {
+        try {
+          // Use fetch to properly handle errors
+          const response = await fetch(downloadUrl, {
+            credentials: 'include',
+          });
+
+          if (!response.ok) {
+            const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
+            const errorMessage = errorData.error || `Server error: ${response.status}`;
+            
+            // If it's a 404 and we have retries left, wait and retry (challenge might not be synced yet)
+            if (response.status === 404 && retries > 1) {
+              await new Promise(resolve => setTimeout(resolve, 1000)); // Wait 1 second
+              retries--;
+              continue;
+            }
+            
+            throw new Error(errorMessage);
+          }
+
+          // Check if response is actually a calendar file (starts with BEGIN:VCALENDAR)
+          const text = await response.text();
+          if (!text.includes('BEGIN:VCALENDAR')) {
+            // If it's JSON error, parse it
+            try {
+              const errorData = JSON.parse(text);
+              throw new Error(errorData.error || 'Invalid calendar file');
+            } catch {
+              throw new Error('Invalid calendar file received');
+            }
+          }
+
+          // Get the blob and create download
+          const blob = new Blob([text], { type: 'text/calendar' });
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = '7-day-event-actions.ics';
+          document.body.appendChild(a);
+          a.click();
+          window.URL.revokeObjectURL(url);
+          document.body.removeChild(a);
+          
+          setTimeout(() => {
+            onClose();
+          }, 500);
+          return; // Success, exit function
+        } catch (error) {
+          lastError = error as Error;
+          retries--;
+          if (retries > 0) {
+            await new Promise(resolve => setTimeout(resolve, 1000)); // Wait before retry
+          }
+        }
+      }
+      
+      // If we get here, all retries failed
+      throw lastError || new Error('Failed to download calendar after multiple attempts');
     } catch (error) {
       console.error('Error downloading calendar:', error);
-      alert('Failed to download calendar. Please try again.');
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      alert(`Failed to download calendar: ${errorMessage}. Please try again in a moment.`);
     }
   };
 

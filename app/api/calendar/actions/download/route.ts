@@ -106,6 +106,8 @@ async function generateCalendarFile(userId: string, days: number, user: any) {
     const challengeActions = challenge.challenge_actions || [];
     const joinedDate = new Date(activeChallenge.joined_date);
 
+    console.log(`[Calendar Download] Found active challenge: ${challenge.name}, ${challengeActions.length} actions`);
+
     for (let i = 0; i < days; i++) {
       const targetDate = new Date(joinedDate);
       targetDate.setDate(joinedDate.getDate() + i);
@@ -120,9 +122,12 @@ async function generateCalendarFile(userId: string, days: number, user: any) {
           ...challengeAction.actions,
           date: dateStr,
         });
+      } else {
+        console.log(`[Calendar Download] Warning: No challenge action found for day ${dayNumber}`);
       }
     }
   } else {
+    console.log(`[Calendar Download] No active challenge found for user ${userId}, generating regular actions`);
     // No active challenge - generate regular actions
     // Get user's survey data for personalization
     const { data: surveySummary } = await adminSupabase
@@ -207,11 +212,14 @@ END:VEVENT
 
   // If no actions were generated, return an error
   if (actions.length === 0) {
+    console.error(`[Calendar Download] No actions generated for user ${userId}, days: ${days}`);
     return NextResponse.json(
       { error: 'No actions available to download. Please try again later.' },
       { status: 404 }
     );
   }
+
+  console.log(`[Calendar Download] Generated ${actions.length} actions for user ${userId}`);
 
   // Return as iCal file
   return new NextResponse(icalContent, {
