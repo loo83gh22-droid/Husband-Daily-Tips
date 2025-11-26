@@ -601,6 +601,7 @@ export default async function Dashboard() {
           isChallengeAction: true,
           challengeDay: currentDay,
           challengeName: challenge.name,
+          challengeId: challenge.id, // Add challenge ID for leave functionality
         };
       } else {
         // Assign 7-day event action for today
@@ -623,6 +624,7 @@ export default async function Dashboard() {
             isChallengeAction: true,
             challengeDay: currentDay,
             challengeName: challenge.name,
+            challengeId: challenge.id, // Add challenge ID for leave functionality
           };
         } else {
           // Fallback: just return the action data
@@ -632,6 +634,7 @@ export default async function Dashboard() {
             isChallengeAction: true,
             challengeDay: currentDay,
             challengeName: challenge.name,
+            challengeId: challenge.id, // Add challenge ID for leave functionality
           };
         }
       }

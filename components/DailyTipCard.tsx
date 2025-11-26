@@ -29,6 +29,10 @@ interface Tip {
   isAction?: boolean; // Flag to indicate if this is an action
   icon?: string; // For actions
   completed?: boolean; // Whether the action is already completed
+  isChallengeAction?: boolean; // Whether this is part of a 7-day event
+  challengeDay?: number; // Day number in the event (1-7)
+  challengeName?: string; // Name of the 7-day event
+  challengeId?: string; // ID of the 7-day event
 }
 
 interface DailyTipCardProps {
@@ -65,6 +69,7 @@ export default function DailyTipCard({ tip, subscriptionTier = 'free', onActionR
   const [isHiding, setIsHiding] = useState(false);
   const [isShowingMore, setIsShowingMore] = useState(false);
   const [showMoreModal, setShowMoreModal] = useState(false);
+  const [isLeavingEvent, setIsLeavingEvent] = useState(false);
 
   const isPaidUser = subscriptionTier === 'premium' || subscriptionTier === 'pro';
   // Show simplified view if auto-add is enabled and calendar type is set
@@ -298,6 +303,44 @@ export default function DailyTipCard({ tip, subscriptionTier = 'free', onActionR
       toast.error('Failed to hide action. Please try again.');
     } finally {
       setIsHiding(false);
+    }
+  };
+
+  const handleLeaveEvent = async () => {
+    if (!tip.isChallengeAction || !tip.challengeId) return;
+    
+    const confirmed = confirm(
+      `Are you sure you want to leave "${tip.challengeName}"? You'll return to regular daily actions.`
+    );
+    
+    if (!confirmed) return;
+    
+    setIsLeavingEvent(true);
+    try {
+      const response = await fetch('/api/challenges/leave', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ challengeId: tip.challengeId }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to leave 7-day event');
+      }
+
+      const data = await response.json();
+      toast.success(data.message || 'You have left the 7-day event. Returning to regular daily actions.');
+      
+      // Reload page to show regular daily action
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
+    } catch (error: any) {
+      console.error('Error leaving event:', error);
+      toast.error(error.message || 'Failed to leave 7-day event. Please try again.');
+      setIsLeavingEvent(false);
     }
   };
 
@@ -624,6 +667,17 @@ END:VCALENDAR`;
         >
           {isCompleted ? 'Action Done!' : isSubmitting ? 'Saving…' : '✓ Mark as done'}
         </button>
+
+        {/* Leave Event button - only show for 7-day event actions */}
+        {tip.isChallengeAction && tip.challengeId && (
+          <button
+            onClick={handleLeaveEvent}
+            disabled={isLeavingEvent}
+            className="px-4 sm:px-6 py-2 sm:py-3 bg-slate-700 hover:bg-slate-600 disabled:bg-slate-800 disabled:text-slate-500 text-slate-200 text-xs sm:text-sm font-medium rounded-lg transition-all disabled:cursor-default min-h-[44px] touch-manipulation border border-slate-600 hover:border-slate-500"
+          >
+            {isLeavingEvent ? 'Leaving…' : 'Leave 7-Day Event'}
+          </button>
+        )}
 
         {/* Show me more like this button - only show after completion for actions */}
         {isCompleted && tip.isAction && tip.benefit && (
