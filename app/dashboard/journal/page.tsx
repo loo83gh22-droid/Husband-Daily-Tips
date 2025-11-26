@@ -186,47 +186,49 @@ export default async function JournalPage() {
               )}
             </div>
 
-            {/* Journal Summary */}
-            <CollapsibleSection title="Journaling Can Be Hard, and It Works." defaultExpanded={true}>
-              <div className="bg-slate-900/80 border border-slate-800 rounded-xl p-6">
-                <p className="text-sm text-slate-300 leading-relaxed mb-3">
-                  Writing down what happened forces you to actually think about it. No shortcuts. 
-                  No autopilot. Just you, being honest about what worked and what didn't. That's 
-                  where the real change happens, not in doing the action, but in reflecting on it.
-                </p>
-                <p className="text-sm text-slate-300 leading-relaxed mb-3">
-                  Capture the details. What did you enjoy? How did it feel? What made it work? 
-                  When you write down the enjoyment and the details, you're creating a blueprint 
-                  for the future. Revisit these entries later, and you can put those actions on 
-                  autopilot because you remember why they mattered and how good they felt.
-                </p>
-                <p className="text-sm text-slate-300 leading-relaxed mb-4">
-                  We prompt you right after you complete an action. No blank page. No "I'll do it later." 
-                  Just: "How'd it go?" Write one sentence. Write ten. Or skip it. Your call. But when 
-                  you write, you're building something real.
-                </p>
-                <div className="bg-slate-800/50 border border-slate-700/50 rounded-lg p-4 mt-4">
-                  <p className="text-xs text-slate-400 leading-relaxed">
-                    <strong className="text-slate-300">Quick note:</strong> This journal only shows actions you completed. 
-                    Skip something? It won't show up here. This is your record of wins, not misses. 
-                    That's intentional.
-                  </p>
-                </div>
-              </div>
-            </CollapsibleSection>
-
-            {/* Progress Overview Chart */}
-            {userId && stats && (
-              <CollapsibleSection title="Progress Overview" defaultExpanded={true}>
+            {/* Journal Summary and Progress Overview - Side by Side */}
+            <div className="grid md:grid-cols-2 gap-4 mb-6">
+              <CollapsibleSection title="Journaling Can Be Hard, and It Works." defaultExpanded={true}>
                 <div className="bg-slate-900/80 border border-slate-800 rounded-xl p-6">
-                  <ProgressCharts
-                    userId={userId}
-                    currentStreak={stats.currentStreak}
-                    healthScore={stats.healthScore}
-                  />
+                  <p className="text-sm text-slate-300 leading-relaxed mb-3">
+                    Writing down what happened forces you to actually think about it. No shortcuts. 
+                    No autopilot. Just you, being honest about what worked and what didn't. That's 
+                    where the real change happens, not in doing the action, but in reflecting on it.
+                  </p>
+                  <p className="text-sm text-slate-300 leading-relaxed mb-3">
+                    Capture the details. What did you enjoy? How did it feel? What made it work? 
+                    When you write down the enjoyment and the details, you're creating a blueprint 
+                    for the future. Revisit these entries later, and you can put those actions on 
+                    autopilot because you remember why they mattered and how good they felt.
+                  </p>
+                  <p className="text-sm text-slate-300 leading-relaxed mb-4">
+                    We prompt you right after you complete an action. No blank page. No "I'll do it later." 
+                    Just: "How'd it go?" Write one sentence. Write ten. Or skip it. Your call. But when 
+                    you write, you're building something real.
+                  </p>
+                  <div className="bg-slate-800/50 border border-slate-700/50 rounded-lg p-4 mt-4">
+                    <p className="text-xs text-slate-400 leading-relaxed">
+                      <strong className="text-slate-300">Quick note:</strong> This journal only shows actions you completed. 
+                      Skip something? It won't show up here. This is your record of wins, not misses. 
+                      That's intentional.
+                    </p>
+                  </div>
                 </div>
               </CollapsibleSection>
-            )}
+
+              {/* Progress Overview Chart */}
+              {userId && stats && (
+                <CollapsibleSection title="Progress Overview" defaultExpanded={true}>
+                  <div className="bg-slate-900/80 border border-slate-800 rounded-xl p-6">
+                    <ProgressCharts
+                      userId={userId}
+                      currentStreak={stats.currentStreak}
+                      healthScore={stats.healthScore}
+                    />
+                  </div>
+                </CollapsibleSection>
+              )}
+            </div>
           </div>
 
           {allReflections.length === 0 ? (
