@@ -295,19 +295,19 @@ export default async function JournalPage() {
             <div className="grid md:grid-cols-2 gap-4 mb-6 md:items-start">
               <div className="flex flex-col h-full">
                 <CollapsibleSection title="Journaling Can Be Hard, and It Works." defaultExpanded={true}>
-                  <div className="bg-slate-900/80 border border-slate-800 rounded-xl p-6 flex flex-col h-full">
+                  <div className="bg-slate-900/80 border border-slate-800 rounded-xl p-4 flex flex-col h-full">
                     <div className="flex-1">
-                      <p className="text-sm text-slate-300 leading-relaxed mb-3">
+                      <p className="text-sm text-slate-300 leading-relaxed mb-2">
                         Writing it down makes you actually think. No shortcuts, no autopilot—just an honest look at what worked and what didn't. That's where the real growth hides.
                       </p>
-                      <p className="text-sm text-slate-300 leading-relaxed mb-3">
+                      <p className="text-sm text-slate-300 leading-relaxed mb-2">
                         Note what you enjoyed, what clicked, what felt good. Those details become a blueprint you can return to later, a reminder of why the action mattered in the first place.
                       </p>
-                      <p className="text-sm text-slate-300 leading-relaxed mb-4">
+                      <p className="text-sm text-slate-300 leading-relaxed mb-3">
                         After each action you'll get a simple prompt: How'd it go? Write a sentence, write a paragraph, or skip it. Your choice. But every time you reflect, you're building something real and repeatable.
                       </p>
                     </div>
-                    <div className="bg-slate-800/50 border border-slate-700/50 rounded-lg p-4 mt-auto">
+                    <div className="bg-slate-800/50 border border-slate-700/50 rounded-lg p-3 mt-auto">
                       <p className="text-xs text-slate-400 leading-relaxed">
                         <strong className="text-slate-300">Quick note:</strong> This journal only shows actions you completed. 
                         Skip something? It won't show up here. This is your record of wins, not misses. 
@@ -322,7 +322,7 @@ export default async function JournalPage() {
               {userId && stats && (
                 <div className="flex flex-col h-full">
                   <CollapsibleSection title="Progress Overview" defaultExpanded={true}>
-                    <div className="bg-slate-900/80 border border-slate-800 rounded-xl p-6 h-full flex flex-col">
+                    <div className="bg-slate-900/80 border border-slate-800 rounded-xl p-4 h-full flex flex-col">
                       <div className="flex-1 min-h-0">
                         <ProgressCharts
                           userId={userId}
