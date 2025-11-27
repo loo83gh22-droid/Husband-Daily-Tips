@@ -16,11 +16,21 @@ export const surveyResponseSchema = z.object({
         ]),
       })
     ).min(1).max(30),
-    // Object format: {1: 5, 2: 1, ...} where key is questionId and value is response
-    z.record(z.string().regex(/^\d+$/).transform(Number), z.union([
-      z.number().int().min(0).max(5),
-      z.boolean(),
-    ])),
+    // Object format: {1: 5, 2: 1, ...} where key is questionId (number or string) and value is response
+    z.record(
+      z.union([z.string(), z.number()]).transform((val) => {
+        if (typeof val === 'string') {
+          const num = parseInt(val, 10);
+          if (isNaN(num)) throw new Error('Invalid question ID');
+          return num;
+        }
+        return val;
+      }),
+      z.union([
+        z.number().int().min(0).max(5),
+        z.boolean(),
+      ])
+    ),
   ]),
   skip: z.boolean().optional(),
 });

@@ -44,6 +44,13 @@ export default function SurveyForm({ userId, questions, isPublic = false }: Surv
     }
   };
 
+  const handlePrevious = () => {
+    if (currentQuestionIndex > 0) {
+      setCurrentQuestionIndex((prev) => prev - 1);
+      setError(null); // Clear errors when going back
+    }
+  };
+
   const handleNext = () => {
     // Check if current question is answered
     if (responses[currentQuestion.id] === undefined) {
@@ -60,11 +67,6 @@ export default function SurveyForm({ userId, questions, isPublic = false }: Surv
     }
   };
 
-  const handlePrevious = () => {
-    if (currentQuestionIndex > 0) {
-      setCurrentQuestionIndex((prev) => prev - 1);
-    }
-  };
 
   const [showResults, setShowResults] = useState(false);
   const [calculatedScore, setCalculatedScore] = useState<number | null>(null);
@@ -99,8 +101,13 @@ export default function SurveyForm({ userId, questions, isPublic = false }: Surv
   };
 
   const handleSubmit = async () => {
-    if (Object.keys(responses).length !== questions.length) {
-      setError('Please answer all questions before submitting.');
+    // Check that all questions are answered
+    const unansweredQuestions = questions.filter(q => responses[q.id] === undefined);
+    if (unansweredQuestions.length > 0) {
+      // Find the first unanswered question and go to it
+      const firstUnansweredIndex = questions.findIndex(q => responses[q.id] === undefined);
+      setCurrentQuestionIndex(firstUnansweredIndex);
+      setError(`Please answer all questions before submitting. You have ${unansweredQuestions.length} unanswered question${unansweredQuestions.length > 1 ? 's' : ''}.`);
       return;
     }
 
