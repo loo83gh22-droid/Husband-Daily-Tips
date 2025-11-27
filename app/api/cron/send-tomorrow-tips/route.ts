@@ -68,17 +68,11 @@ export async function GET(request: Request) {
     const supabase = getSupabaseAdmin();
     const now = new Date();
 
-    // Calculate 24 hours ago to exclude recently created users
-    const twentyFourHoursAgo = new Date(now);
-    twentyFourHoursAgo.setHours(twentyFourHoursAgo.getHours() - 24);
-
     // Get all active users with their timezones
-    // Exclude users created in the last 24 hours (prevents emails to newly created/recreated accounts)
     const { data: users, error: usersError } = await supabase
       .from('users')
-      .select('id, email, name, timezone, created_at')
-      .not('email', 'is', null)
-      .lt('created_at', twentyFourHoursAgo.toISOString());
+      .select('id, email, name, timezone')
+      .not('email', 'is', null);
 
     if (usersError) {
       logger.error('Error fetching users:', usersError);
