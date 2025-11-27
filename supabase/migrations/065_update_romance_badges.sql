@@ -40,8 +40,8 @@ SELECT * FROM (VALUES
   ('Romance Starter', 'Completed your first romance action. The spark starts here.', '💕', 'big_idea', 'category_count', 1, 0, 'Romance'),
   ('Romance Builder', 'Completed 5 romance actions. You''re bringing the romance back.', '💕', 'big_idea', 'category_count', 5, 0, 'Romance'),
   ('Romance Expert', 'Completed 10 romance actions. You''re a romance expert.', '💕', 'big_idea', 'category_count', 10, 0, 'Romance'),
-  ('Romance Champion', 'Completed 25 romance actions. You''re a romance champion.', '💕', 'big_idea', 'category_count', 25, 0, 'Romance'),
-  ('Romance Master', 'Completed 50 romance actions. You''re a romance master.', '💕', 'big_idea', 'category_count', 50, 0, 'Romance'),
+  ('Romance Master', 'Completed 25 romance actions. You''re a romance master.', '💕', 'big_idea', 'category_count', 25, 0, 'Romance'),
+  ('Romance Champion', 'Completed 50 romance actions. You''re a romance champion.', '💕', 'big_idea', 'category_count', 50, 0, 'Romance'),
   ('Romance Legend', 'Completed 100 romance actions. You''re a romance legend.', '💕', 'big_idea', 'category_count', 100, 0, 'Romance')
 ) AS v(name, description, icon, badge_type, requirement_type, requirement_value, health_bonus, category)
 WHERE NOT EXISTS (
@@ -61,7 +61,7 @@ SELECT * FROM (VALUES
   ('Date Night Starter', 'Planned your first date night. Quality time together starts here.', '🍷', 'big_idea', 'date_nights', 1, 0, 'Romance'),
   ('Date Night Builder', 'Planned 5 date nights. You''re making time together a priority.', '🍷', 'big_idea', 'date_nights', 5, 0, 'Romance'),
   ('Date Night Expert', 'Planned 10 date nights. You''re a date night expert.', '🍷', 'big_idea', 'date_nights', 10, 0, 'Romance'),
-  ('Date Night Champion', 'Planned 25 date nights. You''re a date night champion.', '🍷', 'big_idea', 'date_nights', 25, 0, 'Romance')
+  ('Date Night Master', 'Planned 25 date nights. You''re a date night master.', '🍷', 'big_idea', 'date_nights', 25, 0, 'Romance')
 ) AS v(name, description, icon, badge_type, requirement_type, requirement_value, health_bonus, category)
 WHERE NOT EXISTS (
   SELECT 1 FROM badges 

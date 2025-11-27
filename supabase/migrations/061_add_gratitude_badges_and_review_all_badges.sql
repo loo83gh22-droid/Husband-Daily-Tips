@@ -16,8 +16,8 @@ SELECT * FROM (VALUES
   ('Gratitude Starter', 'Completed your first gratitude action. Appreciation starts here.', '🙏', 'big_idea', 'gratitude_actions', 1, 0, 'Gratitude'),
   ('Gratitude Builder', 'Completed 5 gratitude actions. You''re building a habit of appreciation.', '🙌', 'big_idea', 'gratitude_actions', 5, 0, 'Gratitude'),
   ('Gratitude Expert', 'Completed 10 gratitude actions. You''re a gratitude expert.', '🌟', 'big_idea', 'gratitude_actions', 10, 0, 'Gratitude'),
-  ('Gratitude Champion', 'Completed 25 gratitude actions. You''re a gratitude champion.', '✨', 'big_idea', 'gratitude_actions', 25, 0, 'Gratitude'),
-  ('Gratitude Master', 'Completed 50 gratitude actions. You''re a gratitude master.', '💫', 'big_idea', 'gratitude_actions', 50, 0, 'Gratitude'),
+  ('Gratitude Master', 'Completed 25 gratitude actions. You''re a gratitude master.', '✨', 'big_idea', 'gratitude_actions', 25, 0, 'Gratitude'),
+  ('Gratitude Champion', 'Completed 50 gratitude actions. You''re a gratitude champion.', '💫', 'big_idea', 'gratitude_actions', 50, 0, 'Gratitude'),
   ('Gratitude Legend', 'Completed 100 gratitude actions. You''re a gratitude legend. She notices.', '👑', 'big_idea', 'gratitude_actions', 100, 0, 'Gratitude')
 ) AS v(name, description, icon, badge_type, requirement_type, requirement_value, health_bonus, category)
 WHERE NOT EXISTS (

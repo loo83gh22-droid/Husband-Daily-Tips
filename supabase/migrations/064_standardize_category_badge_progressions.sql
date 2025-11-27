@@ -38,8 +38,8 @@ SELECT * FROM (VALUES
   ('Communication Starter', 'Completed your first communication action. You''re starting to get it.', '💬', 'big_idea', 'category_count', 1, 0, 'Communication'),
   ('Communication Builder', 'Completed 5 communication actions. You''re building better communication habits.', '💬', 'big_idea', 'category_count', 5, 0, 'Communication'),
   ('Communication Expert', 'Completed 10 communication actions. You''re a communication expert.', '💬', 'big_idea', 'category_count', 10, 0, 'Communication'),
-  ('Communication Champion', 'Completed 25 communication actions. You''re a communication champion.', '💬', 'big_idea', 'category_count', 25, 0, 'Communication'),
-  ('Communication Master', 'Completed 50 communication actions. You''re a communication master.', '💬', 'big_idea', 'category_count', 50, 0, 'Communication'),
+  ('Communication Master', 'Completed 25 communication actions. You''re a communication master.', '💬', 'big_idea', 'category_count', 25, 0, 'Communication'),
+  ('Communication Champion', 'Completed 50 communication actions. You''re a communication champion.', '💬', 'big_idea', 'category_count', 50, 0, 'Communication'),
   ('Communication Legend', 'Completed 100 communication actions. You''re a communication legend. She notices.', '💬', 'big_idea', 'category_count', 100, 0, 'Communication')
 ) AS v(name, description, icon, badge_type, requirement_type, requirement_value, health_bonus, category)
 WHERE NOT EXISTS (
@@ -66,8 +66,8 @@ SELECT * FROM (VALUES
   ('Intimacy Starter', 'Completed your first intimacy action. Connection starts here.', '💝', 'big_idea', 'category_count', 1, 0, 'Intimacy'),
   ('Intimacy Builder', 'Completed 5 intimacy actions. You''re building deeper connection.', '💝', 'big_idea', 'category_count', 5, 0, 'Intimacy'),
   ('Intimacy Expert', 'Completed 10 intimacy actions. You''re an intimacy expert.', '💝', 'big_idea', 'category_count', 10, 0, 'Intimacy'),
-  ('Intimacy Champion', 'Completed 25 intimacy actions. You''re an intimacy champion.', '💝', 'big_idea', 'category_count', 25, 0, 'Intimacy'),
-  ('Intimacy Master', 'Completed 50 intimacy actions. You''re an intimacy master.', '💝', 'big_idea', 'category_count', 50, 0, 'Intimacy'),
+  ('Intimacy Master', 'Completed 25 intimacy actions. You''re an intimacy master.', '💝', 'big_idea', 'category_count', 25, 0, 'Intimacy'),
+  ('Intimacy Champion', 'Completed 50 intimacy actions. You''re an intimacy champion.', '💝', 'big_idea', 'category_count', 50, 0, 'Intimacy'),
   ('Intimacy Legend', 'Completed 100 intimacy actions. You''re an intimacy legend.', '💝', 'big_idea', 'category_count', 100, 0, 'Intimacy')
 ) AS v(name, description, icon, badge_type, requirement_type, requirement_value, health_bonus, category)
 WHERE NOT EXISTS (
@@ -94,8 +94,8 @@ SELECT * FROM (VALUES
   ('Partnership Starter', 'Completed your first partnership action. Teamwork makes the dream work.', '🤝', 'big_idea', 'category_count', 1, 0, 'Partnership'),
   ('Partnership Builder', 'Completed 5 partnership actions. You''re becoming a true partner.', '🤝', 'big_idea', 'category_count', 5, 0, 'Partnership'),
   ('Partnership Expert', 'Completed 10 partnership actions. You''re a partnership expert.', '🤝', 'big_idea', 'category_count', 10, 0, 'Partnership'),
-  ('Partnership Champion', 'Completed 25 partnership actions. You''re a partnership champion.', '🤝', 'big_idea', 'category_count', 25, 0, 'Partnership'),
-  ('Partnership Master', 'Completed 50 partnership actions. You''re a partnership master.', '🤝', 'big_idea', 'category_count', 50, 0, 'Partnership'),
+  ('Partnership Master', 'Completed 25 partnership actions. You''re a partnership master.', '🤝', 'big_idea', 'category_count', 25, 0, 'Partnership'),
+  ('Partnership Champion', 'Completed 50 partnership actions. You''re a partnership champion.', '🤝', 'big_idea', 'category_count', 50, 0, 'Partnership'),
   ('Partnership Legend', 'Completed 100 partnership actions. You''re a partnership legend.', '🤝', 'big_idea', 'category_count', 100, 0, 'Partnership')
 ) AS v(name, description, icon, badge_type, requirement_type, requirement_value, health_bonus, category)
 WHERE NOT EXISTS (
@@ -149,8 +149,8 @@ SELECT * FROM (VALUES
   ('Conflict Resolution Starter', 'Completed your first conflict resolution action. You''re learning to navigate disagreements.', '⚖️', 'big_idea', 'category_count', 1, 0, 'Conflict Resolution'),
   ('Conflict Resolution Builder', 'Completed 5 conflict resolution actions. You''re building healthier conflict skills.', '⚖️', 'big_idea', 'category_count', 5, 0, 'Conflict Resolution'),
   ('Conflict Resolution Expert', 'Completed 10 conflict resolution actions. You''re a conflict resolution expert.', '⚖️', 'big_idea', 'category_count', 10, 0, 'Conflict Resolution'),
-  ('Conflict Resolution Champion', 'Completed 25 conflict resolution actions. You''re a conflict resolution champion.', '⚖️', 'big_idea', 'category_count', 25, 0, 'Conflict Resolution'),
-  ('Conflict Resolution Master', 'Completed 50 conflict resolution actions. You''re a conflict resolution master.', '⚖️', 'big_idea', 'category_count', 50, 0, 'Conflict Resolution'),
+  ('Conflict Resolution Master', 'Completed 25 conflict resolution actions. You''re a conflict resolution master.', '⚖️', 'big_idea', 'category_count', 25, 0, 'Conflict Resolution'),
+  ('Conflict Resolution Champion', 'Completed 50 conflict resolution actions. You''re a conflict resolution champion.', '⚖️', 'big_idea', 'category_count', 50, 0, 'Conflict Resolution'),
   ('Conflict Resolution Legend', 'Completed 100 conflict resolution actions. You''re a conflict resolution legend.', '⚖️', 'big_idea', 'category_count', 100, 0, 'Conflict Resolution')
 ) AS v(name, description, icon, badge_type, requirement_type, requirement_value, health_bonus, category)
 WHERE NOT EXISTS (
@@ -177,8 +177,8 @@ SELECT * FROM (VALUES
   ('Reconnection Starter', 'Completed your first reconnection action. You''re rebuilding the connection.', '🔗', 'big_idea', 'category_count', 1, 0, 'Reconnection'),
   ('Reconnection Builder', 'Completed 5 reconnection actions. You''re actively rebuilding your bond.', '🔗', 'big_idea', 'category_count', 5, 0, 'Reconnection'),
   ('Reconnection Expert', 'Completed 10 reconnection actions. You''re a reconnection expert.', '🔗', 'big_idea', 'category_count', 10, 0, 'Reconnection'),
-  ('Reconnection Champion', 'Completed 25 reconnection actions. You''re a reconnection champion.', '🔗', 'big_idea', 'category_count', 25, 0, 'Reconnection'),
-  ('Reconnection Master', 'Completed 50 reconnection actions. You''re a reconnection master.', '🔗', 'big_idea', 'category_count', 50, 0, 'Reconnection'),
+  ('Reconnection Master', 'Completed 25 reconnection actions. You''re a reconnection master.', '🔗', 'big_idea', 'category_count', 25, 0, 'Reconnection'),
+  ('Reconnection Champion', 'Completed 50 reconnection actions. You''re a reconnection champion.', '🔗', 'big_idea', 'category_count', 50, 0, 'Reconnection'),
   ('Reconnection Legend', 'Completed 100 reconnection actions. You''re a reconnection legend.', '🔗', 'big_idea', 'category_count', 100, 0, 'Reconnection')
 ) AS v(name, description, icon, badge_type, requirement_type, requirement_value, health_bonus, category)
 WHERE NOT EXISTS (
@@ -205,8 +205,8 @@ SELECT * FROM (VALUES
   ('Quality Time Starter', 'Completed your first quality time action. You''re prioritizing time together.', '⏰', 'big_idea', 'category_count', 1, 0, 'Quality Time'),
   ('Quality Time Builder', 'Completed 5 quality time actions. You''re making time together a priority.', '⏰', 'big_idea', 'category_count', 5, 0, 'Quality Time'),
   ('Quality Time Expert', 'Completed 10 quality time actions. You''re a quality time expert.', '⏰', 'big_idea', 'category_count', 10, 0, 'Quality Time'),
-  ('Quality Time Champion', 'Completed 25 quality time actions. You''re a quality time champion.', '⏰', 'big_idea', 'category_count', 25, 0, 'Quality Time'),
-  ('Quality Time Master', 'Completed 50 quality time actions. You''re a quality time master.', '⏰', 'big_idea', 'category_count', 50, 0, 'Quality Time'),
+  ('Quality Time Master', 'Completed 25 quality time actions. You''re a quality time master.', '⏰', 'big_idea', 'category_count', 25, 0, 'Quality Time'),
+  ('Quality Time Champion', 'Completed 50 quality time actions. You''re a quality time champion.', '⏰', 'big_idea', 'category_count', 50, 0, 'Quality Time'),
   ('Quality Time Legend', 'Completed 100 quality time actions. You''re a quality time legend.', '⏰', 'big_idea', 'category_count', 100, 0, 'Quality Time')
 ) AS v(name, description, icon, badge_type, requirement_type, requirement_value, health_bonus, category)
 WHERE NOT EXISTS (

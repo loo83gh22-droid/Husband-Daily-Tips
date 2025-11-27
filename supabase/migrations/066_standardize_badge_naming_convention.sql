@@ -1,5 +1,5 @@
 -- Standardize badge naming convention across all categories
--- Progression: 1=Starter, 5=Builder, 10=Expert, 25=Champion, 50=Master, 100=Legend
+-- Progression: 1=Starter, 5=Builder, 10=Expert, 25=Master, 50=Champion, 100=Legend
 
 -- ============================================================================
 -- STEP 1: Update Communication Badges
@@ -13,15 +13,15 @@ AND requirement_type = 'category_count'
 AND requirement_value = 10;
 
 UPDATE badges 
-SET name = 'Communication Champion',
-    description = 'Completed 25 communication actions. You''re a communication champion.'
+SET name = 'Communication Master',
+    description = 'Completed 25 communication actions. You''re a communication master.'
 WHERE category = 'Communication' 
 AND requirement_type = 'category_count' 
 AND requirement_value = 25;
 
 UPDATE badges 
-SET name = 'Communication Master',
-    description = 'Completed 50 communication actions. You''re a communication master.'
+SET name = 'Communication Champion',
+    description = 'Completed 50 communication actions. You''re a communication champion.'
 WHERE category = 'Communication' 
 AND requirement_type = 'category_count' 
 AND requirement_value = 50;
@@ -38,15 +38,15 @@ AND requirement_type = 'category_count'
 AND requirement_value = 10;
 
 UPDATE badges 
-SET name = 'Intimacy Champion',
-    description = 'Completed 25 intimacy actions. You''re an intimacy champion.'
+SET name = 'Intimacy Master',
+    description = 'Completed 25 intimacy actions. You''re an intimacy master.'
 WHERE category = 'Intimacy' 
 AND requirement_type = 'category_count' 
 AND requirement_value = 25;
 
 UPDATE badges 
-SET name = 'Intimacy Master',
-    description = 'Completed 50 intimacy actions. You''re an intimacy master.'
+SET name = 'Intimacy Champion',
+    description = 'Completed 50 intimacy actions. You''re an intimacy champion.'
 WHERE category = 'Intimacy' 
 AND requirement_type = 'category_count' 
 AND requirement_value = 50;
@@ -63,15 +63,15 @@ AND requirement_type = 'category_count'
 AND requirement_value = 10;
 
 UPDATE badges 
-SET name = 'Partnership Champion',
-    description = 'Completed 25 partnership actions. You''re a partnership champion.'
+SET name = 'Partnership Master',
+    description = 'Completed 25 partnership actions. You''re a partnership master.'
 WHERE category = 'Partnership' 
 AND requirement_type = 'category_count' 
 AND requirement_value = 25;
 
 UPDATE badges 
-SET name = 'Partnership Master',
-    description = 'Completed 50 partnership actions. You''re a partnership master.'
+SET name = 'Partnership Champion',
+    description = 'Completed 50 partnership actions. You''re a partnership champion.'
 WHERE category = 'Partnership' 
 AND requirement_type = 'category_count' 
 AND requirement_value = 50;
@@ -88,15 +88,15 @@ AND requirement_type = 'category_count'
 AND requirement_value = 10;
 
 UPDATE badges 
-SET name = 'Conflict Resolution Champion',
-    description = 'Completed 25 conflict resolution actions. You''re a conflict resolution champion.'
+SET name = 'Conflict Resolution Master',
+    description = 'Completed 25 conflict resolution actions. You''re a conflict resolution master.'
 WHERE category = 'Conflict Resolution' 
 AND requirement_type = 'category_count' 
 AND requirement_value = 25;
 
 UPDATE badges 
-SET name = 'Conflict Resolution Master',
-    description = 'Completed 50 conflict resolution actions. You''re a conflict resolution master.'
+SET name = 'Conflict Resolution Champion',
+    description = 'Completed 50 conflict resolution actions. You''re a conflict resolution champion.'
 WHERE category = 'Conflict Resolution' 
 AND requirement_type = 'category_count' 
 AND requirement_value = 50;
@@ -113,15 +113,15 @@ AND requirement_type = 'category_count'
 AND requirement_value = 10;
 
 UPDATE badges 
-SET name = 'Reconnection Champion',
-    description = 'Completed 25 reconnection actions. You''re a reconnection champion.'
+SET name = 'Reconnection Master',
+    description = 'Completed 25 reconnection actions. You''re a reconnection master.'
 WHERE category = 'Reconnection' 
 AND requirement_type = 'category_count' 
 AND requirement_value = 25;
 
 UPDATE badges 
-SET name = 'Reconnection Master',
-    description = 'Completed 50 reconnection actions. You''re a reconnection master.'
+SET name = 'Reconnection Champion',
+    description = 'Completed 50 reconnection actions. You''re a reconnection champion.'
 WHERE category = 'Reconnection' 
 AND requirement_type = 'category_count' 
 AND requirement_value = 50;
@@ -138,15 +138,15 @@ AND requirement_type = 'category_count'
 AND requirement_value = 10;
 
 UPDATE badges 
-SET name = 'Quality Time Champion',
-    description = 'Completed 25 quality time actions. You''re a quality time champion.'
+SET name = 'Quality Time Master',
+    description = 'Completed 25 quality time actions. You''re a quality time master.'
 WHERE category = 'Quality Time' 
 AND requirement_type = 'category_count' 
 AND requirement_value = 25;
 
 UPDATE badges 
-SET name = 'Quality Time Master',
-    description = 'Completed 50 quality time actions. You''re a quality time master.'
+SET name = 'Quality Time Champion',
+    description = 'Completed 50 quality time actions. You''re a quality time champion.'
 WHERE category = 'Quality Time' 
 AND requirement_type = 'category_count' 
 AND requirement_value = 50;
@@ -162,14 +162,14 @@ WHERE requirement_type = 'gratitude_actions'
 AND requirement_value = 10;
 
 UPDATE badges 
-SET name = 'Gratitude Champion',
-    description = 'Completed 25 gratitude actions. You''re a gratitude champion.'
+SET name = 'Gratitude Master',
+    description = 'Completed 25 gratitude actions. You''re a gratitude master.'
 WHERE requirement_type = 'gratitude_actions' 
 AND requirement_value = 25;
 
 UPDATE badges 
-SET name = 'Gratitude Master',
-    description = 'Completed 50 gratitude actions. You''re a gratitude master.'
+SET name = 'Gratitude Champion',
+    description = 'Completed 50 gratitude actions. You''re a gratitude champion.'
 WHERE requirement_type = 'gratitude_actions' 
 AND requirement_value = 50;
 
@@ -184,8 +184,8 @@ WHERE requirement_type = 'date_nights'
 AND requirement_value = 5;
 
 UPDATE badges 
-SET name = 'Date Night Champion',
-    description = 'Planned 25 date nights. You''re a date night champion.'
+SET name = 'Date Night Master',
+    description = 'Planned 25 date nights. You''re a date night master.'
 WHERE requirement_type = 'date_nights' 
 AND requirement_value = 25;
 
@@ -193,5 +193,5 @@ AND requirement_value = 25;
 -- STEP 9: Update comment documenting standardized naming
 -- ============================================================================
 
-COMMENT ON TABLE badges IS 'All badge progressions follow consistent naming: 1=Starter, 5=Builder, 10=Expert, 25=Champion, 50=Master, 100=Legend. This applies to all category_count badges and gratitude_actions badges. Badges are awards and do NOT affect Husband Health score.';
+COMMENT ON TABLE badges IS 'All badge progressions follow consistent naming: 1=Starter, 5=Builder, 10=Expert, 25=Master, 50=Champion, 100=Legend. This applies to all category_count badges and gratitude_actions badges. Badges are awards and do NOT affect Husband Health score.';
 
