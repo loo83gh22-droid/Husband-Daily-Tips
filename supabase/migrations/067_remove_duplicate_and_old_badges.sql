@@ -24,15 +24,42 @@ WHERE (name ILIKE '%conflict%resolution%mast%' OR name ILIKE '%conflict%mast%')
 -- STEP 3: Remove Intimacy badges that don't fit the standard progression
 -- ============================================================================
 
--- Remove duplicate "Intimacy Expert" badges at 10 actions (keep only the one with "You're an intimacy expert" description)
--- Remove "Deep Connection Master" at 20 actions (doesn't fit standard progression)
--- Remove "Intimacy Champion" at 30 actions (doesn't fit standard progression)
--- Keep only: Starter (1), Builder (5), Expert (10), Master (25), Champion (50), Legend (100), plus event and specialized badges
+-- First, remove ALL Intimacy category_count badges that don't match standard progression (1,5,10,25,50,100)
 DELETE FROM badges 
-WHERE (name = 'Deep Connection Master' AND category = 'Intimacy')
-   OR (category = 'Intimacy' AND requirement_type = 'category_count' AND requirement_value = 30)
-   OR (name = 'Intimacy Expert' AND category = 'Intimacy' AND requirement_type = 'category_count' AND requirement_value = 10 AND description LIKE '%building real connection%')
-   OR (name = 'Intimacy Champion' AND category = 'Intimacy' AND requirement_type = 'category_count' AND requirement_value = 30);
+WHERE category = 'Intimacy' 
+AND requirement_type = 'category_count'
+AND requirement_value NOT IN (1, 5, 10, 25, 50, 100);
+
+-- Remove "Deep Connection Master" at 20 actions (doesn't fit standard progression)
+DELETE FROM badges 
+WHERE name = 'Deep Connection Master' AND category = 'Intimacy';
+
+-- Remove duplicate "Intimacy Expert" badges at 10 actions - keep only ONE
+-- Use ROW_NUMBER to keep the oldest one with correct description, remove all others
+DELETE FROM badges
+WHERE id IN (
+  SELECT id FROM (
+    SELECT id, ROW_NUMBER() OVER (
+      PARTITION BY category, requirement_type, requirement_value 
+      ORDER BY 
+        CASE WHEN description LIKE '%intimacy expert%' THEN 0 ELSE 1 END,
+        created_at ASC
+    ) as rn
+    FROM badges
+    WHERE name = 'Intimacy Expert'
+    AND category = 'Intimacy'
+    AND requirement_type = 'category_count'
+    AND requirement_value = 10
+  ) t
+  WHERE rn > 1
+);
+
+-- Remove any "Intimacy Champion" badges at 30 actions (should only exist at 50)
+DELETE FROM badges 
+WHERE name = 'Intimacy Champion' 
+AND category = 'Intimacy' 
+AND requirement_type = 'category_count' 
+AND requirement_value = 30;
 
 -- ============================================================================
 -- STEP 4: Remove Partnership badges that don't fit the standard progression
