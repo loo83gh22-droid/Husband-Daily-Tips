@@ -92,7 +92,7 @@ export default function SubscriptionButton({ plan, currentTier, hasActiveTrial, 
   // 3. They have an active trial (tier is premium but no paid subscription yet)
   const isCurrent = plan.tier === currentTier || 
                     (plan.tier === 'premium' && isOnPremium) ||
-                    (plan.tier === 'premium' && hasActiveTrial);
+                    (plan.tier === 'premium' && (hasActiveTrial === true));
 
   // Determine button text
   let buttonText = '';
@@ -112,7 +112,7 @@ export default function SubscriptionButton({ plan, currentTier, hasActiveTrial, 
   return (
     <button
       onClick={handleAction}
-      disabled={isLoading || isCurrent}
+      disabled={isLoading || (isCurrent === true)}
       className={`w-full px-6 py-3 rounded-lg font-semibold transition-colors ${
         isCurrent
           ? 'bg-slate-800 text-slate-500 cursor-not-allowed border border-slate-700'

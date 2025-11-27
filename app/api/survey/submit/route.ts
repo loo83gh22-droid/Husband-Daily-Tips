@@ -75,7 +75,8 @@ export async function POST(request: Request) {
     }
 
     // Handle skip: set baseline to 50 and mark survey as completed
-    if (skip || !responses || responses.length === 0) {
+    const responsesLength = Array.isArray(responses) ? responses.length : Object.keys(responses || {}).length;
+    if (skip || !responses || responsesLength === 0) {
       const { error: summaryError } = await adminSupabase.from('survey_summary').upsert({
         user_id: finalUserId,
         baseline_health: 50, // Default baseline
