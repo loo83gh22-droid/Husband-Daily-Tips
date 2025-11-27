@@ -138,7 +138,12 @@ export default function SurveyForm({ userId, questions, isPublic = false }: Surv
 
       if (!response.ok) {
         const data = await response.json();
-        throw new Error(data.error || 'Failed to submit survey');
+        // Show detailed validation errors if available
+        const errorMessage = data.details 
+          ? `${data.error}\n\nDetails: ${JSON.stringify(data.details, null, 2)}`
+          : data.error || 'Failed to submit survey';
+        console.error('Survey submission error details:', data);
+        throw new Error(errorMessage);
       }
 
       // Redirect to dashboard after successful submission
