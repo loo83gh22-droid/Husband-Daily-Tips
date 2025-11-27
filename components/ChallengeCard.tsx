@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import ChallengeJoinSuccessModal from './ChallengeJoinSuccessModal';
 import ChallengeErrorModal from './ChallengeErrorModal';
+import { personalizeText } from '@/lib/personalize-text';
 
 interface Challenge {
   id: string;
@@ -44,9 +45,10 @@ interface ChallengeCardProps {
   userId?: string;
   onJoin?: (challengeId: string) => void;
   subscriptionTier?: string;
+  partnerName?: string | null;
 }
 
-export default function ChallengeCard({ challenge, userChallenge, userId, onJoin, subscriptionTier = 'free' }: ChallengeCardProps) {
+export default function ChallengeCard({ challenge, userChallenge, userId, onJoin, subscriptionTier = 'free', partnerName }: ChallengeCardProps) {
   const [isJoining, setIsJoining] = useState(false);
   // Sync isJoined with userChallenge prop - update when prop changes
   const [isJoined, setIsJoined] = useState(!!userChallenge);
@@ -222,7 +224,7 @@ export default function ChallengeCard({ challenge, userChallenge, userId, onJoin
                 </span>
               )}
             </div>
-            <p className="text-sm text-slate-400 mt-1">{challenge.description.replace(/\bchallenge\b/gi, '7-day event')}</p>
+            <p className="text-sm text-slate-400 mt-1">{personalizeText(challenge.description.replace(/\bchallenge\b/gi, '7-day event'), partnerName)}</p>
           </div>
         </div>
         {isInProgress && (

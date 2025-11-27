@@ -435,6 +435,7 @@ export default function ActionsPageClient({
                 isEnrolled={isEnrolled}
                 onJoinEvent={handleJoinChallenge}
                 challenge={challengeWithActions}
+                partnerName={partnerName}
               />
             );
           })}
@@ -546,6 +547,7 @@ export default function ActionsPageClient({
                   }
                   completedMap={completedMapInstance}
                   userId={userId}
+                  partnerName={partnerName}
                   favoritedActionIds={favoritedActionIds}
                   partnerName={partnerName}
                 />

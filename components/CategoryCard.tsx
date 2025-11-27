@@ -35,6 +35,7 @@ interface CategoryCardProps {
   isEnrolled?: boolean;
   onJoinEvent?: (eventId: string) => void;
   challenge?: Challenge | null;
+  partnerName?: string | null;
 }
 
 const getThemeColor = (theme: string) => {
@@ -62,6 +63,7 @@ export default function CategoryCard({
   isEnrolled,
   onJoinEvent,
   challenge,
+  partnerName,
 }: CategoryCardProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const completionPercentage = actionCount > 0 ? Math.round((completedCount / actionCount) * 100) : 0;
@@ -128,6 +130,7 @@ export default function CategoryCard({
                 challenge={challenge}
                 isEnrolled={isEnrolled}
                 onJoin={onJoinEvent}
+                partnerName={partnerName}
               />
             )}
           </>

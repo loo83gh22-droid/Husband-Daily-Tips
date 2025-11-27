@@ -143,7 +143,7 @@ export default function ActionDetailModal({
                 {action.benefit && (
                   <div className="mb-6 p-5 bg-slate-800/60 border-l-4 border-primary-500/60 rounded-r-lg">
                     <p className="text-sm font-bold text-primary-300 mb-3">Why this matters:</p>
-                    <p className="text-slate-200 text-base leading-relaxed">{action.benefit}</p>
+                    <p className="text-slate-200 text-base leading-relaxed">{personalizeText(action.benefit, partnerName)}</p>
                   </div>
                 )}
 

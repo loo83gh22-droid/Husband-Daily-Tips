@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
+import { personalizeText } from '@/lib/personalize-text';
 
 interface Challenge {
   id: string;
@@ -28,6 +29,7 @@ interface ChallengeDetailModalProps {
   challenge: Challenge | null;
   isEnrolled?: boolean;
   onJoin?: (challengeId: string) => void;
+  partnerName?: string | null;
 }
 
 export default function ChallengeDetailModal({
@@ -36,6 +38,7 @@ export default function ChallengeDetailModal({
   challenge,
   isEnrolled = false,
   onJoin,
+  partnerName,
 }: ChallengeDetailModalProps) {
   const [isJoining, setIsJoining] = useState(false);
   const [challengeActions, setChallengeActions] = useState<Array<{
@@ -227,7 +230,7 @@ export default function ChallengeDetailModal({
               {challenge.name.replace(/Challenge/gi, 'Event')}
             </h3>
             <p className="text-slate-200 text-base md:text-lg leading-relaxed">
-              {challenge.description.replace(/\bchallenge\b/gi, '7-day event')}
+              {personalizeText(challenge.description.replace(/\bchallenge\b/gi, '7-day event'), partnerName)}
             </p>
           </div>
 
@@ -264,12 +267,12 @@ export default function ChallengeDetailModal({
                               <span className="text-xl">{action.icon}</span>
                             )}
                             <h4 className="text-base font-semibold text-slate-100">
-                              {action.name}
+                              {personalizeText(action.name, partnerName)}
                             </h4>
                           </div>
                           {action.description && (
                             <p className="text-sm text-slate-300 leading-relaxed">
-                              {action.description}
+                              {personalizeText(action.description, partnerName)}
                             </p>
                           )}
                         </div>

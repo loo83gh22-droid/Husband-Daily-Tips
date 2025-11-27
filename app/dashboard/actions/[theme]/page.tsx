@@ -11,11 +11,11 @@ async function getActionsByTheme(auth0Id: string, theme: string) {
   
   const { data: user } = await adminSupabase
     .from('users')
-    .select('id')
+    .select('id, partner_name')
     .eq('auth0_id', auth0Id)
     .single();
 
-  if (!user) return { actions: [], completedMap: {} };
+  if (!user) return { actions: [], completedMap: {}, partnerName: null };
 
   // Get all actions for this theme
   // First try to match by theme, then by category if theme doesn't match
@@ -49,6 +49,7 @@ async function getActionsByTheme(auth0Id: string, theme: string) {
     actions: actions || [],
     completedMap,
     userId: user.id,
+    partnerName: user.partner_name || null,
   };
 }
 
@@ -64,7 +65,7 @@ export default async function ActionsByThemePage({
   }
 
   const auth0Id = session.user.sub;
-  const { actions, completedMap, userId } = await getActionsByTheme(auth0Id, params.theme);
+  const { actions, completedMap, userId, partnerName } = await getActionsByTheme(auth0Id, params.theme);
 
   // Format theme name - handle special cases
   let themeName = params.theme.charAt(0).toUpperCase() + params.theme.slice(1).replace(/_/g, ' ');
@@ -156,6 +157,7 @@ export default async function ActionsByThemePage({
               actions={actions || []}
               completedMap={new Map(Object.entries(completedMap))}
               userId={userId}
+              partnerName={partnerName}
             />
           </section>
         </div>

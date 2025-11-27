@@ -1,5 +1,6 @@
 /**
- * Personalizes action text by replacing generic terms with the partner's name
+ * Personalizes action text by replacing the FIRST instance of partner-related terms with the partner's name,
+ * then using pronouns (she/her) for subsequent references
  * @param text - The original text to personalize
  * @param partnerName - The partner's name (optional)
  * @returns Personalized text, or original text if no partner name is provided
@@ -10,71 +11,258 @@ export function personalizeText(text: string | null | undefined, partnerName: st
   }
 
   let personalizedText = text;
+  let nameUsed = false; // Track if we've used the name once
 
-  // Replace possessive "her" (her day, her feelings, etc.) with "Partner's"
-  // Match "her" followed by a space and a word (possessive adjective)
-  personalizedText = personalizedText.replace(/\bher\s+([a-z]+)/gi, (match, word) => {
-    // Check if it's a possessive context (her + noun)
-    // Common possessive patterns: her day, her feelings, her needs, etc.
-    return `${partnerName}'s ${word}`;
-  });
+  // Helper to replace first occurrence only, then use pronouns for rest
+  const replaceFirstThenPronouns = (
+    pattern: RegExp,
+    nameReplacement: string | ((match: string, ...args: any[]) => string),
+    pronounReplacement: string = ''
+  ) => {
+    if (nameUsed) {
+      // After first replacement, replace with pronouns
+      if (pronounReplacement) {
+        personalizedText = personalizedText.replace(pattern, pronounReplacement);
+      }
+      // If no pronoun replacement specified, leave as is (already pronouns)
+      return;
+    }
+    
+    // Replace first occurrence with name
+    const match = personalizedText.match(pattern);
+    if (match) {
+      if (typeof nameReplacement === 'function') {
+        personalizedText = personalizedText.replace(pattern, (match, ...args) => {
+          nameUsed = true;
+          return nameReplacement(match, ...args);
+        });
+      } else {
+        personalizedText = personalizedText.replace(pattern, () => {
+          nameUsed = true;
+          return nameReplacement;
+        });
+      }
+    }
+  };
 
-  // Replace object pronoun "her" (give her, tell her, etc.) with partner name
-  // Match "her" at end of sentence or followed by punctuation/space
-  personalizedText = personalizedText.replace(/\bher\b(?=\s|\.|,|!|\?|$)/gi, partnerName);
+  // Priority order: Replace the first occurrence of any partner reference with the name
+  
+  // 1. "your partner" -> partner name (first occurrence only), then "her" for rest
+  if (!nameUsed) {
+    personalizedText = personalizedText.replace(/\byour partner\b/i, () => {
+      nameUsed = true;
+      return partnerName;
+    });
+  } else {
+    personalizedText = personalizedText.replace(/\byour partner\b/gi, 'her');
+  }
 
-  // Handle contractions first (before replacing "she")
-  // "she's" -> "Jodi's" or "Jodi is" (depending on context)
-  personalizedText = personalizedText.replace(/\bshe's\b/gi, `${partnerName} is`);
-  personalizedText = personalizedText.replace(/\bshe is\b/gi, `${partnerName} is`);
-  personalizedText = personalizedText.replace(/\bshe has\b/gi, `${partnerName} has`);
-  personalizedText = personalizedText.replace(/\bshe was\b/gi, `${partnerName} was`);
-  personalizedText = personalizedText.replace(/\bshe will\b/gi, `${partnerName} will`);
-  personalizedText = personalizedText.replace(/\bshe can\b/gi, `${partnerName} can`);
-  personalizedText = personalizedText.replace(/\bshe should\b/gi, `${partnerName} should`);
-  personalizedText = personalizedText.replace(/\bshe would\b/gi, `${partnerName} would`);
-  personalizedText = personalizedText.replace(/\bshe could\b/gi, `${partnerName} could`);
-  
-  // Replace subject pronoun "she" with partner name (after handling contractions)
-  personalizedText = personalizedText.replace(/\bshe\b/gi, partnerName);
+  // 2. "your wife" -> partner name (first occurrence only), then "her" for rest
+  if (!nameUsed) {
+    personalizedText = personalizedText.replace(/\byour wife\b/i, () => {
+      nameUsed = true;
+      return partnerName;
+    });
+  } else {
+    personalizedText = personalizedText.replace(/\byour wife\b/gi, 'her');
+  }
 
-  // Replace possessive pronoun "hers" with "Partner's"
-  personalizedText = personalizedText.replace(/\bhers\b/gi, `${partnerName}'s`);
+  // 3. "your spouse" -> partner name (first occurrence only), then "her" for rest
+  if (!nameUsed) {
+    personalizedText = personalizedText.replace(/\byour spouse\b/i, () => {
+      nameUsed = true;
+      return partnerName;
+    });
+  } else {
+    personalizedText = personalizedText.replace(/\byour spouse\b/gi, 'her');
+  }
 
-  // Replace "your partner" -> partner name
-  personalizedText = personalizedText.replace(/\byour partner\b/gi, partnerName);
-  
-  // Replace "your wife" -> partner name
-  personalizedText = personalizedText.replace(/\byour wife\b/gi, partnerName);
-  
-  // Replace "your spouse" -> partner name
-  personalizedText = personalizedText.replace(/\byour spouse\b/gi, partnerName);
-  
-  // Replace standalone "partner" -> partner name (be careful with context)
-  personalizedText = personalizedText.replace(/\bpartner\b/gi, partnerName);
-  
-  // Replace standalone "wife" -> partner name
-  personalizedText = personalizedText.replace(/\bwife\b/gi, partnerName);
-  
-  // Replace standalone "spouse" -> partner name
-  personalizedText = personalizedText.replace(/\bspouse\b/gi, partnerName);
+  // 4. Possessive "her + noun" (her day, her feelings) -> "Partner's + noun" (first occurrence only), then "her" for rest
+  if (!nameUsed) {
+    personalizedText = personalizedText.replace(/\bher\s+([a-z]+)/i, (match, word) => {
+      nameUsed = true;
+      return `${partnerName}'s ${word}`;
+    });
+  } else {
+    // Keep as "her + noun" for subsequent occurrences
+    // No change needed - already pronouns
+  }
 
-  // Handle "Don't Interrupt Her" -> "Don't Interrupt Jodi"
-  personalizedText = personalizedText.replace(/\binterrupt her\b/gi, `interrupt ${partnerName}`);
+  // 5. Object pronoun "her" (give her, tell her) -> partner name (first occurrence only), then "her" for rest
+  if (!nameUsed) {
+    personalizedText = personalizedText.replace(/\bher\b(?=\s|\.|,|!|\?|$)/i, () => {
+      nameUsed = true;
+      return partnerName;
+    });
+  }
+  // Subsequent "her" stays as "her" (already pronouns)
+
+  // 6. Contractions and verb forms with "she" -> partner name (first occurrence only), then "she" for rest
+  if (!nameUsed) {
+    personalizedText = personalizedText.replace(/\bshe's\b/i, () => {
+      nameUsed = true;
+      return `${partnerName} is`;
+    });
+  } else {
+    personalizedText = personalizedText.replace(/\bshe's\b/gi, "she's");
+  }
   
-  // Handle "Validate Her Feelings" -> "Validate Jodi's Feelings"
-  personalizedText = personalizedText.replace(/\bvalidate her\b/gi, `validate ${partnerName}'s`);
+  if (!nameUsed) {
+    personalizedText = personalizedText.replace(/\bshe is\b/i, () => {
+      nameUsed = true;
+      return `${partnerName} is`;
+    });
+  } else {
+    personalizedText = personalizedText.replace(/\bshe is\b/gi, 'she is');
+  }
   
-  // Handle "ask her" -> "ask Jodi"
-  personalizedText = personalizedText.replace(/\bask her\b/gi, `ask ${partnerName}`);
+  if (!nameUsed) {
+    personalizedText = personalizedText.replace(/\bshe has\b/i, () => {
+      nameUsed = true;
+      return `${partnerName} has`;
+    });
+  } else {
+    personalizedText = personalizedText.replace(/\bshe has\b/gi, 'she has');
+  }
   
-  // Handle "tell her" -> "tell Jodi"
-  personalizedText = personalizedText.replace(/\btell her\b/gi, `tell ${partnerName}`);
+  if (!nameUsed) {
+    personalizedText = personalizedText.replace(/\bshe was\b/i, () => {
+      nameUsed = true;
+      return `${partnerName} was`;
+    });
+  } else {
+    personalizedText = personalizedText.replace(/\bshe was\b/gi, 'she was');
+  }
   
-  // Handle "When she's talking" -> "When Jodi is talking" (already handled above with contractions)
+  if (!nameUsed) {
+    personalizedText = personalizedText.replace(/\bshe will\b/i, () => {
+      nameUsed = true;
+      return `${partnerName} will`;
+    });
+  } else {
+    personalizedText = personalizedText.replace(/\bshe will\b/gi, 'she will');
+  }
   
-  // Handle "After she tells you" -> "After Jodi tells you" (already handled above)
+  if (!nameUsed) {
+    personalizedText = personalizedText.replace(/\bshe can\b/i, () => {
+      nameUsed = true;
+      return `${partnerName} can`;
+    });
+  } else {
+    personalizedText = personalizedText.replace(/\bshe can\b/gi, 'she can');
+  }
+  
+  if (!nameUsed) {
+    personalizedText = personalizedText.replace(/\bshe should\b/i, () => {
+      nameUsed = true;
+      return `${partnerName} should`;
+    });
+  } else {
+    personalizedText = personalizedText.replace(/\bshe should\b/gi, 'she should');
+  }
+  
+  if (!nameUsed) {
+    personalizedText = personalizedText.replace(/\bshe would\b/i, () => {
+      nameUsed = true;
+      return `${partnerName} would`;
+    });
+  } else {
+    personalizedText = personalizedText.replace(/\bshe would\b/gi, 'she would');
+  }
+  
+  if (!nameUsed) {
+    personalizedText = personalizedText.replace(/\bshe could\b/i, () => {
+      nameUsed = true;
+      return `${partnerName} could`;
+    });
+  } else {
+    personalizedText = personalizedText.replace(/\bshe could\b/gi, 'she could');
+  }
+
+  // 7. Subject pronoun "she" -> partner name (first occurrence only), then "she" for rest
+  if (!nameUsed) {
+    personalizedText = personalizedText.replace(/\bshe\b/i, () => {
+      nameUsed = true;
+      return partnerName;
+    });
+  }
+  // Subsequent "she" stays as "she" (already pronouns)
+
+  // 8. Possessive pronoun "hers" -> "Partner's" (first occurrence only), then "hers" for rest
+  if (!nameUsed) {
+    personalizedText = personalizedText.replace(/\bhers\b/i, () => {
+      nameUsed = true;
+      return `${partnerName}'s`;
+    });
+  }
+  // Subsequent "hers" stays as "hers" (already pronouns)
+
+  // 9. Standalone "partner" -> partner name (first occurrence only), then "her" for rest
+  if (!nameUsed) {
+    personalizedText = personalizedText.replace(/\bpartner\b/i, () => {
+      nameUsed = true;
+      return partnerName;
+    });
+  } else {
+    personalizedText = personalizedText.replace(/\bpartner\b/gi, 'her');
+  }
+
+  // 10. Standalone "wife" -> partner name (first occurrence only), then "her" for rest
+  if (!nameUsed) {
+    personalizedText = personalizedText.replace(/\bwife\b/i, () => {
+      nameUsed = true;
+      return partnerName;
+    });
+  } else {
+    personalizedText = personalizedText.replace(/\bwife\b/gi, 'her');
+  }
+
+  // 11. Standalone "spouse" -> partner name (first occurrence only), then "her" for rest
+  if (!nameUsed) {
+    personalizedText = personalizedText.replace(/\bspouse\b/i, () => {
+      nameUsed = true;
+      return partnerName;
+    });
+  } else {
+    personalizedText = personalizedText.replace(/\bspouse\b/gi, 'her');
+  }
+
+  // 12. Specific phrases
+  if (!nameUsed) {
+    personalizedText = personalizedText.replace(/\binterrupt her\b/i, () => {
+      nameUsed = true;
+      return `interrupt ${partnerName}`;
+    });
+  } else {
+    personalizedText = personalizedText.replace(/\binterrupt her\b/gi, 'interrupt her');
+  }
+  
+  if (!nameUsed) {
+    personalizedText = personalizedText.replace(/\bvalidate her\b/i, () => {
+      nameUsed = true;
+      return `validate ${partnerName}'s`;
+    });
+  } else {
+    personalizedText = personalizedText.replace(/\bvalidate her\b/gi, "validate her");
+  }
+  
+  if (!nameUsed) {
+    personalizedText = personalizedText.replace(/\bask her\b/i, () => {
+      nameUsed = true;
+      return `ask ${partnerName}`;
+    });
+  } else {
+    personalizedText = personalizedText.replace(/\bask her\b/gi, 'ask her');
+  }
+  
+  if (!nameUsed) {
+    personalizedText = personalizedText.replace(/\btell her\b/i, () => {
+      nameUsed = true;
+      return `tell ${partnerName}`;
+    });
+  } else {
+    personalizedText = personalizedText.replace(/\btell her\b/gi, 'tell her');
+  }
 
   return personalizedText;
 }
-

@@ -837,7 +837,10 @@ export default async function Dashboard() {
         </div>
 
         {/* 7-Day Events Section */}
-        <ActiveChallenges subscriptionTier={user.subscription_tier || 'free'} />
+        <ActiveChallenges 
+          subscriptionTier={user.subscription_tier || 'free'} 
+          partnerName={user.partner_name || null}
+        />
       </main>
     </div>
   );

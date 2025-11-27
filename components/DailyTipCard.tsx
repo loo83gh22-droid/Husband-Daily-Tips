@@ -705,7 +705,7 @@ END:VCALENDAR`;
             {tip.benefit && (
               <div className="mt-4 sm:mt-5 p-3 sm:p-4 md:p-5 bg-slate-800/60 border-l-4 border-primary-500/60 rounded-r-lg">
                 <p className="text-xs sm:text-sm font-bold text-primary-300 mb-1 sm:mb-2">Why this matters:</p>
-                <p className="text-slate-200 text-sm sm:text-base leading-relaxed">{tip.benefit}</p>
+                <p className="text-slate-200 text-sm sm:text-base leading-relaxed">{personalizeText(tip.benefit, partnerName)}</p>
               </div>
             )}
           </div>
