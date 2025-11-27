@@ -17,12 +17,18 @@ export const surveyResponseSchema = z.object({
       })
     ).min(1).max(30),
     // Object format: {1: 5, 2: 1, ...} or {"1": 5, "2": 1, ...} where key is questionId and value is response
-    z.record(
-      z.string().or(z.number()),
-      z.union([
-        z.number().int().min(0).max(5),
-        z.boolean(),
-      ])
+    // Accept any object with string/number keys and number/boolean values (will be validated more strictly in processing)
+    z.record(z.unknown(), z.unknown()).refine(
+      (val) => {
+        // Check that all values are valid (number 0-5 or boolean)
+        return Object.values(val).every((v) => {
+          if (typeof v === 'number') {
+            return Number.isInteger(v) && v >= 0 && v <= 5;
+          }
+          return typeof v === 'boolean';
+        });
+      },
+      { message: 'All response values must be numbers (0-5) or booleans' }
     ),
   ]),
   skip: z.boolean().optional(),
