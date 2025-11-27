@@ -547,7 +547,6 @@ export default function ActionsPageClient({
                   }
                   completedMap={completedMapInstance}
                   userId={userId}
-                  partnerName={partnerName}
                   favoritedActionIds={favoritedActionIds}
                   partnerName={partnerName}
                 />
