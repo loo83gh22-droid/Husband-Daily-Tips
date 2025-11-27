@@ -8,6 +8,8 @@
 -- ============================================================================
 
 -- Remove specific old badges that are being replaced
+-- Remove old "Romance Rookie" (replaced by "Romance Builder")
+-- Remove old "Date Night Pro" (replaced by "Date Night Regular" for 5, and we'll use a different name for 10)
 DELETE FROM badges 
 WHERE name IN ('Romance Rookie', 'Date Night Pro');
 
@@ -55,7 +57,7 @@ INSERT INTO badges (name, description, icon, badge_type, requirement_type, requi
 SELECT * FROM (VALUES
   ('Date Night Starter', 'Planned your first date night. Quality time together starts here.', '🍷', 'big_idea', 'date_nights', 1, 0, 'Romance'),
   ('Date Night Regular', 'Planned 5 date nights. You''re making time together a priority.', '🍷', 'big_idea', 'date_nights', 5, 0, 'Romance'),
-  ('Date Night Pro', 'Planned 10 date nights. You''re a date night pro.', '🍷', 'big_idea', 'date_nights', 10, 0, 'Romance'),
+  ('Date Night Expert', 'Planned 10 date nights. You''re a date night expert.', '🍷', 'big_idea', 'date_nights', 10, 0, 'Romance'),
   ('Date Night Master', 'Planned 25 date nights. You''ve mastered prioritizing quality time together.', '🍷', 'big_idea', 'date_nights', 25, 0, 'Romance')
 ) AS v(name, description, icon, badge_type, requirement_type, requirement_value, health_bonus, category)
 WHERE NOT EXISTS (
