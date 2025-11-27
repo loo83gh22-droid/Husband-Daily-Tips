@@ -38,7 +38,7 @@ WHERE NOT EXISTS (
 INSERT INTO badges (name, description, icon, badge_type, requirement_type, requirement_value, health_bonus, category)
 SELECT 
   '7-Day Communication Champion',
-  'Completed the 7-Day Communication Challenge',
+  'Completed the 7-Day Communication Event',
   '💬',
   'big_idea',
   'event_completion',
