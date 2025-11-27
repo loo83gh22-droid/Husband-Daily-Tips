@@ -62,45 +62,30 @@ export default function SurveyForm({ userId, questions, isPublic = false }: Surv
   const [calculatedScore, setCalculatedScore] = useState<number | null>(null);
 
   const calculatePublicResults = () => {
-    // Calculate category scores
-    const categoryScores: Record<string, { total: number; count: number }> = {
-      communication: { total: 0, count: 0 },
-      romance: { total: 0, count: 0 },
-      partnership: { total: 0, count: 0 },
-      intimacy: { total: 0, count: 0 },
-      conflict: { total: 0, count: 0 },
-    };
-
+    // Count Yes answers for baseline questions (questions 1-18)
+    // Yes = 1 point, No = 0 points
+    let yesCount = 0;
+    let totalBaselineQuestions = 0;
+    
     questions.forEach((question) => {
-      const responseValue = responses[question.id];
-      if (responseValue !== undefined) {
-        const category = question.category.toLowerCase();
-        if (categoryScores[category]) {
-          categoryScores[category].total += responseValue;
-          categoryScores[category].count += 1;
+      // Only count baseline questions (1-18), not goal-setting questions (19+)
+      if (question.id <= 18) {
+        totalBaselineQuestions++;
+        const responseValue = responses[question.id];
+        if (responseValue !== undefined && question.response_type === 'yes_no' && responseValue === 1) {
+          yesCount++;
         }
       }
     });
 
-    // Calculate scores (scale to 0-100)
-    const communicationScore = categoryScores.communication.count > 0
-      ? (categoryScores.communication.total / categoryScores.communication.count) * 20
-      : 50;
-    const romanceScore = categoryScores.romance.count > 0
-      ? (categoryScores.romance.total / categoryScores.romance.count) * 20
-      : 50;
-    const partnershipScore = categoryScores.partnership.count > 0
-      ? (categoryScores.partnership.total / categoryScores.partnership.count) * 20
-      : 50;
-    const intimacyScore = categoryScores.intimacy.count > 0
-      ? (categoryScores.intimacy.total / categoryScores.intimacy.count) * 20
-      : 50;
-    const conflictScore = (communicationScore + romanceScore + partnershipScore + intimacyScore) / 4;
-
-    // Baseline health is average of all 5 categories
-    const baselineHealth = Math.round(
-      (communicationScore + romanceScore + partnershipScore + intimacyScore + conflictScore) / 5
-    );
+    // Calculate baseline health from Yes/No answers
+    // Percentage = (Yes count / Total questions) * 100
+    // Maximum baseline health is capped at 90%
+    let baselineHealth = 50; // Default if no questions answered
+    if (totalBaselineQuestions > 0) {
+      const percentage = (yesCount / totalBaselineQuestions) * 100;
+      baselineHealth = Math.min(90, Math.round(percentage)); // Cap at 90%
+    }
 
     return baselineHealth;
   };
