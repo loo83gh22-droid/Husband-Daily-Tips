@@ -118,11 +118,13 @@ export async function checkAndAwardBadges(
       case 'milestone_actions':
       // New outdoor/adventure requirement types
       case 'outdoor_actions':
+      case 'outdoor_activities':
       case 'walk_actions':
       case 'hiking_actions':
       case 'streaking_actions':
       case 'adventure_actions':
-      case 'camping_actions':
+      case 'adventure_activities':
+      case 'camping_activities':
       case 'water_activities':
       case 'run_actions':
       case 'sports_actions':
@@ -132,6 +134,44 @@ export async function checkAndAwardBadges(
           const count = stats.actionCounts[badge.requirement_type] || 0;
           if (count >= (badge.requirement_value || 0)) {
             earned = true;
+          }
+        } else {
+          // If actionCounts not provided, query the database directly
+          // For outdoor_activities, count actions with outdoor-related keywords
+          if (badge.requirement_type === 'outdoor_activities') {
+            const { data: outdoorActions } = await supabase
+              .from('user_action_completions')
+              .select('actions(name, description, category)')
+              .eq('user_id', userId);
+            
+            const outdoorKeywords = ['outdoor', 'hiking', 'walk', 'camping', 'nature', 'park', 'trail', 'beach', 'picnic', 'garden'];
+            const outdoorCount = outdoorActions?.filter((ac: any) => {
+              const name = (ac.actions?.name || '').toLowerCase();
+              const desc = (ac.actions?.description || '').toLowerCase();
+              return outdoorKeywords.some(keyword => name.includes(keyword) || desc.includes(keyword));
+            }).length || 0;
+            
+            if (outdoorCount >= (badge.requirement_value || 0)) {
+              earned = true;
+            }
+          }
+          // For adventure_activities, count actions with adventure-related keywords
+          else if (badge.requirement_type === 'adventure_activities') {
+            const { data: adventureActions } = await supabase
+              .from('user_action_completions')
+              .select('actions(name, description, category)')
+              .eq('user_id', userId);
+            
+            const adventureKeywords = ['adventure', 'explore', 'explorer', 'challenge', 'quest', 'journey', 'discover', 'expedition'];
+            const adventureCount = adventureActions?.filter((ac: any) => {
+              const name = (ac.actions?.name || '').toLowerCase();
+              const desc = (ac.actions?.description || '').toLowerCase();
+              return adventureKeywords.some(keyword => name.includes(keyword) || desc.includes(keyword));
+            }).length || 0;
+            
+            if (adventureCount >= (badge.requirement_value || 0)) {
+              earned = true;
+            }
           }
         }
         break;
@@ -264,17 +304,49 @@ export async function calculateBadgeProgress(
       case 'milestone_actions':
       // New outdoor/adventure requirement types
       case 'outdoor_actions':
+      case 'outdoor_activities':
       case 'walk_actions':
       case 'hiking_actions':
       case 'streaking_actions':
       case 'adventure_actions':
-      case 'camping_actions':
+      case 'adventure_activities':
+      case 'camping_activities':
       case 'water_activities':
       case 'run_actions':
       case 'sports_actions':
       case 'weekend_streak':
           if (stats.actionCounts) {
             current = stats.actionCounts[badge.requirement_type] || 0;
+          } else {
+            // If actionCounts not provided, query the database directly
+            // For outdoor_activities, count actions with outdoor-related keywords
+            if (badge.requirement_type === 'outdoor_activities') {
+              const { data: outdoorActions } = await supabase
+                .from('user_action_completions')
+                .select('actions(name, description, category)')
+                .eq('user_id', userId);
+              
+              const outdoorKeywords = ['outdoor', 'hiking', 'walk', 'camping', 'nature', 'park', 'trail', 'beach', 'picnic', 'garden'];
+              current = outdoorActions?.filter((ac: any) => {
+                const name = (ac.actions?.name || '').toLowerCase();
+                const desc = (ac.actions?.description || '').toLowerCase();
+                return outdoorKeywords.some(keyword => name.includes(keyword) || desc.includes(keyword));
+              }).length || 0;
+            }
+            // For adventure_activities, count actions with adventure-related keywords
+            else if (badge.requirement_type === 'adventure_activities') {
+              const { data: adventureActions } = await supabase
+                .from('user_action_completions')
+                .select('actions(name, description, category)')
+                .eq('user_id', userId);
+              
+              const adventureKeywords = ['adventure', 'explore', 'explorer', 'challenge', 'quest', 'journey', 'discover', 'expedition'];
+              current = adventureActions?.filter((ac: any) => {
+                const name = (ac.actions?.name || '').toLowerCase();
+                const desc = (ac.actions?.description || '').toLowerCase();
+                return adventureKeywords.some(keyword => name.includes(keyword) || desc.includes(keyword));
+              }).length || 0;
+            }
           }
       break;
 
