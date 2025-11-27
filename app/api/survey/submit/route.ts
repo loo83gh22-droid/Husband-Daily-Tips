@@ -38,12 +38,31 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json();
+    
+    // Log the incoming data for debugging (remove in production if needed)
+    logger.info('Survey submission received:', {
+      hasUserId: !!body.userId,
+      responsesType: Array.isArray(body.responses) ? 'array' : typeof body.responses,
+      responsesKeys: Array.isArray(body.responses) ? body.responses.length : Object.keys(body.responses || {}).length,
+      sampleResponse: Array.isArray(body.responses) 
+        ? body.responses[0] 
+        : Object.entries(body.responses || {}).slice(0, 3),
+    });
 
     // Validate input
     const validationResult = surveyResponseSchema.safeParse(body);
     
     if (!validationResult.success) {
-      logger.error('Survey validation failed:', validationResult.error.errors);
+      logger.error('Survey validation failed:', {
+        errors: validationResult.error.errors,
+        receivedData: {
+          userId: body.userId,
+          responsesType: Array.isArray(body.responses) ? 'array' : typeof body.responses,
+          responsesSample: Array.isArray(body.responses)
+            ? body.responses.slice(0, 2)
+            : Object.fromEntries(Object.entries(body.responses || {}).slice(0, 3)),
+        },
+      });
       return NextResponse.json(
         {
           error: 'Invalid request data',
