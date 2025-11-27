@@ -93,14 +93,14 @@ export default function SubscriptionButton({ plan, currentTier, hasActiveTrial, 
   let buttonText = '';
   if (isCurrent) {
     buttonText = 'Current Plan';
+  } else if (plan.tier === 'premium' && isOnPremium) {
+    // User is already on premium subscription
+    buttonText = 'Current Plan';
   } else if (plan.tier === 'premium' && currentTier === 'free') {
     buttonText = 'Start Free Trial';
   } else if (plan.tier === 'premium' && hasActiveTrial) {
     const priceText = plan.interval === 'year' ? '$71.40/year' : '$7/month';
     buttonText = `Join Premium (${priceText})`;
-  } else if (plan.tier === 'premium' && currentTier === 'premium' && !hasActiveTrial) {
-    // User has active subscription (not trial)
-    buttonText = 'Current Plan';
   } else if (plan.tier === 'free') {
     buttonText = 'Downgrade';
   } else {
