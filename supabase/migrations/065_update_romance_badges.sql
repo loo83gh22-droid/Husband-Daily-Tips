@@ -39,9 +39,9 @@ INSERT INTO badges (name, description, icon, badge_type, requirement_type, requi
 SELECT * FROM (VALUES
   ('Romance Starter', 'Completed your first romance action. The spark starts here.', '💕', 'big_idea', 'category_count', 1, 0, 'Romance'),
   ('Romance Builder', 'Completed 5 romance actions. You''re bringing the romance back.', '💕', 'big_idea', 'category_count', 5, 0, 'Romance'),
-  ('Romance Master', 'Completed 10 romance actions. You''re a romance master.', '💕', 'big_idea', 'category_count', 10, 0, 'Romance'),
-  ('Romance Expert', 'Completed 25 romance actions. You''ve mastered keeping the spark alive.', '💕', 'big_idea', 'category_count', 25, 0, 'Romance'),
-  ('Romance Champion', 'Completed 50 romance actions. You''re a romance champion.', '💕', 'big_idea', 'category_count', 50, 0, 'Romance'),
+  ('Romance Expert', 'Completed 10 romance actions. You''re a romance expert.', '💕', 'big_idea', 'category_count', 10, 0, 'Romance'),
+  ('Romance Champion', 'Completed 25 romance actions. You''re a romance champion.', '💕', 'big_idea', 'category_count', 25, 0, 'Romance'),
+  ('Romance Master', 'Completed 50 romance actions. You''re a romance master.', '💕', 'big_idea', 'category_count', 50, 0, 'Romance'),
   ('Romance Legend', 'Completed 100 romance actions. You''re a romance legend.', '💕', 'big_idea', 'category_count', 100, 0, 'Romance')
 ) AS v(name, description, icon, badge_type, requirement_type, requirement_value, health_bonus, category)
 WHERE NOT EXISTS (
