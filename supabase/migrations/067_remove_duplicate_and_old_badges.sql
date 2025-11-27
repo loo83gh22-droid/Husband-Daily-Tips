@@ -33,7 +33,17 @@ WHERE (name = 'Deep Connection Master' AND category = 'Intimacy')
    OR (name = 'Intimacy Expert' AND category = 'Intimacy' AND requirement_type = 'category_count' AND requirement_value = 10 AND description LIKE '%building real connection%');
 
 -- ============================================================================
--- STEP 4: Remove any other badges that don't fit the standard progression (1,5,10,25,50,100)
+-- STEP 4: Remove Partnership badges that don't fit the standard progression
+-- ============================================================================
+
+-- Remove "True Partner" at 10 actions (duplicate of "Partnership Expert")
+-- Remove "Partnership Pro" at 20 actions (doesn't fit standard progression)
+DELETE FROM badges 
+WHERE (name = 'True Partner' AND category = 'Partnership' AND requirement_type = 'category_count' AND requirement_value = 10)
+   OR (name = 'Partnership Pro' AND category = 'Partnership' AND requirement_type = 'category_count' AND requirement_value = 20);
+
+-- ============================================================================
+-- STEP 5: Remove any other badges that don't fit the standard progression (1,5,10,25,50,100)
 -- ============================================================================
 
 -- Remove any category_count badges with requirement_value = 20 or 30 (not in standard progression)
@@ -43,7 +53,7 @@ AND requirement_value IN (20, 30)
 AND category IS NOT NULL;
 
 -- ============================================================================
--- STEP 4: Update comment
+-- STEP 6: Update comment
 -- ============================================================================
 
 COMMENT ON TABLE badges IS 'All badge progressions follow consistent naming: 1=Starter, 5=Builder, 10=Expert, 25=Master, 50=Champion, 100=Legend. Only badges with requirement values of 1, 5, 10, 25, 50, or 100 are kept. Badges are awards and do NOT affect Husband Health score.';
