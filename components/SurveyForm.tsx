@@ -33,7 +33,15 @@ export default function SurveyForm({ userId, questions, isPublic = false }: Surv
       ...prev,
       [currentQuestion.id]: value,
     }));
-    // Don't auto-advance - user must click Next or Complete button
+    
+    // Auto-advance to next question (unless it's the last question)
+    if (!isLastQuestion) {
+      // Small delay to show the selection before advancing
+      setTimeout(() => {
+        setCurrentQuestionIndex((prev) => prev + 1);
+        setError(null); // Clear any previous errors
+      }, 300);
+    }
   };
 
   const handleNext = () => {
