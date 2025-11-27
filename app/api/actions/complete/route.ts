@@ -278,7 +278,6 @@ export async function POST(request: Request) {
             name: n.badge.name,
             description: n.badge.description,
             icon: n.badge.icon,
-            healthBonus: n.healthBonus,
           })),
         });
       }

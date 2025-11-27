@@ -51,7 +51,7 @@ export default function ActionsList({
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const [isHiding, setIsHiding] = useState(false);
   const [newlyEarnedBadges, setNewlyEarnedBadges] = useState<
-    Array<{ name: string; description: string; icon: string; healthBonus: number }>
+    Array<{ name: string; description: string; icon: string }>
   >([]);
   const [subscriptionStatus, setSubscriptionStatus] = useState<SubscriptionStatus | null>(null);
   const [isLoadingSubscription, setIsLoadingSubscription] = useState(true);
@@ -146,11 +146,6 @@ export default function ActionsList({
               <div>
                 <p className="text-sm font-medium text-slate-200">{badge.name}</p>
                 <p className="text-xs text-slate-400">{badge.description}</p>
-                {badge.healthBonus > 0 && (
-                  <p className="text-xs text-primary-300 mt-1">
-                    +{badge.healthBonus} health bonus
-                  </p>
-                )}
               </div>
             </div>
           ))}

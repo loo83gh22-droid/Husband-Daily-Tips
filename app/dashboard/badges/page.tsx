@@ -371,11 +371,6 @@ export default async function BadgesPage() {
                             )}
 
                             <div className="flex flex-col items-center gap-1 text-xs">
-                              {badge.health_bonus > 0 && (
-                                <span className="text-primary-300">
-                                  +{badge.health_bonus} health
-                                </span>
-                              )}
                               {isEarned && (
                                 <span className="text-green-400 font-medium">✓ Earned</span>
                               )}

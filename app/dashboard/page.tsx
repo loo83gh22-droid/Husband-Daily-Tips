@@ -438,14 +438,7 @@ async function getUserStats(userId: string | null) {
 
   const totalDailyActionCompletions = dailyActionCompletions?.length || 0;
 
-  // Get badge bonuses (now 0, but keeping for backward compatibility)
-  const { data: userBadges } = await adminSupabase
-    .from('user_badges')
-    .select('badges(health_bonus)')
-    .eq('user_id', userId);
-
-  const totalBadgeBonuses =
-    userBadges?.reduce((sum: number, ub: any) => sum + (ub.badges?.health_bonus || 0), 0) || 0;
+  // Badges no longer provide health bonuses - they are just awards
 
   // Calculate health score using new algorithm (async)
   // Includes action points, daily/weekly caps, decay, and repetition penalties

@@ -27,7 +27,7 @@ export async function checkAndAwardBadges(
 
   if (!allBadges) return [];
 
-  const newlyEarned: Array<{ badge: any; healthBonus: number }> = [];
+  const newlyEarned: Array<{ badge: any }> = [];
 
   for (const badge of allBadges) {
     if (earnedBadgeIds.has(badge.id)) continue; // Already earned
@@ -166,7 +166,6 @@ export async function checkAndAwardBadges(
 
       newlyEarned.push({
         badge,
-        healthBonus: badge.health_bonus || 0,
       });
     }
   }

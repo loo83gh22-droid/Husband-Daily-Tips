@@ -49,7 +49,7 @@ export default function DailyTipCard({ tip, subscriptionTier = 'free', onActionR
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [showReflection, setShowReflection] = useState(false);
   const [newlyEarnedBadges, setNewlyEarnedBadges] = useState<
-    Array<{ name: string; description: string; icon: string; healthBonus: number }>
+    Array<{ name: string; description: string; icon: string }>
   >([]);
   const [isExportingCalendar, setIsExportingCalendar] = useState(false);
   const [isFavorited, setIsFavorited] = useState(tip.favorited || false);
@@ -984,11 +984,6 @@ END:VCALENDAR`;
                   <div>
                     <p className="text-sm font-medium text-slate-200">{badge.name}</p>
                     <p className="text-xs text-slate-400">{badge.description}</p>
-                    {badge.healthBonus > 0 && (
-                      <p className="text-xs text-primary-300 mt-1">
-                        +{badge.healthBonus} health bonus
-                      </p>
-                    )}
                   </div>
                 </div>
               ))}
