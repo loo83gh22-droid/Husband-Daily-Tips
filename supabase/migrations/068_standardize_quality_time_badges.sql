@@ -24,6 +24,27 @@ AND (category = 'Quality Time' OR category IS NULL)
 AND requirement_type IN ('category_count', 'outdoor_activities', 'adventure_activities')
 AND requirement_value NOT IN (1, 5, 10, 25, 50, 100);
 
+-- Explicitly remove specific non-standard badges by name
+DELETE FROM badges 
+WHERE name IN (
+  'Outdoor Icon',
+  'Outdoor Master',
+  'Fitness Friends',
+  'Adventure Legends',
+  'Outdoor Enthusiasts',
+  'Nature Lover',
+  'Active Couple',
+  'First Adventure'
+)
+OR (name ILIKE '%outdoor icon%')
+OR (name ILIKE '%outdoor master%')
+OR (name ILIKE '%fitness friends%')
+OR (name ILIKE '%adventure legends%')
+OR (name ILIKE '%outdoor enthusiasts%')
+OR (name ILIKE '%nature lover%')
+OR (name ILIKE '%active couple%')
+OR (name ILIKE '%first adventure%');
+
 -- ============================================================================
 -- STEP 2: Add standardized Quality Time Actions progression (1, 5, 10, 25, 50, 100)
 -- ============================================================================
