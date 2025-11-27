@@ -1,8 +1,9 @@
 -- Standardize Quality Time badges to match the standard progression
 -- Progression: 1=Starter, 5=Builder, 10=Expert, 25=Master, 50=Champion, 100=Legend
+-- Includes: Quality Time Actions, Outdoor Activities, Adventure Activities
 
 -- ============================================================================
--- STEP 1: Remove all existing Quality Time category_count badges
+-- STEP 1: Remove all existing Quality Time related badges
 -- ============================================================================
 
 -- Remove all Quality Time category_count badges (we'll recreate them with correct progression)
@@ -16,14 +17,15 @@ WHERE (category = 'Quality Time' OR name ILIKE '%quality time%' OR name ILIKE '%
 AND requirement_type = 'category_count'
 AND requirement_value NOT IN (1, 5, 10, 25, 50, 100);
 
--- Remove any duplicate or incorrectly named Quality Time badges
+-- Remove any outdoor/adventure badges that don't fit the standard
 DELETE FROM badges 
 WHERE (name ILIKE '%outdoor%' OR name ILIKE '%adventure%' OR name ILIKE '%active%' OR name ILIKE '%fitness%')
-AND category = 'Quality Time'
-AND requirement_type = 'category_count';
+AND (category = 'Quality Time' OR category IS NULL)
+AND requirement_type IN ('category_count', 'outdoor_activities', 'adventure_activities')
+AND requirement_value NOT IN (1, 5, 10, 25, 50, 100);
 
 -- ============================================================================
--- STEP 2: Add standardized Quality Time progression badges (1, 5, 10, 25, 50, 100)
+-- STEP 2: Add standardized Quality Time Actions progression (1, 5, 10, 25, 50, 100)
 -- ============================================================================
 
 INSERT INTO badges (name, description, icon, badge_type, requirement_type, requirement_value, health_bonus, category)
@@ -44,7 +46,49 @@ WHERE NOT EXISTS (
 );
 
 -- ============================================================================
--- STEP 3: Ensure event completion badge exists
+-- STEP 3: Add standardized Outdoor Activities progression (1, 5, 10, 25, 50, 100)
+-- ============================================================================
+
+INSERT INTO badges (name, description, icon, badge_type, requirement_type, requirement_value, health_bonus, category)
+SELECT * FROM (VALUES
+  ('Outdoor Activities Starter', 'Completed your first outdoor activity together. Getting outside together starts here.', '🌲', 'big_idea', 'outdoor_activities', 1, 0, 'Quality Time'),
+  ('Outdoor Activities Builder', 'Completed 5 outdoor activities together. You''re making outdoor time a priority.', '🌲', 'big_idea', 'outdoor_activities', 5, 0, 'Quality Time'),
+  ('Outdoor Activities Expert', 'Completed 10 outdoor activities together. You''re an outdoor activities expert.', '🌲', 'big_idea', 'outdoor_activities', 10, 0, 'Quality Time'),
+  ('Outdoor Activities Master', 'Completed 25 outdoor activities together. You''re an outdoor activities master.', '🌲', 'big_idea', 'outdoor_activities', 25, 0, 'Quality Time'),
+  ('Outdoor Activities Champion', 'Completed 50 outdoor activities together. You''re an outdoor activities champion.', '🌲', 'big_idea', 'outdoor_activities', 50, 0, 'Quality Time'),
+  ('Outdoor Activities Legend', 'Completed 100 outdoor activities together. You''re an outdoor activities legend.', '🌲', 'big_idea', 'outdoor_activities', 100, 0, 'Quality Time')
+) AS v(name, description, icon, badge_type, requirement_type, requirement_value, health_bonus, category)
+WHERE NOT EXISTS (
+  SELECT 1 FROM badges 
+  WHERE name = v.name 
+  AND requirement_type = v.requirement_type 
+  AND requirement_value = v.requirement_value
+  AND category = v.category
+);
+
+-- ============================================================================
+-- STEP 4: Add standardized Adventure Activities progression (1, 5, 10, 25, 50, 100)
+-- ============================================================================
+
+INSERT INTO badges (name, description, icon, badge_type, requirement_type, requirement_value, health_bonus, category)
+SELECT * FROM (VALUES
+  ('Adventure Activities Starter', 'Completed your first adventure activity together. Your adventure journey starts here.', '🏔️', 'big_idea', 'adventure_activities', 1, 0, 'Quality Time'),
+  ('Adventure Activities Builder', 'Completed 5 adventure activities together. You''re building an adventurous relationship.', '🏔️', 'big_idea', 'adventure_activities', 5, 0, 'Quality Time'),
+  ('Adventure Activities Expert', 'Completed 10 adventure activities together. You''re an adventure activities expert.', '🏔️', 'big_idea', 'adventure_activities', 10, 0, 'Quality Time'),
+  ('Adventure Activities Master', 'Completed 25 adventure activities together. You''re an adventure activities master.', '🏔️', 'big_idea', 'adventure_activities', 25, 0, 'Quality Time'),
+  ('Adventure Activities Champion', 'Completed 50 adventure activities together. You''re an adventure activities champion.', '🏔️', 'big_idea', 'adventure_activities', 50, 0, 'Quality Time'),
+  ('Adventure Activities Legend', 'Completed 100 adventure activities together. You''re an adventure activities legend.', '🏔️', 'big_idea', 'adventure_activities', 100, 0, 'Quality Time')
+) AS v(name, description, icon, badge_type, requirement_type, requirement_value, health_bonus, category)
+WHERE NOT EXISTS (
+  SELECT 1 FROM badges 
+  WHERE name = v.name 
+  AND requirement_type = v.requirement_type 
+  AND requirement_value = v.requirement_value
+  AND category = v.category
+);
+
+-- ============================================================================
+-- STEP 5: Ensure event completion badge exists
 -- ============================================================================
 
 INSERT INTO badges (name, description, icon, badge_type, requirement_type, requirement_value, health_bonus, category)
@@ -62,18 +106,18 @@ WHERE NOT EXISTS (
 );
 
 -- ============================================================================
--- STEP 4: Remove any other Quality Time badges that don't fit the standard
+-- STEP 6: Remove any other Quality Time badges that don't fit the standard
 -- ============================================================================
 
 -- Remove any Quality Time badges with requirement values not in standard progression
 DELETE FROM badges 
 WHERE category = 'Quality Time'
-AND requirement_type = 'category_count'
+AND requirement_type IN ('category_count', 'outdoor_activities', 'adventure_activities')
 AND requirement_value NOT IN (1, 5, 10, 25, 50, 100);
 
 -- ============================================================================
--- STEP 5: Update comment
+-- STEP 7: Update comment
 -- ============================================================================
 
-COMMENT ON TABLE badges IS 'Quality Time badges follow the standard progression: 1=Starter, 5=Builder, 10=Expert, 25=Master, 50=Champion, 100=Legend. All badge progressions follow consistent naming across all categories. Badges are awards and do NOT affect Husband Health score.';
+COMMENT ON TABLE badges IS 'Quality Time badges include three progressions: Quality Time Actions (category_count), Outdoor Activities (outdoor_activities), and Adventure Activities (adventure_activities). Each follows the standard progression: 1=Starter, 5=Builder, 10=Expert, 25=Master, 50=Champion, 100=Legend. All badge progressions follow consistent naming across all categories. Badges are awards and do NOT affect Husband Health score.';
 
