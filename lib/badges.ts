@@ -63,18 +63,25 @@ export async function checkAndAwardBadges(
             .select('actions(category)')
             .eq('user_id', userId);
 
-          // Match by badge name to determine category
-          const badgeName = badge.name.toLowerCase();
-          let targetCategory = '';
-          if (badgeName.includes('communication')) targetCategory = 'Communication';
-          else if (badgeName.includes('romance')) targetCategory = 'Romance';
-          else if (badgeName.includes('gratitude')) targetCategory = 'Gratitude';
-          else if (badgeName.includes('partnership')) targetCategory = 'Partnership';
-          else if (badgeName.includes('intimacy')) targetCategory = 'Intimacy';
-          else if (badgeName.includes('roommate') || badgeName.includes('connection') || badgeName.includes('recovery')) targetCategory = 'Roommate Syndrome Recovery';
-          else if (badgeName.includes('outdoor') || badgeName.includes('nature') || badgeName.includes('hiking') || badgeName.includes('walk') || badgeName.includes('camping')) targetCategory = 'Outdoor Activities';
-          else if (badgeName.includes('adventure') || badgeName.includes('explore') || badgeName.includes('explorer')) targetCategory = 'Adventure';
-          else if (badgeName.includes('active') || badgeName.includes('fitness') || badgeName.includes('sport')) targetCategory = 'Active Together';
+          // Match by badge category field first, then fall back to badge name
+          let targetCategory = badge.category || '';
+          
+          // If no category field, try to determine from badge name
+          if (!targetCategory) {
+            const badgeName = badge.name.toLowerCase();
+            if (badgeName.includes('communication')) targetCategory = 'Communication';
+            else if (badgeName.includes('romance')) targetCategory = 'Romance';
+            else if (badgeName.includes('gratitude')) targetCategory = 'Gratitude';
+            else if (badgeName.includes('partnership')) targetCategory = 'Partnership';
+            else if (badgeName.includes('intimacy')) targetCategory = 'Intimacy';
+            else if (badgeName.includes('conflict') && badgeName.includes('resolution')) targetCategory = 'Conflict Resolution';
+            else if (badgeName.includes('reconnection')) targetCategory = 'Reconnection';
+            else if (badgeName.includes('quality') && badgeName.includes('time')) targetCategory = 'Quality Time';
+            else if (badgeName.includes('roommate') || badgeName.includes('connection') || badgeName.includes('recovery')) targetCategory = 'Roommate Syndrome Recovery';
+            else if (badgeName.includes('outdoor') || badgeName.includes('nature') || badgeName.includes('hiking') || badgeName.includes('walk') || badgeName.includes('camping')) targetCategory = 'Outdoor Activities';
+            else if (badgeName.includes('adventure') || badgeName.includes('explore') || badgeName.includes('explorer')) targetCategory = 'Adventure';
+            else if (badgeName.includes('active') || badgeName.includes('fitness') || badgeName.includes('sport')) targetCategory = 'Active Together';
+          }
 
           if (targetCategory) {
             categoryCount =
@@ -199,19 +206,28 @@ export async function calculateBadgeProgress(
       current = stats.currentStreak;
       break;
 
-    case 'category_count':
-      // Count actions or tips in the matching category
-      let categoryCount = 0;
-      const badgeName = badge.name.toLowerCase();
-      let targetCategory = '';
-      if (badgeName.includes('communication')) targetCategory = 'Communication';
-      else if (badgeName.includes('romance')) targetCategory = 'Romance';
-      else if (badgeName.includes('gratitude')) targetCategory = 'Gratitude';
-      else if (badgeName.includes('partnership')) targetCategory = 'Partnership';
-      else if (badgeName.includes('intimacy')) targetCategory = 'Intimacy';
-      else if (badgeName.includes('outdoor') || badgeName.includes('nature') || badgeName.includes('hiking') || badgeName.includes('walk') || badgeName.includes('camping')) targetCategory = 'Outdoor Activities';
-      else if (badgeName.includes('adventure') || badgeName.includes('explore') || badgeName.includes('explorer')) targetCategory = 'Adventure';
-      else if (badgeName.includes('active') || badgeName.includes('fitness') || badgeName.includes('sport')) targetCategory = 'Active Together';
+      case 'category_count':
+        // Count actions or tips in the matching category
+        let categoryCount = 0;
+        
+        // Use badge category field first, then fall back to badge name
+        let targetCategory = badge.category || '';
+        
+        // If no category field, try to determine from badge name
+        if (!targetCategory) {
+          const badgeName = badge.name.toLowerCase();
+          if (badgeName.includes('communication')) targetCategory = 'Communication';
+          else if (badgeName.includes('romance')) targetCategory = 'Romance';
+          else if (badgeName.includes('gratitude')) targetCategory = 'Gratitude';
+          else if (badgeName.includes('partnership')) targetCategory = 'Partnership';
+          else if (badgeName.includes('intimacy')) targetCategory = 'Intimacy';
+          else if (badgeName.includes('conflict') && badgeName.includes('resolution')) targetCategory = 'Conflict Resolution';
+          else if (badgeName.includes('reconnection')) targetCategory = 'Reconnection';
+          else if (badgeName.includes('quality') && badgeName.includes('time')) targetCategory = 'Quality Time';
+          else if (badgeName.includes('outdoor') || badgeName.includes('nature') || badgeName.includes('hiking') || badgeName.includes('walk') || badgeName.includes('camping')) targetCategory = 'Outdoor Activities';
+          else if (badgeName.includes('adventure') || badgeName.includes('explore') || badgeName.includes('explorer')) targetCategory = 'Adventure';
+          else if (badgeName.includes('active') || badgeName.includes('fitness') || badgeName.includes('sport')) targetCategory = 'Active Together';
+        }
 
       if (targetCategory) {
         // Count actions in this category
