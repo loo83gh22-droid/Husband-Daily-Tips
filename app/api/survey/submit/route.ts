@@ -43,6 +43,7 @@ export async function POST(request: Request) {
     const validationResult = surveyResponseSchema.safeParse(body);
     
     if (!validationResult.success) {
+      logger.error('Survey validation failed:', validationResult.error.errors);
       return NextResponse.json(
         {
           error: 'Invalid request data',
@@ -159,8 +160,15 @@ export async function POST(request: Request) {
             responseValue = 0;
           }
         } else {
-          const answer = responses[question.id];
-          responseValue = typeof answer === 'number' ? answer : 0;
+          // Handle both string and number keys (JSON stringifies number keys)
+          const answer = responses[question.id] ?? responses[String(question.id)];
+          if (typeof answer === 'number') {
+            responseValue = answer;
+          } else if (typeof answer === 'boolean') {
+            responseValue = answer ? 1 : 0;
+          } else {
+            responseValue = 0;
+          }
         }
         return {
           user_id: finalUserId,
