@@ -21,13 +21,25 @@ WHERE (name ILIKE '%conflict%resolution%mast%' OR name ILIKE '%conflict%mast%')
        AND requirement_value = 20);
 
 -- ============================================================================
--- STEP 3: Remove any other badges that don't fit the standard progression (1,5,10,25,50,100)
+-- STEP 3: Remove Intimacy badges that don't fit the standard progression
 -- ============================================================================
 
--- Remove any category_count badges with requirement_value = 20 (not in standard progression)
+-- Remove duplicate "Intimacy Expert" badges (keep only one at 10 actions)
+-- Remove "Deep Connection Master" at 20 actions (doesn't fit standard progression)
+-- Remove "Intimacy Champion" at 30 actions (doesn't fit standard progression)
+DELETE FROM badges 
+WHERE (name = 'Deep Connection Master' AND category = 'Intimacy')
+   OR (name = 'Intimacy Champion' AND category = 'Intimacy' AND requirement_type = 'category_count' AND requirement_value = 30)
+   OR (name = 'Intimacy Expert' AND category = 'Intimacy' AND requirement_type = 'category_count' AND requirement_value = 10 AND description LIKE '%building real connection%');
+
+-- ============================================================================
+-- STEP 4: Remove any other badges that don't fit the standard progression (1,5,10,25,50,100)
+-- ============================================================================
+
+-- Remove any category_count badges with requirement_value = 20 or 30 (not in standard progression)
 DELETE FROM badges 
 WHERE requirement_type = 'category_count'
-AND requirement_value = 20
+AND requirement_value IN (20, 30)
 AND category IS NOT NULL;
 
 -- ============================================================================
