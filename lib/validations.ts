@@ -3,7 +3,11 @@ import { z } from 'zod';
 // Survey response validation
 // Accepts both array format [{questionId, answer}] and object format {[questionId]: value}
 export const surveyResponseSchema = z.object({
-  userId: z.string().uuid().optional(),
+  userId: z.union([
+    z.string().uuid(),
+    z.string().length(0), // Allow empty string
+    z.undefined(),
+  ]).optional(),
   responses: z.union([
     // Array format: [{questionId: 1, answer: 5}, ...]
     z.array(

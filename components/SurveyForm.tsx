@@ -131,7 +131,7 @@ export default function SurveyForm({ userId, questions, isPublic = false }: Surv
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          userId,
+          ...(userId && userId.trim() ? { userId } : {}), // Only include userId if it's a valid non-empty string
           responses,
         }),
       });
