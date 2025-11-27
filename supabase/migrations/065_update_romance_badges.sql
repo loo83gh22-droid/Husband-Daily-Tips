@@ -10,8 +10,11 @@
 -- Remove specific old badges that are being replaced
 -- Remove old "Romance Rookie" (replaced by "Romance Builder")
 -- Remove old "Date Night Pro" (replaced by "Date Night Regular" for 5, and we'll use a different name for 10)
+-- Remove "Romance Revitalist" (duplicate of Romance Master at 10 actions)
+-- Remove "Romance Master" at 20 actions (not part of standard progression)
 DELETE FROM badges 
-WHERE name IN ('Romance Rookie', 'Date Night Pro');
+WHERE name IN ('Romance Rookie', 'Date Night Pro', 'Romance Revitalist')
+   OR (name = 'Romance Master' AND requirement_value = 20);
 
 -- Remove existing romance category_count badges (we'll recreate them)
 DELETE FROM badges 
