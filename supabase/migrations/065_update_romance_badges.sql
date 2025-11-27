@@ -59,9 +59,9 @@ WHERE NOT EXISTS (
 INSERT INTO badges (name, description, icon, badge_type, requirement_type, requirement_value, health_bonus, category)
 SELECT * FROM (VALUES
   ('Date Night Starter', 'Planned your first date night. Quality time together starts here.', '🍷', 'big_idea', 'date_nights', 1, 0, 'Romance'),
-  ('Date Night Regular', 'Planned 5 date nights. You''re making time together a priority.', '🍷', 'big_idea', 'date_nights', 5, 0, 'Romance'),
+  ('Date Night Builder', 'Planned 5 date nights. You''re making time together a priority.', '🍷', 'big_idea', 'date_nights', 5, 0, 'Romance'),
   ('Date Night Expert', 'Planned 10 date nights. You''re a date night expert.', '🍷', 'big_idea', 'date_nights', 10, 0, 'Romance'),
-  ('Date Night Master', 'Planned 25 date nights. You''ve mastered prioritizing quality time together.', '🍷', 'big_idea', 'date_nights', 25, 0, 'Romance')
+  ('Date Night Champion', 'Planned 25 date nights. You''re a date night champion.', '🍷', 'big_idea', 'date_nights', 25, 0, 'Romance')
 ) AS v(name, description, icon, badge_type, requirement_type, requirement_value, health_bonus, category)
 WHERE NOT EXISTS (
   SELECT 1 FROM badges 

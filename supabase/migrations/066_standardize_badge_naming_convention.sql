@@ -170,32 +170,47 @@ AND requirement_value = 50
 AND name != 'Quality Time Master';
 
 -- ============================================================================
--- STEP 7: Update Gratitude Badges
+-- STEP 7: Update Gratitude Badges (update by requirement_value, not name)
 -- ============================================================================
 
 UPDATE badges 
 SET name = 'Gratitude Expert',
     description = 'Completed 10 gratitude actions. You''re a gratitude expert.'
 WHERE requirement_type = 'gratitude_actions' 
-AND requirement_value = 10
-AND name != 'Gratitude Expert';
+AND requirement_value = 10;
 
 UPDATE badges 
 SET name = 'Gratitude Champion',
     description = 'Completed 25 gratitude actions. You''re a gratitude champion.'
 WHERE requirement_type = 'gratitude_actions' 
-AND requirement_value = 25
-AND name != 'Gratitude Champion';
+AND requirement_value = 25;
 
 UPDATE badges 
 SET name = 'Gratitude Master',
     description = 'Completed 50 gratitude actions. You''re a gratitude master.'
 WHERE requirement_type = 'gratitude_actions' 
-AND requirement_value = 50
-AND name != 'Gratitude Master';
+AND requirement_value = 50;
 
 -- ============================================================================
--- STEP 8: Update comment documenting standardized naming
+-- STEP 8: Update Date Night Badges to follow naming convention
+-- ============================================================================
+
+UPDATE badges 
+SET name = 'Date Night Builder',
+    description = 'Planned 5 date nights. You''re making time together a priority.'
+WHERE requirement_type = 'date_nights' 
+AND requirement_value = 5
+AND name != 'Date Night Builder';
+
+UPDATE badges 
+SET name = 'Date Night Champion',
+    description = 'Planned 25 date nights. You''re a date night champion.'
+WHERE requirement_type = 'date_nights' 
+AND requirement_value = 25
+AND name != 'Date Night Champion';
+
+-- ============================================================================
+-- STEP 9: Update comment documenting standardized naming
 -- ============================================================================
 
 COMMENT ON TABLE badges IS 'All badge progressions follow consistent naming: 1=Starter, 5=Builder, 10=Expert, 25=Champion, 50=Master, 100=Legend. This applies to all category_count badges and gratitude_actions badges. Badges are awards and do NOT affect Husband Health score.';
