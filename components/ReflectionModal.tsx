@@ -82,8 +82,10 @@ export default function ReflectionModal({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // If no reflection text, just close the modal without saving
     if (!reflection.trim()) {
-      setError('Please write something before submitting.');
+      onClose();
       return;
     }
 
