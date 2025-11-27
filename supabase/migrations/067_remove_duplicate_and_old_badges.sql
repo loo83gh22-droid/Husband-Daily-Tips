@@ -24,7 +24,7 @@ WHERE (name ILIKE '%conflict%resolution%mast%' OR name ILIKE '%conflict%mast%')
 -- STEP 3: Remove Intimacy badges that don't fit the standard progression
 -- ============================================================================
 
--- Remove duplicate "Intimacy Expert" badges at 10 actions (keep only the one with correct description)
+-- Remove duplicate "Intimacy Expert" badges at 10 actions (keep only the one with "You're an intimacy expert" description)
 -- Remove "Deep Connection Master" at 20 actions (doesn't fit standard progression)
 -- Remove "Intimacy Champion" at 30 actions (doesn't fit standard progression)
 -- Keep only: Starter (1), Builder (5), Expert (10), Master (25), Champion (50), Legend (100), plus event and specialized badges
@@ -32,7 +32,7 @@ DELETE FROM badges
 WHERE (name = 'Deep Connection Master' AND category = 'Intimacy')
    OR (category = 'Intimacy' AND requirement_type = 'category_count' AND requirement_value = 30)
    OR (name = 'Intimacy Expert' AND category = 'Intimacy' AND requirement_type = 'category_count' AND requirement_value = 10 AND description LIKE '%building real connection%')
-   OR (name = 'Intimacy Expert' AND category = 'Intimacy' AND requirement_type = 'category_count' AND requirement_value = 10 AND description NOT LIKE '%intimacy expert%');
+   OR (name = 'Intimacy Champion' AND category = 'Intimacy' AND requirement_type = 'category_count' AND requirement_value = 30);
 
 -- ============================================================================
 -- STEP 4: Remove Partnership badges that don't fit the standard progression
