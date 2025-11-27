@@ -24,8 +24,14 @@ WHERE (name ILIKE '%conflict%resolution%mast%' OR name ILIKE '%conflict%mast%')
 -- STEP 3: Remove Intimacy badges that don't fit the standard progression
 -- ============================================================================
 
+-- Remove "Intimacy Champion" at 30 actions specifically (by name and requirement_value)
+DELETE FROM badges 
+WHERE name = 'Intimacy Champion'
+AND requirement_value = 30
+AND (category = 'Intimacy' OR name ILIKE '%intimacy%');
+
 -- First, remove ALL Intimacy category_count badges that don't match standard progression (1,5,10,25,50,100)
--- This removes the "Intimacy Champion" at 30 actions
+-- This removes any other non-standard Intimacy badges
 DELETE FROM badges 
 WHERE category = 'Intimacy' 
 AND requirement_type = 'category_count'
