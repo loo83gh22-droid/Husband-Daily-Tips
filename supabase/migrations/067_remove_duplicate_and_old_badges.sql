@@ -72,10 +72,23 @@ WHERE id IN (
 -- ============================================================================
 
 -- Remove "True Partner" at 10 actions (duplicate of "Partnership Expert")
+-- Remove by name and requirement_value to catch all variations
+DELETE FROM badges 
+WHERE name = 'True Partner'
+AND requirement_value = 10
+AND (category = 'Partnership' OR name ILIKE '%partnership%' OR name ILIKE '%partner%');
+
 -- Remove "Partnership Pro" at 20 actions (doesn't fit standard progression)
 DELETE FROM badges 
-WHERE (name = 'True Partner' AND category = 'Partnership' AND requirement_type = 'category_count' AND requirement_value = 10)
-   OR (name = 'Partnership Pro' AND category = 'Partnership' AND requirement_type = 'category_count' AND requirement_value = 20);
+WHERE name = 'Partnership Pro'
+AND requirement_value = 20
+AND (category = 'Partnership' OR name ILIKE '%partnership%');
+
+-- Also remove ALL Partnership category_count badges that don't match standard progression (1,5,10,25,50,100)
+DELETE FROM badges 
+WHERE category = 'Partnership' 
+AND requirement_type = 'category_count'
+AND requirement_value NOT IN (1, 5, 10, 25, 50, 100);
 
 -- ============================================================================
 -- STEP 5: Remove any other badges that don't fit the standard progression (1,5,10,25,50,100)
