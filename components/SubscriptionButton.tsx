@@ -86,21 +86,23 @@ export default function SubscriptionButton({ plan, currentTier, hasActiveTrial, 
   };
 
   const isPopular = plan.tier === 'premium';
-  // User is on current plan if tier matches, OR if they have premium subscription (not trial)
-  const isCurrent = plan.tier === currentTier || (plan.tier === 'premium' && isOnPremium);
+  // User is on current plan if:
+  // 1. Tier matches exactly, OR
+  // 2. They have premium subscription (paid), OR
+  // 3. They have an active trial (tier is premium but no paid subscription yet)
+  const isCurrent = plan.tier === currentTier || 
+                    (plan.tier === 'premium' && isOnPremium) ||
+                    (plan.tier === 'premium' && hasActiveTrial);
 
   // Determine button text
   let buttonText = '';
   if (isCurrent) {
     buttonText = 'Current Plan';
-  } else if (plan.tier === 'premium' && isOnPremium) {
-    // User is already on premium subscription
-    buttonText = 'Current Plan';
-  } else if (plan.tier === 'premium' && currentTier === 'free') {
+  } else if (plan.tier === 'premium' && currentTier === 'free' && !hasActiveTrial) {
     buttonText = 'Start Free Trial';
   } else if (plan.tier === 'premium' && hasActiveTrial) {
-    const priceText = plan.interval === 'year' ? '$71.40/year' : '$7/month';
-    buttonText = `Join Premium (${priceText})`;
+    // This shouldn't happen if isCurrent is working, but just in case
+    buttonText = 'Current Plan';
   } else if (plan.tier === 'free') {
     buttonText = 'Downgrade';
   } else {
