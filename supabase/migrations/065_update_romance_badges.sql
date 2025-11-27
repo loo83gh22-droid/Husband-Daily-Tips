@@ -7,6 +7,10 @@
 -- STEP 1: Remove existing romance badges that don't match the new structure
 -- ============================================================================
 
+-- Remove specific old badges that are being replaced
+DELETE FROM badges 
+WHERE name IN ('Romance Rookie', 'Date Night Pro');
+
 -- Remove existing romance category_count badges (we'll recreate them)
 DELETE FROM badges 
 WHERE category = 'Romance' 
