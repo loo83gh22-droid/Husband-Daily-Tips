@@ -107,7 +107,29 @@ AND requirement_type = 'category_count'
 AND requirement_value NOT IN (1, 5, 10, 25, 50, 100);
 
 -- ============================================================================
--- STEP 6: Remove any other badges that don't fit the standard progression (1,5,10,25,50,100)
+-- STEP 6: Remove Reconnection badges that don't fit the standard progression
+-- ============================================================================
+
+-- Remove "Connection Builder" at 5 actions (duplicate of "Reconnection Builder")
+DELETE FROM badges 
+WHERE name = 'Connection Builder'
+AND requirement_value = 5
+AND (category = 'Reconnection' OR name ILIKE '%connection%' OR name ILIKE '%reconnection%');
+
+-- Remove "Connection Champion" at 15 actions (doesn't fit standard progression)
+DELETE FROM badges 
+WHERE name = 'Connection Champion'
+AND requirement_value = 15
+AND (category = 'Reconnection' OR name ILIKE '%connection%' OR name ILIKE '%reconnection%' OR name ILIKE '%roommate%');
+
+-- Remove ALL Reconnection category_count badges that don't match standard progression (1,5,10,25,50,100)
+DELETE FROM badges 
+WHERE category = 'Reconnection' 
+AND requirement_type = 'category_count'
+AND requirement_value NOT IN (1, 5, 10, 25, 50, 100);
+
+-- ============================================================================
+-- STEP 7: Remove any other badges that don't fit the standard progression (1,5,10,25,50,100)
 -- ============================================================================
 
 -- Remove any category_count badges with requirement_value = 20 or 30 (not in standard progression)
@@ -117,7 +139,7 @@ AND requirement_value IN (20, 30)
 AND category IS NOT NULL;
 
 -- ============================================================================
--- STEP 7: Update comment
+-- STEP 8: Update comment
 -- ============================================================================
 
 COMMENT ON TABLE badges IS 'All badge progressions follow consistent naming: 1=Starter, 5=Builder, 10=Expert, 25=Master, 50=Champion, 100=Legend. Only badges with requirement values of 1, 5, 10, 25, 50, or 100 are kept. Badges are awards and do NOT affect Husband Health score.';
