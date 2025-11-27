@@ -53,11 +53,8 @@ AND category IS NULL;
 
 -- Update existing weekly event badge names to "7 Day Events"
 UPDATE badges 
-SET name = REPLACE(name, 'Weekly', '7 Day Event'),
-    name = REPLACE(name, 'weekly', '7 Day Event'),
-    name = REPLACE(name, 'Week', '7 Day Event'),
-    description = REPLACE(description, 'weekly event', '7-day event'),
-    description = REPLACE(description, 'Weekly event', '7-day event')
+SET name = REPLACE(REPLACE(REPLACE(name, 'Weekly', '7 Day Event'), 'weekly', '7 Day Event'), 'Week', '7 Day Event'),
+    description = REPLACE(REPLACE(description, 'weekly event', '7-day event'), 'Weekly event', '7-day event')
 WHERE (requirement_type = 'challenge_completed' OR requirement_type = 'event_completion')
 AND (name ILIKE '%weekly%' OR name ILIKE '%week%')
 AND category IS NULL;
