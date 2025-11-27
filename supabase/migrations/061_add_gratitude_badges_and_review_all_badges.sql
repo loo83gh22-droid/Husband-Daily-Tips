@@ -66,17 +66,11 @@ WHERE (requirement_type = 'surprise_actions' AND requirement_value > 10)
 -- Keep only the first badge for each requirement_type + requirement_value combination
 -- This prevents duplicates while preserving the intended badge structure
 DELETE FROM badges
-WHERE id NOT IN (
-  SELECT MIN(id)
-  FROM badges
-  GROUP BY requirement_type, requirement_value, badge_type
-  HAVING COUNT(*) > 1
-)
-AND id IN (
+WHERE id IN (
   SELECT id FROM (
     SELECT id, ROW_NUMBER() OVER (
       PARTITION BY requirement_type, requirement_value, badge_type 
-      ORDER BY id
+      ORDER BY created_at, id
     ) as rn
     FROM badges
   ) t
