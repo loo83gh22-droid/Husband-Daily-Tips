@@ -157,15 +157,42 @@ export default function OnboardingTour({ onComplete }: OnboardingTourProps) {
             setHighlightedElement(element);
             highlightedRef.current = element;
             
-            // Scroll to element smoothly
-            setTimeout(() => {
-              element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }, 100);
+            // Check if mobile or desktop
+            const viewportWidth = typeof window !== 'undefined' ? window.innerWidth : 1024;
+            const isMobile = viewportWidth < 768;
             
-            // Add highlight ring after scroll
-            setTimeout(() => {
+            if (isMobile) {
+              // Mobile: Scroll to element (single column layout)
+              setTimeout(() => {
+                element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              }, 100);
+              
+              // Add highlight ring after scroll
+              setTimeout(() => {
+                element.classList.add('ring-4', 'ring-primary-500', 'ring-opacity-75', 'z-50', 'relative');
+              }, 400);
+            } else {
+              // Desktop: Keep tooltip centered, scroll page behind it
+              // Calculate element position relative to viewport
+              const rect = element.getBoundingClientRect();
+              const elementCenterY = rect.top + rect.height / 2;
+              const viewportCenterY = window.innerHeight / 2;
+              
+              // Scroll the page so element center aligns with viewport center
+              const scrollOffset = elementCenterY - viewportCenterY;
+              const targetScrollY = Math.max(0, window.scrollY + scrollOffset);
+              
+              // Add highlight ring first
               element.classList.add('ring-4', 'ring-primary-500', 'ring-opacity-75', 'z-50', 'relative');
-            }, 400);
+              
+              // Scroll smoothly after a brief delay to ensure element is highlighted
+              setTimeout(() => {
+                window.scrollTo({ 
+                  top: targetScrollY, 
+                  behavior: 'smooth' 
+                });
+              }, 150);
+            }
             
             // Auto-advance after 4 seconds
             autoAdvanceTimerRef.current = setTimeout(() => {
@@ -283,59 +310,66 @@ export default function OnboardingTour({ onComplete }: OnboardingTourProps) {
   const viewportWidth = typeof window !== 'undefined' ? window.innerWidth : 1024;
   const isMobile = viewportWidth < 768;
 
-  // Calculate tooltip position - ALWAYS show tooltip
+  // Calculate tooltip position
   let tooltipStyle: React.CSSProperties = {};
   
-  // Check if we have a valid element (not dummy, not body)
-  const isDummyElement = highlightedElement?.hasAttribute?.('data-tour-dummy') || 
-                         highlightedElement === document.body;
-  
-  if (highlightedElement && !isDummyElement && typeof highlightedElement.getBoundingClientRect === 'function') {
-    try {
-      const rect = highlightedElement.getBoundingClientRect();
-      const viewportHeight = typeof window !== 'undefined' ? window.innerHeight : 800;
-      const tooltipHeight = 200; // Approximate tooltip height
-      
-      // Only use element position if rect is valid and element is visible
-      if (rect.width > 0 && rect.height > 0 && 
-          rect.top >= 0 && rect.left >= 0 &&
-          rect.bottom <= viewportHeight + 100 && // Allow some off-screen tolerance
-          rect.right <= viewportWidth + 100) {
-        const tooltipOffset = 16;
-        const tooltipLeft = Math.max(16, Math.min(rect.left + rect.width / 2, viewportWidth - 16));
+  // On desktop: Always center the tooltip, page scrolls behind it
+  // On mobile: Position tooltip relative to element (or center if element not found)
+  if (isMobile) {
+    // Mobile: Position tooltip relative to element if found
+    const isDummyElement = highlightedElement?.hasAttribute?.('data-tour-dummy') || 
+                           highlightedElement === document.body;
+    
+    if (highlightedElement && !isDummyElement && typeof highlightedElement.getBoundingClientRect === 'function') {
+      try {
+        const rect = highlightedElement.getBoundingClientRect();
+        const viewportHeight = typeof window !== 'undefined' ? window.innerHeight : 800;
+        const tooltipHeight = 200;
         
-        // Check if tooltip would fit below the element
-        const spaceBelow = viewportHeight - rect.bottom;
-        const spaceAbove = rect.top;
-        
-        // Position tooltip below if there's enough space, otherwise above
-        let tooltipTop: number;
-        let transform: string;
-        
-        if (spaceBelow >= tooltipHeight + tooltipOffset) {
-          // Position below element
-          tooltipTop = rect.bottom + window.scrollY + tooltipOffset;
-          transform = 'translate(-50%, 0)';
-        } else if (spaceAbove >= tooltipHeight + tooltipOffset) {
-          // Position above element (for navigation at top of page)
-          tooltipTop = rect.top + window.scrollY - tooltipOffset;
-          transform = 'translate(-50%, -100%)';
+        if (rect.width > 0 && rect.height > 0 && 
+            rect.top >= 0 && rect.left >= 0 &&
+            rect.bottom <= viewportHeight + 100 &&
+            rect.right <= viewportWidth + 100) {
+          const tooltipOffset = 16;
+          const tooltipLeft = Math.max(16, Math.min(rect.left + rect.width / 2, viewportWidth - 16));
+          
+          const spaceBelow = viewportHeight - rect.bottom;
+          const spaceAbove = rect.top;
+          
+          let tooltipTop: number;
+          let transform: string;
+          
+          if (spaceBelow >= tooltipHeight + tooltipOffset) {
+            tooltipTop = rect.bottom + window.scrollY + tooltipOffset;
+            transform = 'translate(-50%, 0)';
+          } else if (spaceAbove >= tooltipHeight + tooltipOffset) {
+            tooltipTop = rect.top + window.scrollY - tooltipOffset;
+            transform = 'translate(-50%, -100%)';
+          } else {
+            tooltipTop = viewportHeight / 2;
+            transform = 'translate(-50%, -50%)';
+          }
+          
+          tooltipStyle = {
+            top: `${tooltipTop}px`,
+            left: `${tooltipLeft}px`,
+            transform: transform,
+            maxWidth: `${Math.min(viewportWidth - 32, 340)}px`,
+            position: 'fixed' as const,
+            zIndex: 10000,
+          };
         } else {
-          // Not enough space above or below, center it
-          tooltipTop = viewportHeight / 2;
-          transform = 'translate(-50%, -50%)';
+          // Center if off-screen
+          tooltipStyle = {
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            maxWidth: `${Math.min(viewportWidth - 32, 340)}px`,
+            position: 'fixed' as const,
+            zIndex: 10000,
+          };
         }
-        
-        tooltipStyle = {
-          top: `${tooltipTop}px`,
-          left: `${tooltipLeft}px`,
-          transform: transform,
-          maxWidth: `${Math.min(viewportWidth - 32, 340)}px`,
-          position: 'fixed' as const,
-          zIndex: 10000,
-        };
-      } else {
-        // Element exists but positioning would be off-screen, center it instead
+      } catch (e) {
         tooltipStyle = {
           top: '50%',
           left: '50%',
@@ -345,8 +379,8 @@ export default function OnboardingTour({ onComplete }: OnboardingTourProps) {
           zIndex: 10000,
         };
       }
-    } catch (e) {
-      // Fallback to center if getBoundingClientRect fails
+    } else {
+      // Center if element not found
       tooltipStyle = {
         top: '50%',
         left: '50%',
@@ -357,12 +391,14 @@ export default function OnboardingTour({ onComplete }: OnboardingTourProps) {
       };
     }
   } else {
-    // Floating tooltip in center - always show tooltip even if element not found
+    // Desktop: Always center the tooltip, page scrolls behind it
     tooltipStyle = {
       top: '50%',
       left: '50%',
       transform: 'translate(-50%, -50%)',
-      maxWidth: `${Math.min(viewportWidth - 32, 340)}px`,
+      maxWidth: `${Math.min(viewportWidth - 32, 400)}px`,
+      position: 'fixed' as const,
+      zIndex: 10000,
     };
   }
 
