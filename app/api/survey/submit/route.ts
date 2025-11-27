@@ -199,7 +199,22 @@ export async function POST(request: Request) {
       consistency: { total: 0, count: 0 },
     };
 
+    // Count Yes answers for baseline questions (questions 1-18)
+    // Yes = 1 point, No = 0 points
+    let yesCount = 0;
+    let totalBaselineQuestions = 0;
+    
     responseRecords.forEach((response) => {
+      const questionId = response.question_id;
+      // Only count baseline questions (1-18), not goal-setting questions (19-29)
+      if (questionId <= 18) {
+        totalBaselineQuestions++;
+        if (response.response_type === 'yes_no' && response.response_value === 1) {
+          yesCount++;
+        }
+      }
+      
+      // Still calculate category scores for goal-setting and other purposes
       const category = response.category.toLowerCase();
       if (categoryScores[category]) {
         // For yes/no: 1 = 5, 0 = 1 (normalize to 1-5 scale)
@@ -213,8 +228,17 @@ export async function POST(request: Request) {
       }
     });
 
-    // Calculate average scores per category (scale to 0-100)
-    // Each category has 2 questions (except consistency which has 1)
+    // Calculate baseline health from Yes/No answers
+    // Percentage = (Yes count / Total questions) * 100
+    // Maximum baseline health is capped at 90%
+    let baselineHealth = 50; // Default if no questions answered
+    if (totalBaselineQuestions > 0) {
+      const percentage = (yesCount / totalBaselineQuestions) * 100;
+      baselineHealth = Math.min(90, Math.round(percentage)); // Cap at 90%
+    }
+
+    // Calculate average scores per category (scale to 0-100) for category breakdown
+    // Each category has 2 questions (except consistency which has 2 now)
     // Scale: average (1-5) × 20 = score (0-100)
     const communicationScore = categoryScores.communication.count > 0
       ? (categoryScores.communication.total / categoryScores.communication.count) * 20
@@ -243,14 +267,6 @@ export async function POST(request: Request) {
     const consistencyScore = categoryScores.consistency.count > 0
       ? (categoryScores.consistency.total / categoryScores.consistency.count) * 20
       : 50;
-
-    // Baseline health is the average of all 9 category scores
-    // 8 action categories (2 questions each) + 1 consistency category (1 question) = 17 questions total
-    const baselineHealth = Math.round(
-      (communicationScore + intimacyScore + partnershipScore + romanceScore + 
-       gratitudeScore + conflictResolutionScore + reconnectionScore + qualityTimeScore + 
-       consistencyScore) / 9
-    );
 
     // Extract goal-setting responses (self-ratings and improvement desires)
     // Questions 14-29 are the goal-setting questions
