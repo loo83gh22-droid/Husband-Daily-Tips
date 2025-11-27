@@ -25,6 +25,7 @@ WHERE (name ILIKE '%conflict%resolution%mast%' OR name ILIKE '%conflict%mast%')
 -- ============================================================================
 
 -- First, remove ALL Intimacy category_count badges that don't match standard progression (1,5,10,25,50,100)
+-- This removes the "Intimacy Champion" at 30 actions
 DELETE FROM badges 
 WHERE category = 'Intimacy' 
 AND requirement_type = 'category_count'
@@ -34,16 +35,22 @@ AND requirement_value NOT IN (1, 5, 10, 25, 50, 100);
 DELETE FROM badges 
 WHERE name = 'Deep Connection Master' AND category = 'Intimacy';
 
--- Remove duplicate "Intimacy Expert" badges at 10 actions - keep only ONE
--- Use ROW_NUMBER to keep the oldest one with correct description, remove all others
+-- Remove the specific "Intimacy Expert" badge with "You're an intimacy expert" description (eyes icon)
+-- Keep the one with "You're building real connection" description (heart icon)
+DELETE FROM badges
+WHERE name = 'Intimacy Expert'
+AND category = 'Intimacy'
+AND requirement_type = 'category_count'
+AND requirement_value = 10
+AND description LIKE '%You''re an intimacy expert%';
+
+-- If there are still multiple "Intimacy Expert" badges at 10, keep only the oldest one
 DELETE FROM badges
 WHERE id IN (
   SELECT id FROM (
     SELECT id, ROW_NUMBER() OVER (
       PARTITION BY category, requirement_type, requirement_value 
-      ORDER BY 
-        CASE WHEN description LIKE '%intimacy expert%' THEN 0 ELSE 1 END,
-        created_at ASC
+      ORDER BY created_at ASC
     ) as rn
     FROM badges
     WHERE name = 'Intimacy Expert'
@@ -53,13 +60,6 @@ WHERE id IN (
   ) t
   WHERE rn > 1
 );
-
--- Remove any "Intimacy Champion" badges at 30 actions (should only exist at 50)
-DELETE FROM badges 
-WHERE name = 'Intimacy Champion' 
-AND category = 'Intimacy' 
-AND requirement_type = 'category_count' 
-AND requirement_value = 30;
 
 -- ============================================================================
 -- STEP 4: Remove Partnership badges that don't fit the standard progression
