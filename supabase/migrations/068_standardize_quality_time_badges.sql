@@ -120,4 +120,3 @@ AND requirement_value NOT IN (1, 5, 10, 25, 50, 100);
 -- ============================================================================
 
 COMMENT ON TABLE badges IS 'Quality Time badges include three progressions: Quality Time Actions (category_count), Outdoor Activities (outdoor_activities), and Adventure Activities (adventure_activities). Each follows the standard progression: 1=Starter, 5=Builder, 10=Expert, 25=Master, 50=Champion, 100=Legend. All badge progressions follow consistent naming across all categories. Badges are awards and do NOT affect Husband Health score.';
-
