@@ -59,13 +59,26 @@ WHERE (requirement_type = 'challenge_completed' OR requirement_type = 'event_com
 AND (name ILIKE '%weekly%' OR name ILIKE '%week%')
 AND category IS NULL;
 
--- Ensure standard 7 Day Event badges exist
+-- Remove old event badges that don't match the new naming
+DELETE FROM badges 
+WHERE name IN (
+  'Event Starter',
+  'Event Master',
+  'Event Legend',
+  'Steady Hand'
+)
+OR (name ILIKE '%event starter%' AND requirement_type = 'challenge_joined')
+OR (name ILIKE '%event master%' AND requirement_type IN ('challenge_completed', 'event_completion'))
+OR (name ILIKE '%event legend%' AND requirement_type IN ('challenge_completed', 'event_completion'))
+OR (name ILIKE '%steady hand%');
+
+-- Ensure standard 7 Day Event badges exist (with correct "7-Day" naming)
 INSERT INTO badges (name, description, icon, badge_type, requirement_type, requirement_value, health_bonus, category)
 SELECT * FROM (VALUES
-  ('First 7-Day Event', 'Completed your first 7-day event. You''re committed to growth.', '🎯', 'consistency', 'event_completion', 1, 0, NULL),
-  ('3 Seven-Day Events', 'Completed 3 seven-day events. You''re building consistency.', '🎯', 'consistency', 'event_completion', 3, 0, NULL),
-  ('5 Seven-Day Events', 'Completed 5 seven-day events. You''re a dedicated participant.', '🎯', 'consistency', 'event_completion', 5, 0, NULL),
-  ('All Seven-Day Events', 'Completed all available seven-day events. You''re a completionist.', '🎯', 'consistency', 'event_completion', 999, 0, NULL)
+  ('First 7-Day Event', 'Completed your first 7-Day event. You''re committed to growth.', '🎯', 'consistency', 'event_completion', 1, 0, NULL),
+  ('3 Seven-Day Events', 'Completed 3 7-Day events. You''re building consistency.', '🎯', 'consistency', 'event_completion', 3, 0, NULL),
+  ('5 Seven-Day Events', 'Completed 5 7-Day events. You''re a dedicated participant.', '🎯', 'consistency', 'event_completion', 5, 0, NULL),
+  ('All Seven-Day Events', 'Completed all available 7-Day events. You''re a completionist.', '🎯', 'consistency', 'event_completion', 999, 0, NULL)
 ) AS v(name, description, icon, badge_type, requirement_type, requirement_value, health_bonus, category)
 WHERE NOT EXISTS (
   SELECT 1 FROM badges 
@@ -73,6 +86,13 @@ WHERE NOT EXISTS (
   AND requirement_value = v.requirement_value
   AND category IS NULL
 );
+
+-- Update any existing badges that say "seven-day" to "7-Day"
+UPDATE badges 
+SET name = REPLACE(REPLACE(name, 'seven-day', '7-Day'), 'Seven-Day', '7-Day'),
+    description = REPLACE(REPLACE(description, 'seven-day', '7-Day'), 'Seven-Day', '7-Day')
+WHERE (name ILIKE '%seven-day%' OR description ILIKE '%seven-day%')
+AND requirement_type = 'event_completion';
 
 -- ============================================================================
 -- STEP 4: Standardize Total Actions Completed badges (10, 25, 50, 100, 150, 200, 250, 300, 350, 400, 500)
