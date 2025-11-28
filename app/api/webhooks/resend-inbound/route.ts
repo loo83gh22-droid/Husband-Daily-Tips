@@ -80,7 +80,7 @@ export async function POST(request: Request) {
       // Optionally: Send notification to admin about unknown reply
       await notifyAdmin(supabase, {
         type: 'unknown_reply',
-        email: userEmail,
+        user_email: userEmail,
         subject,
         content: text || html,
       });
