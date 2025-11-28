@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     url: 'https://www.besthusbandever.com',
     siteName: 'Best Husband Ever',
     title: 'Best Husband Ever - Your Daily Action, Delivered',
-    description: 'Daily actions to level up your marriage game. One move today. One wife smile tomorrow. You got this.',
+    description: 'Stop winging it. Start winning it. Daily actions that show you care. She will notice. You will both feel the difference.',
     images: [
       {
         url: 'https://www.besthusbandever.com/og-image.png?v=2',
