@@ -33,6 +33,7 @@ export async function sendTomorrowTipEmail(
   try {
     const { data, error } = await resend.emails.send({
       from: process.env.RESEND_FROM_EMAIL || 'Best Husband Ever Tomorrow\'s Action! <action@besthusbandever.com>',
+      replyTo: process.env.SUPPORT_EMAIL || process.env.ADMIN_EMAIL || 'support@besthusbandever.com',
       to: email,
       subject: `Tomorrow: Make Her Smile (Here's How)`,
       html: `
