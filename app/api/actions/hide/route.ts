@@ -28,10 +28,10 @@ export async function POST(request: NextRequest) {
     const auth0Id = session.user.sub;
     const adminSupabase = getSupabaseAdmin();
 
-    // Get user ID
+    // Get user with subscription info
     const { data: user, error: userError } = await adminSupabase
       .from('users')
-      .select('id')
+      .select('id, subscription_tier, trial_ends_at, stripe_subscription_id')
       .eq('auth0_id', auth0Id)
       .single();
 
@@ -39,6 +39,28 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         { error: 'User not found' },
         { status: 404 }
+      );
+    }
+
+    // Check if user has premium access (paid subscription or active trial)
+    const trialEndsAt = user?.trial_ends_at ? new Date(user.trial_ends_at) : null;
+    const now = new Date();
+    const hasActiveTrial = user?.subscription_tier === 'premium' && 
+                          trialEndsAt && 
+                          trialEndsAt > now && 
+                          !user?.stripe_subscription_id;
+    const hasSubscription = !!user?.stripe_subscription_id;
+    const isOnPremium = user?.subscription_tier === 'premium' && hasSubscription;
+    const hasPremiumAccess = isOnPremium || hasActiveTrial;
+
+    // Hide actions is a premium feature
+    if (!hasPremiumAccess) {
+      return NextResponse.json(
+        { 
+          error: 'Premium required',
+          message: 'Hiding actions is a Premium feature. Upgrade to personalize your experience.'
+        },
+        { status: 403 }
       );
     }
 
@@ -98,10 +120,10 @@ export async function DELETE(request: NextRequest) {
     const auth0Id = session.user.sub;
     const adminSupabase = getSupabaseAdmin();
 
-    // Get user ID
+    // Get user with subscription info
     const { data: user, error: userError } = await adminSupabase
       .from('users')
-      .select('id')
+      .select('id, subscription_tier, trial_ends_at, stripe_subscription_id')
       .eq('auth0_id', auth0Id)
       .single();
 
@@ -109,6 +131,28 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json(
         { error: 'User not found' },
         { status: 404 }
+      );
+    }
+
+    // Check if user has premium access (paid subscription or active trial)
+    const trialEndsAt = user?.trial_ends_at ? new Date(user.trial_ends_at) : null;
+    const now = new Date();
+    const hasActiveTrial = user?.subscription_tier === 'premium' && 
+                          trialEndsAt && 
+                          trialEndsAt > now && 
+                          !user?.stripe_subscription_id;
+    const hasSubscription = !!user?.stripe_subscription_id;
+    const isOnPremium = user?.subscription_tier === 'premium' && hasSubscription;
+    const hasPremiumAccess = isOnPremium || hasActiveTrial;
+
+    // Hide actions is a premium feature
+    if (!hasPremiumAccess) {
+      return NextResponse.json(
+        { 
+          error: 'Premium required',
+          message: 'Unhiding actions is a Premium feature. Upgrade to personalize your experience.'
+        },
+        { status: 403 }
       );
     }
 

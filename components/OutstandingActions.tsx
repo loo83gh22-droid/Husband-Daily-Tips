@@ -18,9 +18,10 @@ interface OutstandingAction {
 
 interface OutstandingActionsProps {
   userId: string;
+  hasPremiumAccess?: boolean;
 }
 
-export default function OutstandingActions({ userId }: OutstandingActionsProps) {
+export default function OutstandingActions({ userId, hasPremiumAccess = false }: OutstandingActionsProps) {
   const [actions, setActions] = useState<OutstandingAction[]>([]);
   const [loading, setLoading] = useState(true);
   const [markingComplete, setMarkingComplete] = useState<string | null>(null);
@@ -106,6 +107,29 @@ export default function OutstandingActions({ userId }: OutstandingActionsProps) 
       setMarkingDNC(null);
     }
   };
+
+  // If free user, show upgrade message
+  if (!hasPremiumAccess) {
+    return (
+      <div className="bg-slate-900/70 border border-slate-800 rounded-xl p-4 md:p-6">
+        <h3 className="text-sm font-semibold text-slate-200 mb-4">Outstanding Actions</h3>
+        <div className="bg-primary-500/10 border border-primary-500/30 rounded-lg p-4 text-center">
+          <p className="text-sm text-slate-300 mb-3">
+            Catch up on missed actions with Premium
+          </p>
+          <p className="text-xs text-slate-400 mb-4">
+            See and complete any actions you missed. Upgrade to stay on track.
+          </p>
+          <Link
+            href="/dashboard/subscription"
+            className="inline-block px-4 py-2 text-xs font-semibold bg-primary-500 text-slate-950 rounded-lg hover:bg-primary-400 transition-colors"
+          >
+            Upgrade to Premium
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   if (loading) {
     return (

@@ -277,6 +277,7 @@ export default function ActionsList({
           showHideButton={true}
           partnerName={partnerName}
           isFavorited={detailAction ? favoritedActionIds.has(detailAction.id) : false}
+          hasPremiumAccess={subscriptionStatus ? (subscriptionStatus.isOnPremium || subscriptionStatus.hasActiveTrial) : false}
           onHide={async () => {
             setIsHiding(true);
             try {

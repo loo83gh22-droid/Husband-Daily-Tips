@@ -23,6 +23,7 @@ interface ActionDetailModalProps {
   showHideButton?: boolean;
   partnerName?: string | null;
   isFavorited?: boolean;
+  hasPremiumAccess?: boolean;
 }
 
 export default function ActionDetailModal({
@@ -33,6 +34,7 @@ export default function ActionDetailModal({
   showHideButton = false,
   partnerName,
   isFavorited: initialIsFavorited = false,
+  hasPremiumAccess = false,
 }: ActionDetailModalProps) {
   const [isFavorited, setIsFavorited] = useState(initialIsFavorited);
   const [isTogglingFavorite, setIsTogglingFavorite] = useState(false);
@@ -193,7 +195,7 @@ export default function ActionDetailModal({
                       )}
                     </button>
 
-                    {showHideButton && onHide && (
+                    {showHideButton && onHide && hasPremiumAccess && (
                       <button
                         onClick={() => {
                           if (confirm('Hide this action? You won\'t see it again. You can unhide it later in your settings.')) {

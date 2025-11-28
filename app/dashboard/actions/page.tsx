@@ -6,13 +6,14 @@ import DashboardNav from '@/components/DashboardNav';
 import ActionsPageClient from '@/components/ActionsPageClient';
 import ActionTooltip from '@/components/ActionTooltip';
 import BackToTop from '@/components/BackToTop';
+import OutstandingActions from '@/components/OutstandingActions';
 
 async function getActions(auth0Id: string) {
   // Use admin client to bypass RLS (Auth0 context isn't set)
   const adminSupabase = getSupabaseAdmin();
   const { data: user } = await adminSupabase
     .from('users')
-    .select('id, partner_name')
+    .select('id, partner_name, subscription_tier, trial_ends_at, stripe_subscription_id')
     .eq('auth0_id', auth0Id)
     .single();
 
@@ -23,6 +24,7 @@ async function getActions(auth0Id: string) {
     currentStreak: 0,
     actionsThisWeek: 0,
     badgesEarned: 0,
+    hasPremiumAccess: false,
   };
 
   // Get all actions - use distinct to avoid duplicates
@@ -140,6 +142,17 @@ async function getActions(auth0Id: string) {
 
   const badgesEarned: number = badges?.length ?? 0;
 
+  // Check if user has premium access (paid subscription or active trial)
+  const trialEndsAt = user?.trial_ends_at ? new Date(user.trial_ends_at) : null;
+  const now = new Date();
+  const hasActiveTrial = user?.subscription_tier === 'premium' && 
+                        trialEndsAt && 
+                        trialEndsAt > now && 
+                        !user?.stripe_subscription_id;
+  const hasSubscription = !!user?.stripe_subscription_id;
+  const isOnPremium = user?.subscription_tier === 'premium' && hasSubscription;
+  const hasPremiumAccess = isOnPremium || hasActiveTrial;
+
   return {
     actions: uniqueActions,
     completedMap: completedMapObj,
@@ -149,6 +162,7 @@ async function getActions(auth0Id: string) {
     actionsThisWeek,
     badgesEarned,
     partnerName: user.partner_name || null,
+    hasPremiumAccess,
   };
 }
 
@@ -160,7 +174,7 @@ export default async function ActionsPage() {
   }
 
   const auth0Id = session.user.sub;
-  const { actions, completedMap, userId, favoritedActions, currentStreak, actionsThisWeek, badgesEarned, partnerName } = await getActions(auth0Id);
+  const { actions, completedMap, userId, favoritedActions, currentStreak, actionsThisWeek, badgesEarned, partnerName, hasPremiumAccess } = await getActions(auth0Id);
 
   // Filter out favorited actions from main actions list (they'll be shown separately)
   const favoritedActionIds = new Set(favoritedActions.map((fa: any) => fa.id));
@@ -255,64 +269,68 @@ export default async function ActionsPage() {
               Do the thing. Get the badge. Become legendary. Become the Best Husband Ever.
             </p>
             
-            {/* Quick Stats (visible when not sticky) - Focus on growth, not completion */}
-            <div className="bg-gradient-to-r from-slate-900/80 via-slate-800/80 to-slate-900/80 border border-slate-700/50 rounded-xl p-3 sm:p-4 md:p-6 mb-4 sm:mb-6 backdrop-blur-sm">
-              <div className="grid grid-cols-3 gap-2 sm:gap-3 md:gap-4 lg:gap-8">
-                {/* Actions This Week */}
-                <div className="flex flex-col items-center text-center gap-1 sm:flex-row sm:items-center sm:text-left sm:gap-3">
-                  <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-gradient-to-br from-blue-500/20 to-blue-600/20 border border-blue-500/30 flex items-center justify-center">
-                    <span className="text-xl sm:text-2xl">📈</span>
+            {/* Stats and Outstanding Actions - Two Column Layout */}
+            <div className="grid grid-cols-1 lg:grid-cols-[1fr,1fr] gap-4 mb-4 sm:mb-6">
+              {/* Quick Stats - Compact */}
+              <div className="bg-gradient-to-r from-slate-900/80 via-slate-800/80 to-slate-900/80 border border-slate-700/50 rounded-xl p-3 sm:p-4 backdrop-blur-sm">
+                <div className="grid grid-cols-3 gap-2 sm:gap-3">
+                  {/* Actions This Week */}
+                  <div className="flex flex-col items-center text-center gap-1">
+                    <div className="flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-gradient-to-br from-blue-500/20 to-blue-600/20 border border-blue-500/30 flex items-center justify-center">
+                      <span className="text-lg sm:text-xl">📈</span>
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-[9px] sm:text-[10px] text-slate-400 font-medium uppercase tracking-wide">Week</p>
+                      <p className="text-base sm:text-lg md:text-xl font-bold text-blue-400">
+                        {actionsThisWeek}
+                      </p>
+                      <p className="text-[8px] sm:text-[9px] text-slate-500">actions</p>
+                    </div>
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-[10px] sm:text-xs text-slate-400 font-medium uppercase tracking-wide">Week</p>
-                    <p className="text-lg sm:text-xl md:text-2xl font-bold text-blue-400">
-                      {actionsThisWeek}
-                    </p>
-                    <p className="text-[9px] sm:text-[10px] text-slate-500 hidden sm:block">actions</p>
+
+                  {/* Current Streak */}
+                  <div className="flex flex-col items-center text-center gap-1">
+                    <div className="flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-gradient-to-br from-orange-500/20 to-orange-600/20 border border-orange-500/30 flex items-center justify-center">
+                      <span className="text-lg sm:text-xl">🔥</span>
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-[9px] sm:text-[10px] text-slate-400 font-medium uppercase tracking-wide">Streak</p>
+                      <p className="text-base sm:text-lg md:text-xl font-bold text-orange-400">
+                        {currentStreak}
+                      </p>
+                      <p className="text-[8px] sm:text-[9px] text-slate-500">{currentStreak === 1 ? 'day' : 'days'}</p>
+                    </div>
+                  </div>
+
+                  {/* Badges Earned */}
+                  <div className="flex flex-col items-center text-center gap-1">
+                    <div className="flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-gradient-to-br from-emerald-500/20 to-emerald-600/20 border border-emerald-500/30 flex items-center justify-center">
+                      <span className="text-lg sm:text-xl">🏆</span>
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-[9px] sm:text-[10px] text-slate-400 font-medium uppercase tracking-wide">Badges</p>
+                      <p className="text-base sm:text-lg md:text-xl font-bold text-emerald-400">
+                        {badgesEarned}
+                      </p>
+                      <p className="text-[8px] sm:text-[9px] text-slate-500">earned</p>
+                    </div>
                   </div>
                 </div>
 
-                {/* Current Streak */}
-                <div className="flex flex-col items-center text-center gap-1 sm:flex-row sm:items-center sm:text-left sm:gap-3">
-                  <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-gradient-to-br from-orange-500/20 to-orange-600/20 border border-orange-500/30 flex items-center justify-center">
-                    <span className="text-xl sm:text-2xl">🔥</span>
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-[10px] sm:text-xs text-slate-400 font-medium uppercase tracking-wide">Streak</p>
-                    <p className="text-lg sm:text-xl md:text-2xl font-bold text-orange-400">
-                      {currentStreak}
-                    </p>
-                    <p className="text-[9px] sm:text-[10px] text-slate-500 hidden sm:block">{currentStreak === 1 ? 'day' : 'days'}</p>
-                  </div>
-                </div>
-
-                {/* Badges Earned */}
-                <div className="flex flex-col items-center text-center gap-1 sm:flex-row sm:items-center sm:text-left sm:gap-3">
-                  <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-gradient-to-br from-emerald-500/20 to-emerald-600/20 border border-emerald-500/30 flex items-center justify-center">
-                    <span className="text-xl sm:text-2xl">🏆</span>
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-[10px] sm:text-xs text-slate-400 font-medium uppercase tracking-wide">Badges</p>
-                    <p className="text-lg sm:text-xl md:text-2xl font-bold text-emerald-400">
-                      {badgesEarned}
-                    </p>
-                    <p className="text-[9px] sm:text-[10px] text-slate-500 hidden sm:block">earned</p>
-                  </div>
+                {/* Growth Message - Compact */}
+                <div className="mt-2 sm:mt-3 pt-2 sm:pt-3 border-t border-slate-700/50">
+                  <p className="text-[10px] sm:text-xs font-semibold text-slate-200">
+                    {completedCount} total completed
+                  </p>
+                  <p className="text-[9px] sm:text-[10px] text-slate-400 mt-0.5">
+                    Keep showing up! 💪
+                  </p>
                 </div>
               </div>
 
-              {/* Growth Message */}
-              <div className="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-slate-700/50">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-xs sm:text-sm font-semibold text-slate-200">
-                      {completedCount} total actions completed
-                    </p>
-                    <p className="text-[10px] sm:text-xs text-slate-400 mt-0.5">
-                      Consistency builds stronger relationships. Keep showing up! 💪
-                    </p>
-                  </div>
-                </div>
+              {/* Outstanding Actions */}
+              <div className="lg:block">
+                <OutstandingActions userId={userId} hasPremiumAccess={hasPremiumAccess} />
               </div>
             </div>
           </div>

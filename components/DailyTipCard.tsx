@@ -275,6 +275,11 @@ export default function DailyTipCard({ tip, subscriptionTier = 'free', onActionR
       });
 
       if (!hideResponse.ok) {
+        const errorData = await hideResponse.json().catch(() => ({}));
+        if (hideResponse.status === 403) {
+          toast.error(errorData.message || 'Hiding actions is a Premium feature. Upgrade to personalize your experience.');
+          return;
+        }
         throw new Error('Failed to hide action');
       }
 
@@ -644,7 +649,7 @@ END:VCALENDAR`;
                   </>
                 )}
               </button>
-              {tip.isAction && (
+              {tip.isAction && isPaidUser && (
                 <button
                   onClick={handleHideAction}
                   disabled={isHiding}
@@ -666,7 +671,7 @@ END:VCALENDAR`;
               </div>
               </div>
             </div>
-            {tip.isAction && showHideTip && (
+            {tip.isAction && showHideTip && isPaidUser && (
               <div className="mb-3 p-2 bg-slate-800/30 border border-slate-700/50 rounded-lg relative">
                 <button
                   onClick={() => {
