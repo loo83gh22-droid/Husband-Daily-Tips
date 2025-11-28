@@ -111,18 +111,18 @@ export default function OutstandingActions({ userId, hasPremiumAccess = false }:
   // If free user, show upgrade message
   if (!hasPremiumAccess) {
     return (
-      <div className="bg-slate-900/70 border border-slate-800 rounded-xl p-4 md:p-6">
-        <h3 className="text-sm font-semibold text-slate-200 mb-4">Outstanding Actions</h3>
-        <div className="bg-gradient-to-br from-primary-500/20 to-primary-600/20 border border-primary-500/40 rounded-lg p-5 text-center">
-          <p className="text-base font-semibold text-slate-50 mb-2">
+      <div className="bg-gradient-to-r from-slate-900/80 via-slate-800/80 to-slate-900/80 border border-slate-700/50 rounded-xl p-3 sm:p-4 backdrop-blur-sm">
+        <h3 className="text-sm font-semibold text-slate-200 mb-3">Outstanding Actions</h3>
+        <div className="bg-gradient-to-br from-primary-500/20 to-primary-600/20 border border-primary-500/40 rounded-lg p-4 text-center">
+          <p className="text-sm font-semibold text-slate-50 mb-1.5">
             Catch up on missed actions with Premium
           </p>
-          <p className="text-sm text-slate-300 mb-4">
-            See and complete any actions you missed. Upgrade to stay on track and never miss a beat.
+          <p className="text-xs text-slate-300 mb-3">
+            See and complete any actions you missed. Upgrade to stay on track.
           </p>
           <Link
             href="/dashboard/subscription?upgrade=actions"
-            className="inline-flex items-center justify-center px-6 py-3 text-sm font-bold bg-primary-500 text-slate-950 rounded-lg hover:bg-primary-400 transition-all transform hover:scale-105 shadow-lg shadow-primary-500/20"
+            className="inline-flex items-center justify-center px-4 py-2 text-xs font-bold bg-primary-500 text-slate-950 rounded-lg hover:bg-primary-400 transition-all shadow-lg shadow-primary-500/20"
           >
             Upgrade to Premium →
           </Link>
@@ -133,17 +133,17 @@ export default function OutstandingActions({ userId, hasPremiumAccess = false }:
 
   if (loading) {
     return (
-      <div className="bg-slate-900/70 border border-slate-800 rounded-xl p-4">
-        <p className="text-sm text-slate-400">Loading outstanding actions...</p>
+      <div className="bg-gradient-to-r from-slate-900/80 via-slate-800/80 to-slate-900/80 border border-slate-700/50 rounded-xl p-3 sm:p-4 backdrop-blur-sm">
+        <p className="text-xs text-slate-400">Loading outstanding actions...</p>
       </div>
     );
   }
 
   if (actions.length === 0) {
     return (
-      <div className="bg-slate-900/70 border border-slate-800 rounded-xl p-4 md:p-6">
-        <h3 className="text-sm font-semibold text-slate-200 mb-4">Outstanding Actions</h3>
-        <p className="text-sm text-slate-400 text-center py-4">
+      <div className="bg-gradient-to-r from-slate-900/80 via-slate-800/80 to-slate-900/80 border border-slate-700/50 rounded-xl p-3 sm:p-4 backdrop-blur-sm">
+        <h3 className="text-sm font-semibold text-slate-200 mb-3">Outstanding Actions</h3>
+        <p className="text-xs text-slate-400 text-center py-3">
           No outstanding actions. You&apos;re all caught up! 🎉
         </p>
       </div>
@@ -151,13 +151,13 @@ export default function OutstandingActions({ userId, hasPremiumAccess = false }:
   }
 
   return (
-    <div className="bg-slate-900/70 border border-slate-800 rounded-xl p-4 md:p-6">
-      <div className="flex items-center justify-between mb-4">
+    <div className="bg-gradient-to-r from-slate-900/80 via-slate-800/80 to-slate-900/80 border border-slate-700/50 rounded-xl p-3 sm:p-4 backdrop-blur-sm h-full flex flex-col">
+      <div className="flex items-center justify-between mb-3">
         <h3 className="text-sm font-semibold text-slate-200">Outstanding Actions</h3>
         <span className="text-xs text-slate-400">{actions.length} pending</span>
       </div>
 
-      <div className="space-y-3 max-h-[400px] overflow-y-auto">
+      <div className="flex-1 space-y-2 overflow-y-auto min-h-0">
         {actions.map((action) => {
           const actionDate = new Date(action.date);
           const isPastDue = actionDate < new Date();
@@ -166,33 +166,31 @@ export default function OutstandingActions({ userId, hasPremiumAccess = false }:
           return (
             <div
               key={action.user_daily_actions_id}
-              className={`p-3 rounded-lg border ${
+              className={`p-2.5 rounded-lg border ${
                 isPastDue
                   ? 'bg-amber-500/10 border-amber-500/30'
                   : 'bg-slate-800/30 border-slate-700/50'
               }`}
             >
-              <div className="flex items-start gap-3 mb-3">
-                <span className="text-xl flex-shrink-0">{action.icon}</span>
+              <div className="flex items-start gap-2 mb-2">
+                <span className="text-lg flex-shrink-0">{action.icon}</span>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-start justify-between gap-2 mb-1">
-                    <h4 className="text-sm font-medium text-slate-200 leading-tight">
+                    <h4 className="text-xs font-medium text-slate-200 leading-tight">
                       {action.name}
                     </h4>
-                    <span className="text-xs text-slate-400 whitespace-nowrap flex-shrink-0">
-                      {isPastDue ? (
-                        <span className="text-amber-400">{daysAgo}d ago</span>
-                      ) : (
-                        format(actionDate, 'MMM d')
-                      )}
-                    </span>
+                    {isPastDue && (
+                      <span className="text-[10px] text-amber-400 whitespace-nowrap flex-shrink-0">
+                        {daysAgo}d ago
+                      </span>
+                    )}
                   </div>
                   {action.description && (
-                    <p className="text-xs text-slate-400 leading-tight mb-2">
+                    <p className="text-[10px] text-slate-400 leading-tight mb-1.5 line-clamp-2">
                       {action.description}
                     </p>
                   )}
-                  <span className="inline-block text-[10px] text-slate-500 bg-slate-800/50 px-2 py-0.5 rounded">
+                  <span className="inline-block text-[9px] text-slate-500 bg-slate-800/50 px-1.5 py-0.5 rounded">
                     {action.category}
                   </span>
                 </div>
@@ -202,14 +200,14 @@ export default function OutstandingActions({ userId, hasPremiumAccess = false }:
                 <button
                   onClick={() => handleMarkCompleteClick(action)}
                   disabled={markingComplete === action.user_daily_actions_id || markingDNC === action.user_daily_actions_id}
-                  className="flex-1 px-3 py-2.5 sm:py-1.5 text-xs font-medium bg-primary-500/20 border border-primary-500/30 text-primary-300 rounded hover:bg-primary-500/30 active:bg-primary-500/40 transition-colors disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] touch-manipulation"
+                  className="flex-1 px-2.5 py-1.5 text-[10px] font-medium bg-primary-500/20 border border-primary-500/30 text-primary-300 rounded hover:bg-primary-500/30 active:bg-primary-500/40 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {markingComplete === action.user_daily_actions_id ? 'Completing...' : '✓ Complete'}
                 </button>
                 <button
                   onClick={() => handleMarkDNC(action.user_daily_actions_id)}
                   disabled={markingComplete === action.user_daily_actions_id || markingDNC === action.user_daily_actions_id}
-                  className="flex-1 px-3 py-2.5 sm:py-1.5 text-xs font-medium bg-slate-700/50 border border-slate-600/50 text-slate-300 rounded hover:bg-slate-700/70 active:bg-slate-700/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] touch-manipulation"
+                  className="flex-1 px-2.5 py-1.5 text-[10px] font-medium bg-slate-700/50 border border-slate-600/50 text-slate-300 rounded hover:bg-slate-700/70 active:bg-slate-700/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {markingDNC === action.user_daily_actions_id ? 'Marking...' : 'DNC'}
                 </button>
@@ -218,17 +216,6 @@ export default function OutstandingActions({ userId, hasPremiumAccess = false }:
           );
         })}
       </div>
-
-      {actions.length > 0 && (
-        <div className="mt-4 pt-4 border-t border-slate-700/50">
-          <Link
-            href="/dashboard/journal"
-            className="text-xs text-primary-300 hover:text-primary-200 font-medium flex items-center gap-1"
-          >
-            View your previous actions →
-          </Link>
-        </div>
-      )}
 
       {/* Action Completion Modal */}
       {selectedAction && (

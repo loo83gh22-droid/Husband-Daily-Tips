@@ -270,7 +270,7 @@ export default async function ActionsPage() {
             </p>
             
             {/* Stats and Outstanding Actions - Two Column Layout */}
-            <div className="grid grid-cols-1 lg:grid-cols-[1fr,1fr] gap-4 mb-4 sm:mb-6">
+            <div className="grid grid-cols-1 lg:grid-cols-[1fr,1fr] gap-4 mb-4 sm:mb-6 lg:items-stretch">
               {/* Quick Stats - Compact */}
               <div className="bg-gradient-to-r from-slate-900/80 via-slate-800/80 to-slate-900/80 border border-slate-700/50 rounded-xl p-3 sm:p-4 backdrop-blur-sm">
                 <div className="grid grid-cols-3 gap-2 sm:gap-3">
@@ -329,9 +329,7 @@ export default async function ActionsPage() {
               </div>
 
               {/* Outstanding Actions */}
-              <div className="lg:block">
-                <OutstandingActions userId={userId} hasPremiumAccess={hasPremiumAccess ?? false} />
-              </div>
+              <OutstandingActions userId={userId} hasPremiumAccess={hasPremiumAccess ?? false} />
             </div>
           </div>
 
