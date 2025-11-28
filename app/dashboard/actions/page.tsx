@@ -151,7 +151,7 @@ async function getActions(auth0Id: string) {
                         !user?.stripe_subscription_id;
   const hasSubscription = !!user?.stripe_subscription_id;
   const isOnPremium = user?.subscription_tier === 'premium' && hasSubscription;
-  const hasPremiumAccess = isOnPremium || hasActiveTrial;
+  const hasPremiumAccess: boolean = !!(isOnPremium || hasActiveTrial);
 
   return {
     actions: uniqueActions,
@@ -330,7 +330,7 @@ export default async function ActionsPage() {
 
               {/* Outstanding Actions */}
               <div className="lg:block">
-                <OutstandingActions userId={userId} hasPremiumAccess={hasPremiumAccess} />
+                <OutstandingActions userId={userId} hasPremiumAccess={hasPremiumAccess ?? false} />
               </div>
             </div>
           </div>
