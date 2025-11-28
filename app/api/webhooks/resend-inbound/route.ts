@@ -44,14 +44,16 @@ export async function POST(request: Request) {
     }
 
     const rawBody = await request.text();
-    logger.log('Raw webhook body:', rawBody.substring(0, 500)); // Log first 500 chars
+    logger.log('Raw webhook body:', rawBody.substring(0, 1000)); // Log first 1000 chars
     
     const payload = JSON.parse(rawBody);
-    logger.log('Parsed webhook payload:', JSON.stringify(payload, null, 2));
+    logger.log('Parsed webhook payload keys:', Object.keys(payload));
+    logger.log('Full parsed webhook payload:', JSON.stringify(payload, null, 2));
 
     // Resend Inbound webhook format might be different - check actual structure
     // It might be: { type: 'email.received', data: {...} }
     // Or it might be: { from: {...}, to: {...}, subject: ..., text: ..., html: ... }
+    // Or it might be: { from: {...}, to: {...}, subject: ..., body: {...} }
     
     let fromEmail: string;
     let toEmail: string | string[];
@@ -65,19 +67,30 @@ export async function POST(request: Request) {
       fromEmail = typeof payload.data.from === 'string' ? payload.data.from : payload.data.from?.email || '';
       toEmail = payload.data.to || [];
       subject = payload.data.subject || '';
-      text = payload.data.text || '';
-      html = payload.data.html || '';
+      text = payload.data.text || payload.data.body?.text || '';
+      html = payload.data.html || payload.data.body?.html || '';
     } else if (payload.from) {
       // Format 2: Direct format { from: {...}, to: {...}, ... }
       fromEmail = typeof payload.from === 'string' ? payload.from : payload.from?.email || '';
       toEmail = payload.to || [];
       subject = payload.subject || '';
-      text = payload.text || '';
-      html = payload.html || '';
+      // Try multiple possible locations for content
+      text = payload.text || payload.body?.text || payload.body_text || payload.content?.text || '';
+      html = payload.html || payload.body?.html || payload.body_html || payload.content?.html || '';
     } else {
       logger.error('Unknown webhook payload format:', payload);
       return NextResponse.json({ error: 'Unknown payload format' }, { status: 400 });
     }
+
+    // Log what we extracted
+    logger.log('Extracted email data:', {
+      fromEmail,
+      subject,
+      textLength: text.length,
+      htmlLength: html.length,
+      textPreview: text.substring(0, 100),
+      htmlPreview: html.substring(0, 100),
+    });
 
     logger.log('Email reply received:', { fromEmail, toEmail, subject });
 
