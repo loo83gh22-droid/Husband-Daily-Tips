@@ -22,6 +22,7 @@ import TrialExpirationBanner from '@/components/TrialExpirationBanner';
 import ReferralTracker from '@/components/ReferralTracker';
 import ReferralCard from '@/components/ReferralCard';
 import GettingStarted from '@/components/GettingStarted';
+import QuotesDisplay from '@/components/QuotesDisplay';
 import Link from 'next/link';
 
 async function getUserData(auth0Id: string) {
@@ -525,6 +526,11 @@ export default async function Dashboard() {
                 View your previous actions →
               </Link>
             </div>
+
+            {/* Random Quote */}
+            <div className="mt-4 sm:mt-6 md:mt-8">
+              <QuotesDisplay />
+            </div>
           </div>
 
           {/* Right column: Health bar + stats */}
@@ -565,6 +571,11 @@ export default async function Dashboard() {
 
             <div>
               <ReferralCard />
+            </div>
+
+            {/* Random Quote */}
+            <div>
+              <QuotesDisplay />
             </div>
           </div>
         </div>

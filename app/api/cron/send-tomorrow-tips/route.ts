@@ -174,6 +174,10 @@ export async function GET(request: Request) {
           continue;
         }
 
+        // Get a random quote to include in the email
+        const { getRandomQuote } = await import('@/lib/quotes');
+        const quote = await getRandomQuote();
+
         // Send email with tomorrow's action
         // Note: Resend free tier only allows sending to the account owner's email
         // To send to all users, verify a domain at resend.com/domains
@@ -184,6 +188,7 @@ export async function GET(request: Request) {
             title: action.name,
             content: `${action.description}\n\nWhy this matters: ${action.benefit || 'Every action strengthens your relationship.'}`,
             category: action.category,
+            quote: quote || undefined,
           },
         );
 

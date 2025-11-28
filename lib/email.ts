@@ -14,6 +14,7 @@ export interface EmailTip {
   category: string;
   actionId?: string; // Added for calendar links
   userId?: string; // Added for calendar links
+  quote?: { quote_text: string; author: string | null }; // Optional quote to include
 }
 
 export async function sendTomorrowTipEmail(
@@ -71,6 +72,19 @@ export async function sendTomorrowTipEmail(
                   Tomorrow&apos;s action arrives today at 12pm. Why? Because winners plan ahead, and that&apos;s what you&apos;re becoming. Plus, it gives you time to actually make it happen. No scrambling, no forgetting, just execution. You got this.
                 </p>
               </div>
+              
+              ${tip.quote ? `
+                <div style="background-color: #fef3c7; border-left: 4px solid #f59e0b; border-radius: 8px; padding: 20px; margin-bottom: 30px;">
+                  <p style="color: #78350f; font-size: 15px; font-style: italic; margin: 0 0 8px 0; line-height: 1.6;">
+                    "${tip.quote.quote_text}"
+                  </p>
+                  ${tip.quote.author ? `
+                    <p style="color: #92400e; font-size: 13px; margin: 0; text-align: right;">
+                      — ${tip.quote.author}
+                    </p>
+                  ` : ''}
+                </div>
+              ` : ''}
               
               <div style="text-align: center; padding-top: 20px; border-top: 1px solid #e5e7eb;">
                 <a href="${baseUrl}/dashboard" 
