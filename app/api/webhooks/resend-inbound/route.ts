@@ -118,8 +118,9 @@ export async function POST(request: Request) {
             console.log('Fetched email data from Resend:', JSON.stringify(emailData, null, 2));
             
             // Extract content from the fetched email
-            text = emailData.text || emailData.body?.text || emailData.plain_text || '';
-            html = emailData.html || emailData.body?.html || '';
+            // Resend Receiving API returns: { text, html, ... }
+            text = (emailData as any).text || '';
+            html = (emailData as any).html || '';
             
             console.log('Extracted content after API fetch:', {
               textLength: text.length,
