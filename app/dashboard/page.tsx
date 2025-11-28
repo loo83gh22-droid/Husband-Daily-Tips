@@ -259,7 +259,7 @@ export default async function Dashboard() {
                         !user?.stripe_subscription_id;
   const hasSubscription = !!user?.stripe_subscription_id;
   const isOnPremium = user?.subscription_tier === 'premium' && hasSubscription;
-  const hasPremiumAccess = isOnPremium || hasActiveTrial;
+  const hasPremiumAccess: boolean = !!(isOnPremium || hasActiveTrial);
   
   // Get stats first to get category scores for personalization
   const stats = await getUserStats(user.id);
@@ -513,7 +513,7 @@ export default async function Dashboard() {
 
             {/* Outstanding Actions - Premium Feature */}
             <div className="mt-4 sm:mt-6 md:mt-8">
-              <OutstandingActions userId={user.id} hasPremiumAccess={hasPremiumAccess} />
+              <OutstandingActions userId={user.id} hasPremiumAccess={hasPremiumAccess ?? false} />
             </div>
 
             {/* Previous Actions Link */}
@@ -560,7 +560,7 @@ export default async function Dashboard() {
             </div>
 
             <div data-tour="badges">
-              <BadgesDisplay userId={user.id} hasPremiumAccess={hasPremiumAccess} />
+              <BadgesDisplay userId={user.id} hasPremiumAccess={hasPremiumAccess ?? false} />
             </div>
 
             <div>
