@@ -84,7 +84,7 @@ export default async function SubscriptionPage({
       },
       '7day-events': {
         title: 'Upgrade to Join 7-Day Events',
-        description: '7-day events are a Premium feature. Join structured 7-day challenges designed to level up your relationship skills. Upgrade to unlock this feature and more.',
+        description: '7-day events are a Premium feature. Join structured 7-day events designed to level up your relationship skills. Upgrade to unlock this feature and more.',
       },
     };
 

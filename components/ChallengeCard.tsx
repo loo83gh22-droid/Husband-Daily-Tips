@@ -110,7 +110,7 @@ export default function ChallengeCard({ challenge, userChallenge, userId, onJoin
           }
           
           // Always show modal for 400 errors (one 7-day event at a time)
-          if (response.status === 400 || errorMessage.includes('currently participating') || errorData.error === 'You can only join one challenge at a time') {
+          if (response.status === 400 || errorMessage.includes('currently participating') || errorData.error === 'You can only join one 7-day event at a time') {
             // Extract event name from message
             const match = errorMessage.match(/"([^"]+)"/);
             const challengeNameFromMatch = match ? match[1] : null;

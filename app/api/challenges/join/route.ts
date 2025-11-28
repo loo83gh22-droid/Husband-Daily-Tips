@@ -4,7 +4,7 @@ import { getSupabaseAdmin } from '@/lib/supabase';
 import { logger } from '@/lib/logger';
 
 /**
- * Join a weekly challenge
+ * Join a 7-day event
  */
 export async function POST(request: Request) {
   try {
@@ -66,7 +66,7 @@ export async function POST(request: Request) {
       .single();
 
     if (challengeError || !challenge) {
-      return NextResponse.json({ error: 'Challenge not found or not active' }, { status: 404 });
+      return NextResponse.json({ error: '7-day event not found or not active' }, { status: 404 });
     }
 
     const today = new Date().toISOString().split('T')[0];
@@ -80,10 +80,10 @@ export async function POST(request: Request) {
       .single();
 
     if (existing) {
-      return NextResponse.json({ success: true, message: 'Already joined challenge' });
+      return NextResponse.json({ success: true, message: 'Already joined this 7-day event' });
     }
 
-    // Check if user already has an active (incomplete) challenge
+    // Check if user already has an active (incomplete) 7-day event
     const { data: activeChallenges, error: activeError } = await supabase
       .from('user_challenges')
       .select('id, challenges(name)')
@@ -91,11 +91,11 @@ export async function POST(request: Request) {
       .eq('completed', false);
 
     if (activeChallenges && activeChallenges.length > 0) {
-      const challengeName = (activeChallenges[0].challenges as any)?.name || 'another challenge';
+      const challengeName = (activeChallenges[0].challenges as any)?.name || 'another 7-day event';
       return NextResponse.json(
         { 
-          error: 'You can only join one challenge at a time',
-          message: `You're currently participating in "${challengeName}". Complete it before joining a new challenge.`,
+          error: 'You can only join one 7-day event at a time',
+          message: `You're currently participating in "${challengeName}". Complete it before joining a new 7-day event.`,
           challengeName: challengeName,
           challenge_name: challengeName
         },
@@ -103,8 +103,8 @@ export async function POST(request: Request) {
       );
     }
 
-    // When joining a new challenge, mark any other active challenges as inactive
-    // Only one challenge should be active at a time
+    // When joining a new 7-day event, mark any other active events as inactive
+    // Only one 7-day event should be active at a time
     await supabase
       .from('user_challenges')
       .update({ completed: true })
@@ -112,7 +112,7 @@ export async function POST(request: Request) {
       .eq('completed', false)
       .neq('challenge_id', challengeId);
 
-    // Join challenge
+    // Join 7-day event
     const { data: userChallenge, error: joinError } = await supabase
       .from('user_challenges')
       .insert({
@@ -126,12 +126,12 @@ export async function POST(request: Request) {
       .single();
 
     if (joinError) {
-      console.error('Error joining challenge:', joinError);
-      return NextResponse.json({ error: 'Failed to join challenge' }, { status: 500 });
+      console.error('Error joining 7-day event:', joinError);
+      return NextResponse.json({ error: 'Failed to join 7-day event' }, { status: 500 });
     }
 
-    // If this is a 7-day challenge, automatically assign 7 days of actions
-    // This ensures the challenge actions are locked in and take precedence
+    // If this is a 7-day event, automatically assign 7 days of actions
+    // This ensures the event actions are locked in and take precedence
     if (challenge && challenge.duration_days === 7) {
       try {
         const { getSupabaseAdmin } = await import('@/lib/supabase');
@@ -172,10 +172,10 @@ export async function POST(request: Request) {
           }
         }
 
-        // Actions assigned for 7-day challenge
+        // Actions assigned for 7-day event
       } catch (assignError) {
-        // Don't fail challenge join if action assignment fails
-        console.error('Error assigning actions for challenge:', assignError);
+        // Don't fail event join if action assignment fails
+        console.error('Error assigning actions for 7-day event:', assignError);
       }
     }
 
@@ -186,18 +186,18 @@ export async function POST(request: Request) {
       .eq('id', user.id)
       .single();
 
-    // Check if this is their first challenge (for badge)
+    // Check if this is their first 7-day event (for badge)
     const { data: allChallenges } = await supabase
       .from('user_challenges')
       .select('id')
       .eq('user_id', user.id);
 
     if (allChallenges && allChallenges.length === 1) {
-      // First challenge - award "Challenge Starter" badge
+      // First 7-day event - award "Event Starter" badge
       const { data: badge } = await supabase
         .from('badges')
         .select('id')
-        .eq('name', 'Challenge Starter')
+        .eq('name', 'Event Starter')
         .single();
 
       if (badge) {
@@ -209,7 +209,7 @@ export async function POST(request: Request) {
       }
     }
 
-    // Send email with all challenge actions (all challenges are 7-day challenges)
+    // Send email with all event actions (all events are 7-day events)
     if (challenge && userWithEmail && userChallenge) {
       try {
         // Get all challenge actions for the email
@@ -233,14 +233,14 @@ export async function POST(request: Request) {
           await sendChallengeEmail(userWithEmail, challenge, challengeActions, userChallenge);
         }
       } catch (emailError) {
-        // Don't fail challenge join if email fails
-        console.error('Error sending challenge email:', emailError);
+        // Don't fail event join if email fails
+        console.error('Error sending 7-day event email:', emailError);
       }
     }
 
     return NextResponse.json({ success: true, userChallenge });
   } catch (error) {
-    console.error('Unexpected error joining challenge:', error);
+    console.error('Unexpected error joining 7-day event:', error);
     return NextResponse.json({ error: 'Unexpected error' }, { status: 500 });
   }
 }
@@ -587,12 +587,12 @@ async function sendChallengeEmail(
     });
 
     if (error) {
-      logger.error('Resend error sending challenge email:', error);
+      logger.error('Resend error sending 7-day event email:', error);
     } else {
-      logger.log(`Challenge email sent to ${user.email}`);
+      logger.log(`7-day event email sent to ${user.email}`);
     }
   } catch (error) {
-    logger.error('Error sending challenge email:', error);
+    logger.error('Error sending 7-day event email:', error);
   }
 }
 
