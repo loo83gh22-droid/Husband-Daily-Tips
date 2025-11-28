@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import { logger } from '@/lib/logger';
+import { Resend } from 'resend';
 
 /**
  * Resend Inbound Email Webhook
@@ -66,8 +67,9 @@ export async function POST(request: Request) {
 
     // Handle different payload formats
     // Resend Inbound webhook format: https://resend.com/docs/dashboard/webhooks/inbound
-    // Based on Resend docs, the format is typically:
-    // { type: 'email.received', data: { from: {...}, to: {...}, subject: ..., text: ..., html: ... } }
+    // IMPORTANT: The webhook only provides metadata. We need to fetch the email content separately using email_id
+    
+    let emailId: string | undefined;
     
     if (payload.type === 'email.received' && payload.data) {
       // Format 1: { type: 'email.received', data: {...} }
@@ -75,8 +77,9 @@ export async function POST(request: Request) {
       fromEmail = typeof data.from === 'string' ? data.from : (data.from?.email || data.from?.address || '');
       toEmail = data.to || [];
       subject = data.subject || '';
+      emailId = data.email_id; // This is the key - we need this to fetch the content
       
-      // Try all possible locations for content
+      // Try all possible locations for content (usually empty in webhook)
       text = data.text || data.body?.text || data.body_text || data.content?.text || data.plain || data.plain_text || '';
       html = data.html || data.body?.html || data.body_html || data.content?.html || '';
     } else if (payload.from) {
@@ -84,6 +87,7 @@ export async function POST(request: Request) {
       fromEmail = typeof payload.from === 'string' ? payload.from : (payload.from?.email || payload.from?.address || '');
       toEmail = payload.to || [];
       subject = payload.subject || '';
+      emailId = payload.email_id;
       // Try multiple possible locations for content
       text = payload.text || payload.body?.text || payload.body_text || payload.content?.text || payload.plain || payload.plain_text || '';
       html = payload.html || payload.body?.html || payload.body_html || payload.content?.html || '';
@@ -93,15 +97,45 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Unknown payload format' }, { status: 400 });
     }
 
-    // If we still don't have content, try to extract from the entire payload
-    if (!text && !html) {
-      console.warn('No content found in standard locations, searching entire payload...');
-      const payloadStr = JSON.stringify(payload);
-      // Look for common email content patterns
-      if (payloadStr.includes('text/plain') || payloadStr.includes('text/html')) {
-        // Might be in a nested structure
-        console.log('Found email content indicators, but content is empty. Full payload structure:', Object.keys(payload));
+    // If we don't have content, fetch it from Resend API using email_id
+    // Resend webhooks only provide metadata - we need to fetch the actual email content
+    if ((!text && !html) && emailId) {
+      console.log('No content in webhook, fetching from Resend Receiving API using email_id:', emailId);
+      try {
+        const resend = new Resend(process.env.RESEND_API_KEY || '');
+        
+        if (!process.env.RESEND_API_KEY) {
+          console.error('RESEND_API_KEY not configured - cannot fetch email content');
+          logger.error('RESEND_API_KEY not configured - cannot fetch email content');
+        } else {
+          // Use Resend's Receiving API to get the full email content
+          const { data: emailData, error: fetchError } = await resend.emails.receiving.get(emailId);
+
+          if (fetchError) {
+            console.error('Error fetching email content from Resend:', fetchError);
+            logger.error('Error fetching email content from Resend:', fetchError);
+          } else if (emailData) {
+            console.log('Fetched email data from Resend:', JSON.stringify(emailData, null, 2));
+            
+            // Extract content from the fetched email
+            text = emailData.text || emailData.body?.text || emailData.plain_text || '';
+            html = emailData.html || emailData.body?.html || '';
+            
+            console.log('Extracted content after API fetch:', {
+              textLength: text.length,
+              htmlLength: html.length,
+              textPreview: text.substring(0, 200),
+              htmlPreview: html.substring(0, 200),
+            });
+          }
+        }
+      } catch (fetchError: any) {
+        console.error('Exception fetching email content from Resend API:', fetchError);
+        logger.error('Exception fetching email content from Resend API:', fetchError);
+        // Continue without content - we'll store what we have
       }
+    } else if (!text && !html && !emailId) {
+      console.warn('No content found and no email_id to fetch from');
     }
 
     // Log what we extracted
