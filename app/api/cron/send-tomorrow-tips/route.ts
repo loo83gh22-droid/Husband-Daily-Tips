@@ -68,10 +68,10 @@ export async function GET(request: Request) {
     const supabase = getSupabaseAdmin();
     const now = new Date();
 
-    // Get all active users with their timezones
+    // Get all active users with their timezones and profile data
     const { data: users, error: usersError } = await supabase
       .from('users')
-      .select('id, email, name, timezone')
+      .select('id, email, name, timezone, subscription_tier, has_kids, kids_live_with_you, country')
       .not('email', 'is', null);
 
     if (usersError) {
@@ -136,67 +136,42 @@ export async function GET(request: Request) {
     // For each user where it's 5pm, get an action for tomorrow
     for (const user of usersToEmail) {
       try {
-        // Check if user already has an action for tomorrow
-        const { data: existingAction } = await supabase
-          .from('user_daily_actions')
-          .select('action_id, actions(*)')
+        // Get user's category scores from survey_summary for personalized action selection
+        const { data: surveySummary } = await supabase
+          .from('survey_summary')
+          .select('communication_score, romance_score, partnership_score, intimacy_score, conflict_score')
           .eq('user_id', user.id)
-          .eq('date', tomorrowStr)
           .single();
 
-        let action;
-        if (existingAction?.actions) {
-          action = existingAction.actions;
-        } else {
-          // Get actions user hasn't seen in the last 30 days
-          const thirtyDaysAgo = new Date();
-          thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-          const thirtyDaysAgoStr = thirtyDaysAgo.toISOString().split('T')[0];
+        const categoryScores = surveySummary ? {
+          communication_score: surveySummary.communication_score,
+          romance_score: surveySummary.romance_score,
+          partnership_score: surveySummary.partnership_score,
+          intimacy_score: surveySummary.intimacy_score,
+          conflict_score: surveySummary.conflict_score,
+        } : undefined;
 
-          // Get actions user has seen in the last 30 days
-          const { data: recentActions } = await supabase
-            .from('user_daily_actions')
-            .select('action_id')
-            .eq('user_id', user.id)
-            .gte('date', thirtyDaysAgoStr);
+        // Get user profile data
+        const userProfile = {
+          has_kids: user.has_kids ?? null,
+          kids_live_with_you: user.kids_live_with_you ?? null,
+          country: user.country ?? null,
+        };
 
-          const seenActionIds = recentActions?.map((ra) => ra.action_id) || [];
+        // Use the shared action selection function (same logic as dashboard)
+        // This ensures the email matches what will appear on the dashboard
+        const { selectTomorrowAction } = await import('@/lib/action-selection');
+        const action = await selectTomorrowAction(
+          user.id,
+          user.subscription_tier || 'free',
+          categoryScores,
+          userProfile
+        );
 
-          // Get available actions - all actions are available to all tiers
-          let { data: actions } = await supabase
-            .from('actions')
-            .select('*')
-            .limit(100);
-
-          // Filter out actions seen in last 30 days
-          if (actions && seenActionIds.length > 0) {
-            actions = actions.filter((action) => !seenActionIds.includes(action.id));
-          }
-
-          if (!actions || actions.length === 0) {
-            // Fallback: if no actions available, get any action anyway
-            const { data: allActions } = await supabase
-              .from('actions')
-              .select('*')
-              .limit(100);
-
-            if (!allActions || allActions.length === 0) {
-              logger.error(`No actions available for user ${user.id}`);
-              errorCount++;
-              continue;
-            }
-            action = allActions[Math.floor(Math.random() * allActions.length)];
-          } else {
-            action = actions[Math.floor(Math.random() * actions.length)];
-          }
-
-          // Pre-assign action for tomorrow
-          await supabase.from('user_daily_actions').insert({
-            user_id: user.id,
-            action_id: action.id,
-            date: tomorrowStr,
-            completed: false,
-          });
+        if (!action) {
+          logger.error(`No action selected for user ${user.id}`);
+          errorCount++;
+          continue;
         }
 
         // Send email with tomorrow's action
