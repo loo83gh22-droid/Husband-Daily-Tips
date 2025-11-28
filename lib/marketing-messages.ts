@@ -38,8 +38,16 @@ export async function getMarketingMessage(
     .order('display_order', { ascending: true })
     .limit(100); // Get all matching messages, then randomize in code
   
-  if (error || !data || data.length === 0) {
-    console.error('Error fetching marketing messages:', error);
+  if (error) {
+    // Table might not exist yet - silently fail (migration not run)
+    // Only log if it's not a "relation does not exist" error
+    if (error.code !== '42P01' && error.code !== 'PGRST116') {
+      console.error('Error fetching marketing messages:', error);
+    }
+    return null;
+  }
+  
+  if (!data || data.length === 0) {
     return null;
   }
   
@@ -75,8 +83,16 @@ export async function getMarketingMessages(
     .order('display_order', { ascending: true })
     .limit(100);
   
-  if (error || !data || data.length === 0) {
-    console.error('Error fetching marketing messages:', error);
+  if (error) {
+    // Table might not exist yet - silently fail (migration not run)
+    // Only log if it's not a "relation does not exist" error
+    if (error.code !== '42P01' && error.code !== 'PGRST116') {
+      console.error('Error fetching marketing messages:', error);
+    }
+    return [];
+  }
+  
+  if (!data || data.length === 0) {
     return [];
   }
   

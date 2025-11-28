@@ -26,6 +26,9 @@ CREATE INDEX IF NOT EXISTS idx_email_replies_received_at ON email_replies(receiv
 -- Enable RLS
 ALTER TABLE email_replies ENABLE ROW LEVEL SECURITY;
 
+-- Drop policy if it exists (in case migration was partially run before)
+DROP POLICY IF EXISTS "Users can view own email replies" ON email_replies;
+
 -- Policy: Users can view their own replies
 CREATE POLICY "Users can view own email replies"
   ON email_replies
