@@ -466,7 +466,7 @@ async function sendChallengeEmail(
     const outlookCalendarUrl = `https://outlook.live.com/calendar/0/deeplink/compose?subject=${encodeURIComponent(challengeName)}&startdt=${firstDate.toISOString()}&enddt=${endDate.toISOString()}&body=${encodeURIComponent('7 days of relationship actions')}`;
 
     const { data, error } = await resend.emails.send({
-      from: process.env.RESEND_FROM_EMAIL || 'Best Husband Ever - Tomorrow\'s Action! <action@besthusbandever.com>',
+      from: process.env.RESEND_FROM_EMAIL || 'Best Husband Ever Tomorrow\'s Action! <action@besthusbandever.com>',
       to: user.email,
       subject: `🎯 Boom. Challenge Started. 7 Days to Level Up.`,
       html: `
