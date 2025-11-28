@@ -142,6 +142,132 @@ export interface PostReportData {
   reportId: string;
 }
 
+export interface EmailReplyNotificationData {
+  type: 'user_reply' | 'unknown_reply';
+  user_id?: string;
+  user_name?: string;
+  user_email: string;
+  subject: string;
+  content: string;
+  reply_id?: string;
+}
+
+export async function sendEmailReplyNotification(replyData: EmailReplyNotificationData): Promise<boolean> {
+  // Check if Resend is configured
+  if (!process.env.RESEND_API_KEY) {
+    console.error('RESEND_API_KEY not configured');
+    return false;
+  }
+
+  const adminEmail = process.env.ADMIN_EMAIL || process.env.SUPPORT_EMAIL || 'admin@besthusbandever.com';
+  const baseUrl = process.env.AUTH0_BASE_URL || 'https://www.besthusbandever.com';
+
+  const isKnownUser = replyData.type === 'user_reply';
+  const userName = replyData.user_name || 'Unknown User';
+  const userEmail = replyData.user_email;
+
+  try {
+    const { data, error } = await resend.emails.send({
+      from: process.env.RESEND_FROM_EMAIL || 'Best Husband Ever <noreply@besthusbandever.com>',
+      to: adminEmail,
+      subject: isKnownUser 
+        ? `📧 New Email Reply from ${userName}` 
+        : `📧 New Email Reply from Unknown User`,
+      html: `
+        <!DOCTYPE html>
+        <html>
+          <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Email Reply Notification</title>
+          </head>
+          <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #1f2937; background-color: #f9fafb; margin: 0; padding: 0;">
+            <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 40px 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+              <div style="text-align: center; margin-bottom: 30px;">
+                <h1 style="color: #0ea5e9; font-size: 24px; margin: 0;">📧 Email Reply Received</h1>
+                <p style="color: #6b7280; font-size: 14px; margin: 5px 0 0 0;">A user has replied to a daily action email</p>
+              </div>
+              
+              ${isKnownUser ? `
+                <div style="background-color: #eff6ff; border-left: 4px solid #3b82f6; border-radius: 8px; padding: 20px; margin-bottom: 20px;">
+                  <h3 style="color: #1e40af; font-size: 16px; margin: 0 0 10px 0;">User Information</h3>
+                  <p style="color: #374151; font-size: 14px; margin: 5px 0;">
+                    <strong>Name:</strong> ${userName}
+                  </p>
+                  <p style="color: #374151; font-size: 14px; margin: 5px 0;">
+                    <strong>Email:</strong> ${userEmail}
+                  </p>
+                  ${replyData.user_id ? `
+                    <p style="color: #374151; font-size: 14px; margin: 5px 0;">
+                      <strong>User ID:</strong> <code style="background-color: #f3f4f6; padding: 2px 6px; border-radius: 3px; font-size: 12px;">${replyData.user_id}</code>
+                    </p>
+                  ` : ''}
+                </div>
+              ` : `
+                <div style="background-color: #fef2f2; border-left: 4px solid #ef4444; border-radius: 8px; padding: 20px; margin-bottom: 20px;">
+                  <h3 style="color: #991b1b; font-size: 16px; margin: 0 0 10px 0;">⚠️ Unknown User</h3>
+                  <p style="color: #374151; font-size: 14px; margin: 5px 0;">
+                    <strong>Email:</strong> ${userEmail}
+                  </p>
+                  <p style="color: #6b7280; font-size: 13px; margin: 10px 0 0 0;">
+                    This email address is not associated with any user account. You may want to reach out to them directly.
+                  </p>
+                </div>
+              `}
+
+              <div style="background-color: #0f172a; border-radius: 8px; padding: 20px; margin-bottom: 20px;">
+                <h3 style="color: #f1f5f9; font-size: 16px; margin: 0 0 15px 0;">Email Content</h3>
+                <div style="background-color: #1e293b; border-radius: 6px; padding: 15px; margin-bottom: 15px;">
+                  <p style="color: #cbd5e1; font-size: 13px; margin: 0 0 10px 0; font-weight: 600;">Subject:</p>
+                  <p style="color: #f1f5f9; font-size: 14px; margin: 0 0 15px 0;">${replyData.subject}</p>
+                  <p style="color: #cbd5e1; font-size: 13px; margin: 15px 0 10px 0; font-weight: 600;">Message:</p>
+                  <div style="color: #e2e8f0; font-size: 14px; margin: 0; white-space: pre-wrap; line-height: 1.6; max-height: 400px; overflow-y: auto;">
+                    ${replyData.content.replace(/\n/g, '<br>')}
+                  </div>
+                </div>
+              </div>
+
+              ${replyData.reply_id ? `
+                <div style="background-color: #f3f4f6; border-radius: 8px; padding: 15px; margin-bottom: 20px;">
+                  <p style="color: #6b7280; font-size: 12px; margin: 0;">
+                    <strong>Reply ID:</strong> <code style="background-color: #ffffff; padding: 2px 6px; border-radius: 3px; font-size: 11px;">${replyData.reply_id}</code>
+                  </p>
+                </div>
+              ` : ''}
+              
+              <div style="text-align: center; padding-top: 20px; border-top: 1px solid #e5e7eb;">
+                <p style="color: #6b7280; font-size: 13px; margin: 0 0 15px 0;">
+                  This reply has been stored in your database. You can view all replies in Supabase under the <code>email_replies</code> table.
+                </p>
+                ${isKnownUser && replyData.user_id ? `
+                  <a href="${baseUrl}/dashboard" 
+                     style="display: inline-block; background-color: #0ea5e9; color: #ffffff; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: 600; margin: 5px;">
+                    View Dashboard →
+                  </a>
+                ` : ''}
+              </div>
+
+              <p style="text-align: center; color: #9ca3af; font-size: 11px; margin-top: 30px;">
+                This is an automated notification from Best Husband Ever.
+              </p>
+            </div>
+          </body>
+        </html>
+      `,
+    });
+
+    if (error) {
+      console.error('Error sending email reply notification:', error);
+      return false;
+    }
+
+    return true;
+  } catch (error) {
+    console.error('Unexpected error sending email reply notification:', error);
+    return false;
+  }
+}
+
 export async function sendPostReportEmail(reportData: PostReportData): Promise<boolean> {
   // Check if Resend is configured
   if (!process.env.RESEND_API_KEY) {

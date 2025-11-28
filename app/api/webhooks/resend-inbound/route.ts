@@ -95,8 +95,9 @@ export async function POST(request: Request) {
     if (!user) {
       logger.warn('Reply from unknown email:', userEmail);
       // Still store it, but mark as unknown user
+      let replyId: string | undefined;
       try {
-        await storeEmailReply(supabase, {
+        const storedReply = await storeEmailReply(supabase, {
           from_email: userEmail,
           from_name: extractNameFromEmail(fromEmail),
           subject,
@@ -104,28 +105,31 @@ export async function POST(request: Request) {
           user_id: null,
           status: 'unknown_user',
         });
-
-        // Optionally: Send notification to admin about unknown reply
-        await notifyAdmin(supabase, {
-          type: 'unknown_reply',
-          user_email: userEmail,
-          subject,
-          content: text || html,
-        });
-
-        return NextResponse.json({ received: true, message: 'Reply stored (unknown user)' });
+        replyId = storedReply?.[0]?.id;
       } catch (storeError: any) {
-        logger.error('Failed to store unknown user reply:', storeError);
+        // Already logged in storeEmailReply
         return NextResponse.json(
-          { error: 'Failed to store reply', details: storeError.message },
+          { error: 'Failed to store reply', details: storeError?.message || 'Unknown error' },
           { status: 500 }
         );
       }
+
+      // Send notification to admin about unknown reply
+      await notifyAdmin(supabase, {
+        type: 'unknown_reply',
+        user_email: userEmail,
+        subject,
+        content: text || html,
+        reply_id: replyId,
+      });
+
+      return NextResponse.json({ received: true, message: 'Reply stored (unknown user)' });
     }
 
     // Store the reply in database
+    let replyId: string | undefined;
     try {
-      await storeEmailReply(supabase, {
+      const storedReply = await storeEmailReply(supabase, {
         from_email: userEmail,
         from_name: user.name || extractNameFromEmail(fromEmail),
         subject,
@@ -133,6 +137,7 @@ export async function POST(request: Request) {
         user_id: user.id,
         status: 'received',
       });
+      replyId = storedReply?.[0]?.id;
     } catch (storeError: any) {
       logger.error('Failed to store user reply:', storeError);
       return NextResponse.json(
@@ -141,8 +146,8 @@ export async function POST(request: Request) {
       );
     }
 
-    // Send notification to admin (optional - you can disable this)
-    if (process.env.NOTIFY_ADMIN_ON_REPLIES === 'true') {
+    // Send notification to admin (enabled by default, can be disabled with env var)
+    if (process.env.NOTIFY_ADMIN_ON_REPLIES !== 'false') {
       await notifyAdmin(supabase, {
         type: 'user_reply',
         user_id: user.id,
@@ -150,6 +155,7 @@ export async function POST(request: Request) {
         user_email: userEmail,
         subject,
         content: text || html,
+        reply_id: replyId,
       });
     }
 
@@ -233,7 +239,7 @@ async function storeEmailReply(
 }
 
 /**
- * Notify admin of new reply (optional)
+ * Notify admin of new reply
  */
 async function notifyAdmin(
   supabase: any,
@@ -244,6 +250,7 @@ async function notifyAdmin(
     user_email: string;
     subject: string;
     content: string;
+    reply_id?: string;
   }
 ) {
   const adminEmail = process.env.ADMIN_EMAIL || process.env.SUPPORT_EMAIL;
@@ -254,14 +261,23 @@ async function notifyAdmin(
   }
 
   try {
-    const { sendPostReportEmail } = await import('@/lib/email');
+    const { sendEmailReplyNotification } = await import('@/lib/email');
     
-    // Reuse existing email function or create a new one
-    // For now, we'll just log - you can implement email notification later
-    logger.log('Admin notification (would send to):', adminEmail, data);
-    
-    // TODO: Implement admin notification email
-    // You can create a new function in lib/email.ts for this
+    const emailSent = await sendEmailReplyNotification({
+      type: data.type,
+      user_id: data.user_id,
+      user_name: data.user_name,
+      user_email: data.user_email,
+      subject: data.subject,
+      content: data.content,
+      reply_id: data.reply_id,
+    });
+
+    if (emailSent) {
+      logger.log('Admin notification email sent successfully to:', adminEmail);
+    } else {
+      logger.warn('Failed to send admin notification email');
+    }
   } catch (error) {
     logger.error('Error notifying admin:', error);
   }
