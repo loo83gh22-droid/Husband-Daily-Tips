@@ -272,10 +272,11 @@ async function generateActionForDate(
 
   const hiddenActionIds = hiddenActions?.map((ha: any) => ha.action_id) || [];
 
-  // Get available actions
+  // Get available actions (only eligible for 7-day events when generating for events)
   let { data: actions } = await adminSupabase
     .from('actions')
     .select('*')
+    .eq('eligible_for_7day_events', true)
     .limit(100);
 
   // Filter out actions seen in last 30 days
@@ -399,10 +400,11 @@ async function generateActionForDate(
   }
 
   if (!actions || actions.length === 0) {
-    // Fallback: get any action that's not hidden
+    // Fallback: get any eligible action that's not hidden
     const { data: allActions } = await adminSupabase
       .from('actions')
       .select('*')
+      .eq('eligible_for_7day_events', true)
       .limit(100);
 
     if (!allActions || allActions.length === 0) {

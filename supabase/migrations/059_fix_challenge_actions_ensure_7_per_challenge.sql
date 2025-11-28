@@ -52,11 +52,12 @@ BEGIN
       -- Remove all existing challenge_actions for this challenge to start fresh
       DELETE FROM challenge_actions WHERE challenge_id = challenge_record.id;
       
-      -- Try to get 7 actions from the theme first
+      -- Try to get 7 actions from the theme first (only eligible for 7-day events)
       day_num := 1;
       FOR action_record IN 
         SELECT id FROM actions 
         WHERE theme = theme_name 
+        AND eligible_for_7day_events = TRUE
         ORDER BY display_order NULLS LAST, name 
         LIMIT 7
       LOOP
@@ -66,12 +67,13 @@ BEGIN
         day_num := day_num + 1;
       END LOOP;
       
-      -- If we still don't have 7, fill with actions from the category
+      -- If we still don't have 7, fill with actions from the category (only eligible for 7-day events)
       IF day_num <= 7 THEN
         FOR action_record IN 
           SELECT id FROM actions 
           WHERE category = category_name 
           AND theme != theme_name  -- Don't duplicate theme actions
+          AND eligible_for_7day_events = TRUE
           AND id NOT IN (SELECT action_id FROM challenge_actions WHERE challenge_id = challenge_record.id)
           ORDER BY display_order NULLS LAST, name 
           LIMIT (7 - day_num + 1)
@@ -83,11 +85,12 @@ BEGIN
         END LOOP;
       END IF;
       
-      -- If we still don't have 7, use any actions from the category (including theme)
+      -- If we still don't have 7, use any eligible actions from the category (including theme)
       IF day_num <= 7 THEN
         FOR action_record IN 
           SELECT id FROM actions 
           WHERE category = category_name 
+          AND eligible_for_7day_events = TRUE
           AND id NOT IN (SELECT action_id FROM challenge_actions WHERE challenge_id = challenge_record.id)
           ORDER BY display_order NULLS LAST, name 
           LIMIT (7 - day_num + 1)
