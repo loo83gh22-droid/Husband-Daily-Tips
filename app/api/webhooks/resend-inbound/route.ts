@@ -44,9 +44,12 @@ export async function POST(request: Request) {
     }
 
     const rawBody = await request.text();
+    console.log('Raw webhook body:', rawBody.substring(0, 2000)); // Log first 2000 chars
     logger.log('Raw webhook body:', rawBody.substring(0, 1000)); // Log first 1000 chars
     
     const payload = JSON.parse(rawBody);
+    console.log('Parsed webhook payload keys:', Object.keys(payload));
+    console.log('Full parsed webhook payload:', JSON.stringify(payload, null, 2));
     logger.log('Parsed webhook payload keys:', Object.keys(payload));
     logger.log('Full parsed webhook payload:', JSON.stringify(payload, null, 2));
 
@@ -62,35 +65,56 @@ export async function POST(request: Request) {
     let html: string;
 
     // Handle different payload formats
+    // Resend Inbound webhook format: https://resend.com/docs/dashboard/webhooks/inbound
+    // Based on Resend docs, the format is typically:
+    // { type: 'email.received', data: { from: {...}, to: {...}, subject: ..., text: ..., html: ... } }
+    
     if (payload.type === 'email.received' && payload.data) {
       // Format 1: { type: 'email.received', data: {...} }
-      fromEmail = typeof payload.data.from === 'string' ? payload.data.from : payload.data.from?.email || '';
-      toEmail = payload.data.to || [];
-      subject = payload.data.subject || '';
-      text = payload.data.text || payload.data.body?.text || '';
-      html = payload.data.html || payload.data.body?.html || '';
+      const data = payload.data;
+      fromEmail = typeof data.from === 'string' ? data.from : (data.from?.email || data.from?.address || '');
+      toEmail = data.to || [];
+      subject = data.subject || '';
+      
+      // Try all possible locations for content
+      text = data.text || data.body?.text || data.body_text || data.content?.text || data.plain || data.plain_text || '';
+      html = data.html || data.body?.html || data.body_html || data.content?.html || '';
     } else if (payload.from) {
       // Format 2: Direct format { from: {...}, to: {...}, ... }
-      fromEmail = typeof payload.from === 'string' ? payload.from : payload.from?.email || '';
+      fromEmail = typeof payload.from === 'string' ? payload.from : (payload.from?.email || payload.from?.address || '');
       toEmail = payload.to || [];
       subject = payload.subject || '';
       // Try multiple possible locations for content
-      text = payload.text || payload.body?.text || payload.body_text || payload.content?.text || '';
+      text = payload.text || payload.body?.text || payload.body_text || payload.content?.text || payload.plain || payload.plain_text || '';
       html = payload.html || payload.body?.html || payload.body_html || payload.content?.html || '';
     } else {
+      console.error('Unknown webhook payload format:', JSON.stringify(payload, null, 2));
       logger.error('Unknown webhook payload format:', payload);
       return NextResponse.json({ error: 'Unknown payload format' }, { status: 400 });
     }
 
+    // If we still don't have content, try to extract from the entire payload
+    if (!text && !html) {
+      console.warn('No content found in standard locations, searching entire payload...');
+      const payloadStr = JSON.stringify(payload);
+      // Look for common email content patterns
+      if (payloadStr.includes('text/plain') || payloadStr.includes('text/html')) {
+        // Might be in a nested structure
+        console.log('Found email content indicators, but content is empty. Full payload structure:', Object.keys(payload));
+      }
+    }
+
     // Log what we extracted
-    logger.log('Extracted email data:', {
+    const extractedData = {
       fromEmail,
       subject,
       textLength: text.length,
       htmlLength: html.length,
-      textPreview: text.substring(0, 100),
-      htmlPreview: html.substring(0, 100),
-    });
+      textPreview: text.substring(0, 200),
+      htmlPreview: html.substring(0, 200),
+    };
+    console.log('Extracted email data:', extractedData);
+    logger.log('Extracted email data:', extractedData);
 
     logger.log('Email reply received:', { fromEmail, toEmail, subject });
 
