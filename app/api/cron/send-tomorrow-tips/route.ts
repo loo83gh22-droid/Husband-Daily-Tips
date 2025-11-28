@@ -4,10 +4,10 @@ import { sendTomorrowTipEmail } from '@/lib/email';
 import { logger } from '@/lib/logger';
 
 /**
- * Cron endpoint to send tomorrow's tips at 5pm in each user's timezone
+ * Cron endpoint to send tomorrow's tips at 12pm (noon) in each user's timezone
  * 
  * This endpoint runs every hour and checks which users should receive emails
- * based on their timezone (5pm in their local time).
+ * based on their timezone (12pm in their local time).
  * 
  * Set up in Vercel (vercel.json):
  * {
@@ -93,7 +93,7 @@ export async function GET(request: Request) {
       });
     }
 
-    // Filter users: only send to those where it's 5pm (17:00) in their timezone
+    // Filter users: only send to those where it's 12pm (12:00) in their timezone
     const usersToEmail = [];
     for (const user of users) {
       const timezone = user.timezone || 'America/New_York'; // Default timezone
@@ -103,8 +103,8 @@ export async function GET(request: Request) {
         const userTime = new Date(now.toLocaleString('en-US', { timeZone: timezone }));
         const hour = userTime.getHours();
 
-        // If it's 5pm (17:00) in their timezone, add to list
-        if (hour === 17) {
+        // If it's 12pm (12:00) in their timezone, add to list
+        if (hour === 12) {
           usersToEmail.push(user);
         }
       } catch (error) {
@@ -119,7 +119,7 @@ export async function GET(request: Request) {
         sent: 0,
         errors: 0,
         total: users.length,
-        message: 'No users to email at this time (not 5pm in any user timezone)',
+        message: 'No users to email at this time (not 12pm in any user timezone)',
         checked: users.length,
         currentUtcTime: now.toISOString(),
       });
@@ -133,7 +133,7 @@ export async function GET(request: Request) {
     let sentCount = 0;
     let errorCount = 0;
 
-    // For each user where it's 5pm, get an action for tomorrow
+    // For each user where it's 12pm, get an action for tomorrow
     for (const user of usersToEmail) {
       try {
         // Get user's category scores from survey_summary for personalized action selection
@@ -212,7 +212,7 @@ export async function GET(request: Request) {
       errors: errorCount,
       total: users.length,
       usersEmailed: usersToEmail.length,
-      message: `Sent ${sentCount} emails to users where it's 5pm in their timezone`,
+      message: `Sent ${sentCount} emails to users where it's 12pm in their timezone`,
     });
   } catch (error: any) {
     logger.error('Unexpected error in cron job:', error);
