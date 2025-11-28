@@ -43,19 +43,46 @@ export async function POST(request: Request) {
       logger.log('Resend inbound webhook received with signature');
     }
 
-    const payload: ResendInboundPayload = await request.json();
+    const rawBody = await request.text();
+    logger.log('Raw webhook body:', rawBody.substring(0, 500)); // Log first 500 chars
+    
+    const payload = JSON.parse(rawBody);
+    logger.log('Parsed webhook payload:', JSON.stringify(payload, null, 2));
 
-    // Only process email.received events
-    if (payload.type !== 'email.received') {
-      return NextResponse.json({ received: true, message: 'Event type not handled' });
+    // Resend Inbound webhook format might be different - check actual structure
+    // It might be: { type: 'email.received', data: {...} }
+    // Or it might be: { from: {...}, to: {...}, subject: ..., text: ..., html: ... }
+    
+    let fromEmail: string;
+    let toEmail: string | string[];
+    let subject: string;
+    let text: string;
+    let html: string;
+
+    // Handle different payload formats
+    if (payload.type === 'email.received' && payload.data) {
+      // Format 1: { type: 'email.received', data: {...} }
+      fromEmail = typeof payload.data.from === 'string' ? payload.data.from : payload.data.from?.email || '';
+      toEmail = payload.data.to || [];
+      subject = payload.data.subject || '';
+      text = payload.data.text || '';
+      html = payload.data.html || '';
+    } else if (payload.from) {
+      // Format 2: Direct format { from: {...}, to: {...}, ... }
+      fromEmail = typeof payload.from === 'string' ? payload.from : payload.from?.email || '';
+      toEmail = payload.to || [];
+      subject = payload.subject || '';
+      text = payload.text || '';
+      html = payload.html || '';
+    } else {
+      logger.error('Unknown webhook payload format:', payload);
+      return NextResponse.json({ error: 'Unknown payload format' }, { status: 400 });
     }
 
-    const { from, to, subject, text, html } = payload.data;
-
-    logger.log('Email reply received:', { from, to, subject });
+    logger.log('Email reply received:', { fromEmail, toEmail, subject });
 
     // Extract original email address (the user who replied)
-    const userEmail = from.toLowerCase().trim();
+    const userEmail = fromEmail.toLowerCase().trim();
 
     // Get user from database
     const supabase = getSupabaseAdmin();
@@ -68,35 +95,51 @@ export async function POST(request: Request) {
     if (!user) {
       logger.warn('Reply from unknown email:', userEmail);
       // Still store it, but mark as unknown user
-      await storeEmailReply(supabase, {
-        from_email: userEmail,
-        from_name: extractNameFromEmail(from),
-        subject,
-        content: text || html,
-        user_id: null,
-        status: 'unknown_user',
-      });
+      try {
+        await storeEmailReply(supabase, {
+          from_email: userEmail,
+          from_name: extractNameFromEmail(fromEmail),
+          subject,
+          content: text || html,
+          user_id: null,
+          status: 'unknown_user',
+        });
 
-      // Optionally: Send notification to admin about unknown reply
-      await notifyAdmin(supabase, {
-        type: 'unknown_reply',
-        user_email: userEmail,
-        subject,
-        content: text || html,
-      });
+        // Optionally: Send notification to admin about unknown reply
+        await notifyAdmin(supabase, {
+          type: 'unknown_reply',
+          user_email: userEmail,
+          subject,
+          content: text || html,
+        });
 
-      return NextResponse.json({ received: true, message: 'Reply stored (unknown user)' });
+        return NextResponse.json({ received: true, message: 'Reply stored (unknown user)' });
+      } catch (storeError: any) {
+        logger.error('Failed to store unknown user reply:', storeError);
+        return NextResponse.json(
+          { error: 'Failed to store reply', details: storeError.message },
+          { status: 500 }
+        );
+      }
     }
 
     // Store the reply in database
-    await storeEmailReply(supabase, {
-      from_email: userEmail,
-      from_name: user.name || extractNameFromEmail(from),
-      subject,
-      content: text || html,
-      user_id: user.id,
-      status: 'received',
-    });
+    try {
+      await storeEmailReply(supabase, {
+        from_email: userEmail,
+        from_name: user.name || extractNameFromEmail(fromEmail),
+        subject,
+        content: text || html,
+        user_id: user.id,
+        status: 'received',
+      });
+    } catch (storeError: any) {
+      logger.error('Failed to store user reply:', storeError);
+      return NextResponse.json(
+        { error: 'Failed to store reply', details: storeError.message },
+        { status: 500 }
+      );
+    }
 
     // Send notification to admin (optional - you can disable this)
     if (process.env.NOTIFY_ADMIN_ON_REPLIES === 'true') {
@@ -142,8 +185,17 @@ async function storeEmailReply(
   }
 ) {
   try {
+    logger.log('Attempting to store email reply:', {
+      from_email: data.from_email,
+      from_name: data.from_name,
+      subject: data.subject.substring(0, 50),
+      content_length: data.content.length,
+      user_id: data.user_id,
+      status: data.status,
+    });
+
     // Check if email_replies table exists, if not we'll create it via migration
-    const { error } = await supabase
+    const { data: insertedData, error } = await supabase
       .from('email_replies')
       .insert({
         from_email: data.from_email,
@@ -153,14 +205,30 @@ async function storeEmailReply(
         user_id: data.user_id,
         status: data.status,
         received_at: new Date().toISOString(),
-      });
+      })
+      .select();
 
     if (error) {
-      // Table might not exist yet - log but don't fail
-      logger.warn('Could not store email reply (table may not exist):', error.message);
+      // Log full error details
+      logger.error('Error storing email reply:', {
+        error: error.message,
+        code: error.code,
+        details: error.details,
+        hint: error.hint,
+        fullError: JSON.stringify(error, null, 2),
+      });
+      throw error; // Re-throw so caller knows it failed
     }
-  } catch (error) {
-    logger.error('Error storing email reply:', error);
+
+    logger.log('Email reply stored successfully:', insertedData);
+    return insertedData;
+  } catch (error: any) {
+    logger.error('Exception storing email reply:', {
+      message: error.message,
+      stack: error.stack,
+      fullError: JSON.stringify(error, null, 2),
+    });
+    throw error; // Re-throw so caller knows it failed
   }
 }
 
