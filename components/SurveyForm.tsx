@@ -190,22 +190,26 @@ export default function SurveyForm({ userId, questions, isPublic = false }: Surv
           </p>
         </div>
 
-        <div className="mb-8 p-6 bg-slate-800/50 rounded-lg border border-slate-700">
-          <p className="text-slate-300 mb-4">
-            Great! You've completed the survey. Now sign up to:
+        <div className="mb-8 p-6 bg-gradient-to-br from-primary-500/10 to-primary-600/10 rounded-lg border border-primary-500/30">
+          <p className="text-slate-50 font-semibold text-lg mb-4">
+            Great! You've completed the survey. Now unlock your full potential:
           </p>
-          <ul className="text-left space-y-2 text-slate-300 mb-6">
-            <li className="flex items-center gap-2">
-              <span className="text-primary-400">✓</span>
-              Save your baseline score and track improvements
+          <ul className="text-left space-y-3 text-slate-200 mb-6">
+            <li className="flex items-start gap-3">
+              <span className="text-primary-400 text-xl font-bold mt-0.5">✓</span>
+              <span><strong className="text-slate-50">Save your baseline score</strong> and track improvements over time</span>
             </li>
-            <li className="flex items-center gap-2">
-              <span className="text-primary-400">✓</span>
-              Get daily actions that fit your situation based on your results
+            <li className="flex items-start gap-3">
+              <span className="text-primary-400 text-xl font-bold mt-0.5">✓</span>
+              <span><strong className="text-slate-50">Get daily personalized actions</strong> based on your survey results</span>
             </li>
-            <li className="flex items-center gap-2">
-              <span className="text-primary-400">✓</span>
-              Access your Husband Health and track your progress
+            <li className="flex items-start gap-3">
+              <span className="text-primary-400 text-xl font-bold mt-0.5">✓</span>
+              <span><strong className="text-slate-50">Access your Husband Health</strong> and see real progress</span>
+            </li>
+            <li className="flex items-start gap-3">
+              <span className="text-primary-400 text-xl font-bold mt-0.5">✓</span>
+              <span><strong className="text-slate-50">7-day free trial</strong> - No credit card required</span>
             </li>
           </ul>
         </div>
@@ -213,13 +217,13 @@ export default function SurveyForm({ userId, questions, isPublic = false }: Surv
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <a
             href="/api/auth/login"
-            className="inline-flex items-center justify-center px-7 py-3.5 rounded-lg bg-primary-500 text-slate-950 text-sm font-semibold shadow-lg shadow-primary-500/20 hover:bg-primary-400 transition-colors"
+            className="inline-flex items-center justify-center px-10 py-4 rounded-xl bg-primary-500 text-slate-950 text-lg font-bold shadow-2xl shadow-primary-500/30 hover:bg-primary-400 transition-all transform hover:scale-105"
           >
-            Sign Up Free →
+            Start Free Trial →
           </a>
           <a
             href="/"
-            className="inline-flex items-center justify-center px-7 py-3.5 rounded-lg border border-slate-700 text-sm font-semibold text-slate-100 hover:bg-slate-900 transition-colors"
+            className="inline-flex items-center justify-center px-7 py-4 rounded-lg border border-slate-700 text-sm font-semibold text-slate-100 hover:bg-slate-900 transition-colors"
           >
             Learn More
           </a>

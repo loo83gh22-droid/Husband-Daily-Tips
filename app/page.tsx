@@ -87,12 +87,18 @@ export default async function Home() {
               Boyfriends, partners, and anyone committed to leveling up their relationship can benefit.
             </p>
 
-            <div className="mb-8">
+            <div className="mb-8 flex flex-col sm:flex-row gap-4">
               <Link
                 href="/survey"
                 className="inline-flex items-center justify-center px-10 py-5 rounded-xl bg-primary-500 text-slate-950 text-lg font-bold shadow-2xl shadow-primary-500/30 hover:bg-primary-400 transition-all transform hover:scale-105"
               >
                 Get Your Husband Score →
+              </Link>
+              <Link
+                href="/api/auth/login"
+                className="inline-flex items-center justify-center px-10 py-5 rounded-xl border-2 border-primary-500 text-primary-400 text-lg font-bold hover:bg-primary-500/10 transition-all transform hover:scale-105"
+              >
+                Start Free Trial →
               </Link>
             </div>
             <div className="flex flex-col sm:flex-row gap-4 mb-6">

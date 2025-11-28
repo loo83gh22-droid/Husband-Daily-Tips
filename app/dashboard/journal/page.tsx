@@ -253,10 +253,10 @@ export default async function JournalPage() {
               </div>
 
               <Link
-                href="/dashboard/subscription"
-                className="inline-block bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white font-semibold px-8 py-4 rounded-lg transition-all shadow-lg hover:shadow-xl transform hover:scale-105"
+                href="/dashboard/subscription?upgrade=journal"
+                className="inline-flex items-center justify-center bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white font-bold px-10 py-4 rounded-xl transition-all shadow-2xl shadow-primary-500/30 hover:shadow-primary-500/50 transform hover:scale-105 text-lg"
               >
-                Upgrade to Premium
+                Start Free Trial →
               </Link>
               
               <p className="text-xs text-slate-500 mt-6">

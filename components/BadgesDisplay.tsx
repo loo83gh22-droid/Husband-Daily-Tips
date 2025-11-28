@@ -257,18 +257,18 @@ export default function BadgesDisplay({ userId, hasPremiumAccess = false }: Badg
       ) : (
         /* Free users - show upgrade message for in-progress badges */
         (almostThereBadges.length > 0 || gettingStartedBadges.length > 0) && (
-          <div className="bg-primary-500/10 border border-primary-500/30 rounded-lg p-4 text-center">
-            <p className="text-sm text-slate-300 mb-2">
+          <div className="bg-gradient-to-br from-primary-500/20 to-primary-600/20 border border-primary-500/40 rounded-lg p-5 text-center">
+            <p className="text-base font-semibold text-slate-50 mb-2">
               Track your badge progress with Premium
             </p>
-            <p className="text-xs text-slate-400 mb-3">
+            <p className="text-sm text-slate-300 mb-4">
               See which badges you&apos;re close to earning and stay motivated.
             </p>
             <Link
-              href="/dashboard/subscription"
-              className="inline-block px-4 py-2 text-xs font-semibold bg-primary-500 text-slate-950 rounded-lg hover:bg-primary-400 transition-colors"
+              href="/dashboard/subscription?upgrade=badges"
+              className="inline-flex items-center justify-center px-6 py-3 text-sm font-bold bg-primary-500 text-slate-950 rounded-lg hover:bg-primary-400 transition-all transform hover:scale-105 shadow-lg shadow-primary-500/20"
             >
-              Upgrade to Premium
+              Upgrade to Premium →
             </Link>
           </div>
         )
