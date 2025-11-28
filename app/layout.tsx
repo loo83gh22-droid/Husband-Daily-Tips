@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     description: 'Daily actions to level up your marriage game. One move today. One wife smile tomorrow. You got this.',
     images: [
       {
-        url: 'https://www.besthusbandever.com/og-image.png',
+        url: 'https://www.besthusbandever.com/og-image.png?v=2',
         width: 1200,
         height: 630,
         alt: 'Best Husband Ever - Daily Actions for Better Relationships',
