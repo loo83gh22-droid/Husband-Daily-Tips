@@ -82,6 +82,7 @@ async function getUserStats(userId: string | null) {
       totalTips: 0,
       currentStreak: 0,
       totalDays: 0,
+      badgesCompleted: 0,
       healthScore: 0,
       baselineHealth: null,
     };
@@ -106,10 +107,19 @@ async function getUserStats(userId: string | null) {
     .order('date', { ascending: false });
 
   if (error || !tips) {
+    // Get badge count even if tips fail
+    const { data: userBadges } = await adminSupabase
+      .from('user_badges')
+      .select('id')
+      .eq('user_id', userId);
+    
+    const badgesCompleted = userBadges?.length || 0;
+
     return {
       totalTips: 0,
       currentStreak: 0,
       totalDays: 0,
+      badgesCompleted,
       healthScore: baselineHealth || 0,
       baselineHealth,
     };
@@ -197,10 +207,19 @@ async function getUserStats(userId: string | null) {
     conflict_score: surveySummary.conflict_score,
   } : null;
 
+  // Get badge count
+  const { data: userBadges } = await adminSupabase
+    .from('user_badges')
+    .select('id')
+    .eq('user_id', userId);
+
+  const badgesCompleted = userBadges?.length || 0;
+
   return { 
     totalTips, 
     currentStreak: streak, 
-    totalDays: uniqueDays, 
+    totalDays: uniqueDays,
+    badgesCompleted,
     healthScore, 
     baselineHealth,
     categoryScores,
@@ -555,10 +574,10 @@ export default async function Dashboard() {
                 color="blue"
               />
               <StatsCard
-                title="Active days"
-                value={stats.totalDays}
-                subtitle="days you showed up"
-                icon="📅"
+                title="Badges completed"
+                value={stats.badgesCompleted}
+                subtitle="badges earned"
+                icon="🏆"
                 color="green"
               />
             </div>

@@ -33,9 +33,11 @@ export default function StatsCard({ title, value, subtitle, icon, color, current
       if (value >= 30) return "🎯 Consistency pays off. You're proof.";
       if (value >= 10) return "📈 Building momentum. That's the move.";
     }
-    if (title === 'Active days' && value > 0) {
-      if (value >= 30) return "🌟 You're committed. She notices.";
-      if (value >= 10) return "💯 Showing up. That's what matters.";
+    if (title === 'Badges completed' && value > 0) {
+      if (value >= 50) return "🏆 You're a legend. Keep going.";
+      if (value >= 25) return "🌟 Incredible progress. She notices.";
+      if (value >= 10) return "💯 Building momentum. That's the move.";
+      if (value >= 5) return "✨ Great start. Keep going.";
     }
     return null;
   };

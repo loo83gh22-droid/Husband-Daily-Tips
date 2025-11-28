@@ -187,76 +187,44 @@ export default function BadgesDisplay({ userId, hasPremiumAccess = false }: Badg
     );
   };
 
+  // Combine all in-progress badges and sort by completion percentage (descending)
+  // Show only top 5 nearest to completion
+  const allInProgress = [...almostThereBadges, ...gettingStartedBadges]
+    .sort((a, b) => {
+      const aPercent = a.progress?.percentage || 0;
+      const bPercent = b.progress?.percentage || 0;
+      return bPercent - aPercent; // Highest percentage first
+    })
+    .slice(0, 5); // Top 5 only
+
   return (
     <div className="bg-slate-900/70 border border-slate-800 rounded-xl p-4 md:p-6">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-sm font-semibold text-slate-200">Badges</h3>
-        <span className="text-xs text-slate-400">
-          {earnedBadges.length} / {badges.length} earned
-        </span>
+        <h3 className="text-sm font-semibold text-slate-200">Badges in Progress</h3>
+        {allInProgress.length > 0 && (
+          <span className="text-xs text-slate-400">
+            {allInProgress.length} {allInProgress.length === 1 ? 'badge' : 'badges'}
+          </span>
+        )}
       </div>
-
-      {/* Show earned badges for all users */}
-      {earnedBadges.length > 0 && (
-        <div className="mb-4">
-          <p className="text-xs text-slate-400 mb-3">
-            Earned ({earnedBadges.length})
-          </p>
-          <div className="grid grid-cols-4 sm:grid-cols-6 gap-2">
-            {earnedBadges.slice(0, 12).map((badge) => (
-              <div
-                key={badge.id}
-                className="p-2 bg-slate-800/30 rounded-lg border border-slate-700/50 text-center"
-                title={`${badge.name}: ${badge.description}`}
-              >
-                <span className="text-lg block mb-1">{badge.icon}</span>
-                <span className="text-[9px] text-slate-400 line-clamp-1">{badge.name}</span>
-              </div>
-            ))}
-          </div>
-          {earnedBadges.length > 12 && (
-            <Link
-              href="/dashboard/badges"
-              className="text-xs text-primary-300 hover:text-primary-200 mt-2 inline-block"
-            >
-              View all {earnedBadges.length} earned badges →
-            </Link>
-          )}
-        </div>
-      )}
 
       {/* In-progress badges - Premium only */}
       {hasPremiumAccess ? (
         <>
-          {almostThereBadges.length > 0 && (
-            <div className="mb-4">
-              <p className="text-xs text-slate-400 mb-3">
-                Almost There ({almostThereBadges.length})
-              </p>
-              <div className="space-y-2">
-                {almostThereBadges.map((badge) => renderBadgeCard(badge, true))}
-              </div>
+          {allInProgress.length > 0 ? (
+            <div className="space-y-2">
+              {allInProgress.map((badge) => {
+                const isAlmostThere = (badge.progress?.percentage || 0) >= 75;
+                return renderBadgeCard(badge, isAlmostThere);
+              })}
             </div>
-          )}
-
-          {gettingStartedBadges.length > 0 && (
-            <div>
-              <p className="text-xs text-slate-400 mb-3">
-                Getting Started ({gettingStartedBadges.length})
-              </p>
-              <div className="space-y-2">
-                {gettingStartedBadges.map((badge) => renderBadgeCard(badge, false))}
-              </div>
-            </div>
-          )}
-
-          {almostThereBadges.length === 0 && gettingStartedBadges.length === 0 && earnedBadges.length === 0 && (
-            <p className="text-sm text-slate-400 text-center py-4">No badges yet. Complete actions to earn your first badge!</p>
+          ) : (
+            <p className="text-sm text-slate-400 text-center py-4">No badges in progress. Complete actions to start earning badges!</p>
           )}
         </>
       ) : (
-        /* Free users - show upgrade message for in-progress badges */
-        (almostThereBadges.length > 0 || gettingStartedBadges.length > 0) && (
+        /* Free users - show upgrade message */
+        allInProgress.length > 0 ? (
           <div className="bg-gradient-to-br from-primary-500/20 to-primary-600/20 border border-primary-500/40 rounded-lg p-5 text-center">
             <p className="text-base font-semibold text-slate-50 mb-2">
               Track your badge progress with Premium
@@ -271,11 +239,9 @@ export default function BadgesDisplay({ userId, hasPremiumAccess = false }: Badg
               Upgrade to Premium →
             </Link>
           </div>
+        ) : (
+          <p className="text-sm text-slate-400 text-center py-4">No badges in progress. Complete actions to start earning badges!</p>
         )
-      )}
-
-      {earnedBadges.length === 0 && hasPremiumAccess && almostThereBadges.length === 0 && gettingStartedBadges.length === 0 && (
-        <p className="text-sm text-slate-400 text-center py-4">No badges yet. Complete actions to earn your first badge!</p>
       )}
     </div>
   );
