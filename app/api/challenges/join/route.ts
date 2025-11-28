@@ -499,7 +499,7 @@ async function sendChallengeEmail(
                   <strong style="color: #1e293b;">Hey ${displayName},</strong>
                 </p>
                 <p style="color: #475569; font-size: 15px; margin: 0 0 15px 0;">
-                  Here&apos;s the deal: We&apos;ve locked in <strong style="color: #fbbf24;">7 actions</strong>, one for each day. These aren&apos;t random—they&apos;re picked for you based on your survey. These actions will appear on your dashboard each day and take priority over the algorithm.
+                  Here&apos;s the deal: We&apos;ve locked in <strong style="color: #fbbf24;">7 actions</strong>, one for each day. These aren&apos;t random, they&apos;re picked for you based on your initial survey and your commitment to the 7 day event. These actions will appear on your dashboard each day and take priority over the regularly served Daily Actions.
                 </p>
                 <p style="color: #475569; font-size: 15px; margin: 0;">
                   Your complete 7-day action plan (aka your roadmap to winning):
