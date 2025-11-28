@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     siteName: 'Best Husband Ever',
     images: [
       {
-        url: '/og-image.png',
+        url: 'https://www.besthusbandever.com/og-image.png',
         width: 1200,
         height: 630,
         alt: 'Best Husband Ever - Daily Actions for Better Relationships',
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Best Husband Ever - Daily Actions to Level Up Your Marriage',
     description: 'Stop winging it. Start winning it. Get daily personalized actions delivered to help you become the best husband ever.',
-    images: ['/og-image.png'],
+    images: ['https://www.besthusbandever.com/og-image.png'],
   },
 };
 
