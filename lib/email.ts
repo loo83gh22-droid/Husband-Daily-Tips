@@ -31,7 +31,7 @@ export async function sendTomorrowTipEmail(
 
   try {
     const { data, error } = await resend.emails.send({
-      from: process.env.RESEND_FROM_EMAIL || 'Best Husband Ever - Tomorrow\'s Action! <action@besthusbandever.com>',
+      from: process.env.RESEND_FROM_EMAIL || 'Best Husband Ever Tomorrow\'s Action! <action@besthusbandever.com>',
       to: email,
       subject: `Tomorrow: Make Her Smile (Here's How)`,
       html: `
@@ -68,7 +68,7 @@ export async function sendTomorrowTipEmail(
                   Here&apos;s the deal:
                 </p>
                 <p style="color: #6b7280; font-size: 14px; margin: 0; line-height: 1.6;">
-                  Tomorrow&apos;s action arrives today at 12pm. Why? Because winners plan ahead, and that&apos;s what you&apos;re becoming. Plus, it gives you time to actually make it happen—no scrambling, no forgetting, just execution. You got this.
+                  Tomorrow&apos;s action arrives today at 12pm. Why? Because winners plan ahead, and that&apos;s what you&apos;re becoming. Plus, it gives you time to actually make it happen. No scrambling, no forgetting, just execution. You got this.
                 </p>
               </div>
               
@@ -141,7 +141,7 @@ export async function sendPostReportEmail(reportData: PostReportData): Promise<b
     const { data, error } = await resend.emails.send({
       from: process.env.RESEND_FROM_EMAIL || 'Best Husband Ever <noreply@besthusbandever.com>',
       to: adminEmail,
-      subject: `🚨 Team Wins Post Reported - Action Required`,
+      subject: `🚨 Team Wins Post Reported Action Required`,
       html: `
         <!DOCTYPE html>
         <html>
