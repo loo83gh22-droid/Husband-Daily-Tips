@@ -468,7 +468,7 @@ async function sendChallengeEmail(
     const { data, error } = await resend.emails.send({
       from: process.env.RESEND_FROM_EMAIL || 'Best Husband Ever Tomorrow\'s Action! <action@besthusbandever.com>',
       to: user.email,
-      subject: `🎯 Boom. Challenge Started. 7 Days to Level Up.`,
+      subject: `🎯 Boom. 7 Day Event Started. 7 Days to Level Up.`,
       html: `
         <!DOCTYPE html>
         <html>
@@ -500,9 +500,6 @@ async function sendChallengeEmail(
                 </p>
                 <p style="color: #475569; font-size: 15px; margin: 0 0 15px 0;">
                   Here&apos;s the deal: We&apos;ve locked in <strong style="color: #fbbf24;">7 actions</strong>, one for each day. These aren&apos;t random, they&apos;re picked for you based on your initial survey and your commitment to the 7 day event. These actions will appear on your dashboard each day and take priority over the regularly served Daily Actions.
-                </p>
-                <p style="color: #475569; font-size: 15px; margin: 0;">
-                  Your complete 7-day action plan (aka your roadmap to winning):
                 </p>
               </div>
               
@@ -570,18 +567,18 @@ async function sendChallengeEmail(
                   
                   <a href="${baseUrl}/dashboard" 
                      style="display: inline-block; background-color: #fbbf24; color: #0f172a; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: 600; text-align: center; margin-top: 10px; font-size: 14px;">
-                    View Challenge in Dashboard →
+                    View 7 Day Event in Dashboard →
                   </a>
                 </div>
               </div>
               
               <p style="color: #94a3b8; font-size: 13px; margin-top: 30px; padding-top: 20px; border-top: 1px solid #e2e8f0;">
-                These actions were picked for you based on your relationship survey. Complete them daily to make the most of your challenge!
+                These actions were picked for you based on your relationship survey. Complete them daily to make the most of your 7 Day Event!
               </p>
             </div>
             
             <div style="text-align: center; margin-top: 20px; color: #94a3b8; font-size: 12px;">
-              <p>You&apos;re getting this because you joined a 7-day challenge on Best Husband Ever. Let&apos;s do this.</p>
+              <p>You&apos;re getting this because you joined a 7 Day Event on Best Husband Ever. Let&apos;s do this.</p>
               <p><a href="${baseUrl}/dashboard/account" style="color: #64748b;">Manage email preferences</a></p>
             </div>
           </body>

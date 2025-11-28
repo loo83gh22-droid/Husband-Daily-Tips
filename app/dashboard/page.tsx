@@ -22,7 +22,7 @@ import TrialExpirationBanner from '@/components/TrialExpirationBanner';
 import ReferralTracker from '@/components/ReferralTracker';
 import ReferralCard from '@/components/ReferralCard';
 import GettingStarted from '@/components/GettingStarted';
-import QuotesDisplay from '@/components/QuotesDisplay';
+import FreeFloatingQuote from '@/components/FreeFloatingQuote';
 import Link from 'next/link';
 
 async function getUserData(auth0Id: string) {
@@ -527,10 +527,8 @@ export default async function Dashboard() {
               </Link>
             </div>
 
-            {/* Random Quote */}
-            <div className="mt-4 sm:mt-6 md:mt-8">
-              <QuotesDisplay />
-            </div>
+            {/* Free-Floating Quote in Dead Space */}
+            <FreeFloatingQuote />
           </div>
 
           {/* Right column: Health bar + stats */}
@@ -571,11 +569,6 @@ export default async function Dashboard() {
 
             <div>
               <ReferralCard />
-            </div>
-
-            {/* Random Quote */}
-            <div>
-              <QuotesDisplay />
             </div>
           </div>
         </div>
