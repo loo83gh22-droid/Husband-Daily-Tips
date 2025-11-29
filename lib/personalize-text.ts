@@ -77,11 +77,36 @@ export function personalizeText(text: string | null | undefined, partnerName: st
     personalizedText = personalizedText.replace(/\byour spouse\b/gi, 'her');
   }
 
-  // 4. Possessive "her + noun" (her day, her feelings) -> "Partner's + noun" (first occurrence only), then "her" for rest
+  // 4. Possessive "her + noun" (her day, her feelings) -> handled carefully
+  // For clearly possessive nouns (day, feelings, needs, schedule, time, energy, body, boundaries, perspective, effort)
+  // we use "Partner's + noun" for the first occurrence.
+  // For generic phrases like "tell her something", we use "Partner + noun" (no 's) to avoid awkward "Jodi's something".
   if (!nameUsed) {
     personalizedText = personalizedText.replace(/\bher\s+([a-z]+)/i, (match, word) => {
       nameUsed = true;
-      return `${partnerName}'s ${word}`;
+      const lowercaseWord = word.toLowerCase();
+      const possessiveNouns = new Set([
+        'day',
+        'feelings',
+        'needs',
+        'schedule',
+        'time',
+        'energy',
+        'body',
+        'boundaries',
+        'perspective',
+        'effort',
+        'work',
+        'ideas',
+        'wins',
+      ]);
+
+      if (possessiveNouns.has(lowercaseWord)) {
+        return `${partnerName}'s ${word}`;
+      }
+
+      // Default: treat as object pronoun + noun (e.g., "tell Jodi something")
+      return `${partnerName} ${word}`;
     });
   } else {
     // Keep as "her + noun" for subsequent occurrences
