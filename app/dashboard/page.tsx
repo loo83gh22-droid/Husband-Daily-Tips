@@ -215,9 +215,14 @@ async function getUserStats(userId: string | null) {
 
   let badgesCompleted = userBadges?.length || 0;
 
-  // If user has badges but no completions, there's a mismatch - recalculate badges
+  // Calculate total unique completions (tips + actions)
+  const totalCompletions = uniqueTipIds.size + uniqueActionIds.size;
+
+  // If user has significantly more badges than completions, there's a mismatch
+  // Recalculate badges to ensure they match actual completions
   // This handles cases where completions were deleted but badges weren't updated
-  if (badgesCompleted > 0 && totalTips === 0 && uniqueActionIds.size === 0) {
+  // Also handles cases where badges were awarded incorrectly (e.g., for joining but not completing events)
+  if (badgesCompleted > totalCompletions) {
     try {
       const { recalculateUserBadges } = await import('@/lib/recalculate-badges');
       const result = await recalculateUserBadges(adminSupabase as any, userId);
