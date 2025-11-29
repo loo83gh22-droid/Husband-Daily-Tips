@@ -94,6 +94,7 @@ export async function GET(request: Request) {
     }
 
     // Filter users: only send to those where it's 12pm (12:00) in their timezone
+    // Also determine the day of week for each user to format emails accordingly
     const usersToEmail = [];
     for (const user of users) {
       const timezone = user.timezone || 'America/New_York'; // Default timezone
@@ -102,10 +103,11 @@ export async function GET(request: Request) {
         // Get current time in user's timezone
         const userTime = new Date(now.toLocaleString('en-US', { timeZone: timezone }));
         const hour = userTime.getHours();
+        const dayOfWeek = userTime.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
 
-        // If it's 12pm (12:00) in their timezone, add to list
+        // If it's 12pm (12:00) in their timezone, add to list with day of week
         if (hour === 12) {
-          usersToEmail.push(user);
+          usersToEmail.push({ ...user, dayOfWeek, timezone });
         }
       } catch (error) {
         logger.error(`Error processing timezone for user ${user.id}:`, error);
@@ -133,9 +135,22 @@ export async function GET(request: Request) {
     let sentCount = 0;
     let errorCount = 0;
 
+    // Helper function to get Monday of current week (ISO week start)
+    function getMondayOfWeek(date: Date): Date {
+      const d = new Date(date);
+      const day = d.getDay();
+      const diff = d.getDate() - day + (day === 0 ? -6 : 1); // Adjust when day is Sunday
+      return new Date(d.setDate(diff));
+    }
+
     // For each user where it's 12pm, get an action for tomorrow
     for (const user of usersToEmail) {
       try {
+        const dayOfWeek = user.dayOfWeek; // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
+        const isMonday = dayOfWeek === 1;
+        const isSunday = dayOfWeek === 0;
+        const isWeekday = dayOfWeek >= 1 && dayOfWeek <= 5; // Monday-Friday
+
         // Get user's category scores from survey_summary for personalized action selection
         const { data: surveySummary } = await supabase
           .from('survey_summary')
@@ -159,43 +174,187 @@ export async function GET(request: Request) {
           work_days: user.work_days ?? null,
         };
 
-        // Use the shared action selection function (same logic as dashboard)
-        // This ensures the email matches what will appear on the dashboard
+        // For Sunday-Thursday, only select weekly_routine actions for daily action
+        // For Friday-Saturday, use normal selection (planning_required allowed)
         const { selectTomorrowAction } = await import('@/lib/action-selection');
-        const action = await selectTomorrowAction(
+        const weeklyRoutineOnly = dayOfWeek >= 0 && dayOfWeek <= 4; // Sunday-Thursday
+        
+        const dailyAction = await selectTomorrowAction(
           user.id,
           user.subscription_tier || 'free',
           categoryScores,
-          userProfile
+          userProfile,
+          weeklyRoutineOnly
         );
 
-        if (!action) {
+        if (!dailyAction) {
           logger.error(`No action selected for user ${user.id}`);
           errorCount++;
           continue;
+        }
+
+        // Handle weekly planning actions
+        let weeklyPlanningActions = [];
+        let weekStartDate: string | null = null;
+
+        if (isMonday) {
+          // Monday: Select 5 planning actions for the week
+          const { selectWeeklyPlanningActions } = await import('@/lib/action-selection');
+          weeklyPlanningActions = await selectWeeklyPlanningActions(
+            user.id,
+            user.subscription_tier || 'free',
+            categoryScores,
+            userProfile
+          );
+
+          if (weeklyPlanningActions.length > 0) {
+            // Store planning actions for the week
+            const mondayDate = getMondayOfWeek(new Date());
+            weekStartDate = mondayDate.toISOString().split('T')[0];
+            
+            await supabase
+              .from('user_weekly_planning_actions')
+              .upsert({
+                user_id: user.id,
+                week_start_date: weekStartDate,
+                action_ids: weeklyPlanningActions.map(a => a.id),
+                updated_at: new Date().toISOString(),
+              }, {
+                onConflict: 'user_id,week_start_date',
+              });
+          }
+        } else if (isWeekday) {
+          // Tuesday-Friday: Retrieve stored planning actions
+          const mondayDate = getMondayOfWeek(new Date());
+          weekStartDate = mondayDate.toISOString().split('T')[0];
+          
+          const { data: weeklyPlan } = await supabase
+            .from('user_weekly_planning_actions')
+            .select('action_ids')
+            .eq('user_id', user.id)
+            .eq('week_start_date', weekStartDate)
+            .single();
+
+          if (weeklyPlan?.action_ids && weeklyPlan.action_ids.length > 0) {
+            // Fetch the actual action details
+            const { data: actions } = await supabase
+              .from('actions')
+              .select('*')
+              .in('id', weeklyPlan.action_ids);
+            
+            weeklyPlanningActions = actions || [];
+          }
+        }
+
+        // Get all actions served last week for weekly review (Sunday only)
+        // Last week = previous Monday through Sunday (7-13 days ago)
+        let allActionsLastWeek = [];
+        if (isSunday) {
+          // Get last week's Monday (7 days ago, then get that week's Monday)
+          const today = new Date();
+          const lastWeekStart = new Date(today);
+          lastWeekStart.setDate(today.getDate() - 7); // Go back 7 days
+          const lastWeekMonday = getMondayOfWeek(lastWeekStart);
+          const lastWeekStartStr = lastWeekMonday.toISOString().split('T')[0];
+          
+          // Last week's Sunday (6 days after Monday)
+          const lastWeekEnd = new Date(lastWeekMonday);
+          lastWeekEnd.setDate(lastWeekMonday.getDate() + 6);
+          const lastWeekEndStr = lastWeekEnd.toISOString().split('T')[0];
+
+          // Get ALL actions served last week (from user_daily_actions)
+          const { data: servedActions } = await supabase
+            .from('user_daily_actions')
+            .select('action_id, date, completed, actions(*)')
+            .eq('user_id', user.id)
+            .gte('date', lastWeekStartStr)
+            .lte('date', lastWeekEndStr)
+            .order('date', { ascending: true });
+
+          // If no actions in exact week range, try to get recent actions (last 14 days) as fallback
+          if (!servedActions || servedActions.length === 0) {
+            const today = new Date();
+            const twoWeeksAgo = new Date(today);
+            twoWeeksAgo.setDate(today.getDate() - 14);
+            const twoWeeksAgoStr = twoWeeksAgo.toISOString().split('T')[0];
+            const todayStr = today.toISOString().split('T')[0];
+            
+            const { data: recentActions } = await supabase
+              .from('user_daily_actions')
+              .select('action_id, date, completed, actions(*)')
+              .eq('user_id', user.id)
+              .gte('date', twoWeeksAgoStr)
+              .lte('date', todayStr)
+              .order('date', { ascending: false })
+              .limit(7); // Get up to 7 most recent actions
+            
+            if (recentActions && recentActions.length > 0) {
+              // Use recent actions as fallback
+              const recentActionIds = new Set(recentActions.map((ra: any) => ra.action_id));
+              const { data: recentCompletions } = await supabase
+                .from('user_action_completions')
+                .select('action_id')
+                .eq('user_id', user.id)
+                .in('action_id', Array.from(recentActionIds));
+              
+              const completedActionIds = new Set(recentCompletions?.map(c => c.action_id) || []);
+              
+              allActionsLastWeek = recentActions.map((sa: any) => ({
+                ...sa.actions,
+                date: sa.date,
+                completed: sa.completed || completedActionIds.has(sa.action_id),
+              })).filter((a: any) => a && a.id);
+            }
+          } else {
+            // Get completed action IDs from last week
+            const { data: completions } = await supabase
+              .from('user_action_completions')
+              .select('action_id')
+              .eq('user_id', user.id)
+              .gte('completed_at', lastWeekStartStr)
+              .lte('completed_at', lastWeekEndStr);
+
+            const completedActionIds = new Set(completions?.map(c => c.action_id) || []);
+
+            // Map served actions with completion status
+            allActionsLastWeek = servedActions.map((sa: any) => ({
+              ...sa.actions,
+              date: sa.date,
+              completed: sa.completed || completedActionIds.has(sa.action_id),
+            })).filter((a: any) => a && a.id); // Filter out any null actions
+          }
         }
 
         // Get a random quote to include in the email
         const { getRandomQuote } = await import('@/lib/quotes');
         const quote = await getRandomQuote();
 
-        // Send email with tomorrow's action
-        // Note: Resend free tier only allows sending to the account owner's email
-        // To send to all users, verify a domain at resend.com/domains
+        // Send email with new format
+        // For planning actions, include action IDs and user ID for "Mark as Done" buttons
+        const planningActionsWithIds = (isMonday ? weeklyPlanningActions : (isWeekday ? weeklyPlanningActions : [])).map(action => ({
+          ...action,
+          id: action.id, // Ensure ID is included
+        }));
+
         const success = await sendTomorrowTipEmail(
           user.email,
           user.name || user.email.split('@')[0],
           {
-            title: action.name,
-            content: `${action.description}\n\nWhy this matters: ${action.benefit || 'Every action strengthens your relationship.'}`,
-            category: action.category,
+            title: dailyAction.name,
+            content: `${dailyAction.description}\n\nWhy this matters: ${dailyAction.benefit || 'Every action strengthens your relationship.'}`,
+            category: dailyAction.category,
             quote: quote || undefined,
+            actionId: dailyAction.id,
+            userId: user.id,
+            dayOfWeek,
+            weeklyPlanningActions: planningActionsWithIds,
+            allActionsLastWeek: isSunday ? allActionsLastWeek : [],
           },
         );
 
         if (success) {
           sentCount++;
-          logger.log(`✅ Email sent to ${user.email}`);
+          logger.log(`✅ Email sent to ${user.email} (Day: ${dayOfWeek})`);
         } else {
           errorCount++;
           // Check if it's a Resend domain verification issue

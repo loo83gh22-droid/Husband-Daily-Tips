@@ -20,12 +20,14 @@ interface CategoryScores {
 /**
  * Shared function to select tomorrow's action for a user
  * This ensures the email and dashboard use the same logic
+ * @param weeklyRoutineOnly - If true, only select from weekly_routine actions (for Sun-Thu emails)
  */
 export async function selectTomorrowAction(
   userId: string,
   subscriptionTier: string,
   categoryScores?: CategoryScores,
-  userProfile?: UserProfile
+  userProfile?: UserProfile,
+  weeklyRoutineOnly: boolean = false
 ) {
   const adminSupabase = getSupabaseAdmin();
 
@@ -151,33 +153,46 @@ export async function selectTomorrowAction(
 
   // Filter actions by day of week category preference
   if (actions && actions.length > 0) {
-    // Separate actions by day_of_week_category
-    const weeklyRoutineActions = actions.filter(a => a.day_of_week_category === 'weekly_routine');
-    const planningRequiredActions = actions.filter(a => a.day_of_week_category === 'planning_required');
-    const uncategorizedActions = actions.filter(a => !a.day_of_week_category);
-    
-    // On work days, prefer weekly_routine (80% chance), but allow planning_required (20% chance)
-    // On days off, prefer planning_required (70% chance), but allow weekly_routine (30% chance)
-    // This gives flexibility while being mindful of feasibility
-    let preferredActions: typeof actions = [];
-    let fallbackActions: typeof actions = [];
-    
-    if (isDayOff) {
-      // Day off: prefer planning_required (date nights, camping, etc.), but allow weekly_routine
-      preferredActions = planningRequiredActions.length > 0 ? planningRequiredActions : [];
-      fallbackActions = [...weeklyRoutineActions, ...uncategorizedActions];
+    // If weeklyRoutineOnly is true (for Sun-Thu emails), only use weekly_routine actions
+    if (weeklyRoutineOnly) {
+      const weeklyRoutineActions = actions.filter(a => a.day_of_week_category === 'weekly_routine');
+      // If no weekly_routine actions available, fall back to uncategorized (but not planning_required)
+      if (weeklyRoutineActions.length > 0) {
+        actions = weeklyRoutineActions;
+      } else {
+        // Fallback to uncategorized actions (but exclude planning_required)
+        actions = actions.filter(a => !a.day_of_week_category || a.day_of_week_category === 'weekly_routine');
+      }
     } else {
-      // Work day: prefer weekly_routine (simple actions at home), but allow planning_required
-      preferredActions = weeklyRoutineActions.length > 0 ? weeklyRoutineActions : [];
-      fallbackActions = [...planningRequiredActions, ...uncategorizedActions];
+      // Normal selection logic with preferences
+      // Separate actions by day_of_week_category
+      const weeklyRoutineActions = actions.filter(a => a.day_of_week_category === 'weekly_routine');
+      const planningRequiredActions = actions.filter(a => a.day_of_week_category === 'planning_required');
+      const uncategorizedActions = actions.filter(a => !a.day_of_week_category);
+      
+      // On work days, prefer weekly_routine (80% chance), but allow planning_required (20% chance)
+      // On days off, prefer planning_required (70% chance), but allow weekly_routine (30% chance)
+      // This gives flexibility while being mindful of feasibility
+      let preferredActions: typeof actions = [];
+      let fallbackActions: typeof actions = [];
+      
+      if (isDayOff) {
+        // Day off: prefer planning_required (date nights, camping, etc.), but allow weekly_routine
+        preferredActions = planningRequiredActions.length > 0 ? planningRequiredActions : [];
+        fallbackActions = [...weeklyRoutineActions, ...uncategorizedActions];
+      } else {
+        // Work day: prefer weekly_routine (simple actions at home), but allow planning_required
+        preferredActions = weeklyRoutineActions.length > 0 ? weeklyRoutineActions : [];
+        fallbackActions = [...planningRequiredActions, ...uncategorizedActions];
+      }
+      
+      // Use preferred actions if available, otherwise use fallback
+      // Weight: 80% preferred, 20% fallback on work days; 70% preferred, 30% fallback on days off
+      const preferredWeight = isDayOff ? 0.7 : 0.8;
+      const usePreferred = Math.random() < preferredWeight && preferredActions.length > 0;
+      
+      actions = usePreferred ? preferredActions : (fallbackActions.length > 0 ? fallbackActions : actions);
     }
-    
-    // Use preferred actions if available, otherwise use fallback
-    // Weight: 80% preferred, 20% fallback on work days; 70% preferred, 30% fallback on days off
-    const preferredWeight = isDayOff ? 0.7 : 0.8;
-    const usePreferred = Math.random() < preferredWeight && preferredActions.length > 0;
-    
-    actions = usePreferred ? preferredActions : (fallbackActions.length > 0 ? fallbackActions : actions);
   }
 
   // Combined action selection: Survey data + User preferences ("Show me more like this")
@@ -364,4 +379,105 @@ export async function selectTomorrowAction(
   });
 
   return randomAction;
+}
+
+/**
+ * Select 5 planning_required actions for the week ahead
+ * These are sent on Monday and can be completed anytime during the week
+ */
+export async function selectWeeklyPlanningActions(
+  userId: string,
+  subscriptionTier: string,
+  categoryScores?: CategoryScores,
+  userProfile?: UserProfile
+) {
+  const adminSupabase = getSupabaseAdmin();
+
+  // Get actions user hasn't seen in the last 30 days
+  const thirtyDaysAgo = new Date();
+  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+  const thirtyDaysAgoStr = thirtyDaysAgo.toISOString().split('T')[0];
+
+  const { data: recentActions } = await adminSupabase
+    .from('user_daily_actions')
+    .select('action_id')
+    .eq('user_id', userId)
+    .gte('date', thirtyDaysAgoStr);
+
+  const seenActionIds = recentActions?.map((ra) => ra.action_id) || [];
+
+  // Get hidden action IDs
+  const { data: hiddenActions } = await adminSupabase
+    .from('user_hidden_actions')
+    .select('action_id')
+    .eq('user_id', userId);
+
+  const hiddenActionIds = hiddenActions?.map((ha) => ha.action_id) || [];
+
+  // Get planning_required actions only
+  let { data: actions, error } = await adminSupabase
+    .from('actions')
+    .select('*')
+    .eq('day_of_week_category', 'planning_required')
+    .limit(100);
+
+  if (error) {
+    console.error('Error fetching planning actions:', error);
+    return [];
+  }
+
+  // Filter out seen actions
+  if (actions && seenActionIds.length > 0) {
+    actions = actions.filter((action) => !seenActionIds.includes(action.id));
+  }
+
+  // Filter out hidden actions
+  if (actions && hiddenActionIds.length > 0) {
+    actions = actions.filter((action) => !hiddenActionIds.includes(action.id));
+  }
+
+  // Filter by seasonal availability and country
+  if (actions) {
+    const { isActionAvailableOnDate } = await import('@/lib/seasonal-dates');
+    const today = new Date();
+    const userCountry = userProfile?.country as 'US' | 'CA' | null || null;
+    actions = actions.filter((action) => {
+      if (action.country && action.country !== userCountry) {
+        return false;
+      }
+      if (action.country && !userCountry) {
+        return false;
+      }
+      return isActionAvailableOnDate(action, today, userCountry);
+    });
+  }
+
+  // Filter out kid-related actions if needed
+  if (actions && userProfile) {
+    const hasKids = userProfile.has_kids === true;
+    const kidsLiveWithYou = userProfile.kids_live_with_you === true;
+    
+    if (!hasKids || (hasKids && !kidsLiveWithYou)) {
+      const kidKeywords = ['kid', 'child', 'children', 'family', 'parent', 'bedtime', 'school', 'homework', 'playground'];
+      actions = actions.filter((action) => {
+        const actionText = `${action.name || ''} ${action.description || ''} ${action.benefit || ''}`.toLowerCase();
+        const isKidRelated = kidKeywords.some(keyword => actionText.includes(keyword));
+        if (!hasKids) {
+          return !isKidRelated;
+        } else {
+          const requiresDailyPresence = ['bedtime', 'school', 'homework', 'playground'].some(keyword => actionText.includes(keyword));
+          return !requiresDailyPresence;
+        }
+      });
+    }
+  }
+
+  // If we have enough actions, select 5 diverse ones
+  if (!actions || actions.length === 0) {
+    return [];
+  }
+
+  // Shuffle and take 5
+  const shuffled = [...actions].sort(() => Math.random() - 0.5);
+  return shuffled.slice(0, 5);
 }

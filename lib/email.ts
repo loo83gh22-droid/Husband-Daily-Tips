@@ -12,9 +12,237 @@ export interface EmailTip {
   title: string;
   content: string;
   category: string;
-  actionId?: string; // Added for calendar links
-  userId?: string; // Added for calendar links
+  actionId?: string; // Added for calendar links and "Mark as Done" button
+  userId?: string; // Added for calendar links and "Mark as Done" button
   quote?: { quote_text: string; author: string | null }; // Optional quote to include
+  dayOfWeek?: number; // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
+  weeklyPlanningActions?: Array<{ id: string; name: string; description: string; benefit?: string; category: string }>; // Planning actions for the week
+  allActionsLastWeek?: Array<{ id: string; name: string; description?: string; category: string; date: string; completed: boolean }>; // All actions served last week (Sunday only) with completion status
+}
+
+export function generateEmailHTML(tip: EmailTip, baseUrl: string): string {
+  const dayOfWeek = tip.dayOfWeek ?? new Date().getDay();
+  const isMonday = dayOfWeek === 1;
+  const isSunday = dayOfWeek === 0;
+  const isWeekday = dayOfWeek >= 1 && dayOfWeek <= 5;
+  const weeklyPlanningActions = tip.weeklyPlanningActions || [];
+  const allActionsLastWeek = tip.allActionsLastWeek || [];
+
+  return `
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Tomorrow's Action</title>
+      </head>
+      <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #1f2937; background-color: #f9fafb; margin: 0; padding: 0;">
+        <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 40px 20px;">
+          <div style="text-align: center; margin-bottom: 30px;">
+            <h1 style="color: #0ea5e9; font-size: 24px; margin: 0;">Best Husband Ever</h1>
+            <p style="color: #6b7280; font-size: 14px; margin: 5px 0 0 0;">Your daily action, delivered.</p>
+          </div>
+          
+          <!-- Tomorrow's Daily Action -->
+          <div style="background-color: #0f172a; border-radius: 8px; padding: 30px; margin-bottom: 30px; border-left: 4px solid #0ea5e9;">
+            <div style="margin-bottom: 15px;">
+              <span style="background-color: rgba(14, 165, 233, 0.1); color: #7dd3fc; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;">
+                ${tip.category}
+              </span>
+            </div>
+            <h2 style="color: #f1f5f9; font-size: 22px; margin: 0 0 15px 0; font-weight: 600;">
+              ${tip.title}
+            </h2>
+            <p style="color: #cbd5e1; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0; white-space: pre-line;">
+              ${tip.content}
+            </p>
+            ${tip.actionId && tip.userId ? `
+              <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(14, 165, 233, 0.2);">
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                  <a href="${baseUrl}/dashboard/complete-action?actionId=${tip.actionId}&userId=${tip.userId}" 
+                     style="display: inline-block; background-color: #0ea5e9; color: #ffffff; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 14px;">
+                    ✓ Mark as Done
+                  </a>
+                  <a href="${baseUrl}/dashboard/mark-dnc?actionId=${tip.actionId}&userId=${tip.userId}" 
+                     style="display: inline-block; background-color: #6b7280; color: #ffffff; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 14px;">
+                    ✗ Did Not Complete
+                  </a>
+                </div>
+                <p style="color: #94a3b8; font-size: 12px; margin: 10px 0 0 0;">
+                  Mark as done to add a journal entry, or mark as did not complete if you couldn't do it
+                </p>
+              </div>
+            ` : ''}
+          </div>
+          
+          ${isMonday && weeklyPlanningActions.length > 0 ? `
+            <!-- Monday: Planning Actions - Choose 1 (Summarized) -->
+            <div style="background-color: #fef3c7; border-left: 4px solid #f59e0b; border-radius: 8px; padding: 25px; margin-bottom: 30px;">
+              <h3 style="color: #78350f; font-size: 18px; margin: 0 0 15px 0; font-weight: 600;">
+                📅 Planning Actions for This Week
+              </h3>
+              <p style="color: #92400e; font-size: 14px; margin: 0 0 20px 0; line-height: 1.6;">
+                Here are 5 actions that require a bit more planning. <strong>Choose 1</strong> to complete this week—pick what works for your schedule.
+              </p>
+              ${weeklyPlanningActions.map((action, idx) => `
+                <div style="background-color: #ffffff; border-radius: 6px; padding: 12px; margin-bottom: ${idx < weeklyPlanningActions.length - 1 ? '10px' : '0'}; border: 1px solid #fde68a;">
+                  <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;">
+                    <div style="flex: 1; min-width: 0;">
+                      <h4 style="color: #78350f; font-size: 15px; margin: 0 0 6px 0; font-weight: 600;">
+                        ${action.name}
+                      </h4>
+                      <p style="color: #92400e; font-size: 13px; margin: 0; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+                        ${action.description}
+                      </p>
+                    </div>
+                    <div style="flex-shrink: 0; display: flex; flex-direction: column; gap: 6px; align-items: flex-end;">
+                      <a href="${baseUrl}/dashboard/action/${action.id}" 
+                         style="display: inline-block; color: #f59e0b; text-decoration: none; font-size: 12px; font-weight: 600; white-space: nowrap;">
+                        View Details →
+                      </a>
+                      ${tip.userId && action.id ? `
+                        <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+                          <a href="${baseUrl}/dashboard/complete-action?actionId=${action.id}&userId=${tip.userId}" 
+                             style="display: inline-block; background-color: #f59e0b; color: #ffffff; padding: 6px 12px; text-decoration: none; border-radius: 4px; font-weight: 600; font-size: 11px;">
+                            ✓ Done
+                          </a>
+                          <a href="${baseUrl}/dashboard/mark-dnc?actionId=${action.id}&userId=${tip.userId}" 
+                             style="display: inline-block; background-color: #6b7280; color: #ffffff; padding: 6px 12px; text-decoration: none; border-radius: 4px; font-weight: 600; font-size: 11px;">
+                            ✗ DNC
+                          </a>
+                        </div>
+                      ` : ''}
+                    </div>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          ` : ''}
+          
+          ${isWeekday && !isMonday && weeklyPlanningActions.length > 0 ? `
+            <!-- Tuesday-Friday: Planning Actions Reminder List -->
+            <div style="background-color: #f3f4f6; border-left: 4px solid #6b7280; border-radius: 8px; padding: 20px; margin-bottom: 30px;">
+              <h3 style="color: #374151; font-size: 16px; margin: 0 0 12px 0; font-weight: 600;">
+                📋 This Week's Planning Actions
+              </h3>
+              <ul style="color: #6b7280; font-size: 14px; margin: 0; padding-left: 20px; line-height: 1.8;">
+                ${weeklyPlanningActions.map(action => `
+                  <li>${action.name}</li>
+                `).join('')}
+              </ul>
+              <p style="color: #9ca3af; font-size: 12px; margin: 12px 0 0 0;">
+                <a href="${baseUrl}/dashboard/outstanding-actions" style="color: #0ea5e9; text-decoration: none;">View all outstanding actions →</a>
+              </p>
+            </div>
+          ` : ''}
+          
+          ${isSunday ? `
+            <!-- Sunday: Weekly Review -->
+            <div style="background-color: #eff6ff; border-left: 4px solid #3b82f6; border-radius: 8px; padding: 25px; margin-bottom: 30px;">
+              <h3 style="color: #1e40af; font-size: 18px; margin: 0 0 15px 0; font-weight: 600;">
+                📊 Weekly Review
+              </h3>
+              <p style="color: #1e3a8a; font-size: 14px; margin: 0 0 15px 0; line-height: 1.6;">
+                Here's a summary of all actions served last week. Take a moment to reflect on your progress.
+              </p>
+              ${allActionsLastWeek.length > 0 ? `
+                <div style="background-color: #ffffff; border-radius: 6px; padding: 15px; margin-bottom: 15px;">
+                  <p style="color: #1e40af; font-size: 14px; margin: 0 0 12px 0; font-weight: 600;">
+                    Actions Served Last Week (${allActionsLastWeek.length}):
+                  </p>
+                  <div style="space-y: 8px;">
+                    ${allActionsLastWeek.map(action => {
+                      const actionDate = new Date(action.date);
+                      const dateStr = actionDate.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+                      return `
+                        <div style="padding: 10px; margin-bottom: 8px; background-color: ${action.completed ? '#d1fae5' : '#fef3c7'}; border-radius: 4px; border-left: 3px solid ${action.completed ? '#10b981' : '#f59e0b'};">
+                          <div style="display: flex; align-items: center; justify-content: space-between;">
+                            <div style="flex: 1;">
+                              <span style="color: ${action.completed ? '#065f46' : '#78350f'}; font-size: 12px; font-weight: 600; margin-right: 8px;">
+                                ${action.completed ? '✓' : '○'}
+                              </span>
+                              <span style="color: ${action.completed ? '#065f46' : '#78350f'}; font-size: 13px; font-weight: ${action.completed ? '500' : '600'};">
+                                ${action.name}
+                              </span>
+                              <span style="color: ${action.completed ? '#047857' : '#92400e'}; font-size: 11px; margin-left: 8px;">
+                                (${dateStr})
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      `;
+                    }).join('')}
+                  </div>
+                  <p style="color: #6b7280; font-size: 12px; margin: 12px 0 0 0; padding-top: 12px; border-top: 1px solid #e5e7eb;">
+                    <strong>${allActionsLastWeek.filter(a => a.completed).length}</strong> completed • 
+                    <strong>${allActionsLastWeek.filter(a => !a.completed).length}</strong> incomplete
+                  </p>
+                </div>
+              ` : `
+                <p style="color: #3b82f6; font-size: 13px; margin: 0; font-style: italic;">
+                  No actions served last week. Check back next week!
+                </p>
+              `}
+              <div style="margin-top: 15px;">
+                <a href="${baseUrl}/dashboard/outstanding-actions" 
+                   style="display: inline-block; background-color: #3b82f6; color: #ffffff; padding: 10px 20px; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 14px;">
+                  View Outstanding Actions →
+                </a>
+              </div>
+            </div>
+          ` : ''}
+          
+          <div style="background-color: #f3f4f6; border-radius: 8px; padding: 20px; margin-bottom: 30px;">
+            <p style="color: #374151; font-size: 14px; margin: 0 0 10px 0; font-weight: 600;">
+              Here&apos;s the deal:
+            </p>
+            <p style="color: #6b7280; font-size: 14px; margin: 0; line-height: 1.6;">
+              Tomorrow&apos;s action arrives today at 12pm. Why? Because winners plan ahead, and that&apos;s what you&apos;re becoming. Plus, it gives you time to actually make it happen. No scrambling, no forgetting, just execution. You got this.
+            </p>
+          </div>
+          
+          ${tip.quote ? `
+            <div style="background-color: #fef3c7; border-left: 4px solid #f59e0b; border-radius: 8px; padding: 20px; margin-bottom: 30px;">
+              <p style="color: #78350f; font-size: 15px; font-style: italic; margin: 0 0 8px 0; line-height: 1.6;">
+                "${tip.quote.quote_text}"
+              </p>
+              ${tip.quote.author ? `
+                <p style="color: #92400e; font-size: 13px; margin: 0; text-align: right;">
+                  — ${tip.quote.author}
+                </p>
+              ` : ''}
+            </div>
+          ` : ''}
+          
+          <div style="text-align: center; padding-top: 20px; border-top: 1px solid #e5e7eb;">
+            <a href="${baseUrl}/dashboard" 
+               style="display: inline-block; background-color: #0ea5e9; color: #ffffff; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: 600; margin-bottom: 10px;">
+              View in Dashboard →
+            </a>
+            ${tip.actionId && tip.userId ? `
+              <div style="margin: 15px 0; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+                <a href="${baseUrl}/api/calendar/actions/download?days=1&userId=${tip.userId}" 
+                   style="display: inline-block; background-color: #0f172a; color: #0ea5e9; padding: 10px 18px; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 13px; border: 2px solid #0ea5e9;">
+                  📅 Download Tomorrow's Action
+                </a>
+                <a href="${baseUrl}/api/calendar/actions/download?days=7&userId=${tip.userId}" 
+                   style="display: inline-block; background-color: #0f172a; color: #0ea5e9; padding: 10px 18px; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 13px; border: 2px solid #0ea5e9;">
+                  📅 Download 7 Days
+                </a>
+              </div>
+            ` : ''}
+            <p style="color: #6b7280; font-size: 12px; margin: 15px 0 0 0;">
+              You&apos;re getting this because you signed up for Best Husband Ever. Your daily action, delivered.
+            </p>
+            <p style="color: #9ca3af; font-size: 11px; margin: 10px 0 0 0;">
+              <a href="${baseUrl}/dashboard" style="color: #0ea5e9; text-decoration: none;">View Dashboard</a> | 
+              <a href="${baseUrl}/dashboard/account" style="color: #0ea5e9; text-decoration: none;">Manage Preferences</a>
+            </p>
+          </div>
+        </div>
+      </body>
+    </html>
+  `;
 }
 
 export async function sendTomorrowTipEmail(
@@ -36,86 +264,7 @@ export async function sendTomorrowTipEmail(
       replyTo: process.env.SUPPORT_EMAIL || process.env.ADMIN_EMAIL || 'support@besthusbandever.com',
       to: email,
       subject: `Tomorrow: Make Her Smile (Here's How)`,
-      html: `
-        <!DOCTYPE html>
-        <html>
-          <head>
-            <meta charset="utf-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Tomorrow's Action</title>
-          </head>
-          <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #1f2937; background-color: #f9fafb; margin: 0; padding: 0;">
-            <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 40px 20px;">
-              <div style="text-align: center; margin-bottom: 30px;">
-                <h1 style="color: #0ea5e9; font-size: 24px; margin: 0;">Best Husband Ever</h1>
-                <p style="color: #6b7280; font-size: 14px; margin: 5px 0 0 0;">Your daily action, delivered.</p>
-              </div>
-              
-              <div style="background-color: #0f172a; border-radius: 8px; padding: 30px; margin-bottom: 30px; border-left: 4px solid #0ea5e9;">
-                <div style="margin-bottom: 15px;">
-                  <span style="background-color: rgba(14, 165, 233, 0.1); color: #7dd3fc; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;">
-                    ${tip.category}
-                  </span>
-                </div>
-                <h2 style="color: #f1f5f9; font-size: 22px; margin: 0 0 15px 0; font-weight: 600;">
-                  ${tip.title}
-                </h2>
-                <p style="color: #cbd5e1; font-size: 16px; line-height: 1.6; margin: 0; white-space: pre-line;">
-                  ${tip.content}
-                </p>
-              </div>
-              
-              <div style="background-color: #f3f4f6; border-radius: 8px; padding: 20px; margin-bottom: 30px;">
-                <p style="color: #374151; font-size: 14px; margin: 0 0 10px 0; font-weight: 600;">
-                  Here&apos;s the deal:
-                </p>
-                <p style="color: #6b7280; font-size: 14px; margin: 0; line-height: 1.6;">
-                  Tomorrow&apos;s action arrives today at 12pm. Why? Because winners plan ahead, and that&apos;s what you&apos;re becoming. Plus, it gives you time to actually make it happen. No scrambling, no forgetting, just execution. You got this.
-                </p>
-              </div>
-              
-              ${tip.quote ? `
-                <div style="background-color: #fef3c7; border-left: 4px solid #f59e0b; border-radius: 8px; padding: 20px; margin-bottom: 30px;">
-                  <p style="color: #78350f; font-size: 15px; font-style: italic; margin: 0 0 8px 0; line-height: 1.6;">
-                    "${tip.quote.quote_text}"
-                  </p>
-                  ${tip.quote.author ? `
-                    <p style="color: #92400e; font-size: 13px; margin: 0; text-align: right;">
-                      — ${tip.quote.author}
-                    </p>
-                  ` : ''}
-                </div>
-              ` : ''}
-              
-              <div style="text-align: center; padding-top: 20px; border-top: 1px solid #e5e7eb;">
-                <a href="${baseUrl}/dashboard" 
-                   style="display: inline-block; background-color: #0ea5e9; color: #ffffff; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: 600; margin-bottom: 10px;">
-                  View in Dashboard →
-                </a>
-                ${tip.actionId && tip.userId ? `
-                  <div style="margin: 15px 0; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
-                    <a href="${baseUrl}/api/calendar/actions/download?days=1&userId=${tip.userId}" 
-                       style="display: inline-block; background-color: #0f172a; color: #0ea5e9; padding: 10px 18px; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 13px; border: 2px solid #0ea5e9;">
-                      📅 Download Tomorrow's Action
-                    </a>
-                    <a href="${baseUrl}/api/calendar/actions/download?days=7&userId=${tip.userId}" 
-                       style="display: inline-block; background-color: #0f172a; color: #0ea5e9; padding: 10px 18px; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 13px; border: 2px solid #0ea5e9;">
-                      📅 Download 7 Days
-                    </a>
-                  </div>
-                ` : ''}
-                <p style="color: #6b7280; font-size: 12px; margin: 15px 0 0 0;">
-                  You&apos;re getting this because you signed up for Best Husband Ever. Your daily action, delivered.
-                </p>
-                <p style="color: #9ca3af; font-size: 11px; margin: 10px 0 0 0;">
-                  <a href="${baseUrl}/dashboard" style="color: #0ea5e9; text-decoration: none;">View Dashboard</a> | 
-                  <a href="${baseUrl}/dashboard/account" style="color: #0ea5e9; text-decoration: none;">Manage Preferences</a>
-                </p>
-              </div>
-            </div>
-          </body>
-        </html>
-      `,
+      html: generateEmailHTML(tip, baseUrl),
     });
 
     if (error) {
