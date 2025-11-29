@@ -3,6 +3,14 @@ import { getSupabaseAdmin } from '@/lib/supabase';
 import { sendTomorrowTipEmail } from '@/lib/email';
 import { logger } from '@/lib/logger';
 
+// Helper function to get Monday of current week (ISO week start)
+const getMondayOfWeek = (date: Date): Date => {
+  const d = new Date(date);
+  const day = d.getDay();
+  const diff = d.getDate() - day + (day === 0 ? -6 : 1); // Adjust when day is Sunday
+  return new Date(d.setDate(diff));
+};
+
 /**
  * Cron endpoint to send tomorrow's tips at 12pm (noon) in each user's timezone
  * 
@@ -134,14 +142,6 @@ export async function GET(request: Request) {
 
     let sentCount = 0;
     let errorCount = 0;
-
-    // Helper function to get Monday of current week (ISO week start)
-    function getMondayOfWeek(date: Date): Date {
-      const d = new Date(date);
-      const day = d.getDay();
-      const diff = d.getDate() - day + (day === 0 ? -6 : 1); // Adjust when day is Sunday
-      return new Date(d.setDate(diff));
-    }
 
     // For each user where it's 12pm, get an action for tomorrow
     for (const user of usersToEmail) {
@@ -299,11 +299,21 @@ export async function GET(request: Request) {
               
               const completedActionIds = new Set(recentCompletions?.map(c => c.action_id) || []);
               
-              allActionsLastWeek = recentActions.map((sa: any) => ({
-                ...sa.actions,
-                date: sa.date,
-                completed: sa.completed || completedActionIds.has(sa.action_id),
-              })).filter((a: any) => a && a.id);
+              allActionsLastWeek = recentActions
+                .map((sa: any) => {
+                  const action = sa.actions;
+                  if (!action || Array.isArray(action) || !action.id) return null;
+                  return {
+                    id: action.id,
+                    name: action.name,
+                    description: action.description,
+                    benefit: action.benefit,
+                    category: action.category,
+                    date: sa.date,
+                    completed: sa.completed || completedActionIds.has(sa.action_id),
+                  };
+                })
+                .filter((a: any): a is any => a !== null && typeof a === 'object' && 'id' in a);
             }
           } else {
             // Get completed action IDs from last week
@@ -317,11 +327,21 @@ export async function GET(request: Request) {
             const completedActionIds = new Set(completions?.map(c => c.action_id) || []);
 
             // Map served actions with completion status
-            allActionsLastWeek = servedActions.map((sa: any) => ({
-              ...sa.actions,
-              date: sa.date,
-              completed: sa.completed || completedActionIds.has(sa.action_id),
-            })).filter((a: any) => a && a.id); // Filter out any null actions
+            allActionsLastWeek = servedActions
+              .map((sa: any) => {
+                const action = sa.actions;
+                if (!action || Array.isArray(action) || !action.id) return null;
+                return {
+                  id: action.id,
+                  name: action.name,
+                  description: action.description,
+                  benefit: action.benefit,
+                  category: action.category,
+                  date: sa.date,
+                  completed: sa.completed || completedActionIds.has(sa.action_id),
+                };
+              })
+              .filter((a: any): a is any => a !== null && typeof a === 'object' && 'id' in a); // Filter out any null actions
           }
         }
 
