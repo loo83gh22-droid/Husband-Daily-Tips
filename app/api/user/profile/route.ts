@@ -15,7 +15,7 @@ async function updateProfile(request: Request) {
     }
 
     const auth0Id = session.user.sub;
-    const { username, wedding_date, post_anonymously, timezone, profile_picture, has_kids, kids_live_with_you, country, partner_name } = await request.json();
+    const { username, wedding_date, post_anonymously, timezone, profile_picture, has_kids, kids_live_with_you, country, partner_name, spouse_birthday } = await request.json();
 
     // Use admin client to bypass RLS (Auth0 context isn't set for RLS)
     const adminSupabase = getSupabaseAdmin();
@@ -111,6 +111,19 @@ async function updateProfile(request: Request) {
       }
       updateData.partner_name = trimmedName;
     }
+    if (spouse_birthday !== undefined) {
+      // Validate spouse_birthday if provided
+      if (spouse_birthday !== null && spouse_birthday !== '') {
+        const date = new Date(spouse_birthday);
+        if (isNaN(date.getTime())) {
+          return NextResponse.json(
+            { error: 'Please enter a valid birthday date' },
+            { status: 400 }
+          );
+        }
+      }
+      updateData.spouse_birthday = spouse_birthday && spouse_birthday.trim() ? spouse_birthday.trim() : null;
+    }
 
     const { error: updateError } = await adminSupabase
       .from('users')
@@ -155,7 +168,7 @@ export async function GET() {
     
     const { data: user, error: userError } = await adminSupabase
       .from('users')
-      .select('username, wedding_date, post_anonymously, name, timezone, profile_picture, has_kids, kids_live_with_you, country, partner_name')
+      .select('username, wedding_date, post_anonymously, name, timezone, profile_picture, has_kids, kids_live_with_you, country, partner_name, spouse_birthday')
       .eq('auth0_id', auth0Id)
       .single();
 
@@ -174,6 +187,7 @@ export async function GET() {
           kids_live_with_you: user.kids_live_with_you,
           country: user.country,
           partner_name: user.partner_name,
+          spouse_birthday: user.spouse_birthday,
         });
   } catch (error) {
     console.error('Unexpected error fetching profile:', error);

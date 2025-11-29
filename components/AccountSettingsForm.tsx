@@ -13,6 +13,7 @@ interface UserProfile {
   kids_live_with_you: boolean | null;
   country: string | null;
   partner_name: string | null;
+  spouse_birthday: string | null;
 }
 
 interface AccountSettingsFormProps {
@@ -30,6 +31,7 @@ export default function AccountSettingsForm({ initialData }: AccountSettingsForm
     kids_live_with_you: initialData.kids_live_with_you ?? null,
     country: initialData.country || null,
     partner_name: initialData.partner_name || '',
+    spouse_birthday: initialData.spouse_birthday || '',
   });
   const [profilePicture, setProfilePicture] = useState<File | null>(null);
   const [profilePictureUrl, setProfilePictureUrl] = useState<string | null>(initialData.profile_picture);
@@ -128,6 +130,7 @@ export default function AccountSettingsForm({ initialData }: AccountSettingsForm
           kids_live_with_you: formData.kids_live_with_you,
           country: formData.country,
           partner_name: formData.partner_name || null,
+          spouse_birthday: formData.spouse_birthday || null,
         }),
       });
 
@@ -381,21 +384,39 @@ export default function AccountSettingsForm({ initialData }: AccountSettingsForm
           </p>
         </div>
 
-        <div>
-          <label htmlFor="partner_name" className="block text-sm font-medium text-slate-300 mb-2">
-            Your Partner&apos;s Name
-          </label>
-          <input
-            type="text"
-            id="partner_name"
-            value={formData.partner_name}
-            onChange={(e) => setFormData({ ...formData, partner_name: e.target.value })}
-            placeholder="Enter your partner's name (optional)"
-            className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-slate-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-          />
-          <p className="mt-1 text-xs text-slate-500">
-            This will be used to personalize your daily action cards
-          </p>
+        <div className="space-y-4">
+          <div>
+            <label htmlFor="partner_name" className="block text-sm font-medium text-slate-300 mb-2">
+              Your Partner&apos;s Name
+            </label>
+            <input
+              type="text"
+              id="partner_name"
+              value={formData.partner_name}
+              onChange={(e) => setFormData({ ...formData, partner_name: e.target.value })}
+              placeholder="Enter your partner's name (optional)"
+              className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-slate-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+            />
+            <p className="mt-1 text-xs text-slate-500">
+              This will be used to personalize your daily action cards
+            </p>
+          </div>
+
+          <div>
+            <label htmlFor="spouse_birthday" className="block text-sm font-medium text-slate-300 mb-2">
+              Spouse&apos;s Birthday
+            </label>
+            <input
+              type="date"
+              id="spouse_birthday"
+              value={formData.spouse_birthday}
+              onChange={(e) => setFormData({ ...formData, spouse_birthday: e.target.value })}
+              className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-slate-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+            />
+            <p className="mt-1 text-xs text-slate-500">
+              Used for personalized birthday reminders and special date actions
+            </p>
+          </div>
         </div>
       </div>
 
