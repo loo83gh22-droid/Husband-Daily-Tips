@@ -146,11 +146,23 @@ export async function GET(request: Request) {
         
         const completedActionIds = new Set(recentCompletions?.map(c => c.action_id) || []);
         
-        allActionsLastWeek = recentActions.map(sa => ({
-          ...sa.actions,
-          date: sa.date,
-          completed: sa.completed || completedActionIds.has(sa.action_id),
-        })).filter(a => a.id);
+        allActionsLastWeek = recentActions
+          .map((sa: any) => {
+            const action = sa.actions;
+            if (!action || Array.isArray(action) || !action.id) return null;
+            return {
+              id: action.id,
+              name: action.name,
+              description: action.description,
+              benefit: action.benefit,
+              category: action.category,
+              date: sa.date,
+              completed: sa.completed || completedActionIds.has(sa.action_id),
+            };
+          })
+          .filter((a): a is { id: string; name: string; description: string; benefit: string; category: string; date: string; completed: boolean } => 
+            a !== null && typeof a === 'object' && 'id' in a
+          );
       }
     } else {
       // Get completed action IDs for the week
@@ -164,11 +176,23 @@ export async function GET(request: Request) {
       const completedActionIds = new Set(completions?.map(c => c.action_id) || []);
 
       // Map with completion status
-      allActionsLastWeek = servedActions.map(sa => ({
-        ...sa.actions,
-        date: sa.date,
-        completed: sa.completed || completedActionIds.has(sa.action_id),
-      })).filter(a => a.id);
+      allActionsLastWeek = servedActions
+        .map((sa: any) => {
+          const action = sa.actions;
+          if (!action || Array.isArray(action) || !action.id) return null;
+          return {
+            id: action.id,
+            name: action.name,
+            description: action.description,
+            benefit: action.benefit,
+            category: action.category,
+            date: sa.date,
+            completed: sa.completed || completedActionIds.has(sa.action_id),
+          };
+        })
+        .filter((a): a is { id: string; name: string; description: string; benefit: string; category: string; date: string; completed: boolean } => 
+          a !== null && typeof a === 'object' && 'id' in a
+        );
     }
   }
 
@@ -183,24 +207,24 @@ export async function GET(request: Request) {
     category: dailyAction.category,
     quote: quote || undefined,
     actionId: dailyAction.id,
-    userId: userId, // Include userId for "Mark as Done" buttons
+    userId: userId || undefined, // Include userId for "Mark as Done" buttons
     dayOfWeek,
     weeklyPlanningActions: weeklyPlanningActions.map(a => ({
       id: a.id,
-      name: a.name,
-      description: a.description,
-      benefit: a.benefit,
-      category: a.category,
+      name: a.name || '',
+      description: a.description ?? '',
+      benefit: a.benefit ?? undefined,
+      category: a.category || '',
     })),
     allActionsLastWeek: allActionsLastWeek.map(a => ({
       id: a.id,
-      name: a.name,
-      description: a.description,
-      category: a.category,
+      name: a.name || '',
+      description: a.description ? a.description : undefined,
+      category: a.category || '',
       date: a.date,
       completed: a.completed,
     })),
-  });
+  }, baseUrl);
 
   // Return HTML for preview
   return new NextResponse(emailHTML, {
