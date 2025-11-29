@@ -1,6 +1,87 @@
 import { SupabaseClient } from '@supabase/supabase-js';
 
 /**
+ * Helper function to get Monday of the week for a given date
+ */
+function getMondayOfWeek(date: Date): Date {
+  const d = new Date(date);
+  const day = d.getDay();
+  const diff = d.getDate() - day + (day === 0 ? -6 : 1); // Adjust when day is Sunday
+  return new Date(d.setDate(diff));
+}
+
+/**
+ * Helper function to calculate weekly streak (consecutive work weeks with 1+ action)
+ * Work week = Monday-Friday
+ * Returns the number of consecutive weeks ending with the most recent week that had an action
+ */
+async function calculateWeeklyStreak(
+  supabase: SupabaseClient,
+  userId: string,
+): Promise<number> {
+  // Get all action completions
+  const { data: completions } = await supabase
+    .from('user_action_completions')
+    .select('completed_at')
+    .eq('user_id', userId)
+    .order('completed_at', { ascending: false });
+
+  if (!completions || completions.length === 0) {
+    return 0;
+  }
+
+  // Get unique work weeks (Monday-Friday) that have at least one action
+  // A week is valid if ANY action was completed on Monday-Friday of that week
+  const weeksWithActions = new Set<string>();
+  
+  for (const completion of completions) {
+    const completionDate = new Date(completion.completed_at);
+    const dayOfWeek = completionDate.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
+    
+    // Only count work days (Monday-Friday, i.e., 1-5)
+    if (dayOfWeek >= 1 && dayOfWeek <= 5) {
+      const mondayOfWeek = getMondayOfWeek(completionDate);
+      const weekKey = mondayOfWeek.toISOString().split('T')[0];
+      weeksWithActions.add(weekKey);
+    }
+  }
+
+  if (weeksWithActions.size === 0) {
+    return 0;
+  }
+
+  // Sort weeks in descending order (most recent first)
+  const sortedWeeks = Array.from(weeksWithActions).sort().reverse();
+  
+  // Calculate consecutive streak from most recent week with an action
+  // Start from the most recent week that had an action
+  let streak = 0;
+  const mostRecentWeekDate = new Date(sortedWeeks[0]);
+  let expectedWeek = new Date(mostRecentWeekDate);
+  expectedWeek.setHours(0, 0, 0, 0);
+
+  // Check consecutive weeks backwards from the most recent week with an action
+  for (const week of sortedWeeks) {
+    const weekDate = new Date(week);
+    weekDate.setHours(0, 0, 0, 0);
+    
+    // Check if this week matches the expected week in the streak
+    if (weekDate.getTime() === expectedWeek.getTime()) {
+      streak++;
+      // Move to the previous week
+      expectedWeek = new Date(expectedWeek);
+      expectedWeek.setDate(expectedWeek.getDate() - 7);
+    } else if (weekDate < expectedWeek) {
+      // If we've passed the expected week, the streak is broken
+      break;
+    }
+    // If weekDate > expectedWeek, it means we're catching up on missed weeks, skip it
+  }
+
+  return streak;
+}
+
+/**
  * Check if user has earned any new badges based on their current stats
  */
 export async function checkAndAwardBadges(
@@ -201,6 +282,27 @@ export async function checkAndAwardBadges(
         }
         break;
 
+      case 'weekly_streak':
+        // Calculate consecutive work weeks (Monday-Friday) with at least 1 action
+        const weeklyStreak = await calculateWeeklyStreak(supabase, userId);
+        if (weeklyStreak >= (badge.requirement_value || 0)) {
+          earned = true;
+        }
+        break;
+
+      case 'event_completion':
+        // Check if user has completed 7-day events
+        const { data: completedEvents } = await supabase
+          .from('user_challenges')
+          .select('id')
+          .eq('user_id', userId)
+          .eq('completed', true);
+        
+        if (completedEvents && completedEvents.length >= (badge.requirement_value || 0)) {
+          earned = true;
+        }
+        break;
+
       // Add more requirement types as needed
     }
 
@@ -244,6 +346,11 @@ export async function calculateBadgeProgress(
 
     case 'streak_days':
       current = stats.currentStreak;
+      break;
+
+    case 'weekly_streak':
+      // Calculate consecutive work weeks (Monday-Friday) with at least 1 action
+      current = await calculateWeeklyStreak(supabase, userId);
       break;
 
       case 'category_count':
@@ -348,6 +455,16 @@ export async function calculateBadgeProgress(
               }).length || 0;
             }
           }
+      break;
+
+    case 'event_completion':
+      // Count completed 7-day events
+      const { data: completedEvents } = await supabase
+        .from('user_challenges')
+        .select('id')
+        .eq('user_id', userId)
+        .eq('completed', true);
+      current = completedEvents?.length || 0;
       break;
 
     default:
