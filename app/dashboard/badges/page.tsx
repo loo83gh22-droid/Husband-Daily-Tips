@@ -184,22 +184,31 @@ export default async function BadgesPage() {
                     b.category.toLowerCase().includes('roommate')))
   );
   
-  // Quality Time combines outdoor and active badges
-  const qualityTimeBadges = badges.filter((b) =>
-    b.name.toLowerCase().includes('outdoor') ||
-    b.name.toLowerCase().includes('adventure') ||
-    b.name.toLowerCase().includes('nature') ||
-    b.name.toLowerCase().includes('hiking') ||
-    b.name.toLowerCase().includes('trail') ||
-    b.name.toLowerCase().includes('active') ||
-    b.name.toLowerCase().includes('fitness') ||
-    b.name.toLowerCase().includes('run') ||
-    b.name.toLowerCase().includes('sport') ||
-    (b.category && (b.category.toLowerCase().includes('outdoor') || 
-                    b.category.toLowerCase().includes('adventure') ||
-                    b.category.toLowerCase().includes('active') ||
-                    b.category.toLowerCase().includes('quality_time')))
-  );
+  // Quality Time combines quality-time specific, outdoor, and active badges
+  const qualityTimeBadges = badges.filter((b) => {
+    const name = b.name.toLowerCase();
+    const category = b.category?.toLowerCase() || '';
+
+    return (
+      // Explicit "Quality Time" naming or category
+      name.includes('quality time') ||
+      category.includes('quality time') ||
+
+      // Outdoor / adventure / active style badges
+      name.includes('outdoor') ||
+      name.includes('adventure') ||
+      name.includes('nature') ||
+      name.includes('hiking') ||
+      name.includes('trail') ||
+      name.includes('active') ||
+      name.includes('fitness') ||
+      name.includes('run') ||
+      name.includes('sport') ||
+      category.includes('outdoor') ||
+      category.includes('adventure') ||
+      category.includes('active')
+    );
+  });
   
   // Get all categorized badges (by thematic category)
   const categorizedBadgeIds = new Set([
