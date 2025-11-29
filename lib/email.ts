@@ -75,8 +75,8 @@ export function generateEmailHTML(tip: EmailTip, baseUrl: string): string {
             ` : ''}
           </div>
           
-          ${isMonday && weeklyPlanningActions.length > 0 ? `
-            <!-- Monday: Planning Actions - Choose 1 (Summarized) -->
+          ${(isSunday || isMonday) && weeklyPlanningActions.length > 0 ? `
+            <!-- Sunday/Monday: Planning Actions - Choose 1 (Summarized) -->
             <div style="background-color: #fef3c7; border-left: 4px solid #f59e0b; border-radius: 8px; padding: 25px; margin-bottom: 30px;">
               <h3 style="color: #78350f; font-size: 18px; margin: 0 0 15px 0; font-weight: 600;">
                 📅 Planning Actions for This Week
