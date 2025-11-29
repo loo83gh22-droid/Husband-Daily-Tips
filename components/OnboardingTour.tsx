@@ -30,7 +30,7 @@ const TOUR_STEPS: TourStep[] = [
     id: 'stats',
     target: '[data-tour="stats"]',
     title: 'Your Stats',
-    content: "Track your progress here: current streak, total actions completed, and active days. Keep the streak going!",
+    content: "Track your progress here: current streak, total actions completed, and total badges. Keep the streak going!",
     position: 'bottom',
   },
   {
