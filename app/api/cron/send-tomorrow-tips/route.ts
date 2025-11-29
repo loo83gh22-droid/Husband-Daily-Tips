@@ -197,8 +197,8 @@ export async function GET(request: Request) {
         let weeklyPlanningActions = [];
         let weekStartDate: string | null = null;
 
-        if (isSunday || isMonday) {
-          // Sunday or Monday: Select 5 planning actions for the week
+        if (isMonday) {
+          // Monday: Select 5 planning actions for the week
           const { selectWeeklyPlanningActions } = await import('@/lib/action-selection');
           weeklyPlanningActions = await selectWeeklyPlanningActions(
             user.id,

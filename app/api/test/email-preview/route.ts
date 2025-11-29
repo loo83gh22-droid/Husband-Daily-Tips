@@ -72,13 +72,13 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: 'No weekly_routine actions found' }, { status: 404 });
   }
 
-  // Get planning actions if Sunday, Monday, or weekday
+  // Get planning actions if Monday or weekday (NOT Sunday)
   let weeklyPlanningActions: any[] = [];
   const isSunday = dayOfWeek === 0;
   const isMonday = dayOfWeek === 1;
   const isWeekday = dayOfWeek >= 1 && dayOfWeek <= 5;
 
-  if (isSunday || isMonday || isWeekday) {
+  if (isMonday || (isWeekday && !isMonday)) {
     // Get 5 planning actions
     const { data: planningActions } = await supabase
       .from('actions')

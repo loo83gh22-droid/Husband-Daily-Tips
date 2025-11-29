@@ -75,8 +75,8 @@ export function generateEmailHTML(tip: EmailTip, baseUrl: string): string {
             ` : ''}
           </div>
           
-          ${(isSunday || isMonday) && weeklyPlanningActions.length > 0 ? `
-            <!-- Sunday/Monday: Planning Actions - Choose 1 (Summarized) -->
+          ${isMonday && weeklyPlanningActions.length > 0 ? `
+            <!-- Monday: Planning Actions - Choose 1 (Full Details) -->
             <div style="background-color: #fef3c7; border-left: 4px solid #f59e0b; border-radius: 8px; padding: 25px; margin-bottom: 30px;">
               <h3 style="color: #78350f; font-size: 18px; margin: 0 0 15px 0; font-weight: 600;">
                 📅 Planning Actions for This Week
@@ -91,9 +91,14 @@ export function generateEmailHTML(tip: EmailTip, baseUrl: string): string {
                       <h4 style="color: #78350f; font-size: 15px; margin: 0 0 6px 0; font-weight: 600;">
                         ${action.name}
                       </h4>
-                      <p style="color: #92400e; font-size: 13px; margin: 0; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+                      <p style="color: #92400e; font-size: 13px; margin: 0; line-height: 1.5;">
                         ${action.description}
                       </p>
+                      ${action.benefit ? `
+                        <p style="color: #a16207; font-size: 12px; margin: 6px 0 0 0; font-style: italic;">
+                          💡 ${action.benefit}
+                        </p>
+                      ` : ''}
                     </div>
                     <div style="flex-shrink: 0; display: flex; flex-direction: column; gap: 6px; align-items: flex-end;">
                       <a href="${baseUrl}/dashboard/action/${action.id}" 
@@ -120,16 +125,33 @@ export function generateEmailHTML(tip: EmailTip, baseUrl: string): string {
           ` : ''}
           
           ${isWeekday && !isMonday && weeklyPlanningActions.length > 0 ? `
-            <!-- Tuesday-Friday: Planning Actions Reminder List -->
+            <!-- Tuesday-Friday: Planning Actions Summarized Table -->
             <div style="background-color: #f3f4f6; border-left: 4px solid #6b7280; border-radius: 8px; padding: 20px; margin-bottom: 30px;">
-              <h3 style="color: #374151; font-size: 16px; margin: 0 0 12px 0; font-weight: 600;">
+              <h3 style="color: #374151; font-size: 16px; margin: 0 0 15px 0; font-weight: 600;">
                 📋 This Week's Planning Actions
               </h3>
-              <ul style="color: #6b7280; font-size: 14px; margin: 0; padding-left: 20px; line-height: 1.8;">
-                ${weeklyPlanningActions.map(action => `
-                  <li>${action.name}</li>
-                `).join('')}
-              </ul>
+              <div style="background-color: #ffffff; border-radius: 6px; overflow: hidden;">
+                <table style="width: 100%; border-collapse: collapse;">
+                  <thead>
+                    <tr style="background-color: #f9fafb;">
+                      <th style="padding: 10px 12px; text-align: left; font-size: 12px; font-weight: 600; color: #6b7280; border-bottom: 1px solid #e5e7eb;">Action</th>
+                      <th style="padding: 10px 12px; text-align: left; font-size: 12px; font-weight: 600; color: #6b7280; border-bottom: 1px solid #e5e7eb;">Category</th>
+                      <th style="padding: 10px 12px; text-align: right; font-size: 12px; font-weight: 600; color: #6b7280; border-bottom: 1px solid #e5e7eb;">Details</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    ${weeklyPlanningActions.map((action, idx) => `
+                      <tr style="${idx < weeklyPlanningActions.length - 1 ? 'border-bottom: 1px solid #e5e7eb;' : ''}">
+                        <td style="padding: 12px; font-size: 13px; font-weight: 600; color: #374151;">${action.name}</td>
+                        <td style="padding: 12px; font-size: 12px; color: #6b7280;">${action.category || 'General'}</td>
+                        <td style="padding: 12px; text-align: right;">
+                          <a href="${baseUrl}/dashboard/action/${action.id}" style="color: #0ea5e9; text-decoration: none; font-size: 12px; font-weight: 600;">View →</a>
+                        </td>
+                      </tr>
+                    `).join('')}
+                  </tbody>
+                </table>
+              </div>
               <p style="color: #9ca3af; font-size: 12px; margin: 12px 0 0 0;">
                 <a href="${baseUrl}/dashboard/outstanding-actions" style="color: #0ea5e9; text-decoration: none;">View all outstanding actions →</a>
               </p>
