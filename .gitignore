@@ -42,4 +42,6 @@ family-scheduler/
 *.ps1
 GET_FULL_RESPONSE.ps1
 
+# Temporary export files
+*.csv
 
