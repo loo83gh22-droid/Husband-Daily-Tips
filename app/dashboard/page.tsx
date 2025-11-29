@@ -31,7 +31,7 @@ async function getUserData(auth0Id: string) {
   const adminSupabase = getSupabaseAdmin();
   const { data: user, error } = await adminSupabase
     .from('users')
-    .select('*, subscription_tier, username, name, email, has_kids, kids_live_with_you, trial_started_at, trial_ends_at, country, partner_name')
+    .select('*, subscription_tier, username, name, email, has_kids, kids_live_with_you, trial_started_at, trial_ends_at, country, partner_name, work_days')
     .eq('auth0_id', auth0Id)
     .single();
 
@@ -42,7 +42,7 @@ async function getUserData(auth0Id: string) {
   return user;
 }
 
-async function getTomorrowAction(userId: string | null, subscriptionTier: string, categoryScores?: any, userProfile?: { has_kids?: boolean | null; kids_live_with_you?: boolean | null; country?: string | null }) {
+async function getTomorrowAction(userId: string | null, subscriptionTier: string, categoryScores?: any, userProfile?: { has_kids?: boolean | null; kids_live_with_you?: boolean | null; country?: string | null; work_days?: number[] | null }) {
   if (!userId) return null;
 
   // Use the shared action selection function (same logic as email cron)
@@ -429,7 +429,8 @@ export default async function Dashboard() {
       { 
         has_kids: (user as any).has_kids ?? null, 
         kids_live_with_you: (user as any).kids_live_with_you ?? null,
-        country: (user as any).country ?? null
+        country: (user as any).country ?? null,
+        work_days: (user as any).work_days ?? null
       }
     );
   }

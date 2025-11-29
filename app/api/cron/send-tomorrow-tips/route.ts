@@ -71,7 +71,7 @@ export async function GET(request: Request) {
     // Get all active users with their timezones and profile data
     const { data: users, error: usersError } = await supabase
       .from('users')
-      .select('id, email, name, timezone, subscription_tier, has_kids, kids_live_with_you, country')
+      .select('id, email, name, timezone, subscription_tier, has_kids, kids_live_with_you, country, work_days')
       .not('email', 'is', null);
 
     if (usersError) {
@@ -156,6 +156,7 @@ export async function GET(request: Request) {
           has_kids: user.has_kids ?? null,
           kids_live_with_you: user.kids_live_with_you ?? null,
           country: user.country ?? null,
+          work_days: user.work_days ?? null,
         };
 
         // Use the shared action selection function (same logic as dashboard)

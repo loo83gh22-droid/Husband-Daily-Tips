@@ -4,6 +4,7 @@ interface UserProfile {
   has_kids?: boolean | null;
   kids_live_with_you?: boolean | null;
   country?: string | null;
+  work_days?: number[] | null;
 }
 
 interface CategoryScores {
@@ -69,6 +70,24 @@ export async function selectTomorrowAction(
 
   const hiddenActionIds = hiddenActions?.map((ha) => ha.action_id) || [];
 
+  // Get day of week for tomorrow (0 = Sunday, 1 = Monday, ..., 6 = Saturday)
+  const tomorrowDayOfWeek = tomorrow.getDay();
+  
+  // Determine if tomorrow is a work day or day off based on user's work_days
+  // If work_days is set, use it; otherwise fall back to weekend/weekday logic
+  let isWorkDay = false;
+  let isDayOff = false;
+  
+  if (userProfile?.work_days && Array.isArray(userProfile.work_days) && userProfile.work_days.length > 0) {
+    // User has specified work days - check if tomorrow is a work day
+    isWorkDay = userProfile.work_days.includes(tomorrowDayOfWeek);
+    isDayOff = !isWorkDay;
+  } else {
+    // Fall back to weekend/weekday logic if work_days not set
+    isDayOff = tomorrowDayOfWeek === 0 || tomorrowDayOfWeek === 6; // Sunday or Saturday
+    isWorkDay = !isDayOff;
+  }
+  
   // Get available actions - all actions are available to all tiers
   let { data: actions, error } = await adminSupabase
     .from('actions')
@@ -128,6 +147,37 @@ export async function selectTomorrowAction(
         }
       });
     }
+  }
+
+  // Filter actions by day of week category preference
+  if (actions && actions.length > 0) {
+    // Separate actions by day_of_week_category
+    const weeklyRoutineActions = actions.filter(a => a.day_of_week_category === 'weekly_routine');
+    const planningRequiredActions = actions.filter(a => a.day_of_week_category === 'planning_required');
+    const uncategorizedActions = actions.filter(a => !a.day_of_week_category);
+    
+    // On work days, prefer weekly_routine (80% chance), but allow planning_required (20% chance)
+    // On days off, prefer planning_required (70% chance), but allow weekly_routine (30% chance)
+    // This gives flexibility while being mindful of feasibility
+    let preferredActions: typeof actions = [];
+    let fallbackActions: typeof actions = [];
+    
+    if (isDayOff) {
+      // Day off: prefer planning_required (date nights, camping, etc.), but allow weekly_routine
+      preferredActions = planningRequiredActions.length > 0 ? planningRequiredActions : [];
+      fallbackActions = [...weeklyRoutineActions, ...uncategorizedActions];
+    } else {
+      // Work day: prefer weekly_routine (simple actions at home), but allow planning_required
+      preferredActions = weeklyRoutineActions.length > 0 ? weeklyRoutineActions : [];
+      fallbackActions = [...planningRequiredActions, ...uncategorizedActions];
+    }
+    
+    // Use preferred actions if available, otherwise use fallback
+    // Weight: 80% preferred, 20% fallback on work days; 70% preferred, 30% fallback on days off
+    const preferredWeight = isDayOff ? 0.7 : 0.8;
+    const usePreferred = Math.random() < preferredWeight && preferredActions.length > 0;
+    
+    actions = usePreferred ? preferredActions : (fallbackActions.length > 0 ? fallbackActions : actions);
   }
 
   // Combined action selection: Survey data + User preferences ("Show me more like this")

@@ -154,10 +154,32 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Survey questions not found' }, { status: 500 });
     }
 
+    // Extract work_days from question 30 (if it exists)
+    let workDays: number[] | null = null;
+    const workDaysQuestion = questions.find(q => q.id === 30 && q.response_type === 'multi_select');
+    if (workDaysQuestion) {
+      const workDaysResponse = Array.isArray(responses) 
+        ? responses.find((r: any) => r.questionId === 30)?.answer
+        : responses[30];
+      
+      if (Array.isArray(workDaysResponse) && workDaysResponse.length > 0) {
+        // Validate that all values are numbers between 0-6
+        const validDays = workDaysResponse.filter((d: any) => typeof d === 'number' && d >= 0 && d <= 6);
+        if (validDays.length > 0) {
+          workDays = validDays.sort();
+        }
+      }
+    }
+
     // Save responses to survey_responses table
     // Handle both array format and object format
+    // Skip multi_select questions (they're stored in users.work_days, not survey_responses)
     const responseRecords = questions
       .filter((q) => {
+        // Skip multi_select questions (they're handled separately)
+        if (q.response_type === 'multi_select') {
+          return false;
+        }
         // Check if responses is an array or object
         if (Array.isArray(responses)) {
           return responses.some((r: any) => r.questionId === q.id);
@@ -199,7 +221,9 @@ export async function POST(request: Request) {
         };
       });
 
-    if (responseRecords.length !== questions.length) {
+    // Check that all non-multi_select questions are answered
+    const nonMultiSelectQuestions = questions.filter(q => q.response_type !== 'multi_select');
+    if (responseRecords.length !== nonMultiSelectQuestions.length) {
       return NextResponse.json({ error: 'Not all questions answered' }, { status: 400 });
     }
 
@@ -358,10 +382,19 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Failed to save survey summary' }, { status: 500 });
     }
 
-    // Mark user as survey completed
+    // Mark user as survey completed and save work_days
+    const userUpdateData: { survey_completed: boolean; work_days?: number[] | null } = {
+      survey_completed: true,
+    };
+    
+    // Add work_days if provided
+    if (workDays !== null) {
+      userUpdateData.work_days = workDays;
+    }
+    
     const { error: updateError } = await adminSupabase
       .from('users')
-      .update({ survey_completed: true })
+      .update(userUpdateData)
       .eq('id', finalUserId);
 
     if (updateError) {

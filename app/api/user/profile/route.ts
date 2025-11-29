@@ -15,7 +15,7 @@ async function updateProfile(request: Request) {
     }
 
     const auth0Id = session.user.sub;
-    const { username, wedding_date, post_anonymously, timezone, profile_picture, has_kids, kids_live_with_you, country, partner_name, spouse_birthday } = await request.json();
+    const { username, wedding_date, post_anonymously, timezone, profile_picture, has_kids, kids_live_with_you, country, partner_name, spouse_birthday, work_days } = await request.json();
 
     // Use admin client to bypass RLS (Auth0 context isn't set for RLS)
     const adminSupabase = getSupabaseAdmin();
@@ -124,6 +124,26 @@ async function updateProfile(request: Request) {
       }
       updateData.spouse_birthday = spouse_birthday && spouse_birthday.trim() ? spouse_birthday.trim() : null;
     }
+    if (work_days !== undefined) {
+      // Validate work_days if provided
+      if (work_days !== null && !Array.isArray(work_days)) {
+        return NextResponse.json(
+          { error: 'Work days must be an array' },
+          { status: 400 }
+        );
+      }
+      if (Array.isArray(work_days)) {
+        // Validate each day is 0-6
+        const invalidDays = work_days.filter(d => typeof d !== 'number' || d < 0 || d > 6);
+        if (invalidDays.length > 0) {
+          return NextResponse.json(
+            { error: 'Work days must be numbers between 0 (Sunday) and 6 (Saturday)' },
+            { status: 400 }
+          );
+        }
+      }
+      updateData.work_days = Array.isArray(work_days) && work_days.length > 0 ? work_days : null;
+    }
 
     const { error: updateError } = await adminSupabase
       .from('users')
@@ -168,7 +188,7 @@ export async function GET() {
     
     const { data: user, error: userError } = await adminSupabase
       .from('users')
-      .select('username, wedding_date, post_anonymously, name, timezone, profile_picture, has_kids, kids_live_with_you, country, partner_name, spouse_birthday')
+      .select('username, wedding_date, post_anonymously, name, timezone, profile_picture, has_kids, kids_live_with_you, country, partner_name, spouse_birthday, work_days')
       .eq('auth0_id', auth0Id)
       .single();
 
@@ -188,6 +208,7 @@ export async function GET() {
           country: user.country,
           partner_name: user.partner_name,
           spouse_birthday: user.spouse_birthday,
+          work_days: user.work_days,
         });
   } catch (error) {
     console.error('Unexpected error fetching profile:', error);

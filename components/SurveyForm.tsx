@@ -7,7 +7,7 @@ interface Question {
   id: number;
   question_text: string;
   category: string;
-  response_type: 'scale' | 'yes_no';
+  response_type: 'scale' | 'yes_no' | 'multi_select';
   order_index: number;
 }
 
@@ -20,7 +20,7 @@ interface SurveyFormProps {
 export default function SurveyForm({ userId, questions, isPublic = false }: SurveyFormProps) {
   const router = useRouter();
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [responses, setResponses] = useState<Record<number, number>>({});
+  const [responses, setResponses] = useState<Record<number, number | number[]>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -44,6 +44,22 @@ export default function SurveyForm({ userId, questions, isPublic = false }: Surv
     }
   };
 
+  const handleMultiSelect = (day: number) => {
+    const currentResponse = responses[currentQuestion.id];
+    const selectedDays = Array.isArray(currentResponse) ? currentResponse : [];
+    
+    // Toggle the day
+    const newSelectedDays = selectedDays.includes(day)
+      ? selectedDays.filter(d => d !== day)
+      : [...selectedDays, day].sort();
+    
+    setResponses((prev) => ({
+      ...prev,
+      [currentQuestion.id]: newSelectedDays,
+    }));
+    setError(null);
+  };
+
   const handlePrevious = () => {
     if (currentQuestionIndex > 0) {
       setCurrentQuestionIndex((prev) => prev - 1);
@@ -53,9 +69,19 @@ export default function SurveyForm({ userId, questions, isPublic = false }: Surv
 
   const handleNext = () => {
     // Check if current question is answered
-    if (responses[currentQuestion.id] === undefined) {
+    const currentResponse = responses[currentQuestion.id];
+    if (currentResponse === undefined) {
       setError('Please answer this question before continuing.');
       return;
+    }
+    
+    // For multi_select, ensure at least one option is selected
+    if (currentQuestion.response_type === 'multi_select') {
+      const selectedDays = Array.isArray(currentResponse) ? currentResponse : [];
+      if (selectedDays.length === 0) {
+        setError('Please select at least one day.');
+        return;
+      }
     }
 
     setError(null);
@@ -264,7 +290,43 @@ export default function SurveyForm({ userId, questions, isPublic = false }: Surv
         </h2>
 
         {/* Response Options */}
-        {currentQuestion.response_type === 'scale' ? (
+        {currentQuestion.response_type === 'multi_select' ? (
+          <div className="space-y-3">
+            {[
+              { value: 0, label: 'Sunday' },
+              { value: 1, label: 'Monday' },
+              { value: 2, label: 'Tuesday' },
+              { value: 3, label: 'Wednesday' },
+              { value: 4, label: 'Thursday' },
+              { value: 5, label: 'Friday' },
+              { value: 6, label: 'Saturday' },
+            ].map(({ value, label }) => {
+              const currentResponse = responses[currentQuestion.id];
+              const selectedDays = Array.isArray(currentResponse) ? currentResponse : [];
+              const isSelected = selectedDays.includes(value);
+              
+              return (
+                <button
+                  key={value}
+                  onClick={() => handleMultiSelect(value)}
+                  className={`w-full p-4 rounded-lg border-2 transition-all text-left ${
+                    isSelected
+                      ? 'border-primary-500 bg-primary-500/20 text-slate-50'
+                      : 'border-slate-700 bg-slate-800/50 text-slate-300 hover:border-slate-600 hover:bg-slate-800'
+                  }`}
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="font-medium">{label}</span>
+                    {isSelected && <span className="text-primary-400 text-xl">✓</span>}
+                  </div>
+                </button>
+              );
+            })}
+            <p className="text-xs text-slate-500 mt-4">
+              Select all days you typically work. This helps us serve you planning-required actions on your days off.
+            </p>
+          </div>
+        ) : currentQuestion.response_type === 'scale' ? (
           <div className="space-y-3">
             {[1, 2, 3, 4, 5].map((value) => {
               // Determine scale labels based on question text
@@ -351,7 +413,13 @@ export default function SurveyForm({ userId, questions, isPublic = false }: Surv
         {isLastQuestion ? (
           <button
             onClick={handleNext}
-            disabled={isSubmitting || responses[currentQuestion.id] === undefined}
+            disabled={isSubmitting || (() => {
+              const resp = responses[currentQuestion.id];
+              if (currentQuestion.response_type === 'multi_select') {
+                return !Array.isArray(resp) || resp.length === 0;
+              }
+              return resp === undefined;
+            })()}
             className="px-6 py-2 bg-primary-500 text-slate-950 text-sm font-semibold rounded-lg hover:bg-primary-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isSubmitting ? 'Submitting...' : 'Complete Survey →'}
@@ -359,7 +427,13 @@ export default function SurveyForm({ userId, questions, isPublic = false }: Surv
         ) : (
           <button
             onClick={handleNext}
-            disabled={responses[currentQuestion.id] === undefined}
+            disabled={(() => {
+              const resp = responses[currentQuestion.id];
+              if (currentQuestion.response_type === 'multi_select') {
+                return !Array.isArray(resp) || resp.length === 0;
+              }
+              return resp === undefined;
+            })()}
             className="px-6 py-2 bg-primary-500 text-slate-950 text-sm font-semibold rounded-lg hover:bg-primary-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Next →

@@ -107,6 +107,12 @@ export default async function Home() {
               >
                 How it works
               </Link>
+              <Link
+                href="/blog"
+                className="hidden md:inline-flex text-sm text-slate-300 hover:text-white transition-colors"
+              >
+                Blog
+              </Link>
               <div className="flex items-center gap-3">
                 <Link
                   href="/survey"
@@ -301,6 +307,9 @@ export default async function Home() {
             <div className="flex flex-col md:flex-row justify-between items-center gap-4">
               <BrandLogo variant="nav" showTagline={false} />
               <div className="flex gap-6 text-sm text-slate-400">
+                <Link href="/blog" className="hover:text-slate-200 transition-colors">
+                  Blog
+                </Link>
                 <Link href="/dashboard/about" className="hover:text-slate-200 transition-colors">
                   About
                 </Link>

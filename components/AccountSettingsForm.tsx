@@ -14,6 +14,7 @@ interface UserProfile {
   country: string | null;
   partner_name: string | null;
   spouse_birthday: string | null;
+  work_days: number[] | null;
 }
 
 interface AccountSettingsFormProps {
@@ -32,6 +33,7 @@ export default function AccountSettingsForm({ initialData }: AccountSettingsForm
     country: initialData.country || null,
     partner_name: initialData.partner_name || '',
     spouse_birthday: initialData.spouse_birthday || '',
+    work_days: initialData.work_days || [],
   });
   const [profilePicture, setProfilePicture] = useState<File | null>(null);
   const [profilePictureUrl, setProfilePictureUrl] = useState<string | null>(initialData.profile_picture);
@@ -131,6 +133,7 @@ export default function AccountSettingsForm({ initialData }: AccountSettingsForm
           country: formData.country,
           partner_name: formData.partner_name || null,
           spouse_birthday: formData.spouse_birthday || null,
+          work_days: Array.isArray(formData.work_days) && formData.work_days.length > 0 ? formData.work_days : null,
         }),
       });
 
@@ -417,6 +420,70 @@ export default function AccountSettingsForm({ initialData }: AccountSettingsForm
               Used for personalized birthday reminders and special date actions
             </p>
           </div>
+        </div>
+      </div>
+
+      {/* Work Days */}
+      <div className="pt-4 border-t border-slate-800">
+        <div className="mb-4">
+          <p className="text-sm font-medium text-slate-300 mb-3">
+            Work Schedule
+          </p>
+          <p className="text-xs text-slate-400 mb-4 leading-relaxed">
+            Tell us which days you typically work. We'll serve you planning-required actions (like date nights, camping trips) on your days off.
+          </p>
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-slate-300 mb-3">
+            Work Days (Select all that apply)
+          </label>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            {[
+              { value: 0, label: 'Sunday' },
+              { value: 1, label: 'Monday' },
+              { value: 2, label: 'Tuesday' },
+              { value: 3, label: 'Wednesday' },
+              { value: 4, label: 'Thursday' },
+              { value: 5, label: 'Friday' },
+              { value: 6, label: 'Saturday' },
+            ].map(({ value, label }) => {
+              const selectedDays = Array.isArray(formData.work_days) ? formData.work_days : [];
+              const isSelected = selectedDays.includes(value);
+              
+              return (
+                <label
+                  key={value}
+                  className={`flex items-center gap-2 p-3 rounded-lg border-2 cursor-pointer transition-all ${
+                    isSelected
+                      ? 'border-primary-500 bg-primary-500/20'
+                      : 'border-slate-700 bg-slate-800/50 hover:border-slate-600'
+                  }`}
+                >
+                  <input
+                    type="checkbox"
+                    checked={isSelected}
+                    onChange={() => {
+                      const currentDays = Array.isArray(formData.work_days) ? formData.work_days : [];
+                      const newDays = isSelected
+                        ? currentDays.filter(d => d !== value)
+                        : [...currentDays, value].sort();
+                      setFormData({ ...formData, work_days: newDays });
+                    }}
+                    className="w-4 h-4 text-primary-500 border-slate-700 bg-slate-800 rounded focus:ring-2 focus:ring-primary-500"
+                  />
+                  <span className={`text-sm font-medium ${isSelected ? 'text-slate-50' : 'text-slate-300'}`}>
+                    {label}
+                  </span>
+                </label>
+              );
+            })}
+          </div>
+          <p className="mt-3 text-xs text-slate-500">
+            {Array.isArray(formData.work_days) && formData.work_days.length > 0
+              ? `You work ${formData.work_days.length} day${formData.work_days.length > 1 ? 's' : ''} per week`
+              : 'No work days selected. Planning-required actions will be served on weekends by default.'}
+          </p>
         </div>
       </div>
 
