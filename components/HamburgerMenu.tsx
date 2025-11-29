@@ -51,7 +51,7 @@ export default function HamburgerMenu() {
     { href: '/dashboard/subscription', label: 'Pricing & Subscriptions' },
     { href: '/dashboard/payments', label: 'Payments' },
     { href: '/dashboard/referrals', label: 'Referrals' },
-    { href: '/dashboard/feedback', label: 'Share Your Thoughts', highlight: true },
+    { href: '/dashboard/feedback', label: 'Give Feedback', highlight: true },
   ];
 
   return (

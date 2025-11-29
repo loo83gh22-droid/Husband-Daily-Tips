@@ -13,7 +13,7 @@ export default function FeedbackForm() {
     e.preventDefault();
     
     if (!feedback.trim()) {
-      setError('Please share your thoughts!');
+      setError('Please give feedback!');
       return;
     }
 
@@ -63,7 +63,7 @@ export default function FeedbackForm() {
           }}
           className="px-6 py-2 bg-emerald-500 text-slate-950 text-sm font-semibold rounded-lg hover:bg-emerald-400 transition-colors"
         >
-          Share More Feedback
+          Give More Feedback
         </button>
       </div>
     );

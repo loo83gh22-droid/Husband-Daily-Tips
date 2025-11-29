@@ -18,7 +18,7 @@ export default async function FeedbackPage() {
         <div className="max-w-3xl mx-auto">
           <div className="mb-8">
             <h1 className="text-3xl md:text-4xl font-bold mb-2 bg-gradient-to-r from-primary-400 to-primary-600 bg-clip-text text-transparent">
-              Share Your Thoughts
+              Give Feedback
             </h1>
             <p className="text-slate-300 text-base md:text-lg mb-4 font-medium">
               We're building this for you. Your feedback, suggestions, and ideas help us make this better. 

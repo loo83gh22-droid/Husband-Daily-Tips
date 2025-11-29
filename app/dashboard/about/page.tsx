@@ -62,7 +62,7 @@ export default async function AboutPage() {
               
               <p className="text-slate-300 leading-relaxed mb-4">
                 <Link href="/dashboard/feedback" className="text-primary-400 hover:text-primary-300 underline">
-                  Share your thoughts
+                  Give Feedback
                 </Link> with me anytime with ideas, critiques, or suggestions.
               </p>
               
