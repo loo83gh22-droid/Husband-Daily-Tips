@@ -74,6 +74,14 @@ async function deleteUserCompletely(userId) {
     user_hidden_actions: 0,
     user_daily_actions: 0,
     email_replies: 0,
+    user_category_preferences: 0,
+    user_follow_up_surveys: 0,
+    feedback: 0,
+    guide_visits: 0,
+    referrals_as_referrer: 0,
+    referrals_as_referee: 0,
+    stripe_subscriptions: 0,
+    stripe_payment_methods: 0,
     users: 0,
   };
 
@@ -190,7 +198,130 @@ async function deleteUserCompletely(userId) {
       console.log(`   ⚠ email_replies table not found or error (skipping)`);
     }
 
-    // 13. Finally, delete the user record itself
+    // 13. Delete user_category_preferences
+    try {
+      const { count: categoryPrefsCount } = await supabase
+        .from('user_category_preferences')
+        .delete()
+        .eq('user_id', userId);
+      deletionResults.user_category_preferences = categoryPrefsCount || 0;
+      if (categoryPrefsCount > 0) {
+        console.log(`   ✓ Deleted ${deletionResults.user_category_preferences} user_category_preferences`);
+      }
+    } catch (error) {
+      console.log(`   ⚠ user_category_preferences table not found or error (skipping)`);
+    }
+
+    // 14. Delete user_follow_up_surveys
+    try {
+      const { count: followUpSurveysCount } = await supabase
+        .from('user_follow_up_surveys')
+        .delete()
+        .eq('user_id', userId);
+      deletionResults.user_follow_up_surveys = followUpSurveysCount || 0;
+      if (followUpSurveysCount > 0) {
+        console.log(`   ✓ Deleted ${deletionResults.user_follow_up_surveys} user_follow_up_surveys`);
+      }
+    } catch (error) {
+      console.log(`   ⚠ user_follow_up_surveys table not found or error (skipping)`);
+    }
+
+    // 15. Delete feedback
+    try {
+      const { count: feedbackCount } = await supabase
+        .from('feedback')
+        .delete()
+        .eq('user_id', userId);
+      deletionResults.feedback = feedbackCount || 0;
+      if (feedbackCount > 0) {
+        console.log(`   ✓ Deleted ${deletionResults.feedback} feedback entries`);
+      }
+    } catch (error) {
+      console.log(`   ⚠ feedback table not found or error (skipping)`);
+    }
+
+    // 16. Delete guide_visits
+    try {
+      const { count: guideVisitsCount } = await supabase
+        .from('guide_visits')
+        .delete()
+        .eq('user_id', userId);
+      deletionResults.guide_visits = guideVisitsCount || 0;
+      if (guideVisitsCount > 0) {
+        console.log(`   ✓ Deleted ${deletionResults.guide_visits} guide_visits`);
+      }
+    } catch (error) {
+      console.log(`   ⚠ guide_visits table not found or error (skipping)`);
+    }
+
+    // 17. Delete referrals where user is the referrer
+    try {
+      const { count: referralsAsReferrerCount } = await supabase
+        .from('referrals')
+        .delete()
+        .eq('referrer_id', userId);
+      deletionResults.referrals_as_referrer = referralsAsReferrerCount || 0;
+      if (referralsAsReferrerCount > 0) {
+        console.log(`   ✓ Deleted ${deletionResults.referrals_as_referrer} referrals (as referrer)`);
+      }
+    } catch (error) {
+      console.log(`   ⚠ referrals table not found or error (skipping)`);
+    }
+
+    // 18. Delete referrals where user is the referee
+    try {
+      const { count: referralsAsRefereeCount } = await supabase
+        .from('referrals')
+        .delete()
+        .eq('referee_id', userId);
+      deletionResults.referrals_as_referee = referralsAsRefereeCount || 0;
+      if (referralsAsRefereeCount > 0) {
+        console.log(`   ✓ Deleted ${deletionResults.referrals_as_referee} referrals (as referee)`);
+      }
+    } catch (error) {
+      // Already handled above
+    }
+
+    // 19. Delete stripe_subscriptions
+    try {
+      const { count: subscriptionsCount } = await supabase
+        .from('stripe_subscriptions')
+        .delete()
+        .eq('user_id', userId);
+      deletionResults.stripe_subscriptions = subscriptionsCount || 0;
+      if (subscriptionsCount > 0) {
+        console.log(`   ✓ Deleted ${deletionResults.stripe_subscriptions} stripe_subscriptions`);
+      }
+    } catch (error) {
+      console.log(`   ⚠ stripe_subscriptions table not found or error (skipping)`);
+    }
+
+    // 20. Delete stripe_payment_methods
+    try {
+      const { count: paymentMethodsCount } = await supabase
+        .from('stripe_payment_methods')
+        .delete()
+        .eq('user_id', userId);
+      deletionResults.stripe_payment_methods = paymentMethodsCount || 0;
+      if (paymentMethodsCount > 0) {
+        console.log(`   ✓ Deleted ${deletionResults.stripe_payment_methods} stripe_payment_methods`);
+      }
+    } catch (error) {
+      console.log(`   ⚠ stripe_payment_methods table not found or error (skipping)`);
+    }
+
+    // 21. Update users table to clear referred_by_user_id (if this user was a referrer)
+    try {
+      await supabase
+        .from('users')
+        .update({ referred_by_user_id: null })
+        .eq('referred_by_user_id', userId);
+      console.log(`   ✓ Cleared referred_by_user_id references`);
+    } catch (error) {
+      // Ignore if column doesn't exist
+    }
+
+    // 22. Finally, delete the user record itself
     const { count: userCount } = await supabase
       .from('users')
       .delete()
