@@ -194,6 +194,9 @@ export async function POST(request: Request) {
         content: text || html,
         reply_id: replyId,
       });
+      
+      // Also forward the actual reply email directly to admin
+      await forwardReplyToAdmin(userEmail, extractNameFromEmail(fromEmail), subject, text || html);
 
       return NextResponse.json({ received: true, message: 'Reply stored (unknown user)' });
     }
@@ -229,6 +232,9 @@ export async function POST(request: Request) {
         content: text || html,
         reply_id: replyId,
       });
+      
+      // Also forward the actual reply email directly to admin
+      await forwardReplyToAdmin(userEmail, user.name || '', subject, text || html);
     }
 
     logger.log('Email reply processed successfully:', { user_id: user.id, email: userEmail });
@@ -352,6 +358,76 @@ async function notifyAdmin(
     }
   } catch (error) {
     logger.error('Error notifying admin:', error);
+  }
+}
+
+/**
+ * Forward reply email directly to admin
+ */
+async function forwardReplyToAdmin(
+  fromEmail: string,
+  fromName: string,
+  subject: string,
+  content: string
+) {
+  const adminEmail = process.env.ADMIN_EMAIL || process.env.SUPPORT_EMAIL;
+  
+  if (!adminEmail) {
+    logger.warn('No admin email configured for forwarding replies');
+    return;
+  }
+
+  if (!process.env.RESEND_API_KEY) {
+    logger.warn('RESEND_API_KEY not configured - cannot forward reply');
+    return;
+  }
+
+  try {
+    const resend = new Resend(process.env.RESEND_API_KEY);
+    
+    // Forward the email with a clear subject line
+    const forwardedSubject = `Fwd: ${subject}`;
+    
+    const { error } = await resend.emails.send({
+      from: 'action@besthusbandever.com',
+      to: adminEmail,
+      replyTo: fromEmail, // So admin can reply directly to the user
+      subject: forwardedSubject,
+      html: `
+        <!DOCTYPE html>
+        <html>
+          <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          </head>
+          <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #1f2937;">
+            <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
+              <p style="color: #6b7280; font-size: 13px; margin-bottom: 20px;">
+                <strong>Forwarded reply from:</strong> ${fromName} (${fromEmail})<br>
+                <strong>Original subject:</strong> ${subject}
+              </p>
+              <div style="background-color: #f9fafb; border-left: 4px solid #0ea5e9; border-radius: 8px; padding: 20px; margin-bottom: 20px;">
+                <div style="white-space: pre-wrap; color: #374151; font-size: 14px; line-height: 1.6;">
+                  ${content.replace(/\n/g, '<br>')}
+                </div>
+              </div>
+              <p style="color: #9ca3af; font-size: 12px; margin-top: 20px;">
+                This is a forwarded email reply. You can reply directly to this email to respond to ${fromName}.
+              </p>
+            </div>
+          </body>
+        </html>
+      `,
+      text: `Forwarded reply from: ${fromName} (${fromEmail})\nOriginal subject: ${subject}\n\n${content}`,
+    });
+
+    if (error) {
+      logger.error('Error forwarding reply to admin:', error);
+    } else {
+      logger.log('Reply forwarded to admin successfully:', adminEmail);
+    }
+  } catch (error: any) {
+    logger.error('Exception forwarding reply to admin:', error);
   }
 }
 
