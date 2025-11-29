@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { getSession } from '@auth0/nextjs-auth0';
 
+export const dynamic = 'force-dynamic';
+
 /**
  * Admin endpoint to verify critical environment variables are set
  * Does NOT expose actual values for security

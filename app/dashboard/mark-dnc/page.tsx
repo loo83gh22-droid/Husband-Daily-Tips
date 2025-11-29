@@ -1,11 +1,11 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import DashboardNav from '@/components/DashboardNav';
 import Link from 'next/link';
 
-export default function MarkDNCPage() {
+function MarkDNCContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const actionId = searchParams.get('actionId');
@@ -119,5 +119,24 @@ export default function MarkDNCPage() {
   }
 
   return null;
+}
+
+export default function MarkDNCPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-slate-950">
+        <DashboardNav />
+        <main className="container mx-auto px-4 py-8 md:py-12 max-w-full overflow-x-hidden">
+          <div className="max-w-4xl mx-auto">
+            <div className="bg-slate-900/80 border border-slate-800 rounded-xl p-8 text-center">
+              <p className="text-slate-300">Loading...</p>
+            </div>
+          </div>
+        </main>
+      </div>
+    }>
+      <MarkDNCContent />
+    </Suspense>
+  );
 }
 
