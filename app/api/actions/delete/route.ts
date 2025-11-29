@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getSession } from '@auth0/nextjs-auth0';
 import { getSupabaseAdmin } from '@/lib/supabase';
+import { recalculateUserBadges } from '@/lib/recalculate-badges';
 
 /**
  * Delete a specific action completion by completion ID
@@ -83,6 +84,14 @@ export async function POST(request: Request) {
     if (deleteError) {
       console.error('Error deleting action completion:', deleteError);
       return NextResponse.json({ error: 'Failed to delete action completion' }, { status: 500 });
+    }
+
+    // Recalculate badges after deleting the completion
+    try {
+      await recalculateUserBadges(supabase, user.id);
+    } catch (badgeError) {
+      console.error('Error recalculating badges after action delete:', badgeError);
+      // Don't fail the delete request; badge recalculation is best-effort.
     }
 
     return NextResponse.json({ success: true });

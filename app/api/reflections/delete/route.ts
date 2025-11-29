@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getSession } from '@auth0/nextjs-auth0';
 import { getSupabaseAdmin } from '@/lib/supabase';
-import { checkAndAwardBadges } from '@/lib/badges';
+import { recalculateUserBadges } from '@/lib/recalculate-badges';
 
 /**
  * Delete a reflection (journal entry)
@@ -80,69 +80,11 @@ export async function POST(request: Request) {
 
     // After removing the journal entry and linked action completion(s),
     // recalculate this user's badges so counts stay consistent.
-    // 1) Compute fresh stats (tips + action completion counts)
-    const { data: tips } = await supabaseAdmin
-      .from('user_tips')
-      .select('date')
-      .eq('user_id', user.id)
-      .order('date', { ascending: false });
-
-    const totalTips = tips?.length || 0;
-    const uniqueDays = new Set(tips?.map((t) => t.date)).size;
-
-    let streak = 0;
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-
-    for (let i = 0; i < 365; i++) {
-      const checkDate = new Date(today);
-      checkDate.setDate(today.getDate() - i);
-      const dateStr = checkDate.toISOString().split('T')[0];
-
-      if (tips?.some((t) => t.date === dateStr)) {
-        streak++;
-      } else {
-        break;
-      }
-    }
-
-    const { data: actionCompletions } = await supabaseAdmin
-      .from('user_action_completions')
-      .select('actions(requirement_type)')
-      .eq('user_id', user.id);
-
-    const actionCounts: Record<string, number> = {};
-    actionCompletions?.forEach((ac: any) => {
-      const reqType = ac.actions?.requirement_type;
-      if (reqType) {
-        actionCounts[reqType] = (actionCounts[reqType] || 0) + 1;
-      }
-    });
-
-    const stats = {
-      totalTips,
-      currentStreak: streak,
-      totalDays: uniqueDays,
-      actionCounts,
-    };
-
-    // 2) Clear existing user_badges for this user
-    const { error: clearBadgesError } = await supabaseAdmin
-      .from('user_badges')
-      .delete()
-      .eq('user_id', user.id);
-
-    if (clearBadgesError) {
-      console.error('Error clearing user badges for recalculation:', clearBadgesError);
-      // Don't fail the delete request; just log and continue.
-    } else {
-      // 3) Re-award badges based on current stats
-      try {
-        await checkAndAwardBadges(supabaseAdmin as any, user.id, stats);
-      } catch (badgeError) {
-        console.error('Error recalculating badges after reflection delete:', badgeError);
-        // Again, do not fail the delete response; badge recalculation is best-effort.
-      }
+    try {
+      await recalculateUserBadges(supabaseAdmin as any, user.id);
+    } catch (badgeError) {
+      console.error('Error recalculating badges after reflection delete:', badgeError);
+      // Don't fail the delete request; badge recalculation is best-effort.
     }
 
     return NextResponse.json({ success: true });

@@ -213,7 +213,27 @@ async function getUserStats(userId: string | null) {
     .select('id')
     .eq('user_id', userId);
 
-  const badgesCompleted = userBadges?.length || 0;
+  let badgesCompleted = userBadges?.length || 0;
+
+  // If user has badges but no completions, there's a mismatch - recalculate badges
+  // This handles cases where completions were deleted but badges weren't updated
+  if (badgesCompleted > 0 && totalTips === 0 && uniqueActionIds.size === 0) {
+    try {
+      const { recalculateUserBadges } = await import('@/lib/recalculate-badges');
+      const result = await recalculateUserBadges(adminSupabase as any, userId);
+      if (result.success) {
+        // Re-fetch badge count after recalculation
+        const { data: updatedBadges } = await adminSupabase
+          .from('user_badges')
+          .select('id')
+          .eq('user_id', userId);
+        badgesCompleted = updatedBadges?.length || 0;
+      }
+    } catch (error) {
+      console.error('Error recalculating badges on dashboard load:', error);
+      // Continue with existing badge count if recalculation fails
+    }
+  }
 
   return { 
     totalTips, 
