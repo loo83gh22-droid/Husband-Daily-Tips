@@ -7,6 +7,93 @@ import Link from 'next/link';
 import BackToTop from '@/components/BackToTop';
 import { isNewContent } from '@/lib/is-new-content';
 
+/**
+ * Filter badges to only show progressive badges when previous is completed
+ * Progressive badges are identified by: same category + same requirement_type + sequential requirement_value
+ * Examples: "Quality Time Starter" (1) → "Quality Time Builder" (5) → "Quality Time Expert" (10) → etc.
+ * 
+ * Rules:
+ * - Always show all earned badges
+ * - Show the next badge in progression only if previous is earned
+ * - If nothing earned, show only the first badge (Starter)
+ */
+function filterProgressiveBadges(
+  badges: any[],
+  earnedMap: Map<string, string>
+): any[] {
+  // Identify progressive badge patterns: Starter, Builder, Expert, Master, Champion, Legend
+  const progressiveKeywords = ['starter', 'builder', 'expert', 'master', 'champion', 'legend'];
+  
+  // Group badges by progression key (category + requirement_type)
+  const progressionGroups = new Map<string, any[]>();
+  
+  badges.forEach((badge) => {
+    const nameLower = badge.name.toLowerCase();
+    const hasProgressiveKeyword = progressiveKeywords.some(keyword => nameLower.includes(keyword));
+    
+    // Consider badges progressive if they have a progressive keyword AND same category + requirement_type
+    if (hasProgressiveKeyword && badge.category && badge.requirement_type) {
+      const key = `${badge.category}-${badge.requirement_type}`;
+      if (!progressionGroups.has(key)) {
+        progressionGroups.set(key, []);
+      }
+      progressionGroups.get(key)!.push(badge);
+    }
+  });
+
+  // Filter each progression group
+  const visibleBadges = new Set<string>(); // Track which badges to show
+  
+  progressionGroups.forEach((groupBadges) => {
+    // Sort by requirement_value (ascending) to get progression order
+    const sorted = [...groupBadges].sort((a, b) => {
+      const aVal = a.requirement_value || 0;
+      const bVal = b.requirement_value || 0;
+      return aVal - bVal;
+    });
+
+    // Find the highest earned badge in this progression
+    let highestEarnedIndex = -1;
+    for (let i = 0; i < sorted.length; i++) {
+      if (earnedMap.has(sorted[i].id)) {
+        highestEarnedIndex = i;
+      }
+    }
+
+    // Show all earned badges
+    sorted.forEach((badge) => {
+      if (earnedMap.has(badge.id)) {
+        visibleBadges.add(badge.id);
+      }
+    });
+
+    // Show the next badge(s) in progression only if previous is earned
+    if (highestEarnedIndex >= 0) {
+      // Show next badge after the highest earned (if exists)
+      if (highestEarnedIndex + 1 < sorted.length) {
+        visibleBadges.add(sorted[highestEarnedIndex + 1].id);
+      }
+    } else {
+      // Nothing earned yet - show only the first badge (Starter)
+      if (sorted.length > 0) {
+        visibleBadges.add(sorted[0].id);
+      }
+    }
+  });
+
+  // Include all non-progressive badges (always show them)
+  const nonProgressiveBadges = badges.filter((badge) => {
+    const nameLower = badge.name.toLowerCase();
+    const hasProgressiveKeyword = progressiveKeywords.some(keyword => nameLower.includes(keyword));
+    return !hasProgressiveKeyword || !badge.category || !badge.requirement_type;
+  });
+
+  nonProgressiveBadges.forEach((badge) => visibleBadges.add(badge.id));
+
+  // Return filtered badges
+  return badges.filter((badge) => visibleBadges.has(badge.id));
+}
+
 async function getUserStats(userId: string) {
   // Use admin client to bypass RLS (Auth0 context isn't set)
   const adminSupabase = getSupabaseAdmin();
@@ -122,7 +209,11 @@ async function getUserBadges(auth0Id: string) {
     }),
   );
 
-  return { badges: badgesWithProgress, earnedMap };
+  // Filter badges to show only progressive badges when previous is completed
+  // Progressive badges: same category + same requirement_type + sequential requirement_value
+  const filteredBadges = filterProgressiveBadges(badgesWithProgress, earnedMap);
+
+  return { badges: filteredBadges, earnedMap };
 }
 
 export default async function BadgesPage() {
