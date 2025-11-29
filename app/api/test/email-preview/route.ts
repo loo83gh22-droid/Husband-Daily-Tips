@@ -8,19 +8,20 @@ import { generateEmailHTML } from '@/lib/email';
  * dayOfWeek: 0 = Sunday, 1 = Monday, ..., 6 = Saturday
  */
 export async function GET(request: Request) {
-  // Only allow in development or with admin secret
-  if (process.env.NODE_ENV === 'production' && !process.env.ADMIN_SECRET) {
-    return NextResponse.json({ error: 'Not available in production' }, { status: 403 });
-  }
-
   const url = new URL(request.url);
   const dayOfWeekParam = url.searchParams.get('dayOfWeek');
   const userIdParam = url.searchParams.get('userId');
   const adminSecret = url.searchParams.get('secret');
 
-  // Check admin secret if in production
-  if (process.env.NODE_ENV === 'production' && adminSecret !== process.env.ADMIN_SECRET) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  // If ADMIN_SECRET is set in production, require it for access
+  // If not set, allow access (for easier testing)
+  if (process.env.NODE_ENV === 'production' && process.env.ADMIN_SECRET) {
+    if (!adminSecret || adminSecret !== process.env.ADMIN_SECRET) {
+      return NextResponse.json({ 
+        error: 'Unauthorized',
+        message: 'This endpoint requires an admin secret. Add ?secret=YOUR_ADMIN_SECRET to the URL.'
+      }, { status: 401 });
+    }
   }
 
   const dayOfWeek = dayOfWeekParam ? parseInt(dayOfWeekParam, 10) : new Date().getDay();
