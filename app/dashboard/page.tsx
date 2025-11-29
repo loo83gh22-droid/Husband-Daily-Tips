@@ -20,6 +20,7 @@ import SurveyPromptChecker from '@/components/SurveyPromptChecker';
 import SurveyBanner from '@/components/SurveyBanner';
 import TrialExpirationBanner from '@/components/TrialExpirationBanner';
 import ReferralTracker from '@/components/ReferralTracker';
+import HashScrollHandler from '@/components/HashScrollHandler';
 import ReferralCard from '@/components/ReferralCard';
 import GettingStarted from '@/components/GettingStarted';
 import FreeFloatingQuote from '@/components/FreeFloatingQuote';
@@ -472,6 +473,7 @@ export default async function Dashboard() {
 
   return (
     <div className="min-h-screen bg-slate-950">
+      <HashScrollHandler />
       <KeyboardShortcuts />
       <OnboardingTour />
       <TourButton />
@@ -558,7 +560,7 @@ export default async function Dashboard() {
 
 
             {/* Outstanding Actions - Premium Feature */}
-            <div className="mt-4 sm:mt-6 md:mt-8">
+            <div id="outstanding-actions" className="mt-4 sm:mt-6 md:mt-8 scroll-mt-4">
               <OutstandingActions userId={user.id} hasPremiumAccess={hasPremiumAccess ?? false} />
             </div>
 

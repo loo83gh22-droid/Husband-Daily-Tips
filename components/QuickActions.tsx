@@ -106,10 +106,13 @@ export default function QuickActions({
       label: `Outstanding (${outstandingActionsCount})`,
       icon: '📋',
       action: () => {
-        // Scroll to outstanding actions section
-        const element = document.querySelector('[data-tour="action"]');
+        // Scroll to outstanding actions section on dashboard
+        const element = document.getElementById('outstanding-actions');
         if (element) {
-          element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        } else {
+          // If not on dashboard, navigate to dashboard with anchor
+          router.push('/dashboard#outstanding-actions');
         }
         setIsOpen(false);
       },

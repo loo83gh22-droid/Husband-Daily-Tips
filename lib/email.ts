@@ -153,7 +153,7 @@ export function generateEmailHTML(tip: EmailTip, baseUrl: string): string {
                 </table>
               </div>
               <p style="color: #9ca3af; font-size: 12px; margin: 12px 0 0 0;">
-                <a href="${baseUrl}/dashboard/outstanding-actions" style="color: #0ea5e9; text-decoration: none;">View all outstanding actions →</a>
+                <a href="${baseUrl}/dashboard#outstanding-actions" style="color: #0ea5e9; text-decoration: none;">View all outstanding actions →</a>
               </p>
             </div>
           ` : ''}
@@ -206,7 +206,7 @@ export function generateEmailHTML(tip: EmailTip, baseUrl: string): string {
                 </p>
               `}
               <div style="margin-top: 15px;">
-                <a href="${baseUrl}/dashboard/outstanding-actions" 
+                <a href="${baseUrl}/dashboard#outstanding-actions" 
                    style="display: inline-block; background-color: #3b82f6; color: #ffffff; padding: 10px 20px; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 14px;">
                   View Outstanding Actions →
                 </a>
