@@ -4,40 +4,35 @@
 
 -- Also remove the "Love Language Learner" badge entirely as requested
 
--- First, remove any user badges associated with the badges we're deleting
+-- Step 1: Remove any user badges associated with badges we're deleting
+-- Delete user badges for Intimacy Expert badges that don't have the correct description
 DELETE FROM user_badges
 WHERE badge_id IN (
   SELECT id FROM badges
-  WHERE (
-    -- Intimacy Expert with "building real connection" description (catch any variation)
-    (name = 'Intimacy Expert'
-     AND category = 'Intimacy'
-     AND requirement_type = 'category_count'
-     AND requirement_value = 10
-     AND (description LIKE '%building real connection%' 
-          OR description LIKE '%You''re building real connection%'
-          OR description LIKE '%building%connection%'))
-    OR
-    -- Love Language Learner badge
-    name = 'Love Language Learner'
-  )
+  WHERE name = 'Intimacy Expert'
+    AND category = 'Intimacy'
+    AND requirement_type = 'category_count'
+    AND requirement_value = 10
+    AND description != 'Completed 10 intimacy actions. You''re an intimacy expert.'
 );
 
--- Delete ALL Intimacy Expert badges with "building real connection" in description
--- Keep only the one with "You're an intimacy expert" description
+-- Delete user badges for Love Language Learner
+DELETE FROM user_badges
+WHERE badge_id IN (
+  SELECT id FROM badges WHERE name = 'Love Language Learner'
+);
+
+-- Step 2: Delete the badges themselves
+-- Delete ALL Intimacy Expert badges that DON'T have the exact correct description
 DELETE FROM badges
 WHERE name = 'Intimacy Expert'
-AND category = 'Intimacy'
-AND requirement_type = 'category_count'
-AND requirement_value = 10
-AND description NOT LIKE '%You''re an intimacy expert%'
-AND (description LIKE '%building real connection%' 
-     OR description LIKE '%You''re building real connection%'
-     OR description LIKE '%building%connection%');
+  AND category = 'Intimacy'
+  AND requirement_type = 'category_count'
+  AND requirement_value = 10
+  AND description != 'Completed 10 intimacy actions. You''re an intimacy expert.';
 
 -- Delete the Love Language Learner badge entirely
-DELETE FROM badges
-WHERE name = 'Love Language Learner';
+DELETE FROM badges WHERE name = 'Love Language Learner';
 
 -- Note: The correct Intimacy Expert badge should remain:
 -- Name: 'Intimacy Expert'
