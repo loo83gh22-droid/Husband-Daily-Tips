@@ -201,7 +201,7 @@ export default async function BadgesPage() {
                     b.category.toLowerCase().includes('quality_time')))
   );
   
-  // Get all categorized badges
+  // Get all categorized badges (by thematic category)
   const categorizedBadgeIds = new Set([
     ...communicationBadges,
     ...intimacyBadges,
@@ -213,10 +213,9 @@ export default async function BadgesPage() {
     ...qualityTimeBadges,
   ].map(b => b.id));
   
-  // Consistency badges are those that don't fit other categories
-  const consistencyBadges = badges.filter((b) => 
-    b.badge_type === 'consistency' && !categorizedBadgeIds.has(b.id)
-  );
+  // Consistency badges: anything not captured by the other themes
+  // This ensures EVERY badge in the database shows up somewhere on the page.
+  const consistencyBadges = badges.filter((b) => !categorizedBadgeIds.has(b.id));
   
   // Order matches actions page theme order
   const badgeThemesOrder = [
