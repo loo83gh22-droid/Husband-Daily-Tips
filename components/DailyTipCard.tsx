@@ -322,8 +322,23 @@ export default function DailyTipCard({ tip, subscriptionTier = 'free', onActionR
   const handleLeaveEvent = async () => {
     if (!tip.isChallengeAction || !tip.challengeId) return;
     
+    // Fetch the actual challenge name from the database to ensure accuracy
+    let challengeName = tip.challengeName || 'this 7-day event';
+    try {
+      const response = await fetch(`/api/challenges/${tip.challengeId}`);
+      if (response.ok) {
+        const data = await response.json();
+        if (data.name) {
+          challengeName = data.name.replace(/Challenge/gi, 'Event');
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching challenge name:', error);
+      // Fall back to tip.challengeName if fetch fails
+    }
+    
     const confirmed = confirm(
-      `Are you sure you want to leave "${tip.challengeName}"? You'll return to regular daily actions.`
+      `Are you sure you want to leave "${challengeName}"? You'll return to regular daily actions.`
     );
     
     if (!confirmed) return;
