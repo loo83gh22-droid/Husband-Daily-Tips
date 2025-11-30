@@ -223,29 +223,71 @@ export default function SubscriptionButton({ plan, currentTier, hasActiveTrial, 
     );
   }
 
+  // For trial users on premium plan, show status message and "Subscribe Now" button
+  if (plan.tier === 'premium' && hasActiveTrial && !isOnPremium) {
+    const endDate = trialEndsAt ? new Date(trialEndsAt) : null;
+    const daysRemaining = endDate ? Math.ceil((endDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24)) : 0;
+    
+    return (
+      <div className="space-y-3">
+        <div className="bg-primary-500/10 border border-primary-500/30 rounded-lg p-3 text-center">
+          <p className="text-sm text-primary-300 font-medium">
+            You're on a free trial. {daysRemaining} day{daysRemaining !== 1 ? 's' : ''} remaining.
+          </p>
+          <p className="text-xs text-primary-400 mt-1">
+            All premium features active. Convert to paid anytime to continue after trial.
+          </p>
+        </div>
+        <button
+          onClick={handleAction}
+          disabled={isLoading}
+          className="w-full px-6 py-3 rounded-lg font-semibold transition-colors bg-primary-500 text-slate-950 hover:bg-primary-400 disabled:bg-primary-500/50"
+        >
+          {isLoading ? (
+            <span className="flex items-center justify-center gap-2">
+              <svg
+                className="animate-spin h-5 w-5"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                ></circle>
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                ></path>
+              </svg>
+              Loading...
+            </span>
+          ) : (
+            'Subscribe Now & Continue'
+          )}
+        </button>
+        <p className="text-xs text-slate-400 text-center">
+          Your trial continues until it ends, then billing begins. Cancel anytime.
+        </p>
+      </div>
+    );
+  }
+
   // Determine button text and status for other cases
   let buttonText = '';
   let statusMessage = '';
   
   if (isCurrent) {
-    if (hasActiveTrial && trialEndsAt) {
-      const endDate = new Date(trialEndsAt);
-      const daysRemaining = Math.ceil((endDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24));
-      buttonText = 'Current Plan';
-      statusMessage = `You're on a free trial. ${daysRemaining} day${daysRemaining !== 1 ? 's' : ''} remaining. All premium features active.`;
-    } else if (isOnPremium) {
+    if (isOnPremium) {
       buttonText = 'Current Plan';
       statusMessage = 'You have an active subscription. All premium features unlocked.';
     } else {
       buttonText = 'Current Plan';
-    }
-  } else if (plan.tier === 'premium' && hasActiveTrial) {
-    // Fallback: if hasActiveTrial but isCurrent didn't catch it
-    buttonText = 'Current Plan';
-    if (trialEndsAt) {
-      const endDate = new Date(trialEndsAt);
-      const daysRemaining = Math.ceil((endDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24));
-      statusMessage = `You're on a free trial. ${daysRemaining} day${daysRemaining !== 1 ? 's' : ''} remaining. All premium features active.`;
     }
   } else if (plan.tier === 'free') {
     buttonText = 'Downgrade';
@@ -257,9 +299,9 @@ export default function SubscriptionButton({ plan, currentTier, hasActiveTrial, 
     <div className="space-y-2">
       <button
         onClick={handleAction}
-        disabled={isLoading || (isCurrent === true)}
+        disabled={isLoading || (isCurrent === true && !hasActiveTrial)}
         className={`w-full px-6 py-3 rounded-lg font-semibold transition-colors ${
-          isCurrent
+          isCurrent && !hasActiveTrial
             ? 'bg-slate-800 text-slate-500 cursor-not-allowed border border-slate-700'
             : isPopular
             ? 'bg-primary-500 text-slate-950 hover:bg-primary-400 disabled:bg-primary-500/50'

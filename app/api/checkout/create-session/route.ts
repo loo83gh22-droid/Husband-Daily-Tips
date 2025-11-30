@@ -49,10 +49,10 @@ export async function POST(request: NextRequest) {
 
     const adminSupabase = getSupabaseAdmin();
 
-    // Get user from database
+    // Get user from database (including trial info to check if already on trial)
     const { data: user, error: userError } = await adminSupabase
       .from('users')
-      .select('id, email, name, stripe_customer_id')
+      .select('id, email, name, stripe_customer_id, trial_ends_at, trial_started_at')
       .eq('auth0_id', auth0Id)
       .single();
 
@@ -88,6 +88,16 @@ export async function POST(request: NextRequest) {
     // Get the price ID for premium tier with the selected billing interval
     const priceId = getStripePriceId('premium', billingInterval);
 
+    // Check if user is already on a trial
+    const isOnTrial = user.trial_ends_at && user.trial_started_at;
+    const trialEndDate = user.trial_ends_at ? new Date(user.trial_ends_at) : null;
+    const now = new Date();
+    const hasActiveTrial = isOnTrial && trialEndDate && trialEndDate > now;
+
+    // If user is already on trial or explicitly skipping, don't add trial period
+    // Stripe will handle continuing the existing trial until it ends, then billing begins
+    const shouldSkipTrial = skipTrial || hasActiveTrial;
+
     // Create Stripe Checkout Session
     const checkoutSession = await stripe.checkout.sessions.create({
       customer: customerId,
@@ -100,7 +110,7 @@ export async function POST(request: NextRequest) {
         },
       ],
       subscription_data: {
-        ...(skipTrial ? {} : { trial_period_days: 7 }), // Only add trial if not skipping
+        ...(shouldSkipTrial ? {} : { trial_period_days: 7 }), // Only add trial if not skipping and not already on trial
         metadata: {
           user_id: user.id,
           auth0_id: auth0Id,
