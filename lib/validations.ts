@@ -17,22 +17,32 @@ export const surveyResponseSchema = z.object({
           z.number().int().min(0).max(5), // Rating scale or yes/no (0 or 1)
           z.boolean(), // Yes/No questions
           z.string().min(1).max(1000), // Text responses
+          z.array(z.number().int().min(0).max(6)), // Multi-select questions (e.g., work_days: array of days 0-6)
         ]),
       })
     ).min(1).max(30),
     // Object format: {1: 5, 2: 1, ...} or {"1": 5, "2": 1, ...} where key is questionId and value is response
-    // Accept any object with string/number keys and number/boolean values (will be validated more strictly in processing)
+    // Accept any object with string/number keys and number/boolean/array values (will be validated more strictly in processing)
+    // Arrays are for multi_select questions (e.g., work_days)
     z.record(z.unknown(), z.unknown()).refine(
       (val) => {
-        // Check that all values are valid (number 0-5 or boolean)
+        // Check that all values are valid (number 0-5, boolean, or array of numbers 0-6)
         return Object.values(val).every((v) => {
           if (typeof v === 'number') {
             return Number.isInteger(v) && v >= 0 && v <= 5;
           }
-          return typeof v === 'boolean';
+          if (typeof v === 'boolean') {
+            return true;
+          }
+          // Allow arrays (for multi_select questions like work_days)
+          if (Array.isArray(v)) {
+            // Validate that array contains only numbers 0-6 (days of week)
+            return v.every((item) => typeof item === 'number' && Number.isInteger(item) && item >= 0 && item <= 6);
+          }
+          return false;
         });
       },
-      { message: 'All response values must be numbers (0-5) or booleans' }
+      { message: 'All response values must be numbers (0-5), booleans, or arrays of numbers (0-6) for multi-select questions' }
     ),
   ]),
   skip: z.boolean().optional(),
