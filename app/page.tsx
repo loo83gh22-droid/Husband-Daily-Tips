@@ -186,7 +186,7 @@ export default async function Home() {
                 Daily actions that show you care. She&apos;ll notice. You&apos;ll both feel the difference.
               </p>
               <p className="text-base md:text-lg text-slate-300 leading-relaxed mb-4 max-w-2xl">
-                Consistency transforms your relationship by building trust, connection, and genuine appreciation. It&apos;s the steady, reliable effort that shows you&apos;re committed, that truly makes the difference.
+                Consistency transforms your relationship by building trust, connection, and genuine appreciation. It&apos;s the steady, reliable effort that shows you&apos;re committed that truly makes the difference.
               </p>
               <p className="text-sm md:text-base text-slate-400 italic mb-8 max-w-2xl">
                 Designed for husbands, but it&apos;s not <span className="text-primary-400 font-semibold not-italic">just</span> for husbands. 
