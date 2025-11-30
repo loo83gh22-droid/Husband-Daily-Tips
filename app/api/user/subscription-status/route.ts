@@ -25,12 +25,14 @@ export async function GET() {
 
     if (error) {
       console.error('Error fetching subscription tier:', error);
-      return NextResponse.json({
+      const errorResponse = NextResponse.json({
         tier: 'free',
         hasActiveTrial: false,
         hasSubscription: false,
         isOnPremium: false,
       });
+      errorResponse.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0');
+      return errorResponse;
     }
 
     const trialEndsAt = user?.trial_ends_at ? new Date(user.trial_ends_at) : null;
@@ -45,20 +47,29 @@ export async function GET() {
     const hasSubscription = !!user?.stripe_subscription_id;
     const isOnPremium = user?.subscription_tier === 'premium' && hasSubscription;
 
-    return NextResponse.json({
+    const response = NextResponse.json({
       tier: user?.subscription_tier || 'free',
       hasActiveTrial,
       hasSubscription,
       isOnPremium,
     });
+    
+    // Prevent caching of subscription status
+    response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0');
+    response.headers.set('Pragma', 'no-cache');
+    response.headers.set('Expires', '0');
+    
+    return response;
   } catch (error) {
     console.error('Unexpected error fetching subscription:', error);
-    return NextResponse.json({
+    const errorResponse = NextResponse.json({
       tier: 'free',
       hasActiveTrial: false,
       hasSubscription: false,
       isOnPremium: false,
     });
+    errorResponse.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0');
+    return errorResponse;
   }
 }
 

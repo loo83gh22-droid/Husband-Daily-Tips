@@ -138,7 +138,8 @@ export default function SubscriptionButton({ plan, currentTier, hasActiveTrial, 
                     (plan.tier === 'premium' && (hasActiveTrial === true));
 
   // For free users wanting premium, show two buttons: trial and direct subscription
-  if (plan.tier === 'premium' && currentTier === 'free' && !hasActiveTrial) {
+  // Only show if they don't have an active trial or paid subscription
+  if (plan.tier === 'premium' && !isCurrent && !hasActiveTrial && !isOnPremium) {
     return (
       <div className="space-y-3">
         <button
@@ -222,13 +223,30 @@ export default function SubscriptionButton({ plan, currentTier, hasActiveTrial, 
     );
   }
 
-  // Determine button text for other cases
+  // Determine button text and status for other cases
   let buttonText = '';
+  let statusMessage = '';
+  
   if (isCurrent) {
-    buttonText = 'Current Plan';
+    if (hasActiveTrial && trialEndsAt) {
+      const endDate = new Date(trialEndsAt);
+      const daysRemaining = Math.ceil((endDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24));
+      buttonText = 'Current Plan';
+      statusMessage = `You're on a free trial. ${daysRemaining} day${daysRemaining !== 1 ? 's' : ''} remaining. All premium features active.`;
+    } else if (isOnPremium) {
+      buttonText = 'Current Plan';
+      statusMessage = 'You have an active subscription. All premium features unlocked.';
+    } else {
+      buttonText = 'Current Plan';
+    }
   } else if (plan.tier === 'premium' && hasActiveTrial) {
-    // This shouldn't happen if isCurrent is working, but just in case
+    // Fallback: if hasActiveTrial but isCurrent didn't catch it
     buttonText = 'Current Plan';
+    if (trialEndsAt) {
+      const endDate = new Date(trialEndsAt);
+      const daysRemaining = Math.ceil((endDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24));
+      statusMessage = `You're on a free trial. ${daysRemaining} day${daysRemaining !== 1 ? 's' : ''} remaining. All premium features active.`;
+    }
   } else if (plan.tier === 'free') {
     buttonText = 'Downgrade';
   } else {
@@ -236,17 +254,18 @@ export default function SubscriptionButton({ plan, currentTier, hasActiveTrial, 
   }
 
   return (
-    <button
-      onClick={handleAction}
-      disabled={isLoading || (isCurrent === true)}
-      className={`w-full px-6 py-3 rounded-lg font-semibold transition-colors ${
-        isCurrent
-          ? 'bg-slate-800 text-slate-500 cursor-not-allowed border border-slate-700'
-          : isPopular
-          ? 'bg-primary-500 text-slate-950 hover:bg-primary-400 disabled:bg-primary-500/50'
-          : 'bg-slate-800 text-slate-200 hover:bg-slate-700 border border-slate-700 disabled:bg-slate-800/50'
-      }`}
-    >
+    <div className="space-y-2">
+      <button
+        onClick={handleAction}
+        disabled={isLoading || (isCurrent === true)}
+        className={`w-full px-6 py-3 rounded-lg font-semibold transition-colors ${
+          isCurrent
+            ? 'bg-slate-800 text-slate-500 cursor-not-allowed border border-slate-700'
+            : isPopular
+            ? 'bg-primary-500 text-slate-950 hover:bg-primary-400 disabled:bg-primary-500/50'
+            : 'bg-slate-800 text-slate-200 hover:bg-slate-700 border border-slate-700 disabled:bg-slate-800/50'
+        }`}
+      >
       {isLoading ? (
         <span className="flex items-center justify-center gap-2">
           <svg
@@ -275,6 +294,12 @@ export default function SubscriptionButton({ plan, currentTier, hasActiveTrial, 
         buttonText
       )}
     </button>
+    {statusMessage && (
+      <p className="text-xs text-primary-300 text-center font-medium">
+        {statusMessage}
+      </p>
+    )}
+    </div>
   );
 }
 

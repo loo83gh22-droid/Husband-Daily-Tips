@@ -60,11 +60,19 @@ export default function ActionsList({
   useEffect(() => {
     async function fetchSubscriptionStatus() {
       try {
-        // Add cache-busting query parameter to ensure fresh data
-        const response = await fetch(`/api/user/subscription-status?t=${Date.now()}`);
+        // Add cache-busting query parameter and no-cache headers to ensure fresh data
+        const response = await fetch(`/api/user/subscription-status?t=${Date.now()}`, {
+          cache: 'no-store',
+          headers: {
+            'Cache-Control': 'no-cache',
+          },
+        });
         if (response.ok) {
           const data = await response.json();
+          console.log('Subscription status fetched:', data); // Debug log
           setSubscriptionStatus(data);
+        } else {
+          console.error('Failed to fetch subscription status:', response.status);
         }
       } catch (error) {
         console.error('Error fetching subscription status:', error);
@@ -148,8 +156,8 @@ export default function ActionsList({
   const handleOpenModal = (action: Action) => {
     // Check if user can complete actions from this page
     if (subscriptionStatus && !canCompleteFromActionsPage(subscriptionStatus)) {
-      // Redirect to subscription page with upgrade prompt
-      window.location.href = '/dashboard/subscription?upgrade=actions';
+      // Show toast notification instead of redirecting
+      toast.error("Upgrade to Premium to complete actions from this page.");
       return;
     }
     setSelectedAction(action);
