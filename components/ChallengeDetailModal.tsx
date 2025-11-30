@@ -248,17 +248,18 @@ export default function ChallengeDetailModal({
                 {challengeActions.map((ca, index) => {
                   // Handle both nested structure (ca.actions) and flat structure
                   const action = ca.actions || ca;
-                  const dayNumber = ca.day_number || index + 1;
+                  // Always use sequential numbering (1-7) for display, regardless of day_number field
+                  const displayNumber = index + 1;
                   
                   return (
                     <div
-                      key={dayNumber}
+                      key={displayNumber}
                       className="bg-slate-800/50 rounded-lg p-4 border border-slate-700/50 hover:border-slate-600/50 transition-colors"
                     >
                       <div className="flex items-start gap-3">
                         <div className="flex-shrink-0 w-10 h-10 rounded-full bg-primary-500/20 border border-primary-500/30 flex items-center justify-center">
                           <span className="text-sm font-bold text-primary-300">
-                            {dayNumber}
+                            {displayNumber}
                           </span>
                         </div>
                         <div className="flex-1 min-w-0">
