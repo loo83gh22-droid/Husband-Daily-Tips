@@ -154,8 +154,22 @@ export default function ActionsList({
   };
 
   const handleOpenModal = (action: Action) => {
+    // If subscription status is still loading, wait a bit and try again
+    if (isLoadingSubscription) {
+      toast.error("Loading subscription status...");
+      return;
+    }
+    
+    // If no subscription status yet, allow it (will be checked on backend)
+    if (!subscriptionStatus) {
+      console.warn('Subscription status not loaded yet, allowing action (backend will validate)');
+      setSelectedAction(action);
+      setIsModalOpen(true);
+      return;
+    }
+    
     // Check if user can complete actions from this page
-    if (subscriptionStatus && !canCompleteFromActionsPage(subscriptionStatus)) {
+    if (!canCompleteFromActionsPage(subscriptionStatus)) {
       // Show toast notification instead of redirecting
       toast.error("Upgrade to Premium to complete actions from this page.");
       return;
@@ -220,8 +234,8 @@ export default function ActionsList({
                   )}
                   <button
                     onClick={() => handleOpenModal(action)}
-                    disabled={isSubmitting || isLoadingSubscription || (subscriptionStatus ? !canCompleteFromActionsPage(subscriptionStatus) : false)}
-                    className={`w-6 h-6 rounded border-2 border-primary-500 bg-primary-500/20 hover:bg-primary-500/30 flex items-center justify-center transition-all disabled:opacity-50 ${
+                    disabled={isSubmitting || (subscriptionStatus ? !canCompleteFromActionsPage(subscriptionStatus) : false)}
+                    className={`w-6 h-6 rounded border-2 border-primary-500 bg-primary-500/20 hover:bg-primary-500/30 flex items-center justify-center transition-all disabled:opacity-50 disabled:cursor-not-allowed ${
                       subscriptionStatus && !canCompleteFromActionsPage(subscriptionStatus)
                         ? 'cursor-not-allowed'
                         : ''

@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getSession } from '@auth0/nextjs-auth0';
-import { supabase } from '@/lib/supabase';
+import { getSupabaseAdmin } from '@/lib/supabase';
 
 export const dynamic = 'force-dynamic';
 
@@ -16,8 +16,9 @@ export async function GET() {
     }
 
     const auth0Id = session.user.sub;
+    const adminSupabase = getSupabaseAdmin();
 
-    const { data: user, error } = await supabase
+    const { data: user, error } = await adminSupabase
       .from('users')
       .select('subscription_tier, trial_started_at, trial_ends_at, stripe_subscription_id')
       .eq('auth0_id', auth0Id)
