@@ -309,9 +309,9 @@ export default async function Home() {
                 <div className="w-16 h-16 bg-primary-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
                   <span className="text-2xl">📅</span>
                 </div>
-                <h3 className="text-xl font-semibold text-slate-200 mb-2">Get Daily Actions</h3>
+                <h3 className="text-xl font-semibold text-slate-200 mb-2">Get Daily & Weekly Actions</h3>
                 <p className="text-slate-400">
-                  Receive a personalized action every day. Each one is designed to strengthen your relationship and show you care.
+                  Premium members receive daily routine actions via email and on the dashboard, plus a selection of weekly planning actions that require a bit more planning. You&apos;ll also get a weekly summary email to reflect on your accomplishments.
                 </p>
               </div>
               <div className="text-center">
@@ -333,9 +333,9 @@ export default async function Home() {
             </h2>
             <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
               <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-6">
-                <h3 className="text-xl font-semibold text-slate-200 mb-3">🎯 Action-Based, Not Advice</h3>
+                <h3 className="text-xl font-semibold text-slate-200 mb-3">🎯 Daily Routine + Weekly Planning</h3>
                 <p className="text-slate-400">
-                  We don&apos;t just tell you what to do. We give you specific, actionable steps you can take today.
+                  Premium members get daily routine actions for quick wins, plus weekly planning actions that require more thought and planning. Choose what fits your schedule.
                 </p>
               </div>
               <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-6">
@@ -351,9 +351,9 @@ export default async function Home() {
                 </p>
               </div>
               <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-6">
-                <h3 className="text-xl font-semibold text-slate-200 mb-3">💝 Personalized for You</h3>
+                <h3 className="text-xl font-semibold text-slate-200 mb-3">📧 Daily Emails & Weekly Summaries</h3>
                 <p className="text-slate-400">
-                  Actions are tailored to your relationship goals and areas that need the most attention.
+                  Premium members get daily emails with routine actions, plus a weekly summary email that reminds you to look back on your accomplishments, especially helpful if you haven&apos;t been updating daily.
                 </p>
               </div>
             </div>

@@ -79,9 +79,9 @@ export default function GettingStarted({ userId, totalCompletions }: GettingStar
             1
           </div>
           <div>
-            <h3 className="text-lg font-semibold text-slate-50 mb-1">Complete Your Daily Action</h3>
+            <h3 className="text-lg font-semibold text-slate-50 mb-1">Complete Your Daily Routine Actions</h3>
             <p className="text-slate-300 text-sm leading-relaxed">
-              Each day you&apos;ll see a new action at the top of your dashboard. Click &quot;Mark as done&quot; when you complete it. This builds your Husband Health score and earns you badges.
+              As a Premium member, you&apos;ll receive daily routine actions delivered via email and shown on your dashboard. These are quick, meaningful actions you can complete each day. Click &quot;Mark as done&quot; when you complete them to build your Husband Health score and earn badges.
             </p>
           </div>
         </div>
@@ -89,6 +89,30 @@ export default function GettingStarted({ userId, totalCompletions }: GettingStar
         <div className="flex items-start gap-3">
           <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary-500/20 flex items-center justify-center text-primary-300 font-bold text-sm">
             2
+          </div>
+          <div>
+            <h3 className="text-lg font-semibold text-slate-50 mb-1">Plan Your Weekly Actions</h3>
+            <p className="text-slate-300 text-sm leading-relaxed">
+              Each week, you&apos;ll receive a selection of weekly planning actions. These require a bit more planning and thought, so you can choose which ones fit your schedule and goals. Plan them throughout the week and complete them when ready.
+            </p>
+          </div>
+        </div>
+
+        <div className="flex items-start gap-3">
+          <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary-500/20 flex items-center justify-center text-primary-300 font-bold text-sm">
+            3
+          </div>
+          <div>
+            <h3 className="text-lg font-semibold text-slate-50 mb-1">Check Your Daily Emails</h3>
+            <p className="text-slate-300 text-sm leading-relaxed">
+              Premium members receive daily emails with your routine action for the day. You&apos;ll also receive a weekly summary email that reminds you to look back on what you accomplished during the week, especially helpful if you haven&apos;t been updating daily in the app.
+            </p>
+          </div>
+        </div>
+
+        <div className="flex items-start gap-3">
+          <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary-500/20 flex items-center justify-center text-primary-300 font-bold text-sm">
+            4
           </div>
           <div>
             <h3 className="text-lg font-semibold text-slate-50 mb-1">Reflect on What Happened</h3>
@@ -100,19 +124,7 @@ export default function GettingStarted({ userId, totalCompletions }: GettingStar
 
         <div className="flex items-start gap-3">
           <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary-500/20 flex items-center justify-center text-primary-300 font-bold text-sm">
-            3
-          </div>
-          <div>
-            <h3 className="text-lg font-semibold text-slate-50 mb-1">Hide Actions That Don&apos;t Fit</h3>
-            <p className="text-slate-300 text-sm leading-relaxed">
-              If an action doesn&apos;t suit your situation (like &quot;take lunch to your wife at work&quot; but you can&apos;t do that), simply click the &quot;Hide&quot; button. A new action will be generated for you, and you won&apos;t see that one again. You can find and unhide hidden actions in <Link href="/dashboard/account" className="text-primary-400 hover:text-primary-300 underline font-medium">Account Settings</Link>.
-            </p>
-          </div>
-        </div>
-
-        <div className="flex items-start gap-3">
-          <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary-500/20 flex items-center justify-center text-primary-300 font-bold text-sm">
-            4
+            5
           </div>
           <div>
             <h3 className="text-lg font-semibold text-slate-50 mb-1">Explore All Actions</h3>
@@ -124,7 +136,7 @@ export default function GettingStarted({ userId, totalCompletions }: GettingStar
 
         <div className="flex items-start gap-3">
           <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary-500/20 flex items-center justify-center text-primary-300 font-bold text-sm">
-            5
+            6
           </div>
           <div>
             <h3 className="text-lg font-semibold text-slate-50 mb-1">Track Your Progress</h3>

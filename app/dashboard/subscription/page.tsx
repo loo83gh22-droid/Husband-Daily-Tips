@@ -113,7 +113,9 @@ export default async function SubscriptionPage({
       tier: 'premium',
       interval: 'month' as const,
       features: [
-        'Daily personalized actions',
+        'Daily routine actions delivered via email',
+        'Weekly planning actions (require more planning)',
+        'Weekly summary email (reminder to reflect on accomplishments)',
         'Full Husband Health tracking',
         'Achievement badges',
         'Private journal & Team Wins',
