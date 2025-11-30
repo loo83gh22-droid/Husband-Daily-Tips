@@ -271,11 +271,14 @@ export async function checkAndAwardBadges(
 
       case 'challenge_completed':
         // Check if user has completed challenges
+        // A 7-day event is only considered "completed" if ALL 7 actions were finished
+        // This requires completed = true AND completed_days = 7
         const { data: completedChallenges } = await supabase
           .from('user_challenges')
           .select('id')
           .eq('user_id', userId)
-          .eq('completed', true);
+          .eq('completed', true)
+          .eq('completed_days', 7); // Require all 7 days to be completed
         
         if (completedChallenges && completedChallenges.length >= (badge.requirement_value || 0)) {
           earned = true;
