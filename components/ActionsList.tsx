@@ -60,7 +60,8 @@ export default function ActionsList({
   useEffect(() => {
     async function fetchSubscriptionStatus() {
       try {
-        const response = await fetch('/api/user/subscription-status');
+        // Add cache-busting query parameter to ensure fresh data
+        const response = await fetch(`/api/user/subscription-status?t=${Date.now()}`);
         if (response.ok) {
           const data = await response.json();
           setSubscriptionStatus(data);
@@ -79,6 +80,27 @@ export default function ActionsList({
       }
     }
     fetchSubscriptionStatus();
+    
+    // Refresh subscription status when page becomes visible (e.g., after returning from subscription page)
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        fetchSubscriptionStatus();
+      }
+    };
+    
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    
+    // Also refresh on focus (when user switches back to tab)
+    const handleFocus = () => {
+      fetchSubscriptionStatus();
+    };
+    
+    window.addEventListener('focus', handleFocus);
+    
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('focus', handleFocus);
+    };
   }, []);
 
   const handleCompleteAction = async (notes?: string, linkToJournal?: boolean) => {

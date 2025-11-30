@@ -25,8 +25,11 @@ async function getUserSubscription(auth0Id: string) {
     }
 
     const trialEndsAt = user?.trial_ends_at ? new Date(user.trial_ends_at) : null;
+    const trialStartedAt = user?.trial_started_at ? new Date(user.trial_started_at) : null;
     const now = new Date();
+    // Active trial: premium tier, has trial dates, trial hasn't ended, and no paid subscription
     const hasActiveTrial = user?.subscription_tier === 'premium' && 
+                          trialStartedAt && 
                           trialEndsAt && 
                           trialEndsAt > now && 
                           !user?.stripe_subscription_id;
