@@ -8,7 +8,6 @@ import HealthBar from '@/components/HealthBar';
 import BadgesDisplay from '@/components/BadgesDisplay';
 import DashboardNav from '@/components/DashboardNav';
 import OnboardingSurvey from '@/components/OnboardingSurvey';
-import ActiveChallenges from '@/components/ActiveChallenges';
 import OutstandingActions from '@/components/OutstandingActions';
 import OnboardingTour, { TourButton } from '@/components/OnboardingTour';
 import QuickActions from '@/components/QuickActions';
@@ -620,11 +619,6 @@ export default async function Dashboard() {
           </div>
         </div>
 
-        {/* 7-Day Events Section */}
-        <ActiveChallenges 
-          subscriptionTier={user.subscription_tier || 'free'} 
-          partnerName={user.partner_name || null}
-        />
       </main>
     </div>
   );
