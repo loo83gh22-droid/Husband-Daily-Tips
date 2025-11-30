@@ -111,7 +111,7 @@ export default function ActionsList({
     };
   }, []);
 
-  const handleCompleteAction = async (notes?: string, linkToJournal?: boolean) => {
+  const handleCompleteAction = async (notes?: string, linkToJournal?: boolean, shareToForum?: boolean) => {
     if (!selectedAction) return;
 
     setIsSubmitting(true);
@@ -126,6 +126,7 @@ export default function ActionsList({
           actionId: selectedAction.id,
           notes: notes || null,
           linkToJournal: linkToJournal || false,
+          shareToForum: shareToForum || false,
         }),
       });
 
@@ -306,6 +307,7 @@ export default function ActionsList({
           }}
           action={selectedAction}
           onComplete={handleCompleteAction}
+          subscriptionTier={subscriptionStatus?.tier || 'free'}
         />
       )}
 

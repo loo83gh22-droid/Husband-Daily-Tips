@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 
 interface ActionCompletionModalProps {
   isOpen: boolean;
@@ -11,7 +12,8 @@ interface ActionCompletionModalProps {
     description: string;
     icon: string | null;
   };
-  onComplete: (notes?: string, linkToJournal?: boolean) => Promise<void>; // linkToJournal always true now, but keeping for API compatibility
+  onComplete: (notes?: string, linkToJournal?: boolean, shareToForum?: boolean) => Promise<void>; // linkToJournal always true now, but keeping for API compatibility
+  subscriptionTier?: string; // For checking if user can share to Team Wins
 }
 
 export default function ActionCompletionModal({
@@ -19,11 +21,14 @@ export default function ActionCompletionModal({
   onClose,
   action,
   onComplete,
+  subscriptionTier = 'free',
 }: ActionCompletionModalProps) {
   const [notes, setNotes] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isFavorited, setIsFavorited] = useState(false);
   const [isTogglingFavorite, setIsTogglingFavorite] = useState(false);
+  const [shareToForum, setShareToForum] = useState(false);
+  const isFree = subscriptionTier === 'free';
 
   // Fetch favorite status when modal opens
   useEffect(() => {
@@ -78,8 +83,10 @@ export default function ActionCompletionModal({
 
     try {
       // Always link to journal - notes are required for journal entry
-      await onComplete(notes.trim() || '', true);
+      // Pass shareToForum flag if user wants to share to Team Wins
+      await onComplete(notes.trim() || '', true, shareToForum);
       setNotes('');
+      setShareToForum(false);
       onClose();
     } catch (error) {
       console.error('Error completing action:', error);
@@ -148,6 +155,40 @@ export default function ActionCompletionModal({
           <p className="text-xs text-slate-400">
             Your notes will be automatically saved to your journal as a record of this completion.
           </p>
+
+          <div className="mt-4">
+            {isFree ? (
+              <div className="bg-primary-500/10 border border-primary-500/30 rounded-lg p-4">
+                <p className="text-sm text-slate-300 mb-2">
+                  <span className="font-medium">Share to Team Wins</span> — Upgrade to Paid to share your wins
+                </p>
+                <Link
+                  href="/dashboard/subscription"
+                  className="text-xs text-primary-400 hover:text-primary-300 underline"
+                >
+                  Upgrade now →
+                </Link>
+              </div>
+            ) : (
+              <div className="flex items-start gap-3">
+                <input
+                  type="checkbox"
+                  id="shareToForum"
+                  checked={shareToForum}
+                  onChange={(e) => setShareToForum(e.target.checked)}
+                  className="mt-1 w-4 h-4 text-primary-600 bg-slate-800 border-slate-700 rounded focus:ring-primary-500"
+                  disabled={isSubmitting}
+                />
+                <label htmlFor="shareToForum" className="text-sm text-slate-300 cursor-pointer">
+                  <span className="font-medium">Share to Team Wins</span>
+                  <span className="block text-xs text-slate-500 mt-1">
+                    Other members can see this (anonymously) and comment. Help others learn from your
+                    experience.
+                  </span>
+                </label>
+              </div>
+            )}
+          </div>
 
           <div className="flex gap-3 pt-2">
             <button

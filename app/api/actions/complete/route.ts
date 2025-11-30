@@ -16,7 +16,7 @@ export async function POST(request: Request) {
 
     const auth0Id = session.user.sub;
     const body = await request.json();
-    const { actionId, notes, linkToJournal } = body;
+    const { actionId, notes, linkToJournal, shareToForum } = body;
 
     if (!actionId) {
       return NextResponse.json({ error: 'Missing actionId' }, { status: 400 });
@@ -60,6 +60,14 @@ export async function POST(request: Request) {
     const isOnPremium = user?.subscription_tier === 'premium' && hasSubscription;
     const hasPremiumAccess = isOnPremium || hasActiveTrial;
 
+    // Check if free user is trying to share to forum
+    if (shareToForum && user.subscription_tier === 'free') {
+      return NextResponse.json(
+        { error: 'Upgrade to Paid to share your wins to Team Wins' },
+        { status: 403 }
+      );
+    }
+
     // Check if this action is the user's daily served action
     const today = new Date().toISOString().split('T')[0];
     const { data: dailyAction } = await supabase
@@ -92,13 +100,24 @@ export async function POST(request: Request) {
       .insert({
         user_id: user.id,
         content: journalContent,
-        shared_to_forum: false,
+        shared_to_forum: shareToForum || false,
       })
       .select('id')
       .single();
 
     if (!journalError && journalEntry) {
       journalEntryId = journalEntry.id;
+
+      // If shared to forum, create a Deep Thought post with action name
+      if (shareToForum && journalEntry) {
+        await supabase.from('deep_thoughts').insert({
+          reflection_id: journalEntry.id,
+          user_id: user.id,
+          title: action.name, // Store action name in title field
+          content: journalContent || '',
+          tip_category: action.category || null,
+        });
+      }
     } else if (journalError) {
       console.error('Error creating journal entry:', journalError);
       // Continue anyway - don't fail the action completion if journal fails
