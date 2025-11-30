@@ -348,33 +348,31 @@ export function getGuideSlugForAction(actionName: string, actionTheme?: string):
     { keywords: ['intimacy conversation', 'talk about intimacy'], slug: 'initiate-intimacy' },
   ];
 
-  // Check keyword matches
+  // Check keyword matches (only if there's a strong match)
+  // We'll be more strict - require exact or very close matches
   for (const match of keywordMatches) {
-    if (match.keywords.some((keyword) => normalizedName.includes(keyword))) {
+    // Count how many keywords match
+    const matchingKeywords = match.keywords.filter((keyword) => normalizedName.includes(keyword));
+    
+    // Only return a match if:
+    // 1. At least 2 keywords match (stronger match), OR
+    // 2. It's an exact single keyword match (action name equals the keyword or contains it as a whole word)
+    const hasExactMatch = match.keywords.some(k => {
+      const keywordLower = k.toLowerCase();
+      return normalizedName === keywordLower || 
+             normalizedName === ` ${keywordLower} ` ||
+             normalizedName.startsWith(`${keywordLower} `) ||
+             normalizedName.endsWith(` ${keywordLower}`) ||
+             normalizedName.includes(` ${keywordLower} `);
+    });
+    
+    if (matchingKeywords.length >= 2 || (matchingKeywords.length === 1 && hasExactMatch)) {
       return match.slug;
     }
   }
 
-  // Theme-based fallback (if no specific match found)
-  if (actionTheme) {
-    const themeFallbacks: Record<string, string> = {
-      communication: 'listen-without-fixing',
-      intimacy: 'practice-love-languages',
-      partnership: 'notice-what-needs-doing',
-      romance: 'plan-perfect-date-night',
-      gratitude: 'express-gratitude-daily',
-      conflict: 'resolve-disagreement',
-      reconnection: 'have-20-minute-conversation',
-      quality_time: 'tech-free-quality-time',
-      outdoor: 'go-for-hike-together',
-      active: 'run-together',
-    };
-
-    const normalizedTheme = actionTheme.toLowerCase().trim();
-    if (themeFallbacks[normalizedTheme]) {
-      return themeFallbacks[normalizedTheme];
-    }
-  }
+  // Removed theme-based fallback - too generic and leads to irrelevant guide links
+  // Only show guide button when there's a clear, specific match
 
   // No match found
   return null;
