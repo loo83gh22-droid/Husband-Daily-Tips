@@ -31,7 +31,7 @@ export async function POST(request: NextRequest) {
     // Get user with subscription info
     const { data: user, error: userError } = await adminSupabase
       .from('users')
-      .select('id, subscription_tier, trial_ends_at, stripe_subscription_id')
+      .select('id, subscription_tier, trial_started_at, trial_ends_at, stripe_subscription_id')
       .eq('auth0_id', auth0Id)
       .single();
 
@@ -44,8 +44,11 @@ export async function POST(request: NextRequest) {
 
     // Check if user has premium access (paid subscription or active trial)
     const trialEndsAt = user?.trial_ends_at ? new Date(user.trial_ends_at) : null;
+    const trialStartedAt = user?.trial_started_at ? new Date(user.trial_started_at) : null;
     const now = new Date();
+    // Active trial: premium tier, has trial dates, trial hasn't ended, and no paid subscription
     const hasActiveTrial = user?.subscription_tier === 'premium' && 
+                          trialStartedAt && 
                           trialEndsAt && 
                           trialEndsAt > now && 
                           !user?.stripe_subscription_id;
@@ -123,7 +126,7 @@ export async function DELETE(request: NextRequest) {
     // Get user with subscription info
     const { data: user, error: userError } = await adminSupabase
       .from('users')
-      .select('id, subscription_tier, trial_ends_at, stripe_subscription_id')
+      .select('id, subscription_tier, trial_started_at, trial_ends_at, stripe_subscription_id')
       .eq('auth0_id', auth0Id)
       .single();
 
@@ -136,8 +139,11 @@ export async function DELETE(request: NextRequest) {
 
     // Check if user has premium access (paid subscription or active trial)
     const trialEndsAt = user?.trial_ends_at ? new Date(user.trial_ends_at) : null;
+    const trialStartedAt = user?.trial_started_at ? new Date(user.trial_started_at) : null;
     const now = new Date();
+    // Active trial: premium tier, has trial dates, trial hasn't ended, and no paid subscription
     const hasActiveTrial = user?.subscription_tier === 'premium' && 
+                          trialStartedAt && 
                           trialEndsAt && 
                           trialEndsAt > now && 
                           !user?.stripe_subscription_id;
