@@ -154,6 +154,10 @@ export function getGuideSlugForAction(actionName: string, actionTheme?: string):
     'stargazing date': 'stargazing-date',
     'bike ride': 'bike-ride-together',
     'evening stroll': 'evening-stroll-together',
+    'nature photography walk': 'nature-photography-walk',
+    'photography walk': 'nature-photography-walk',
+    'take photos together': 'nature-photography-walk',
+    'capture moments together': 'nature-photography-walk',
 
     // Active
     'run together': 'run-together',
