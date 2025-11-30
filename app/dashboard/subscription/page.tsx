@@ -1,12 +1,13 @@
 import { getSession } from '@auth0/nextjs-auth0';
 import { redirect } from 'next/navigation';
-import { supabase } from '@/lib/supabase';
+import { getSupabaseAdmin } from '@/lib/supabase';
 import DashboardNav from '@/components/DashboardNav';
 import SubscriptionPlans from '@/components/SubscriptionPlans';
 
 async function getUserSubscription(auth0Id: string) {
   try {
-    const { data: user, error } = await supabase
+    const adminSupabase = getSupabaseAdmin();
+    const { data: user, error } = await adminSupabase
       .from('users')
       .select('subscription_tier, trial_started_at, trial_ends_at, stripe_subscription_id')
       .eq('auth0_id', auth0Id)
@@ -72,7 +73,8 @@ export default async function SubscriptionPage({
   try {
     const auth0Id = session.user.sub;
     const subscriptionInfo = await getUserSubscription(auth0Id);
-    const currentTier = subscriptionInfo.tier;
+    // If user has active trial, they should see Premium as their current tier
+    const currentTier = subscriptionInfo.hasActiveTrial ? 'premium' : subscriptionInfo.tier;
     const upgradeReason = searchParams?.upgrade;
 
     // Upgrade message based on reason
