@@ -336,7 +336,9 @@ export default function ActionsPageClient({
           const data = await userChallengesRes.json();
           // Transform user challenges to match expected format
           // The API returns challenges with nested 'challenges' property
-          const transformed = (data.allChallenges || data.challenges || []).map((uc: any) => {
+          // Only use active challenges (completed = false) for enrollment status
+          const activeChallenges = (data.challenges || []).filter((uc: any) => !uc.completed);
+          const transformed = activeChallenges.map((uc: any) => {
             const challenge = uc.challenges || uc.challenge;
             return {
               challenge_id: uc.challenge_id || challenge?.id || uc.id,
@@ -414,7 +416,17 @@ export default function ActionsPageClient({
           {sortedThemes.map((theme) => {
             const stats = categoryStats[theme];
             const event = challenges.find((c) => c.theme === theme);
-            const isEnrolled = event ? userChallenges.some((uc) => uc.challenge_id === event.id) : false;
+            // Only show "Active" if user has an active (non-completed) challenge for this event
+            // Enforce one-at-a-time rule: only the most recent active challenge should show as "Active"
+            const activeChallenges = userChallenges.filter((uc) => !uc.completed);
+            // Get the most recent active challenge (if multiple exist due to data inconsistency)
+            const mostRecentActive = activeChallenges.length > 0 
+              ? activeChallenges.sort((a, b) => new Date(b.joined_date).getTime() - new Date(a.joined_date).getTime())[0]
+              : null;
+            // Only show "Active" if this event matches the most recent active challenge
+            const isEnrolled = event && mostRecentActive 
+              ? mostRecentActive.challenge_id === event.id
+              : false;
             
             // Ensure challenge_actions are included in the challenge object
             const challengeWithActions = event ? {
