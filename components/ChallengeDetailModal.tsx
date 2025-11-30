@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { personalizeText } from '@/lib/personalize-text';
+import ChallengeConfirmModal from './ChallengeConfirmModal';
 
 interface Challenge {
   id: string;
@@ -41,6 +42,7 @@ export default function ChallengeDetailModal({
   partnerName,
 }: ChallengeDetailModalProps) {
   const [isJoining, setIsJoining] = useState(false);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [challengeActions, setChallengeActions] = useState<Array<{
     day_number: number;
     actions: {
@@ -128,15 +130,23 @@ export default function ChallengeDetailModal({
     return null;
   }
 
-  const handleJoin = async () => {
+  const handleJoinClick = () => {
+    if (isEnrolled || isJoining || !onJoin || !challenge) return;
+    // Show confirmation modal first
+    setShowConfirmModal(true);
+  };
+
+  const handleConfirmJoin = async () => {
     if (isEnrolled || isJoining || !onJoin || !challenge) return;
     
     setIsJoining(true);
     try {
       await onJoin(challenge.id);
+      setShowConfirmModal(false); // Close confirmation modal
       onClose();
     } catch (error) {
       console.error('Error joining 7-day event:', error);
+      setShowConfirmModal(false);
     } finally {
       setIsJoining(false);
     }
@@ -301,7 +311,7 @@ export default function ChallengeDetailModal({
             </button>
             {!isEnrolled && !isPast && (
               <button
-                onClick={handleJoin}
+                onClick={handleJoinClick}
                 disabled={isJoining}
                 className="flex-1 px-6 py-3 bg-primary-500 text-slate-950 text-base font-bold rounded-xl hover:bg-primary-400 active:bg-primary-600 transition-all min-h-[48px] touch-manipulation disabled:opacity-50 disabled:cursor-not-allowed"
               >
@@ -322,6 +332,19 @@ export default function ChallengeDetailModal({
     </>
   );
 
-  return createPortal(modalContent, document.body);
+  return (
+    <>
+      {createPortal(modalContent, document.body)}
+      {showConfirmModal && challenge && (
+        <ChallengeConfirmModal
+          challenge={challenge}
+          isOpen={showConfirmModal}
+          onConfirm={handleConfirmJoin}
+          onCancel={() => setShowConfirmModal(false)}
+          partnerName={partnerName}
+        />
+      )}
+    </>
+  );
 }
 

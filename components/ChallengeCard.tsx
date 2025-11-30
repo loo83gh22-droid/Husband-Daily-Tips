@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import ChallengeJoinSuccessModal from './ChallengeJoinSuccessModal';
 import ChallengeErrorModal from './ChallengeErrorModal';
+import ChallengeConfirmModal from './ChallengeConfirmModal';
 import { personalizeText } from '@/lib/personalize-text';
 
 interface Challenge {
@@ -52,6 +53,7 @@ export default function ChallengeCard({ challenge, userChallenge, userId, onJoin
   const [isJoining, setIsJoining] = useState(false);
   // Sync isJoined with userChallenge prop - update when prop changes
   const [isJoined, setIsJoined] = useState(!!userChallenge);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [errorChallengeName, setErrorChallengeName] = useState('');
@@ -72,7 +74,13 @@ export default function ChallengeCard({ challenge, userChallenge, userId, onJoin
 
   const isPaidUser = subscriptionTier === 'premium' || subscriptionTier === 'pro';
 
-  const handleJoin = async () => {
+  const handleJoinClick = () => {
+    if (isJoined || isJoining || !isPaidUser) return;
+    // Show confirmation modal first
+    setShowConfirmModal(true);
+  };
+
+  const handleConfirmJoin = async () => {
     if (isJoined || isJoining || !isPaidUser) return;
     
     setIsJoining(true);
@@ -86,6 +94,7 @@ export default function ChallengeCard({ challenge, userChallenge, userId, onJoin
       if (response.ok) {
         const data = await response.json();
         setIsJoined(true);
+        setShowConfirmModal(false); // Close confirmation modal
         if (onJoin) onJoin(challenge.id);
         
         // Show success modal for 7-day events
@@ -104,6 +113,7 @@ export default function ChallengeCard({ challenge, userChallenge, userId, onJoin
           
           // Handle premium subscription required error
           if (response.status === 403 || errorMessage.includes('Premium subscription required') || errorData.error === 'Premium subscription required') {
+            setShowConfirmModal(false);
             // Redirect to subscription page with upgrade message
             window.location.href = '/dashboard/subscription?upgrade=7day-events';
             return;
@@ -111,6 +121,7 @@ export default function ChallengeCard({ challenge, userChallenge, userId, onJoin
           
           // Always show modal for 400 errors (one 7-day event at a time)
           if (response.status === 400 || errorMessage.includes('currently participating') || errorData.error === 'You can only join one 7-day event at a time') {
+            setShowConfirmModal(false);
             // Extract event name from message
             const match = errorMessage.match(/"([^"]+)"/);
             const challengeNameFromMatch = match ? match[1] : null;
@@ -119,11 +130,13 @@ export default function ChallengeCard({ challenge, userChallenge, userId, onJoin
             setErrorChallengeName(challengeNameFromData);
             setShowErrorModal(true);
           } else {
+            setShowConfirmModal(false);
             alert(errorMessage);
           }
         } catch (parseError) {
           // If we can't parse JSON, show generic error modal
           console.error('Error parsing 7-day event join response:', parseError);
+          setShowConfirmModal(false);
           setErrorChallengeName('a 7-day event');
           setShowErrorModal(true);
         }
@@ -131,6 +144,7 @@ export default function ChallengeCard({ challenge, userChallenge, userId, onJoin
       }
     } catch (error) {
       console.error('Error joining 7-day event:', error);
+      setShowConfirmModal(false);
     } finally {
       setIsJoining(false);
     }
@@ -246,7 +260,7 @@ export default function ChallengeCard({ challenge, userChallenge, userId, onJoin
               </Link>
             ) : (
               <button
-                onClick={handleJoin}
+                onClick={handleJoinClick}
                 disabled={isJoining || isPast}
                 className={getButtonClasses(challenge.theme, isJoining || isPast)}
               >
@@ -263,6 +277,16 @@ export default function ChallengeCard({ challenge, userChallenge, userId, onJoin
           </Link>
         )}
       </div>
+
+      {showConfirmModal && (
+        <ChallengeConfirmModal
+          challenge={challenge}
+          isOpen={showConfirmModal}
+          onConfirm={handleConfirmJoin}
+          onCancel={() => setShowConfirmModal(false)}
+          partnerName={partnerName}
+        />
+      )}
 
       {showSuccessModal && userId && (
         <ChallengeJoinSuccessModal
