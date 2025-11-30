@@ -349,25 +349,34 @@ export function getGuideSlugForAction(actionName: string, actionTheme?: string):
   ];
 
   // Check keyword matches (only if there's a strong match)
-  // We'll be more strict - require exact or very close matches
+  // We'll be very strict - require multiple keywords or very specific matches
   for (const match of keywordMatches) {
     // Count how many keywords match
     const matchingKeywords = match.keywords.filter((keyword) => normalizedName.includes(keyword));
     
+    // Split action name into words to check complexity
+    const actionWords = normalizedName.split(/\s+/).filter(w => w.length > 0);
+    const isSimpleAction = actionWords.length <= 3; // Simple actions like "morning walk" or "go for hike"
+    
     // Only return a match if:
     // 1. At least 2 keywords match (stronger match), OR
-    // 2. It's an exact single keyword match (action name equals the keyword or contains it as a whole word)
-    const hasExactMatch = match.keywords.some(k => {
-      const keywordLower = k.toLowerCase();
-      return normalizedName === keywordLower || 
-             normalizedName === ` ${keywordLower} ` ||
-             normalizedName.startsWith(`${keywordLower} `) ||
-             normalizedName.endsWith(` ${keywordLower}`) ||
-             normalizedName.includes(` ${keywordLower} `);
-    });
-    
-    if (matchingKeywords.length >= 2 || (matchingKeywords.length === 1 && hasExactMatch)) {
+    // 2. Single keyword match AND action is simple (3 words or less) - indicates it's primarily about that activity
+    //    AND the keyword appears as a whole word (not just a substring)
+    if (matchingKeywords.length >= 2) {
       return match.slug;
+    }
+    
+    if (matchingKeywords.length === 1 && isSimpleAction) {
+      // For simple actions, check that the keyword appears as a whole word
+      const matchedKeyword = match.keywords.find(k => normalizedName.includes(k));
+      if (matchedKeyword) {
+        const keywordLower = matchedKeyword.toLowerCase();
+        // Check if keyword appears as a whole word (surrounded by spaces or at start/end)
+        const wordBoundaryRegex = new RegExp(`(^|\\s)${keywordLower.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(\\s|$)`, 'i');
+        if (wordBoundaryRegex.test(normalizedName)) {
+          return match.slug;
+        }
+      }
     }
   }
 
