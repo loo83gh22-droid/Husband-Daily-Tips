@@ -45,6 +45,7 @@ export async function POST(request: NextRequest) {
 
     const body = await request.json().catch(() => ({}));
     const billingInterval = (body.interval as 'month' | 'year') || 'month';
+    const skipTrial = body.skipTrial === true; // Allow skipping trial for direct subscription
 
     const adminSupabase = getSupabaseAdmin();
 
@@ -99,7 +100,7 @@ export async function POST(request: NextRequest) {
         },
       ],
       subscription_data: {
-        trial_period_days: 7, // 7-day free trial
+        ...(skipTrial ? {} : { trial_period_days: 7 }), // Only add trial if not skipping
         metadata: {
           user_id: user.id,
           auth0_id: auth0Id,
