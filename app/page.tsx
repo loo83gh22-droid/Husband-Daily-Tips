@@ -181,15 +181,12 @@ export default async function Home() {
               </p>
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-slate-50 tracking-tight mb-4">
                 Your daily action, delivered.
-                <span className="block text-primary-400">one step at a time.</span>
               </h1>
               <p className="text-lg md:text-xl text-primary-400 font-semibold mb-4 max-w-2xl">
                 Daily actions that show you care. She&apos;ll notice. You&apos;ll both feel the difference.
               </p>
               <p className="text-base md:text-lg text-slate-300 leading-relaxed mb-4 max-w-2xl">
-                Marriage is hard. You know it. But here&apos;s the thing, it doesn&apos;t have to be complicated. 
-                One small action a day. One moment where you actually show up. No grand gestures needed. 
-                Just consistent, real effort. Become the husband you and your partner deserve.
+                Here&apos;s the thing: daily or even weekly consistency can transform your relationship. When you show up consistently, whether that&apos;s with small daily gestures or meaningful weekly actions, you build trust, connection, and genuine appreciation. These consistent efforts compound over time, creating a deeper bond and bringing more enjoyment to your relationship for both of you. It&apos;s not about grand gestures or perfect moments. It&apos;s about the steady, reliable effort that shows you&apos;re committed and present. That consistency is what truly makes the difference.
               </p>
               <p className="text-sm md:text-base text-slate-400 italic mb-8 max-w-2xl">
                 Designed for husbands, but it&apos;s not <span className="text-primary-400 font-semibold not-italic">just</span> for husbands. 
