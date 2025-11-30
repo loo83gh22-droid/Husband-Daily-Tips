@@ -63,14 +63,9 @@ export default function ChallengeCard({ challenge, userChallenge, userId, onJoin
     setIsJoined(!!userChallenge);
   }, [userChallenge]);
 
-  const startDate = new Date(challenge.start_date);
-  const endDate = new Date(challenge.end_date);
-  const today = new Date();
-  const isActive = today >= startDate && today <= endDate;
-  const isUpcoming = today < startDate;
-  const isPast = today > endDate;
   // A 7-day event is "in progress" if user has joined it and it's not completed
   const isInProgress = isJoined && userChallenge && !userChallenge.completed;
+  // Note: Removed date-based restrictions - users can join events anytime
 
   const isPaidUser = subscriptionTier === 'premium' || subscriptionTier === 'pro';
 
@@ -261,10 +256,10 @@ export default function ChallengeCard({ challenge, userChallenge, userId, onJoin
             ) : (
               <button
                 onClick={handleJoinClick}
-                disabled={isJoining || isPast}
-                className={getButtonClasses(challenge.theme, isJoining || isPast)}
+                disabled={isJoining}
+                className={getButtonClasses(challenge.theme, isJoining)}
               >
-                {isJoining ? 'Joining...' : isPast ? '7-Day Event Ended' : 'Join 7-Day Event'}
+                {isJoining ? 'Joining...' : 'Join 7-Day Event'}
               </button>
             )}
           </>

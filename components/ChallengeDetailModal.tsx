@@ -154,11 +154,7 @@ export default function ChallengeDetailModal({
 
   // Compute values directly without useMemo to avoid dependency issues
   const duration = challenge.duration_days || challenge.challenge_actions?.length || 7;
-  const startDate = new Date(challenge.start_date);
-  const endDate = new Date(challenge.end_date);
-  const today = new Date();
-  const isPast = today > endDate;
-  const isUpcoming = today < startDate;
+  // Note: Removed date-based restrictions - users can join events anytime
 
   const getThemeColor = (theme: string) => {
     const colors: Record<string, string> = {
@@ -231,8 +227,8 @@ export default function ChallengeDetailModal({
               <div className="flex items-center gap-3 text-xs text-slate-400">
                 <span>{duration} days</span>
                 <span>•</span>
-                <span className={isEnrolled ? 'text-primary-400' : isPast ? 'text-slate-500' : isUpcoming ? 'text-blue-400' : 'text-green-400'}>
-                  {isEnrolled ? 'Active' : isPast ? 'Ended' : isUpcoming ? 'Upcoming' : 'Available'}
+                <span className={isEnrolled ? 'text-primary-400' : 'text-green-400'}>
+                  {isEnrolled ? 'Active' : 'Available'}
                 </span>
               </div>
             </div>
@@ -309,7 +305,7 @@ export default function ChallengeDetailModal({
             >
               Close
             </button>
-            {!isEnrolled && !isPast && (
+            {!isEnrolled && (
               <button
                 onClick={handleJoinClick}
                 disabled={isJoining}
