@@ -60,6 +60,13 @@ async function getTeamWins() {
         );
         if (completion) {
           thought.action = completion.actions;
+        } else if (thought.title) {
+          // If no action completion found but title exists, use title as action name
+          // This handles cases where reflection was created directly from ReflectionModal
+          thought.action = {
+            name: thought.title,
+            icon: null, // No icon available from title alone
+          };
         }
       });
     }

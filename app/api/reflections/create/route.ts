@@ -11,7 +11,7 @@ export async function POST(request: Request) {
     }
 
     const auth0Id = session.user.sub;
-    const { tipId, content, shareToForum } = await request.json();
+    const { tipId, content, shareToForum, isAction, actionName } = await request.json();
 
     if (!tipId || !content?.trim()) {
       return NextResponse.json({ error: 'Missing tipId or content' }, { status: 400 });
@@ -38,22 +38,50 @@ export async function POST(request: Request) {
       );
     }
 
-    // Get today's user_tip record
-    const today = new Date().toISOString().split('T')[0];
-    const { data: userTip, error: userTipError } = await supabase
-      .from('user_tips')
-      .select('id')
-      .eq('user_id', user.id)
-      .eq('tip_id', tipId)
-      .eq('date', today)
-      .single();
+    // Handle tips vs actions differently
+    let userTipId = null;
+    let category = null;
+    let actionTitle = null;
+
+    if (isAction) {
+      // For actions, get the action data
+      const { data: actionData } = await supabase
+        .from('actions')
+        .select('category, name')
+        .eq('id', tipId)
+        .single();
+      
+      category = actionData?.category || null;
+      actionTitle = actionName || actionData?.name || null;
+    } else {
+      // For tips, get today's user_tip record
+      const today = new Date().toISOString().split('T')[0];
+      const { data: userTip } = await supabase
+        .from('user_tips')
+        .select('id')
+        .eq('user_id', user.id)
+        .eq('tip_id', tipId)
+        .eq('date', today)
+        .single();
+      
+      userTipId = userTip?.id || null;
+
+      // Get tip category for context
+      const { data: tipData } = await supabase
+        .from('tips')
+        .select('category')
+        .eq('id', tipId)
+        .single();
+      
+      category = tipData?.category || null;
+    }
 
     // Create reflection
     const { data: reflection, error: reflectionError } = await supabase
       .from('reflections')
       .insert({
         user_id: user.id,
-        user_tip_id: userTip?.id || null,
+        user_tip_id: userTipId,
         content: content.trim(),
         shared_to_forum: shareToForum || false,
       })
@@ -67,18 +95,12 @@ export async function POST(request: Request) {
 
     // If shared to forum, create a Deep Thought post
     if (shareToForum && reflection) {
-      // Get tip category for context
-      const { data: tipData } = await supabase
-        .from('tips')
-        .select('category')
-        .eq('id', tipId)
-        .single();
-
       await supabase.from('deep_thoughts').insert({
         reflection_id: reflection.id,
         user_id: user.id,
+        title: actionTitle || null, // Store action name in title field
         content: content.trim(),
-        tip_category: tipData?.category || null,
+        tip_category: category || null,
       });
     }
 

@@ -100,6 +100,8 @@ export default function ReflectionModal({
           tipId,
           content: reflection,
           shareToForum,
+          isAction,
+          actionName: isAction ? tipTitle : undefined, // Pass action name if it's an action
         }),
       });
 
