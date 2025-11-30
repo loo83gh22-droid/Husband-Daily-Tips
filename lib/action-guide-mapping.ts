@@ -348,40 +348,34 @@ export function getGuideSlugForAction(actionName: string, actionTheme?: string):
     { keywords: ['intimacy conversation', 'talk about intimacy'], slug: 'initiate-intimacy' },
   ];
 
-  // Check keyword matches (only if there's a strong match)
-  // We'll be very strict - require multiple keywords or very specific matches
+  // Check keyword matches
   for (const match of keywordMatches) {
-    // Count how many keywords match
-    const matchingKeywords = match.keywords.filter((keyword) => normalizedName.includes(keyword));
-    
-    // Split action name into words to check complexity
-    const actionWords = normalizedName.split(/\s+/).filter(w => w.length > 0);
-    const isSimpleAction = actionWords.length <= 3; // Simple actions like "morning walk" or "go for hike"
-    
-    // Only return a match if:
-    // 1. At least 2 keywords match (stronger match), OR
-    // 2. Single keyword match AND action is simple (3 words or less) - indicates it's primarily about that activity
-    //    AND the keyword appears as a whole word (not just a substring)
-    if (matchingKeywords.length >= 2) {
+    if (match.keywords.some((keyword) => normalizedName.includes(keyword))) {
       return match.slug;
-    }
-    
-    if (matchingKeywords.length === 1 && isSimpleAction) {
-      // For simple actions, check that the keyword appears as a whole word
-      const matchedKeyword = match.keywords.find(k => normalizedName.includes(k));
-      if (matchedKeyword) {
-        const keywordLower = matchedKeyword.toLowerCase();
-        // Check if keyword appears as a whole word (surrounded by spaces or at start/end)
-        const wordBoundaryRegex = new RegExp(`(^|\\s)${keywordLower.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(\\s|$)`, 'i');
-        if (wordBoundaryRegex.test(normalizedName)) {
-          return match.slug;
-        }
-      }
     }
   }
 
-  // Removed theme-based fallback - too generic and leads to irrelevant guide links
-  // Only show guide button when there's a clear, specific match
+  // Theme-based fallback - ensures all actions have a guide
+  // This provides a best-fit guide even when there's no exact match
+  if (actionTheme) {
+    const themeFallbacks: Record<string, string> = {
+      communication: 'listen-without-fixing',
+      intimacy: 'practice-love-languages',
+      partnership: 'notice-what-needs-doing',
+      romance: 'plan-perfect-date-night',
+      gratitude: 'express-gratitude-daily',
+      conflict: 'resolve-disagreement',
+      reconnection: 'have-20-minute-conversation',
+      quality_time: 'tech-free-quality-time',
+      outdoor: 'go-for-hike-together',
+      active: 'run-together',
+    };
+
+    const normalizedTheme = actionTheme.toLowerCase().trim();
+    if (themeFallbacks[normalizedTheme]) {
+      return themeFallbacks[normalizedTheme];
+    }
+  }
 
   // No match found
   return null;

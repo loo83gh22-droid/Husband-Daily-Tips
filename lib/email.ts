@@ -56,23 +56,12 @@ export function generateEmailHTML(tip: EmailTip, baseUrl: string): string {
             <p style="color: #cbd5e1; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0; white-space: pre-line;">
               ${tip.content}
             </p>
-            ${tip.actionId && tip.userId ? `
-              <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(14, 165, 233, 0.2);">
-                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                  <a href="${baseUrl}/dashboard/complete-action?actionId=${tip.actionId}&userId=${tip.userId}" 
-                     style="display: inline-block; background-color: #0ea5e9; color: #ffffff; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 14px;">
-                    ✓ Mark as Done
-                  </a>
-                  <a href="${baseUrl}/dashboard/mark-dnc?actionId=${tip.actionId}&userId=${tip.userId}" 
-                     style="display: inline-block; background-color: #6b7280; color: #ffffff; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 14px;">
-                    ✗ Did Not Complete
-                  </a>
-                </div>
-                <p style="color: #94a3b8; font-size: 12px; margin: 10px 0 0 0;">
-                  Mark as done to add a journal entry, or mark as did not complete if you couldn't do it
-                </p>
-              </div>
-            ` : ''}
+            <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(14, 165, 233, 0.2);">
+              <a href="${baseUrl}/dashboard" 
+                 style="display: inline-block; background-color: #0ea5e9; color: #ffffff; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 14px;">
+                View in Dashboard →
+              </a>
+            </div>
           </div>
           
           ${isMonday && weeklyPlanningActions.length > 0 ? `
@@ -101,22 +90,10 @@ export function generateEmailHTML(tip: EmailTip, baseUrl: string): string {
                       ` : ''}
                     </div>
                     <div style="flex-shrink: 0; display: flex; flex-direction: column; gap: 6px; align-items: flex-end;">
-                      <a href="${baseUrl}/dashboard/action/${action.id}" 
+                          <a href="${baseUrl}/dashboard/action/${action.id}" 
                          style="display: inline-block; color: #f59e0b; text-decoration: none; font-size: 12px; font-weight: 600; white-space: nowrap;">
                         View Details →
                       </a>
-                      ${tip.userId && action.id ? `
-                        <div style="display: flex; gap: 6px; flex-wrap: wrap;">
-                          <a href="${baseUrl}/dashboard/complete-action?actionId=${action.id}&userId=${tip.userId}" 
-                             style="display: inline-block; background-color: #f59e0b; color: #ffffff; padding: 6px 12px; text-decoration: none; border-radius: 4px; font-weight: 600; font-size: 11px;">
-                            ✓ Done
-                          </a>
-                          <a href="${baseUrl}/dashboard/mark-dnc?actionId=${action.id}&userId=${tip.userId}" 
-                             style="display: inline-block; background-color: #6b7280; color: #ffffff; padding: 6px 12px; text-decoration: none; border-radius: 4px; font-weight: 600; font-size: 11px;">
-                            ✗ DNC
-                          </a>
-                        </div>
-                      ` : ''}
                     </div>
                   </div>
                 </div>
@@ -267,10 +244,135 @@ export function generateEmailHTML(tip: EmailTip, baseUrl: string): string {
   `;
 }
 
+/**
+ * Generate email HTML for free users (weekly email with upgrade messaging)
+ */
+export function generateFreeUserEmailHTML(tip: EmailTip, baseUrl: string): string {
+  return `
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>This Week's Action</title>
+      </head>
+      <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #1f2937; background-color: #f9fafb; margin: 0; padding: 0;">
+        <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 40px 20px;">
+          <div style="text-align: center; margin-bottom: 30px;">
+            <h1 style="color: #0ea5e9; font-size: 24px; margin: 0;">Best Husband Ever</h1>
+            <p style="color: #6b7280; font-size: 14px; margin: 5px 0 0 0;">Your weekly action, delivered.</p>
+          </div>
+          
+          <!-- This Week's Action -->
+          <div style="background-color: #0f172a; border-radius: 8px; padding: 30px; margin-bottom: 30px; border-left: 4px solid #0ea5e9;">
+            <div style="margin-bottom: 15px;">
+              <span style="background-color: rgba(14, 165, 233, 0.1); color: #7dd3fc; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;">
+                ${tip.category}
+              </span>
+            </div>
+            <h2 style="color: #f1f5f9; font-size: 22px; margin: 0 0 15px 0; font-weight: 600;">
+              ${tip.title}
+            </h2>
+            <p style="color: #cbd5e1; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0; white-space: pre-line;">
+              ${tip.content}
+            </p>
+            <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(14, 165, 233, 0.2);">
+              <a href="${baseUrl}/dashboard" 
+                 style="display: inline-block; background-color: #0ea5e9; color: #ffffff; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 14px;">
+                View in Dashboard →
+              </a>
+            </div>
+          </div>
+          
+          <!-- Upgrade CTA Section -->
+          <div style="background: linear-gradient(135deg, #0ea5e9 0%, #3b82f6 100%); border-radius: 8px; padding: 30px; margin-bottom: 30px; text-align: center;">
+            <h3 style="color: #ffffff; font-size: 20px; margin: 0 0 15px 0; font-weight: 600;">
+              Want More? Upgrade to Premium
+            </h3>
+            <p style="color: #e0f2fe; font-size: 15px; margin: 0 0 20px 0; line-height: 1.6;">
+              As a Premium member, you'll receive:
+            </p>
+            <div style="text-align: left; background-color: rgba(255, 255, 255, 0.1); border-radius: 6px; padding: 20px; margin-bottom: 20px;">
+              <ul style="color: #ffffff; font-size: 14px; margin: 0; padding-left: 20px; line-height: 1.8;">
+                <li>📧 <strong>Daily routine actions</strong> delivered via email</li>
+                <li>📅 <strong>Weekly planning actions</strong> that require more planning</li>
+                <li>📊 <strong>Weekly summary email</strong> to reflect on your accomplishments</li>
+                <li>📈 <strong>Full Husband Health tracking</strong> and achievement badges</li>
+                <li>📝 <strong>Private journal & Team Wins</strong> to track your progress</li>
+                <li>🎯 <strong>Complete any action</strong> from the Actions page</li>
+                <li>🔥 <strong>Join 7-day events</strong> for structured challenges</li>
+              </ul>
+            </div>
+            <a href="${baseUrl}/dashboard/subscription" 
+               style="display: inline-block; background-color: #ffffff; color: #0ea5e9; padding: 16px 32px; text-decoration: none; border-radius: 6px; font-weight: 700; font-size: 18px; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+              🚀 Start 7-Day Free Trial →
+            </a>
+            <p style="color: #bae6fd; font-size: 13px; margin: 10px 0 0 0; font-weight: 600;">
+              No credit card required • Cancel anytime • Try all Premium features free
+            </p>
+          </div>
+          
+          <!-- Additional CTA Section -->
+          <div style="background-color: #fef3c7; border-left: 4px solid #f59e0b; border-radius: 8px; padding: 25px; margin-bottom: 30px; text-align: center;">
+            <h3 style="color: #78350f; font-size: 18px; margin: 0 0 12px 0; font-weight: 600;">
+              Ready to Level Up Your Relationship?
+            </h3>
+            <p style="color: #92400e; font-size: 14px; margin: 0 0 20px 0; line-height: 1.6;">
+              Join thousands of husbands who are becoming better partners every day. Start your free trial and get daily actions, weekly planning, and full progress tracking.
+            </p>
+            <a href="${baseUrl}/dashboard/subscription" 
+               style="display: inline-block; background-color: #f59e0b; color: #ffffff; padding: 14px 28px; text-decoration: none; border-radius: 6px; font-weight: 700; font-size: 16px;">
+              Upgrade to Premium Now →
+            </a>
+          </div>
+          
+          <div style="background-color: #f3f4f6; border-radius: 8px; padding: 20px; margin-bottom: 30px;">
+            <p style="color: #374151; font-size: 14px; margin: 0 0 10px 0; font-weight: 600;">
+              Free members receive 1 action per week
+            </p>
+            <p style="color: #6b7280; font-size: 14px; margin: 0; line-height: 1.6;">
+              You're receiving this weekly email on the first day of your work week. Upgrade to Premium to get daily actions, weekly planning actions, and more features to help you become the best husband ever.
+            </p>
+          </div>
+          
+          ${tip.quote ? `
+            <div style="background-color: #fef3c7; border-left: 4px solid #f59e0b; border-radius: 8px; padding: 20px; margin-bottom: 30px;">
+              <p style="color: #78350f; font-size: 15px; font-style: italic; margin: 0 0 8px 0; line-height: 1.6;">
+                "${tip.quote.quote_text}"
+              </p>
+              ${tip.quote.author ? `
+                <p style="color: #92400e; font-size: 13px; margin: 0; text-align: right;">
+                  — ${tip.quote.author}
+                </p>
+              ` : ''}
+            </div>
+          ` : ''}
+          
+          <div style="text-align: center; padding-top: 20px; border-top: 1px solid #e5e7eb;">
+            <a href="${baseUrl}/dashboard" 
+               style="display: inline-block; background-color: #0ea5e9; color: #ffffff; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: 600; margin-bottom: 10px;">
+              View in Dashboard →
+            </a>
+            <p style="color: #6b7280; font-size: 12px; margin: 15px 0 0 0;">
+              You're getting this because you signed up for Best Husband Ever. Free members receive 1 action per week.
+            </p>
+            <p style="color: #9ca3af; font-size: 11px; margin: 10px 0 0 0;">
+              <a href="${baseUrl}/dashboard" style="color: #0ea5e9; text-decoration: none;">View Dashboard</a> | 
+              <a href="${baseUrl}/dashboard/subscription" style="color: #0ea5e9; text-decoration: none;">Upgrade to Premium</a> | 
+              <a href="${baseUrl}/dashboard/account" style="color: #0ea5e9; text-decoration: none;">Manage Preferences</a>
+            </p>
+          </div>
+        </div>
+      </body>
+    </html>
+  `;
+}
+
 export async function sendTomorrowTipEmail(
   email: string,
   name: string,
   tip: EmailTip,
+  isFreeUser: boolean = false,
 ): Promise<boolean> {
   // Check if Resend is configured
   if (!process.env.RESEND_API_KEY) {
@@ -285,8 +387,8 @@ export async function sendTomorrowTipEmail(
       from: process.env.RESEND_FROM_EMAIL || 'Best Husband Ever Tomorrow\'s Action! <action@besthusbandever.com>',
       replyTo: 'action@besthusbandever.com',
       to: email,
-      subject: `Tomorrow: Make Her Smile (Here's How)`,
-      html: generateEmailHTML(tip, baseUrl),
+      subject: isFreeUser ? `This Week's Action: Make Her Smile` : `Tomorrow: Make Her Smile (Here's How)`,
+      html: isFreeUser ? generateFreeUserEmailHTML(tip, baseUrl) : generateEmailHTML(tip, baseUrl),
     });
 
     if (error) {

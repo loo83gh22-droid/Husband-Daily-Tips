@@ -5,7 +5,7 @@ import DashboardNav from '@/components/DashboardNav';
 import { supabase } from '@/lib/supabase';
 
 // Guide data - in the future this could come from a database
-const guides: Record<string, any> = {
+export const guides: Record<string, any> = {
   // Communication guides
   'share-your-feelings': {
     id: 20,

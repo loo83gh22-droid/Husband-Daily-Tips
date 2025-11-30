@@ -101,11 +101,33 @@ export async function GET(request: Request) {
       });
     }
 
+    // Helper function to get first work day of the week for a user
+    const getFirstWorkDay = (workDays: number[] | null): number => {
+      if (!workDays || workDays.length === 0) {
+        return 1; // Default to Monday if no work days specified
+      }
+      // Sort work days and return the first one
+      const sorted = [...workDays].sort((a, b) => a - b);
+      return sorted[0];
+    };
+
+    // Helper function to check if a day is a work day for the user
+    const isWorkDay = (dayOfWeek: number, workDays: number[] | null): boolean => {
+      if (!workDays || workDays.length === 0) {
+        // Default to Monday-Friday if no work days specified
+        return dayOfWeek >= 1 && dayOfWeek <= 5;
+      }
+      return workDays.includes(dayOfWeek);
+    };
+
     // Filter users: only send to those where it's 12pm (12:00) in their timezone
+    // For free users: only send on their first work day of the week
+    // For premium users: send on their work days (respects their work_days setting)
     // Also determine the day of week for each user to format emails accordingly
     const usersToEmail = [];
     for (const user of users) {
       const timezone = user.timezone || 'America/New_York'; // Default timezone
+      const subscriptionTier = user.subscription_tier || 'free';
       
       try {
         // Get current time in user's timezone
@@ -113,9 +135,20 @@ export async function GET(request: Request) {
         const hour = userTime.getHours();
         const dayOfWeek = userTime.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
 
-        // If it's 12pm (12:00) in their timezone, add to list with day of week
+        // If it's 12pm (12:00) in their timezone
         if (hour === 12) {
-          usersToEmail.push({ ...user, dayOfWeek, timezone });
+          // For free users: only send on their first work day of the week
+          if (subscriptionTier === 'free') {
+            const firstWorkDay = getFirstWorkDay(user.work_days);
+            if (dayOfWeek === firstWorkDay) {
+              usersToEmail.push({ ...user, dayOfWeek, timezone });
+            }
+          } else {
+            // Premium users: send on their work days (respects their work_days setting)
+            if (isWorkDay(dayOfWeek, user.work_days)) {
+              usersToEmail.push({ ...user, dayOfWeek, timezone });
+            }
+          }
         }
       } catch (error) {
         logger.error(`Error processing timezone for user ${user.id}:`, error);
@@ -356,20 +389,26 @@ export async function GET(request: Request) {
           id: action.id, // Ensure ID is included
         }));
 
+        const isFreeUser = (user.subscription_tier || 'free') === 'free';
+        
+        // For free users, don't include planning actions or weekly review
+        const emailTip = {
+          title: dailyAction.name,
+          content: `${dailyAction.description}\n\nWhy this matters: ${dailyAction.benefit || 'Every action strengthens your relationship.'}`,
+          category: dailyAction.category,
+          quote: quote || undefined,
+          actionId: dailyAction.id,
+          userId: user.id,
+          dayOfWeek,
+          weeklyPlanningActions: isFreeUser ? [] : planningActionsWithIds, // No planning actions for free users
+          allActionsLastWeek: isFreeUser ? [] : (isSunday ? allActionsLastWeek : []), // No weekly review for free users
+        };
+
         const success = await sendTomorrowTipEmail(
           user.email,
           user.name || user.email.split('@')[0],
-          {
-            title: dailyAction.name,
-            content: `${dailyAction.description}\n\nWhy this matters: ${dailyAction.benefit || 'Every action strengthens your relationship.'}`,
-            category: dailyAction.category,
-            quote: quote || undefined,
-            actionId: dailyAction.id,
-            userId: user.id,
-            dayOfWeek,
-            weeklyPlanningActions: planningActionsWithIds,
-            allActionsLastWeek: isSunday ? allActionsLastWeek : [],
-          },
+          emailTip,
+          isFreeUser,
         );
 
         if (success) {

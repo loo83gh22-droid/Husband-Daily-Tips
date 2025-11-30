@@ -2,9 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import Link from 'next/link';
 import { getGuideSlugForAction } from '@/lib/action-guide-mapping';
 import { personalizeText } from '@/lib/personalize-text';
+import HowToGuideModal from './HowToGuideModal';
 
 interface ActionDetailModalProps {
   isOpen: boolean;
@@ -38,6 +38,7 @@ export default function ActionDetailModal({
 }: ActionDetailModalProps) {
   const [isFavorited, setIsFavorited] = useState(initialIsFavorited);
   const [isTogglingFavorite, setIsTogglingFavorite] = useState(false);
+  const [showGuideModal, setShowGuideModal] = useState(false);
 
   // Update favorite status when modal opens or action changes
   useEffect(() => {
@@ -159,16 +160,16 @@ export default function ActionDetailModal({
                   </div>
                 )}
 
-                {/* How-To Guide link */}
+                {/* How-To Guide button */}
                 {guideSlug && (
                   <div className="mb-6">
-                    <Link
-                      href={`/dashboard/how-to-guides/${guideSlug}`}
+                    <button
+                      onClick={() => setShowGuideModal(true)}
                       className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-500/20 border border-emerald-500/50 text-emerald-300 text-sm font-medium rounded-lg hover:bg-emerald-500/30 transition-colors"
                     >
                       <span>📚</span>
                       <span>View How-To Guide</span>
-                    </Link>
+                    </button>
                   </div>
                 )}
 
@@ -220,6 +221,15 @@ export default function ActionDetailModal({
             </motion.div>
           </div>
         </>
+      )}
+
+      {/* How-To Guide Modal */}
+      {guideSlug && (
+        <HowToGuideModal
+          isOpen={showGuideModal}
+          onClose={() => setShowGuideModal(false)}
+          guideSlug={guideSlug}
+        />
       )}
     </AnimatePresence>
   );

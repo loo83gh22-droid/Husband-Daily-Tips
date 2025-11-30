@@ -1,16 +1,19 @@
 import { NextResponse } from 'next/server';
 import { getSupabaseAdmin } from '@/lib/supabase';
-import { generateEmailHTML } from '@/lib/email';
+import { generateEmailHTML, generateFreeUserEmailHTML } from '@/lib/email';
 
 /**
  * Test endpoint to preview email format for any day of the week
- * Usage: /api/test/email-preview?dayOfWeek=0&userId=xxx
+ * Usage: /api/test/email-preview?dayOfWeek=0&userId=xxx&isFreeUser=true
  * dayOfWeek: 0 = Sunday, 1 = Monday, ..., 6 = Saturday
+ * isFreeUser: true to preview free user email (weekly with upgrade CTA)
  */
 export async function GET(request: Request) {
   const url = new URL(request.url);
   const dayOfWeekParam = url.searchParams.get('dayOfWeek');
   const userIdParam = url.searchParams.get('userId');
+  const userEmailParam = url.searchParams.get('userEmail');
+  const isFreeUserParam = url.searchParams.get('isFreeUser');
   const adminSecret = url.searchParams.get('secret');
 
   // If ADMIN_SECRET is set in production, require it for access
@@ -33,8 +36,24 @@ export async function GET(request: Request) {
   const supabase = getSupabaseAdmin();
   const baseUrl = process.env.AUTH0_BASE_URL || 'https://www.besthusbandever.com';
 
-  // Get a test user or use provided userId
+  // Get a test user or use provided userId or email
   let userId = userIdParam;
+  if (!userId && userEmailParam) {
+    // Find user by email
+    const { data: userByEmail } = await supabase
+      .from('users')
+      .select('id')
+      .ilike('email', `%${userEmailParam}%`)
+      .limit(1)
+      .single();
+    
+    if (userByEmail) {
+      userId = userByEmail.id;
+    } else {
+      return NextResponse.json({ error: `User with email containing "${userEmailParam}" not found` }, { status: 404 });
+    }
+  }
+  
   if (!userId) {
     // Get first user from database
     const { data: users } = await supabase
@@ -202,8 +221,10 @@ export async function GET(request: Request) {
   const { getRandomQuote } = await import('@/lib/quotes');
   const quote = await getRandomQuote();
 
-  // Generate email HTML
-  const emailHTML = generateEmailHTML({
+  const isFreeUser = isFreeUserParam === 'true';
+  
+  // Generate email HTML (free user or premium)
+  const emailTip = {
     title: dailyAction.name,
     content: `${dailyAction.description}\n\nWhy this matters: ${dailyAction.benefit || 'Every action strengthens your relationship.'}`,
     category: dailyAction.category,
@@ -211,14 +232,14 @@ export async function GET(request: Request) {
     actionId: dailyAction.id,
     userId: userId || undefined, // Include userId for "Mark as Done" buttons
     dayOfWeek,
-    weeklyPlanningActions: weeklyPlanningActions.map(a => ({
+    weeklyPlanningActions: isFreeUser ? [] : weeklyPlanningActions.map(a => ({
       id: a.id,
       name: a.name || '',
       description: a.description ?? '',
       benefit: a.benefit ?? undefined,
       category: a.category || '',
     })),
-    allActionsLastWeek: allActionsLastWeek.map(a => ({
+    allActionsLastWeek: isFreeUser ? [] : allActionsLastWeek.map(a => ({
       id: a.id,
       name: a.name || '',
       description: a.description ? a.description : undefined,
@@ -226,7 +247,11 @@ export async function GET(request: Request) {
       date: a.date,
       completed: a.completed,
     })),
-  }, baseUrl);
+  };
+
+  const emailHTML = isFreeUser 
+    ? generateFreeUserEmailHTML(emailTip, baseUrl)
+    : generateEmailHTML(emailTip, baseUrl);
 
   // Return HTML for preview
   return new NextResponse(emailHTML, {

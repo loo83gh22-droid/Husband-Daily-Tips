@@ -8,6 +8,7 @@ import ReflectionModal from './ReflectionModal';
 import SocialShare from './SocialShare';
 import ActionCelebration from './ActionCelebration';
 import ShowMoreModal from './ShowMoreModal';
+import HowToGuideModal from './HowToGuideModal';
 import { personalizeText } from '@/lib/personalize-text';
 import { toast } from './Toast';
 import { getGuideSlugForAction } from '@/lib/action-guide-mapping';
@@ -55,6 +56,8 @@ export default function DailyTipCard({ tip, subscriptionTier = 'free', onActionR
   const [isFavorited, setIsFavorited] = useState(tip.favorited || false);
   const [isTogglingFavorite, setIsTogglingFavorite] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [showGuideModal, setShowGuideModal] = useState(false);
+  const guideSlug = tip.isAction ? getGuideSlugForAction(tip.name || '', tip.theme) : null;
   const [displayDate, setDisplayDate] = useState('');
   const [showCelebration, setShowCelebration] = useState(false);
   const [healthIncrease, setHealthIncrease] = useState(0);
@@ -633,19 +636,16 @@ END:VCALENDAR`;
                 {tip.category}
               </span>
               <div className="flex items-center gap-2 sm:gap-2 flex-shrink-0">
-              {tip.isAction && (() => {
-                const guideSlug = getGuideSlugForAction(tip.name || '', tip.theme);
-                return guideSlug ? (
-                  <Link
-                    href={`/dashboard/how-to-guides/${guideSlug}`}
-                    className="px-2 sm:px-3 py-1.5 border border-emerald-500/50 text-emerald-300 text-xs font-medium rounded-lg hover:bg-emerald-500/10 transition-colors flex items-center gap-1 sm:gap-1.5"
-                  >
-                    <span>📚</span>
-                    <span className="hidden sm:inline">How-To Guide</span>
-                    <span className="sm:hidden">Guide</span>
-                  </Link>
-                ) : null;
-              })()}
+              {tip.isAction && guideSlug && (
+                <button
+                  onClick={() => setShowGuideModal(true)}
+                  className="px-2 sm:px-3 py-1.5 border border-emerald-500/50 text-emerald-300 text-xs font-medium rounded-lg hover:bg-emerald-500/10 transition-colors flex items-center gap-1 sm:gap-1.5"
+                >
+                  <span>📚</span>
+                  <span className="hidden sm:inline">How-To Guide</span>
+                  <span className="sm:hidden">Guide</span>
+                </button>
+              )}
               <button
                 onClick={handleToggleFavorite}
                 disabled={isTogglingFavorite}
@@ -1025,6 +1025,15 @@ END:VCALENDAR`;
           />
         </div>
       </motion.div>
+
+      {/* How-To Guide Modal */}
+      {guideSlug && (
+        <HowToGuideModal
+          isOpen={showGuideModal}
+          onClose={() => setShowGuideModal(false)}
+          guideSlug={guideSlug}
+        />
+      )}
     </>
   );
 }
