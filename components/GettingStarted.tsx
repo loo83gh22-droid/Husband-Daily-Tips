@@ -129,7 +129,7 @@ export default function GettingStarted({ userId, totalCompletions }: GettingStar
           <div>
             <h3 className="text-lg font-semibold text-slate-50 mb-1">Explore All Actions</h3>
             <p className="text-slate-300 text-sm leading-relaxed">
-              Visit the <Link href="/dashboard/actions" className="text-primary-400 hover:text-primary-300 underline font-medium">Actions page</Link> to browse hundreds of actions organized by category. Favorite the ones you want to try.
+              Visit the <Link href="/dashboard/actions" className="text-primary-400 hover:text-primary-300 underline font-medium">Actions page</Link> to browse hundreds of actions organized by category. Favorite the ones you want to try, and hide the ones that don&apos;t fit your situation.
             </p>
           </div>
         </div>
