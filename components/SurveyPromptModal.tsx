@@ -40,7 +40,7 @@ export default function SurveyPromptModal({ userId, onDismiss }: SurveyPromptMod
               Completing this survey helps us develop your baseline score and personalize your experience.
             </p>
             <p className="text-slate-400 text-sm">
-              Takes about 2 minutes • Your answers are private
+              Takes about 5 minutes • Your answers are private
             </p>
           </div>
 
