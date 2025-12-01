@@ -67,12 +67,21 @@ export function generateEmailHTML(tip: EmailTip, baseUrl: string): string {
           ${isMonday && weeklyPlanningActions.length > 0 ? `
             <!-- Monday: Planning Actions - Choose 1 (Full Details) -->
             <div style="background-color: #fef3c7; border-left: 4px solid #f59e0b; border-radius: 8px; padding: 25px; margin-bottom: 30px;">
-              <h3 style="color: #78350f; font-size: 18px; margin: 0 0 15px 0; font-weight: 600;">
-                📅 Planning Actions for This Week
-              </h3>
-              <p style="color: #92400e; font-size: 14px; margin: 0 0 20px 0; line-height: 1.6;">
-                Here are 5 actions that require a bit more planning. <strong>Choose 1</strong> to complete this week—pick what works for your schedule.
-              </p>
+              ${weeklyPlanningActions.some(a => a.name?.toLowerCase().includes('birthday')) ? `
+                <h3 style="color: #78350f; font-size: 18px; margin: 0 0 15px 0; font-weight: 600;">
+                  🎉 Birthday Planning Actions
+                </h3>
+                <p style="color: #92400e; font-size: 14px; margin: 0 0 20px 0; line-height: 1.6;">
+                  Your spouse's birthday is coming up! Here are 5 birthday planning actions to help you create a memorable celebration. <strong>Choose 1</strong> (or more) to complete this week—pick what works for your schedule.
+                </p>
+              ` : `
+                <h3 style="color: #78350f; font-size: 18px; margin: 0 0 15px 0; font-weight: 600;">
+                  📅 Planning Actions for This Week
+                </h3>
+                <p style="color: #92400e; font-size: 14px; margin: 0 0 20px 0; line-height: 1.6;">
+                  Here are 5 actions that require a bit more planning. <strong>Choose 1</strong> to complete this week—pick what works for your schedule.
+                </p>
+              `}
               ${weeklyPlanningActions.map((action, idx) => `
                 <div style="background-color: #ffffff; border-radius: 6px; padding: 12px; margin-bottom: ${idx < weeklyPlanningActions.length - 1 ? '10px' : '0'}; border: 1px solid #fde68a;">
                   <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;">
@@ -105,7 +114,7 @@ export function generateEmailHTML(tip: EmailTip, baseUrl: string): string {
             <!-- Tuesday-Friday: Planning Actions Summarized Table -->
             <div style="background-color: #f3f4f6; border-left: 4px solid #6b7280; border-radius: 8px; padding: 20px; margin-bottom: 30px;">
               <h3 style="color: #374151; font-size: 16px; margin: 0 0 15px 0; font-weight: 600;">
-                📋 This Week's Planning Actions
+                ${weeklyPlanningActions.some(a => a.name?.toLowerCase().includes('birthday')) ? '🎉 This Week\'s Birthday Planning Actions' : '📋 This Week\'s Planning Actions'}
               </h3>
               <div style="background-color: #ffffff; border-radius: 6px; overflow: hidden;">
                 <table style="width: 100%; border-collapse: collapse;">

@@ -5,6 +5,7 @@ interface UserProfile {
   kids_live_with_you?: boolean | null;
   country?: string | null;
   work_days?: number[] | null;
+  spouse_birthday?: string | Date | null;
 }
 
 interface CategoryScores {
@@ -49,6 +50,10 @@ export async function selectTomorrowAction(
     // User already has an action assigned (from manual change or 7-day event)
     return existingAction.actions;
   }
+
+  // Note: During birthday week, we serve normal daily actions
+  // Birthday actions are served as weekly planning actions (see selectWeeklyPlanningActions)
+  // This ensures users get their regular daily action PLUS birthday planning options
 
   // Get actions user hasn't seen in the last 30 days
   const thirtyDaysAgo = new Date();
@@ -384,6 +389,7 @@ export async function selectTomorrowAction(
 /**
  * Select 5 planning_required actions for the week ahead
  * These are sent on Monday and can be completed anytime during the week
+ * During birthday week, returns birthday-specific planning actions instead
  */
 export async function selectWeeklyPlanningActions(
   userId: string,
@@ -393,6 +399,28 @@ export async function selectWeeklyPlanningActions(
 ) {
   const adminSupabase = getSupabaseAdmin();
 
+  // Check if we're in birthday week - if so, return birthday actions
+  if (userProfile?.spouse_birthday) {
+    const { getBirthdayWeekInfo } = await import('@/lib/birthday-utils');
+    const today = new Date();
+    const birthdayInfo = getBirthdayWeekInfo(
+      userProfile.spouse_birthday,
+      userProfile.work_days || null,
+      today
+    );
+
+    if (birthdayInfo.isBirthdayWeek) {
+      // We're in birthday week - return birthday planning actions
+      return await selectBirthdayActions(
+        userId,
+        subscriptionTier,
+        categoryScores,
+        userProfile
+      );
+    }
+  }
+
+  // Normal weekly planning actions (not birthday week)
   // Get actions user hasn't seen in the last 30 days
   const thirtyDaysAgo = new Date();
   thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
@@ -478,6 +506,118 @@ export async function selectWeeklyPlanningActions(
   }
 
   // Shuffle and take 5
+  const shuffled = [...actions].sort(() => Math.random() - 0.5);
+  return shuffled.slice(0, 5);
+}
+
+/**
+ * Select birthday-specific planning_required actions for the birthday week
+ * These are served the week leading up to the spouse's birthday
+ */
+export async function selectBirthdayActions(
+  userId: string,
+  subscriptionTier: string,
+  categoryScores?: CategoryScores,
+  userProfile?: UserProfile
+) {
+  const adminSupabase = getSupabaseAdmin();
+
+  // Get actions user hasn't seen in the last 30 days
+  const thirtyDaysAgo = new Date();
+  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+  const thirtyDaysAgoStr = thirtyDaysAgo.toISOString().split('T')[0];
+
+  const { data: recentActions } = await adminSupabase
+    .from('user_daily_actions')
+    .select('action_id')
+    .eq('user_id', userId)
+    .gte('date', thirtyDaysAgoStr);
+
+  const seenActionIds = recentActions?.map((ra) => ra.action_id) || [];
+
+  // Get hidden action IDs
+  const { data: hiddenActions } = await adminSupabase
+    .from('user_hidden_actions')
+    .select('action_id')
+    .eq('user_id', userId);
+
+  const hiddenActionIds = hiddenActions?.map((ha) => ha.action_id) || [];
+
+  // Get birthday-specific actions (planning_required actions with birthday keywords)
+  // Birthday actions include: birthday party, weekend getaway, special dinner, experience, scavenger hunt, etc.
+  const birthdayKeywords = ['birthday', 'surprise party', 'weekend getaway', 'special dinner', 'experience', 'scavenger hunt', 'photo shoot', 'staycation'];
+  
+  let { data: actions, error } = await adminSupabase
+    .from('actions')
+    .select('*')
+    .eq('day_of_week_category', 'planning_required')
+    .limit(100);
+
+  if (error) {
+    console.error('Error fetching birthday actions:', error);
+    return [];
+  }
+
+  // Filter to birthday-specific actions by checking name and description
+  if (actions) {
+    actions = actions.filter((action) => {
+      const actionText = `${action.name || ''} ${action.description || ''}`.toLowerCase();
+      return birthdayKeywords.some(keyword => actionText.includes(keyword));
+    });
+  }
+
+  // Filter out seen actions
+  if (actions && seenActionIds.length > 0) {
+    actions = actions.filter((action) => !seenActionIds.includes(action.id));
+  }
+
+  // Filter out hidden actions
+  if (actions && hiddenActionIds.length > 0) {
+    actions = actions.filter((action) => !hiddenActionIds.includes(action.id));
+  }
+
+  // Filter by seasonal availability and country
+  if (actions) {
+    const { isActionAvailableOnDate } = await import('@/lib/seasonal-dates');
+    const today = new Date();
+    const userCountry = userProfile?.country as 'US' | 'CA' | null || null;
+    actions = actions.filter((action) => {
+      if (action.country && action.country !== userCountry) {
+        return false;
+      }
+      if (action.country && !userCountry) {
+        return false;
+      }
+      return isActionAvailableOnDate(action, today, userCountry);
+    });
+  }
+
+  // Filter out kid-related actions if needed
+  if (actions && userProfile) {
+    const hasKids = userProfile.has_kids === true;
+    const kidsLiveWithYou = userProfile.kids_live_with_you === true;
+    
+    if (!hasKids || (hasKids && !kidsLiveWithYou)) {
+      const kidKeywords = ['kid', 'child', 'children', 'family', 'parent', 'bedtime', 'school', 'homework', 'playground'];
+      actions = actions.filter((action) => {
+        const actionText = `${action.name || ''} ${action.description || ''} ${action.benefit || ''}`.toLowerCase();
+        const isKidRelated = kidKeywords.some(keyword => actionText.includes(keyword));
+        if (!hasKids) {
+          return !isKidRelated;
+        } else {
+          const requiresDailyPresence = ['bedtime', 'school', 'homework', 'playground'].some(keyword => actionText.includes(keyword));
+          return !requiresDailyPresence;
+        }
+      });
+    }
+  }
+
+  // Return all available birthday actions (up to 5, but can be fewer)
+  if (!actions || actions.length === 0) {
+    return [];
+  }
+
+  // Shuffle and return up to 5
   const shuffled = [...actions].sort(() => Math.random() - 0.5);
   return shuffled.slice(0, 5);
 }
