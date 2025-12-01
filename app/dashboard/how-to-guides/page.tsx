@@ -330,6 +330,14 @@ export default async function HowToGuidesPage({
           time: '30-60 min',
         },
         {
+          slug: 'mom-appreciation-day',
+          title: 'Create a Mom Appreciation Day',
+          excerpt:
+            'Designate a day where the family focuses on showing Mom appreciation. Plan activities, meals, and gestures that honor her and make her feel valued.',
+          difficulty: 'Medium',
+          time: 'Full day',
+        },
+        {
           slug: 'give-mom-a-break',
           title: 'Take the Kids Out So Mom Gets a Break',
           excerpt:

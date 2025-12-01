@@ -210,7 +210,9 @@ export function getGuideSlugForAction(actionName: string, actionTheme?: string):
     'give mom a break': 'give-mom-a-break',
     'mom gets a break': 'give-mom-a-break',
     'plan family activity for mom': 'give-mom-a-break',
-    'mom appreciation day': 'give-mom-a-break',
+    'mom appreciation day': 'mom-appreciation-day',
+    'create a mom appreciation day': 'mom-appreciation-day',
+    'create mom appreciation day': 'mom-appreciation-day',
     'handle bedtime routine': 'give-mom-a-break',
 
     // Relationship Games

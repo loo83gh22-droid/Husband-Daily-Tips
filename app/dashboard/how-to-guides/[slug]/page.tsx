@@ -4966,6 +4966,110 @@ When you share it:
 
 You wrote a poem for Mom. It was personal and heartfelt. She felt deeply loved and appreciated. That's a win.`,
   },
+  'mom-appreciation-day': {
+    id: 60,
+    title: 'Create a Mom Appreciation Day',
+    category: 'Partnership',
+    difficulty: 'Medium',
+    time: 'Full day',
+    excerpt: 'Designate a day where the family focuses on showing Mom appreciation. Plan activities, meals, and gestures that honor her and make her feel valued.',
+    content: `## Why This Matters
+
+A dedicated Mom Appreciation Day makes Mom feel deeply valued and honored. It's a day where the whole family focuses on showing her how much she means to everyone. This creates lasting memories and teaches kids to appreciate their mother.
+
+## The Secret: Make It About Her
+
+This isn't about what you want to do. It's about what would make her feel appreciated, honored, and loved. Think about what she values, what she enjoys, and what would make her feel special.
+
+## How to Create a Mom Appreciation Day
+
+1. Plan Activities She Loves
+
+Think about:
+- What does she enjoy doing?
+- What would she love to do but never gets time for?
+- What activities make her happy?
+- What would make her feel relaxed and appreciated?
+
+2. Involve the Whole Family
+
+Make it a family effort:
+- Kids can help plan
+- Everyone participates
+- Everyone shows appreciation
+- It's a team effort to honor Mom
+
+3. Plan Special Meals
+
+Consider:
+- Her favorite breakfast
+- A special lunch or dinner
+- Her favorite treats
+- Meals she doesn't have to cook
+
+4. Create Appreciation Moments
+
+Throughout the day:
+- Share what you appreciate about her
+- Write notes or cards
+- Give her compliments
+- Show gratitude for specific things
+
+5. Give Her a Break
+
+Make sure:
+- She doesn't have to handle responsibilities
+- You handle the kids, meals, cleanup
+- She can relax and enjoy
+- She doesn't have to manage anything
+
+6. Make It Personal
+
+Include:
+- Things specific to her
+- Her interests and preferences
+- What makes her feel loved
+- What honors who she is
+
+## What Makes It Work
+
+It's about her: Everything is focused on what she values and enjoys.
+
+The whole family participates: Everyone shows appreciation and helps.
+
+She gets a real break: She doesn't have to handle responsibilities or manage anything.
+
+It's personal: It's tailored to her interests and what makes her feel loved.
+
+It's planned: You put thought into it, not just winging it.
+
+## Examples of Mom Appreciation Day Activities
+
+- Breakfast in bed with her favorite foods
+- A spa day or relaxation time
+- Her favorite activities or hobbies
+- A special family activity she loves
+- Time alone if that's what she needs
+- Her favorite meal prepared for her
+- Cards and notes from everyone
+- A day where she doesn't have to make decisions
+
+## Common Mistakes
+
+Making it about what you want: It's about what she values and enjoys.
+
+Not involving the family: Everyone should participate in showing appreciation.
+
+Making her manage it: She shouldn't have to plan or handle anything.
+
+Not planning ahead: Put thought into it, don't just wing it.
+
+Making it generic: Make it personal to her interests and preferences.
+
+## The Win
+
+You created a Mom Appreciation Day. She felt deeply valued and honored. The whole family showed appreciation. You created lasting memories. That's a win.`,
+  },
   'give-mom-a-break': {
     id: 49,
     title: 'Take the Kids Out So Mom Gets a Break',
