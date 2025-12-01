@@ -83,6 +83,112 @@ export function calculateVictoriaDay(year: number): Date {
 }
 
 /**
+ * Calculate Martin Luther King Jr. Day (3rd Monday in January) - US only
+ */
+export function calculateMLKDay(year: number): Date {
+  const jan1 = new Date(year, 0, 1);
+  const firstDay = jan1.getDay();
+  const daysToAdd = firstDay === 0 ? 1 : (8 - firstDay);
+  const firstMon = new Date(jan1);
+  firstMon.setDate(1 + daysToAdd);
+  firstMon.setDate(firstMon.getDate() + 14); // Add 2 weeks to get 3rd Monday
+  return firstMon;
+}
+
+/**
+ * Calculate Presidents' Day / Washington's Birthday (3rd Monday in February) - US only
+ */
+export function calculatePresidentsDay(year: number): Date {
+  const feb1 = new Date(year, 1, 1);
+  const firstDay = feb1.getDay();
+  const daysToAdd = firstDay === 0 ? 1 : (8 - firstDay);
+  const firstMon = new Date(feb1);
+  firstMon.setDate(1 + daysToAdd);
+  firstMon.setDate(firstMon.getDate() + 14); // Add 2 weeks to get 3rd Monday
+  return firstMon;
+}
+
+/**
+ * Calculate Juneteenth (June 19) - US only
+ */
+export function calculateJuneteenth(year: number): Date {
+  return new Date(year, 5, 19); // June 19
+}
+
+/**
+ * Calculate Columbus Day (2nd Monday in October) - US only
+ */
+export function calculateColumbusDay(year: number): Date {
+  const oct1 = new Date(year, 9, 1);
+  const firstDay = oct1.getDay();
+  const daysToAdd = firstDay === 0 ? 1 : (8 - firstDay);
+  const firstMon = new Date(oct1);
+  firstMon.setDate(1 + daysToAdd);
+  firstMon.setDate(firstMon.getDate() + 7); // Add 1 week to get 2nd Monday
+  return firstMon;
+}
+
+/**
+ * Calculate Veterans Day (November 11) - US only
+ */
+export function calculateVeteransDay(year: number): Date {
+  return new Date(year, 10, 11); // November 11
+}
+
+/**
+ * Calculate Family Day (3rd Monday in February) - Canada only (most provinces)
+ */
+export function calculateFamilyDay(year: number): Date {
+  const feb1 = new Date(year, 1, 1);
+  const firstDay = feb1.getDay();
+  const daysToAdd = firstDay === 0 ? 1 : (8 - firstDay);
+  const firstMon = new Date(feb1);
+  firstMon.setDate(1 + daysToAdd);
+  firstMon.setDate(firstMon.getDate() + 14); // Add 2 weeks to get 3rd Monday
+  return firstMon;
+}
+
+/**
+ * Calculate Good Friday (Friday before Easter) - Canada only
+ */
+export function calculateGoodFriday(year: number): Date {
+  // Calculate Easter first
+  const a = year % 19;
+  const b = Math.floor(year / 100);
+  const c = year % 100;
+  const d = Math.floor(b / 4);
+  const e = b % 4;
+  const f = Math.floor((b + 8) / 25);
+  const g = Math.floor((b - f + 1) / 3);
+  const h = (19 * a + b - d - g + 15) % 30;
+  const i = Math.floor(c / 4);
+  const k = c % 4;
+  const l = (32 + 2 * e + 2 * i - h - k) % 7;
+  const m = Math.floor((a + 11 * h + 22 * l) / 451);
+  const month = Math.floor((h + l - 7 * m + 114) / 31);
+  const day = ((h + l - 7 * m + 114) % 31) + 1;
+  const easter = new Date(year, month - 1, day);
+  // Good Friday is 2 days before Easter
+  const goodFriday = new Date(easter);
+  goodFriday.setDate(easter.getDate() - 2);
+  return goodFriday;
+}
+
+/**
+ * Calculate National Day for Truth and Reconciliation (September 30) - Canada only
+ */
+export function calculateTruthAndReconciliationDay(year: number): Date {
+  return new Date(year, 8, 30); // September 30
+}
+
+/**
+ * Calculate Remembrance Day (November 11) - Canada only
+ */
+export function calculateRemembranceDay(year: number): Date {
+  return new Date(year, 10, 11); // November 11
+}
+
+/**
  * Get country-specific holiday date range
  * Returns { start: Date, end: Date } or null if not a country-specific holiday
  */

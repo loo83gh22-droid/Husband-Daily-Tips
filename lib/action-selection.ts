@@ -420,6 +420,23 @@ export async function selectWeeklyPlanningActions(
     }
   }
 
+  // Check if we're in a holiday week - if so, return holiday actions
+  const userCountry = userProfile?.country as 'US' | 'CA' | null || null;
+  const { getHolidayWeekInfo } = await import('@/lib/holiday-utils');
+  const today = new Date();
+  const holidayInfo = getHolidayWeekInfo(userCountry, today);
+
+  if (holidayInfo.isHolidayWeek && holidayInfo.holidayName) {
+    // We're in holiday week - return holiday planning actions
+    return await selectHolidayActions(
+      userId,
+      subscriptionTier,
+      categoryScores,
+      userProfile,
+      holidayInfo.holidayName
+    );
+  }
+
   // Normal weekly planning actions (not birthday week)
   // Get actions user hasn't seen in the last 30 days
   const thirtyDaysAgo = new Date();
@@ -620,4 +637,201 @@ export async function selectBirthdayActions(
   // Shuffle and return up to 5
   const shuffled = [...actions].sort(() => Math.random() - 0.5);
   return shuffled.slice(0, 5);
+}
+
+/**
+ * Select holiday-specific planning_required actions for the holiday week
+ * These are served the week leading up to the holiday
+ */
+export async function selectHolidayActions(
+  userId: string,
+  subscriptionTier: string,
+  categoryScores?: CategoryScores,
+  userProfile?: UserProfile,
+  holidayName?: string | null
+) {
+  const adminSupabase = getSupabaseAdmin();
+
+  // Get actions user hasn't seen in the last 30 days
+  const thirtyDaysAgo = new Date();
+  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+  const thirtyDaysAgoStr = thirtyDaysAgo.toISOString().split('T')[0];
+
+  const { data: recentActions } = await adminSupabase
+    .from('user_daily_actions')
+    .select('action_id')
+    .eq('user_id', userId)
+    .gte('date', thirtyDaysAgoStr);
+
+  const seenActionIds = recentActions?.map((ra) => ra.action_id) || [];
+
+  // Get hidden action IDs
+  const { data: hiddenActions } = await adminSupabase
+    .from('user_hidden_actions')
+    .select('action_id')
+    .eq('user_id', userId);
+
+  const hiddenActionIds = hiddenActions?.map((ha) => ha.action_id) || [];
+
+  // Get holiday-specific actions (planning_required actions with holiday keywords)
+  const { getHolidayKeywords } = await import('@/lib/holiday-utils');
+  const holidayKeywords = getHolidayKeywords(holidayName || null);
+  
+  let { data: actions, error } = await adminSupabase
+    .from('actions')
+    .select('*')
+    .eq('day_of_week_category', 'planning_required')
+    .limit(100);
+
+  if (error) {
+    console.error('Error fetching holiday actions:', error);
+    return [];
+  }
+
+  // Filter to holiday-specific actions by checking name and description
+  // Exclude generic holiday actions that don't show initiative (e.g., "Celebrate X Together" without planning/leading language)
+  if (actions && holidayKeywords.length > 0) {
+    actions = actions.filter((action) => {
+      const actionText = `${action.name || ''} ${action.description || ''}`.toLowerCase();
+      const matchesHoliday = holidayKeywords.some(keyword => actionText.includes(keyword));
+      
+      if (!matchesHoliday) {
+        return false;
+      }
+      
+      // Exclude generic "Celebrate X Together" actions that don't show initiative
+      // Look for action-packed language: "plan", "organize", "host", "take charge", "take initiative", "lead"
+      const initiativeKeywords = ['plan', 'organize', 'host', 'take charge', 'take initiative', 'lead', 'coordinate', 'arrange'];
+      const hasInitiativeLanguage = initiativeKeywords.some(keyword => actionText.includes(keyword));
+      
+      // If it's just "Celebrate X Together" without initiative language, exclude it
+      if (action.name?.toLowerCase().includes('celebrate') && 
+          action.name?.toLowerCase().includes('together') && 
+          !hasInitiativeLanguage) {
+        return false;
+      }
+      
+      return true;
+    });
+  }
+
+  // Filter out seen actions
+  if (actions && seenActionIds.length > 0) {
+    actions = actions.filter((action) => !seenActionIds.includes(action.id));
+  }
+
+  // Filter out hidden actions
+  if (actions && hiddenActionIds.length > 0) {
+    actions = actions.filter((action) => !hiddenActionIds.includes(action.id));
+  }
+
+  // Filter by seasonal availability and country
+  if (actions) {
+    const { isActionAvailableOnDate } = await import('@/lib/seasonal-dates');
+    const today = new Date();
+    const userCountry = userProfile?.country as 'US' | 'CA' | null || null;
+    actions = actions.filter((action) => {
+      if (action.country && action.country !== userCountry) {
+        return false;
+      }
+      if (action.country && !userCountry) {
+        return false;
+      }
+      return isActionAvailableOnDate(action, today, userCountry);
+    });
+  }
+
+  // Filter out kid-related actions if needed
+  if (actions && userProfile) {
+    const hasKids = userProfile.has_kids === true;
+    const kidsLiveWithYou = userProfile.kids_live_with_you === true;
+    
+    if (!hasKids || (hasKids && !kidsLiveWithYou)) {
+      const kidKeywords = ['kid', 'child', 'children', 'family', 'parent', 'bedtime', 'school', 'homework', 'playground'];
+      actions = actions.filter((action) => {
+        const actionText = `${action.name || ''} ${action.description || ''} ${action.benefit || ''}`.toLowerCase();
+        const isKidRelated = kidKeywords.some(keyword => actionText.includes(keyword));
+        if (!hasKids) {
+          return !isKidRelated;
+        } else {
+          const requiresDailyPresence = ['bedtime', 'school', 'homework', 'playground'].some(keyword => actionText.includes(keyword));
+          return !requiresDailyPresence;
+        }
+      });
+    }
+  }
+
+  // Return 3 holiday-specific actions, then fill with 2 regular planning actions
+  if (!actions || actions.length === 0) {
+    return [];
+  }
+
+  // Shuffle and take 3 holiday-specific actions
+  const shuffled = [...actions].sort(() => Math.random() - 0.5);
+  const holidayActions = shuffled.slice(0, 3);
+
+  // If we have fewer than 3 holiday actions, return what we have
+  if (holidayActions.length < 3) {
+    return holidayActions;
+  }
+
+  // Now get 2 regular planning_required actions (non-holiday) to fill out the 5
+  const { data: regularActions } = await adminSupabase
+    .from('actions')
+    .select('*')
+    .eq('day_of_week_category', 'planning_required')
+    .limit(100);
+
+  if (regularActions) {
+    // Filter out holiday actions and already selected actions
+    const holidayActionIds = new Set(holidayActions.map(a => a.id));
+    const regularFiltered = regularActions.filter((action) => {
+      // Exclude already selected holiday actions
+      if (holidayActionIds.has(action.id)) {
+        return false;
+      }
+      
+      // Exclude holiday-specific actions by checking if they match holiday keywords
+      const actionText = `${action.name || ''} ${action.description || ''}`.toLowerCase();
+      const isHolidayAction = holidayKeywords.some(keyword => actionText.includes(keyword));
+      if (isHolidayAction) {
+        return false;
+      }
+      
+      // Exclude seen and hidden actions
+      if (seenActionIds.includes(action.id) || hiddenActionIds.includes(action.id)) {
+        return false;
+      }
+      
+      // Filter by seasonal availability and country
+      const userCountry = userProfile?.country as 'US' | 'CA' | null || null;
+      if (action.country && action.country !== userCountry) {
+        return false;
+      }
+      if (action.country && !userCountry) {
+        return false;
+      }
+      
+      return true;
+    });
+
+    // Filter by seasonal availability
+    if (regularFiltered.length > 0) {
+      const { isActionAvailableOnDate } = await import('@/lib/seasonal-dates');
+      const today = new Date();
+      const userCountry = userProfile?.country as 'US' | 'CA' | null || null;
+      const availableRegular = regularFiltered.filter((action) => {
+        return isActionAvailableOnDate(action, today, userCountry);
+      });
+
+      // Shuffle and take 2
+      const shuffledRegular = [...availableRegular].sort(() => Math.random() - 0.5);
+      const twoRegular = shuffledRegular.slice(0, 2);
+
+      return [...holidayActions, ...twoRegular];
+    }
+  }
+
+  // If we couldn't get regular actions, just return the 3 holiday actions
+  return holidayActions;
 }

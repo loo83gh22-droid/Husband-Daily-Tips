@@ -74,6 +74,17 @@ export function generateEmailHTML(tip: EmailTip, baseUrl: string): string {
                 <p style="color: #92400e; font-size: 14px; margin: 0 0 20px 0; line-height: 1.6;">
                   Your spouse's birthday is coming up! Here are 5 birthday planning actions to help you create a memorable celebration. <strong>Choose 1</strong> (or more) to complete this week—pick what works for your schedule.
                 </p>
+              ` : weeklyPlanningActions.some(a => {
+                const actionText = `${a.name || ''} ${a.description || ''}`.toLowerCase();
+                const holidayKeywords = ['canada day', 'independence day', 'thanksgiving', 'valentine', 'christmas', 'new year', 'memorial day', 'labor day', 'labour day', 'victoria day', 'easter'];
+                return holidayKeywords.some(keyword => actionText.includes(keyword));
+              }) ? `
+                <h3 style="color: #78350f; font-size: 18px; margin: 0 0 15px 0; font-weight: 600;">
+                  🎊 Holiday Planning Actions
+                </h3>
+                <p style="color: #92400e; font-size: 14px; margin: 0 0 20px 0; line-height: 1.6;">
+                  A holiday is coming up! Here are 5 action-packed planning options that show initiative. <strong>Choose 1</strong> (or more) to complete this week—take charge and make it memorable.
+                </p>
               ` : `
                 <h3 style="color: #78350f; font-size: 18px; margin: 0 0 15px 0; font-weight: 600;">
                   📅 Planning Actions for This Week
@@ -114,7 +125,11 @@ export function generateEmailHTML(tip: EmailTip, baseUrl: string): string {
             <!-- Tuesday-Friday: Planning Actions Summarized Table -->
             <div style="background-color: #f3f4f6; border-left: 4px solid #6b7280; border-radius: 8px; padding: 20px; margin-bottom: 30px;">
               <h3 style="color: #374151; font-size: 16px; margin: 0 0 15px 0; font-weight: 600;">
-                ${weeklyPlanningActions.some(a => a.name?.toLowerCase().includes('birthday')) ? '🎉 This Week\'s Birthday Planning Actions' : '📋 This Week\'s Planning Actions'}
+                ${weeklyPlanningActions.some(a => a.name?.toLowerCase().includes('birthday')) ? '🎉 This Week\'s Birthday Planning Actions' : weeklyPlanningActions.some(a => {
+                  const actionText = `${a.name || ''} ${a.description || ''}`.toLowerCase();
+                  const holidayKeywords = ['canada day', 'independence day', 'thanksgiving', 'valentine', 'christmas', 'new year', 'memorial day', 'labor day', 'labour day', 'victoria day', 'easter'];
+                  return holidayKeywords.some(keyword => actionText.includes(keyword));
+                }) ? '🎊 This Week\'s Holiday Planning Actions' : '📋 This Week\'s Planning Actions'}
               </h3>
               <div style="background-color: #ffffff; border-radius: 6px; overflow: hidden;">
                 <table style="width: 100%; border-collapse: collapse;">
