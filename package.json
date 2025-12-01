@@ -11,7 +11,11 @@
     "migrations:status": "node scripts/run-migration-simple.js",
     "migrations:run": "node scripts/run-migrations-cli.js",
     "check:env": "node scripts/check-env-vars.js",
-    "check:migrations": "node scripts/check-migrations-status.js"
+    "check:migrations": "node scripts/check-migrations-status.js",
+    "deploy": "node scripts/deploy.js",
+    "deploy:msg": "node scripts/deploy.js",
+    "git:status": "node scripts/git-status-with-output.js",
+    "git:commit": "node scripts/git-commit-push-with-output.js"
   },
   "dependencies": {
     "@auth0/nextjs-auth0": "^3.0.0",

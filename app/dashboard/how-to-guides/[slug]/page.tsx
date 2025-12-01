@@ -743,6 +743,170 @@ Adding to her stress: Don't make things more complicated.
 
 You helped when she was stressed. You gave her what she actually needed. She felt supported. That's a win.`,
   },
+  'support-her-goals': {
+    id: 58,
+    title: 'Support Her Goals (Actually)',
+    category: 'Partnership',
+    difficulty: 'Easy',
+    time: 'Ongoing',
+    excerpt: 'Actually support her goals—personal and work stuff. Ask about progress, celebrate wins, help her when she needs it.',
+    content: `## Why This Matters
+
+Actually supporting her goals shows you care about her as an individual, not just as your partner. When you support what matters to her, you strengthen your relationship and show you're invested in her happiness.
+
+## The Secret: It's About Her, Not You
+
+This isn't about what you think she should do. It's about supporting what matters to her, even if it's not what you would choose.
+
+## How to Support Her Goals
+
+1. Ask About Her Goals
+
+Show interest:
+- "What are you working toward?"
+- "How's [goal] going?"
+- "What do you need help with?"
+- "What are you excited about?"
+
+2. Celebrate Her Wins
+
+When she achieves something:
+- Acknowledge it
+- Celebrate with her
+- Show you're proud
+- Make it a big deal
+
+3. Help When She Needs It
+
+Offer support:
+- "How can I help?"
+- "What do you need from me?"
+- "I can [specific help]"
+- Actually follow through
+
+4. Be Her Cheerleader
+
+Encourage her:
+- "You've got this"
+- "I believe in you"
+- "You're doing great"
+- "I'm here for you"
+
+5. Don't Make It About You
+
+Support her goals because they matter to her, not because they benefit you.
+
+## What Makes It Work
+
+You ask about her goals: You show interest in what matters to her.
+
+You celebrate wins: You acknowledge her achievements.
+
+You help when needed: You offer support and follow through.
+
+You're her cheerleader: You encourage and believe in her.
+
+You don't make it about you: You support her because it matters to her.
+
+## Common Mistakes
+
+Not asking about her goals: Show interest in what matters to her.
+
+Not celebrating wins: Acknowledge her achievements.
+
+Not helping when needed: Offer support and follow through.
+
+Making it about you: Support her because it matters to her, not you.
+
+Not being consistent: Support her regularly, not just sometimes.
+
+## The Win
+
+You supported her goals. You showed you care about her as an individual. You celebrated her wins. You helped when she needed it. You strengthened your relationship. That's a win.`,
+  },
+  'plan-together': {
+    id: 59,
+    title: 'Plan Things Together (As a Team)',
+    category: 'Partnership',
+    difficulty: 'Medium',
+    time: 'Varies',
+    excerpt: 'Learn how to plan vacations, projects, or decisions together in a way that feels collaborative, not like you\'re managing or being managed.',
+    content: `## Why This Matters
+
+Planning together as a team creates collaboration and shared ownership. When you plan together, you both feel heard and invested in the outcome.
+
+## The Secret: It's Collaboration, Not Management
+
+This isn't about one person planning and the other following. It's about planning together, as partners.
+
+## How to Plan Together
+
+1. Start Together
+
+Begin planning together:
+- "Let's plan [thing] together"
+- "What do you think about [idea]?"
+- "How should we approach this?"
+
+2. Listen to Each Other
+
+Actually hear:
+- What does she want?
+- What are her ideas?
+- What are her concerns?
+- What matters to her?
+
+3. Make Decisions Together
+
+Decide together:
+- "What do you think?"
+- "How do you feel about [option]?"
+- "What works for you?"
+- "Let's decide together"
+
+4. Share the Work
+
+Divide planning tasks:
+- You handle [specific thing]
+- She handles [specific thing]
+- You both work on [specific thing]
+
+5. Check In Regularly
+
+As you plan:
+- "How's the planning going?"
+- "What do you need help with?"
+- "Are we on track?"
+- "What do you think?"
+
+## What Makes It Work
+
+You start together: You begin planning as a team.
+
+You listen to each other: You hear what matters to each of you.
+
+You decide together: You make decisions as partners.
+
+You share the work: You both contribute to planning.
+
+You check in regularly: You stay connected throughout the process.
+
+## Common Mistakes
+
+One person doing all the planning: Plan together, as a team.
+
+Not listening: Actually hear what matters to each of you.
+
+Making decisions alone: Decide together, as partners.
+
+Not sharing the work: Both of you contribute.
+
+Not checking in: Stay connected throughout the process.
+
+## The Win
+
+You planned together as a team. You both felt heard. You made decisions together. You shared the work. You created collaboration and shared ownership. That's a win.`,
+  },
   'handle-household-tasks': {
     id: 15,
     title: 'Own Household Tasks (Without Resentment)',
@@ -2232,6 +2396,318 @@ Overthinking it: Keep it simple.
 You started the day with gratitude. You set a positive tone. She felt appreciated. That's a win.`,
   },
   // Additional Conflict guides
+  'resolve-disagreement': {
+    id: 54,
+    title: 'Resolve a Disagreement (Without Winning)',
+    category: 'Conflict Resolution',
+    difficulty: 'Hard',
+    time: '30-60 min',
+    excerpt: 'Learn how to work through disagreements using "I" statements and active listening. Focus on understanding, not being right.',
+    content: `## Why This Matters
+
+Resolving disagreements without trying to "win" creates understanding and connection. When you focus on understanding instead of being right, you can actually work through issues together.
+
+## The Secret: It's About Understanding, Not Winning
+
+This isn't about proving you're right. It's about understanding each other and finding solutions together.
+
+## How to Resolve a Disagreement
+
+1. Use "I" Statements
+
+Express yourself using "I" statements:
+- "I feel [emotion] when [situation]"
+- "I need [what you need]"
+- "I'm concerned about [concern]"
+
+2. Listen Actively
+
+Actually listen. Don't just wait for your turn to talk. Hear what she's saying. Show you understand.
+
+3. Focus on Understanding
+
+Try to understand:
+- How does she feel?
+- What does she need?
+- What's her perspective?
+- What's important to her?
+
+4. Find Common Ground
+
+Look for:
+- What do you both want?
+- What are shared goals?
+- How can you work together?
+
+5. Focus on Solutions
+
+End with:
+- How can we both get what we need?
+- What can we do differently?
+- How can we solve this together?
+
+## What Makes It Work
+
+You use "I" statements: Express yourself without blame.
+
+You listen actively: Actually hear what she's saying.
+
+You focus on understanding: Not being right, but understanding.
+
+You find common ground: Look for shared goals.
+
+You focus on solutions: End with how to solve it together.
+
+## Common Mistakes
+
+Trying to win: It's about understanding, not being right.
+
+Not listening: Actually hear what she's saying.
+
+Getting defensive: Listen, don't defend.
+
+Focusing on blame: Focus on solutions, not blame.
+
+## The Win
+
+You resolved a disagreement. You focused on understanding, not winning. You found solutions together. You worked through it as a team. That's a win.`,
+  },
+  'take-responsibility': {
+    id: 55,
+    title: 'Take Responsibility (Without Blame)',
+    category: 'Conflict Resolution',
+    difficulty: 'Medium',
+    time: '10-15 min',
+    excerpt: 'Learn how to own your part in conflicts without defensiveness or making excuses. Show maturity and accountability.',
+    content: `## Why This Matters
+
+Taking responsibility without blame shows maturity and accountability. When you own your part without making excuses, you create space for resolution and repair.
+
+## The Secret: Own Your Part
+
+This isn't about taking all the blame. It's about owning your part in the conflict without defensiveness or excuses.
+
+## How to Take Responsibility
+
+1. Acknowledge Your Part
+
+Say what you did:
+- "I did [specific thing]"
+- "I said [specific thing]"
+- "I contributed to [situation]"
+
+2. Don't Make Excuses
+
+Avoid:
+- "But you..."
+- "I only did it because..."
+- "You made me..."
+- "It wasn't my fault..."
+
+3. Acknowledge the Impact
+
+Recognize how it affected her:
+- "I can see how that made you feel [emotion]"
+- "I understand that hurt you"
+- "I see how that affected you"
+
+4. Commit to Doing Better
+
+Say what you'll do differently:
+- "I'll [specific change]"
+- "I won't [specific behavior]"
+- "I'll work on [specific thing]"
+
+5. Follow Through
+
+Actually do it. Don't just say it—follow through on your commitment.
+
+## What Makes It Work
+
+You acknowledge your part: You own what you did.
+
+You don't make excuses: No "but you" or "you made me."
+
+You acknowledge impact: You recognize how it affected her.
+
+You commit to change: You say what you'll do differently.
+
+You follow through: You actually do it.
+
+## Common Mistakes
+
+Making excuses: Don't say "but you" or "you made me."
+
+Not acknowledging impact: Recognize how it affected her.
+
+Not committing to change: Say what you'll do differently.
+
+Not following through: Actually do it, don't just say it.
+
+## The Win
+
+You took responsibility. You owned your part without excuses. You acknowledged the impact. You committed to doing better. You showed maturity and accountability. That's a win.`,
+  },
+  'find-common-ground': {
+    id: 56,
+    title: 'Find Common Ground in Disagreements',
+    category: 'Conflict Resolution',
+    difficulty: 'Medium',
+    time: '20-30 min',
+    excerpt: 'Learn how to identify shared goals and work together toward solutions. Turn conflict into collaboration.',
+    content: `## Why This Matters
+
+Finding common ground in disagreements turns conflict into collaboration. When you identify shared goals, you can work together toward solutions instead of against each other.
+
+## The Secret: Look for Shared Goals
+
+This isn't about giving up what you want. It's about finding what you both want and working together to get it.
+
+## How to Find Common Ground
+
+1. Identify Shared Goals
+
+Look for:
+- What do you both want?
+- What are shared goals?
+- What matters to both of you?
+- What are you both trying to achieve?
+
+2. Focus on "We"
+
+Use "we" language:
+- "How can we both get what we need?"
+- "What can we do together?"
+- "How can we solve this?"
+
+3. Look for Solutions Together
+
+Work together to find:
+- Solutions that work for both of you
+- Ways to meet both your needs
+- Approaches that address both concerns
+
+4. Be Willing to Compromise
+
+Be open to:
+- Finding middle ground
+- Meeting each other halfway
+- Solutions that work for both of you
+
+5. Work as a Team
+
+Approach it as:
+- Partners, not opponents
+- Working together, not against each other
+- Collaboration, not competition
+
+## What Makes It Work
+
+You identify shared goals: You find what you both want.
+
+You focus on "we": You work together, not against each other.
+
+You look for solutions together: You collaborate, not compete.
+
+You're willing to compromise: You find middle ground.
+
+You work as a team: Partners, not opponents.
+
+## Common Mistakes
+
+Focusing only on what you want: Look for what you both want.
+
+Working against each other: Work together, not against.
+
+Not being willing to compromise: Find middle ground.
+
+Making it about winning: It's about collaboration, not competition.
+
+## The Win
+
+You found common ground. You identified shared goals. You worked together toward solutions. You turned conflict into collaboration. That's a win.`,
+  },
+  'stay-calm-during-conflict': {
+    id: 57,
+    title: 'Stay Calm During a Disagreement',
+    category: 'Conflict Resolution',
+    difficulty: 'Hard',
+    time: 'Ongoing',
+    excerpt: 'Learn techniques to manage your emotions and stay respectful even when things get heated. Prevent escalation.',
+    content: `## Why This Matters
+
+Staying calm during disagreements prevents escalation and keeps conversations productive. When you manage your emotions, you can actually work through issues instead of making them worse.
+
+## The Secret: Manage Your Emotions
+
+This isn't about not feeling emotions. It's about managing them so they don't control you or escalate the situation.
+
+## How to Stay Calm During a Disagreement
+
+1. Take a Breath
+
+When you feel yourself getting heated:
+- Take a deep breath
+- Pause before responding
+- Give yourself a moment
+
+2. Recognize Your Triggers
+
+Notice:
+- What makes you defensive?
+- What triggers you?
+- What escalates you?
+- What pushes your buttons?
+
+3. Use "I" Statements
+
+Express yourself without blame:
+- "I feel [emotion] when [situation]"
+- "I need [what you need]"
+- "I'm concerned about [concern]"
+
+4. Take a Break if Needed
+
+If things are getting too heated:
+- "Can we take a break and come back to this?"
+- "I need a moment to calm down"
+- "Let's pause and continue when we're both calmer"
+
+5. Focus on Understanding
+
+Shift your focus:
+- From being right to understanding
+- From defending to listening
+- From winning to solving
+
+## What Makes It Work
+
+You manage your emotions: You don't let them control you.
+
+You recognize triggers: You know what escalates you.
+
+You use "I" statements: You express yourself without blame.
+
+You take breaks when needed: You pause before things get too heated.
+
+You focus on understanding: Not being right, but understanding.
+
+## Common Mistakes
+
+Letting emotions control you: Manage them, don't let them control you.
+
+Not recognizing triggers: Know what escalates you.
+
+Getting defensive: Listen, don't defend.
+
+Not taking breaks: Pause when things get too heated.
+
+Focusing on being right: Focus on understanding instead.
+
+## The Win
+
+You stayed calm during a disagreement. You managed your emotions. You prevented escalation. You kept the conversation productive. You worked through it respectfully. That's a win.`,
+  },
   'use-i-statements': {
     id: 32,
     title: 'Use "I" Statements in Conflicts',
@@ -2380,6 +2856,370 @@ Not following through: If you say you'll do it, do it.
 You made amends. You took concrete steps to repair trust. She saw you're committed to doing better. That's a win.`,
   },
   // Additional Reconnection guides
+  'have-20-minute-conversation': {
+    id: 49,
+    title: 'Have a 20-Minute Undistracted Conversation',
+    category: 'Reconnection',
+    difficulty: 'Easy',
+    time: '20 min',
+    excerpt: 'Learn how to create space for meaningful connection. Set aside time with no phones or distractions to actually talk and listen.',
+    content: `## Why This Matters
+
+A 20-minute undistracted conversation creates space for meaningful connection. When phones are away and distractions are gone, you can actually talk and listen in ways that don't happen when you're both distracted.
+
+## The Secret: Remove All Distractions
+
+This isn't about having a conversation while checking your phone. It's about putting everything away and actually being present together.
+
+## How to Have a 20-Minute Undistracted Conversation
+
+1. Put Everything Away
+
+Phones, devices, distractions—put them all away. Out of sight, out of reach. Actually disconnect.
+
+2. Pick a Time
+
+Choose when you'll do it:
+- When you're both available
+- When you can be present
+- When you won't be rushed
+- When you can focus
+
+3. Pick a Place
+
+Choose somewhere:
+- Quiet and comfortable
+- You can talk without distractions
+- You both feel relaxed
+- You can focus on each other
+
+4. Actually Talk
+
+Discuss:
+- How you're both doing
+- What's going on in your lives
+- Your relationship
+- Dreams, concerns, anything that matters
+
+5. Actually Listen
+
+Be present. Listen. Don't just wait for your turn to talk. Actually hear what she's saying.
+
+## What Makes It Work
+
+Everything is away: No devices, no distractions.
+
+You're present: Actually there, not thinking about other things.
+
+You actually talk: About what matters, not just surface stuff.
+
+You actually listen: Hear what she's saying, don't just wait to respond.
+
+## Common Mistakes
+
+Keeping phones nearby: Put them away, out of reach.
+
+Being distracted: Actually be there, not thinking about other things.
+
+Not making time: Make it a priority, don't skip it.
+
+Not actually listening: Hear what she's saying, don't just wait to talk.
+
+## The Win
+
+You had a 20-minute undistracted conversation. You created space for meaningful connection. You actually talked and listened. You connected deeply. That's a win.`,
+  },
+  'ask-about-inner-world': {
+    id: 50,
+    title: 'Ask About Her Inner World',
+    category: 'Reconnection',
+    difficulty: 'Easy',
+    time: '15-30 min',
+    excerpt: 'Learn how to ask questions about her thoughts, feelings, dreams, and concerns. Show you care about who she is, not just what she does.',
+    content: `## Why This Matters
+
+Asking about her inner world shows you care about who she is, not just what she does. It creates emotional intimacy and helps you understand her on a deeper level.
+
+## The Secret: Ask About Who She Is
+
+This isn't about what she did today. It's about her thoughts, feelings, dreams, concerns—her inner world.
+
+## How to Ask About Her Inner World
+
+1. Ask Open-Ended Questions
+
+Questions that invite deeper answers:
+- "What's been on your mind lately?"
+- "How are you feeling about [something]?"
+- "What are you hoping for?"
+- "What's worrying you?"
+
+2. Ask About Feelings
+
+Not just what happened, but how she feels:
+- "How did that make you feel?"
+- "What was that like for you?"
+- "How are you feeling about that?"
+
+3. Ask About Dreams and Hopes
+
+Show interest in what she wants:
+- "What are you hoping for?"
+- "What would you love to do?"
+- "What are you dreaming about?"
+
+4. Actually Listen
+
+Don't just ask and wait to respond. Actually listen. Hear what she's saying. Show you care.
+
+5. Follow Up
+
+Ask follow-up questions. Show you're interested. Don't just move on to the next topic.
+
+## What Makes It Work
+
+You ask about feelings: Not just what happened, but how she feels.
+
+You ask about dreams: Show interest in what she wants.
+
+You actually listen: Hear what she's saying, don't just wait to respond.
+
+You follow up: Show you're interested, ask more questions.
+
+## Common Mistakes
+
+Only asking about what she did: Ask about who she is, not just what she does.
+
+Not listening: Actually hear what she's saying.
+
+Moving on too quickly: Follow up, show interest.
+
+Making it about you: Focus on her, not yourself.
+
+## The Win
+
+You asked about her inner world. You showed you care about who she is. You created emotional intimacy. You connected on a deeper level. That's a win.`,
+  },
+  'state-of-union-conversation': {
+    id: 51,
+    title: 'Have a "State of the Union" Conversation',
+    category: 'Reconnection',
+    difficulty: 'Medium',
+    time: '30-60 min',
+    excerpt: 'Learn how to have regular relationship check-ins. Discuss what\'s working, what isn\'t, and how you can both improve together.',
+    content: `## Why This Matters
+
+Regular relationship check-ins help you stay connected and address issues before they become big problems. You discuss what's working, what isn't, and how you can both improve together.
+
+## The Secret: Make It Regular
+
+This isn't about having one big conversation. It's about regular check-ins that keep you connected and help you address issues early.
+
+## How to Have a State of the Union Conversation
+
+1. Pick a Regular Time
+
+Choose when you'll do it:
+- Weekly
+- Bi-weekly
+- Monthly
+- Whatever works for you both
+
+2. Create a Safe Space
+
+Make sure:
+- You're both comfortable
+- You won't be interrupted
+- You have enough time
+- You can both be present
+
+3. Discuss What's Working
+
+Start with what's good:
+- What's going well?
+- What do you appreciate?
+- What are you grateful for?
+
+4. Discuss What Isn't Working
+
+Then talk about challenges:
+- What's not working?
+- What needs improvement?
+- What are concerns?
+
+5. Discuss How to Improve
+
+End with solutions:
+- How can we both improve?
+- What can we do differently?
+- How can we support each other?
+
+## What Makes It Work
+
+It's regular: Same time, consistent schedule.
+
+It's safe: You both feel comfortable sharing.
+
+It's balanced: You discuss what's working and what isn't.
+
+It's solution-focused: You end with how to improve.
+
+## Common Mistakes
+
+Only focusing on problems: Start with what's working.
+
+Making it one-sided: Both of you share, both of you listen.
+
+Not making it regular: Consistency is key.
+
+Getting defensive: Listen, don't defend.
+
+## The Win
+
+You had a state of the union conversation. You discussed what's working and what isn't. You talked about how to improve. You stayed connected and addressed issues early. That's a win.`,
+  },
+  'do-something-you-used-to-enjoy': {
+    id: 52,
+    title: 'Do Something You Used to Enjoy Together',
+    category: 'Reconnection',
+    difficulty: 'Easy',
+    time: 'Varies',
+    excerpt: 'Remember what you both loved doing together. Learn how to reconnect to the fun, playful couple you used to be.',
+    content: `## Why This Matters
+
+Doing something you used to enjoy together helps you reconnect to the fun, playful couple you used to be. It reminds you of why you fell in love and helps you rebuild that connection.
+
+## The Secret: Remember What You Loved
+
+This isn't about doing something new. It's about remembering what you both loved doing together and doing it again.
+
+## How to Do Something You Used to Enjoy Together
+
+1. Remember What You Loved
+
+Think about:
+- What did you do when you first started dating?
+- What did you both enjoy?
+- What made you laugh?
+- What brought you together?
+
+2. Pick Something
+
+Choose something:
+- You both used to love
+- You can still do
+- You both remember fondly
+- Brings back good memories
+
+3. Make It Happen
+
+Plan it. Make it happen. Don't just talk about it—actually do it.
+
+4. Be Present
+
+Actually be there. Not thinking about other things, not distracted. Just present, enjoying it together.
+
+5. Enjoy It
+
+Have fun. Laugh. Enjoy being together. Remember why you fell in love.
+
+## What Makes It Work
+
+You remember what you loved: It's something you both used to enjoy.
+
+You actually do it: Don't just talk about it, make it happen.
+
+You're present: Actually there, not distracted.
+
+You enjoy it: Have fun, laugh, reconnect.
+
+## Common Mistakes
+
+Only talking about it: Actually do it, don't just discuss it.
+
+Not being present: Actually be there, not distracted.
+
+Making it complicated: Keep it simple, just do what you used to love.
+
+Not making it happen: Plan it, schedule it, do it.
+
+## The Win
+
+You did something you used to enjoy together. You reconnected to the fun, playful couple you used to be. You remembered why you fell in love. You rebuilt that connection. That's a win.`,
+  },
+  'plan-surprise-that-shows-you-know-her': {
+    id: 53,
+    title: 'Plan a Surprise That Shows You Know Her',
+    category: 'Reconnection',
+    difficulty: 'Medium',
+    time: '1-2 hours',
+    excerpt: 'Learn how to plan something specific that shows you pay attention to her interests, preferences, and needs. Demonstrate you see her as an individual.',
+    content: `## Why This Matters
+
+Planning a surprise that shows you know her demonstrates you pay attention to her interests, preferences, and needs. It shows you see her as an individual, not just a partner.
+
+## The Secret: Pay Attention to Her
+
+This isn't about generic surprises. It's about something specific that shows you actually know her—her interests, her preferences, what she loves.
+
+## How to Plan a Surprise That Shows You Know Her
+
+1. Pay Attention
+
+Notice:
+- What does she talk about?
+- What does she enjoy?
+- What are her interests?
+- What does she need?
+
+2. Plan Something Specific
+
+Choose something:
+- Related to her interests
+- She's mentioned wanting
+- Shows you know her
+- Demonstrates you pay attention
+
+3. Think About Details
+
+Consider:
+- What would she actually want?
+- What would make it special for her?
+- What shows you know her?
+- What demonstrates you care?
+
+4. Make It Happen
+
+Plan it. Execute it. Make it special. Show you put thought into it.
+
+5. Show You Know Her
+
+Make it clear this is about her—her interests, her preferences, what she loves. Show you see her as an individual.
+
+## What Makes It Work
+
+It's specific: Related to her interests, not generic.
+
+You pay attention: You notice what she talks about, what she enjoys.
+
+You think about details: You consider what would make it special for her.
+
+You show you know her: It's clear you see her as an individual.
+
+## Common Mistakes
+
+Making it generic: Make it specific to her interests.
+
+Not paying attention: Notice what she talks about, what she enjoys.
+
+Making it about you: This is about her, not you.
+
+Not thinking about details: Consider what would make it special for her.
+
+## The Win
+
+You planned a surprise that shows you know her. You demonstrated you pay attention. You showed you see her as an individual. You made her feel seen and known. That's a win.`,
+  },
   'sit-close-and-talk': {
     id: 34,
     title: 'Sit Close and Talk',
@@ -2528,6 +3368,225 @@ You turn away: "Fine." (one word, no follow-up)
 You turned toward her bid. You responded positively. You connected. Small moments built big bonds. That's a win.`,
   },
   // Additional Quality Time guides
+  'tech-free-quality-time': {
+    id: 46,
+    title: 'Have Tech-Free Quality Time',
+    category: 'Quality Time',
+    difficulty: 'Easy',
+    time: '30 min',
+    excerpt: 'Learn how to spend 30 minutes together with phones put away. Remove distractions and rebuild the connection that got lost in busyness.',
+    content: `## Why This Matters
+
+Tech-free quality time removes distractions and rebuilds connection. When phones are away, you can actually be present and connect in ways that don't happen when you're both on devices.
+
+## The Secret: Put Everything Away
+
+This isn't about checking your phone "just once." It's about putting everything away and actually being present together.
+
+## How to Have Tech-Free Quality Time
+
+1. Put Everything Away
+
+Put your phones, tablets, laptops away. Out of sight, out of reach. Actually disconnect.
+
+2. Pick a Time
+
+Choose when you'll do it:
+- After dinner
+- Before bed
+- Morning coffee
+- Any time you can both be present
+
+3. Pick an Activity
+
+Choose something:
+- You both enjoy
+- Doesn't require devices
+- Lets you talk and connect
+- Is simple and relaxed
+
+4. Be Present
+
+Actually be there. Not thinking about work, not planning what's next. Just present, together.
+
+5. Make It Regular
+
+Do it regularly. Same time, same routine. Consistency builds connection.
+
+## What Makes It Work
+
+Everything is away: No devices, no distractions.
+
+You're present: Actually there, not thinking about other things.
+
+It's regular: You do it consistently, not just sometimes.
+
+It's focused: You're both engaged, both there.
+
+## Common Mistakes
+
+Keeping phones nearby: Put them away, out of reach.
+
+Checking "just once": Don't check at all. Be present.
+
+Not making it regular: Consistency is key.
+
+Being distracted: Actually be there, not thinking about other things.
+
+## The Win
+
+You had tech-free quality time. You removed distractions. You actually connected. You rebuilt the connection that got lost. That's a win.`,
+  },
+  'weekly-date-night-conversation': {
+    id: 47,
+    title: 'Have a Weekly Date Night (Just Conversation)',
+    category: 'Quality Time',
+    difficulty: 'Easy',
+    time: '1-2 hours',
+    excerpt: 'Learn how to have a weekly "date night" that\'s just conversation—not an activity. Talk about your relationship, dreams, or catch up deeply.',
+    content: `## Why This Matters
+
+A weekly date night that's just conversation creates space for deep connection. You're not distracted by activities or entertainment—just talking, listening, and connecting.
+
+## The Secret: It's Just Conversation
+
+This isn't about going out or doing something. It's about setting aside time to just talk and connect deeply.
+
+## How to Have a Weekly Date Night Conversation
+
+1. Pick a Time
+
+Choose when you'll do it:
+- Same time every week
+- When you're both available
+- When you can be present
+- When you won't be rushed
+
+2. Pick a Place
+
+Choose somewhere:
+- Quiet and comfortable
+- You can talk without distractions
+- You both feel relaxed
+- You can focus on each other
+
+3. Put Everything Away
+
+Phones, devices, distractions—put them all away. This is about being present together.
+
+4. Talk About What Matters
+
+Discuss:
+- How you're both doing
+- What's going on in your lives
+- Your relationship
+- Dreams, goals, concerns
+- Anything that matters
+
+5. Make It Regular
+
+Do it every week. Same time, same commitment. Consistency builds connection.
+
+## What Makes It Work
+
+It's regular: Same time, every week.
+
+It's focused: Just conversation, no distractions.
+
+It's present: You're both there, both engaged.
+
+It's deep: You talk about what matters, not just surface stuff.
+
+## Common Mistakes
+
+Skipping it: Make it a priority, don't skip it.
+
+Being distracted: Put your phone away. Be present.
+
+Making it about activities: It's about conversation, not doing something.
+
+Not making it regular: Consistency is what makes it powerful.
+
+## The Win
+
+You had a weekly date night conversation. You created space for deep connection. You talked about what matters. You connected deeply. That's a win.`,
+  },
+  'create-daily-ritual': {
+    id: 48,
+    title: 'Create a Morning or Evening Ritual Together',
+    category: 'Quality Time',
+    difficulty: 'Easy',
+    time: '10-30 min daily',
+    excerpt: 'Learn how to create small daily rituals—morning coffee, evening walk, or bedtime check-in. Consistency builds connection.',
+    content: `## Why This Matters
+
+Daily rituals create consistency and connection. Small, regular moments together build stronger bonds than occasional big gestures.
+
+## The Secret: Consistency Beats Grand Gestures
+
+This isn't about elaborate rituals. It's about small, consistent moments together that build connection over time.
+
+## How to Create a Daily Ritual
+
+1. Pick a Time
+
+Choose when you'll do it:
+- Morning (coffee, walk, check-in)
+- Evening (walk, bedtime check-in, quiet time)
+- Any time you can both be present
+
+2. Keep It Simple
+
+Choose something:
+- Easy to do
+- Doesn't require much time
+- You both enjoy
+- You can do consistently
+
+3. Make It Consistent
+
+Do it at the same time, every day. Consistency is what makes it powerful.
+
+4. Be Present
+
+Actually be there. Not distracted, not rushed. Just present, together.
+
+5. Enjoy It
+
+Keep it light. Enjoy the routine, the consistency, and being together.
+
+## Examples of Daily Rituals
+
+- Morning coffee together (10-15 min)
+- Evening walk together (15-20 min)
+- Bedtime check-in (5-10 min)
+- Quiet time together (10-15 min)
+- Breakfast together (15-20 min)
+
+## What Makes It Work
+
+It's consistent: Same time, every day.
+
+It's simple: Easy to do, not complicated.
+
+It's together: You're both there, both engaged.
+
+It's regular: You do it daily, not just sometimes.
+
+## Common Mistakes
+
+Making it too complicated: Keep it simple.
+
+Not being consistent: Do it every day.
+
+Being distracted: Be present, not on your phone.
+
+Making it too long: Start shorter, build up if needed.
+
+## The Win
+
+You created a daily ritual. You're connecting consistently. You're building stronger bonds. Small moments are building big connection. That's a win.`,
+  },
   'create-morning-ritual': {
     id: 36,
     title: 'Create a Morning Ritual Together',
@@ -2669,6 +3728,290 @@ Making it about logistics: It's about connection, not planning.
 You created an evening ritual. You're ending the day together. You're building consistency. That's a win.`,
   },
   // Additional Outdoor guides
+  'go-for-hike-together': {
+    id: 42,
+    title: 'Go for a Hike Together',
+    category: 'Outdoor Activities',
+    difficulty: 'Easy',
+    time: '2-4 hours',
+    excerpt: 'Learn how to plan and execute a hike that disconnects you from daily stress and creates space for deep conversations and connection.',
+    content: `## Why This Matters
+
+Hiking together disconnects you from daily stress and creates space for deep conversations. Nature, exercise, and uninterrupted time together create perfect conditions for connection.
+
+## The Secret: It's About the Journey, Not the Destination
+
+This isn't about reaching the summit. It's about the time together, the conversations, and the shared experience.
+
+## How to Go for a Hike Together
+
+1. Pick a Trail
+
+Choose something:
+- Appropriate for both fitness levels
+- Not too challenging
+- Has nice views or scenery
+- You both can enjoy
+
+2. Plan Together
+
+Talk about what you want:
+- How long?
+- How challenging?
+- What do you want to see?
+- What do you want to talk about?
+
+3. Pack Together
+
+Bring:
+- Water and snacks
+- Appropriate clothing
+- First aid basics
+- Phone (for safety, but keep it away)
+
+4. Use It as Quality Time
+
+Talk while you hike. Use it as time to connect, not just exercise. Make it about being together, not just the hike.
+
+5. Enjoy the Experience
+
+Take breaks. Enjoy the views. Be present. It's about the experience, not just finishing.
+
+## What Makes It Work
+
+You plan together: It's a shared experience from the start.
+
+You adjust for each other: It's about being together, not individual performance.
+
+You use it as quality time: Talk, connect, be present.
+
+You enjoy it: It's about the experience, not just the hike.
+
+## Common Mistakes
+
+Making it too challenging: Pick something you both can enjoy.
+
+Not planning together: Make it a shared experience.
+
+Focusing on the destination: It's about the journey together.
+
+Not being present: Put your phone away. Be there together.
+
+## The Win
+
+You went for a hike together. You disconnected from stress. You had deep conversations. You connected in nature. That's a win.`,
+  },
+  'morning-walk-together': {
+    id: 43,
+    title: 'Start the Day with a Walk Together',
+    category: 'Outdoor Activities',
+    difficulty: 'Easy',
+    time: '15-30 min',
+    excerpt: 'Learn how to make morning walks a regular thing. Even 15 minutes around the neighborhood can set a positive tone and create connection.',
+    content: `## Why This Matters
+
+Morning walks together set a positive tone for the day. Even 15 minutes around the neighborhood can create connection, get you moving, and start the day on a good note.
+
+## The Secret: Make It a Habit
+
+Don't do it once. Make it a daily habit. Same time, every day. Consistency is what makes it powerful.
+
+## How to Start the Day with a Walk Together
+
+1. Pick a Time
+
+Choose when you'll do it:
+- First thing in the morning
+- After coffee
+- Before work
+- When you both wake up
+
+2. Keep It Short
+
+Start with 15-20 minutes. You can build up, but start simple. Consistency beats length.
+
+3. Make It Regular
+
+Do it every day, or at least most days. Same time, same routine. Consistency builds connection.
+
+4. Use It as Quality Time
+
+Talk while you walk. Use it as time to connect, not just exercise. Make it about being together.
+
+5. Enjoy It
+
+Keep it light. Enjoy the fresh air, the movement, and being together. It's about connection, not exercise.
+
+## What Makes It Work
+
+It's consistent: Same time, every day.
+
+It's short: Easy to fit in, not overwhelming.
+
+It's together: You're both there, both engaged.
+
+It's regular: You do it daily, not just sometimes.
+
+## Common Mistakes
+
+Making it too long: Start shorter, build up.
+
+Not being consistent: Make it a habit, don't skip it.
+
+Being distracted: Be present, not on your phone.
+
+Making it about exercise: It's about connection, not fitness.
+
+## The Win
+
+You started the day with a walk together. You set a positive tone. You connected before the day got busy. That's a win.`,
+  },
+  'picnic-in-nature': {
+    id: 44,
+    title: 'Plan a Picnic in Nature',
+    category: 'Outdoor Activities',
+    difficulty: 'Easy',
+    time: '2-3 hours',
+    excerpt: 'Learn how to pack a lunch and find a beautiful outdoor spot. Create an intimate, relaxed setting for quality conversation.',
+    content: `## Why This Matters
+
+A picnic in nature creates an intimate, relaxed setting for quality conversation. You're outside, away from distractions, and focused on each other.
+
+## The Secret: Keep It Simple
+
+This isn't about elaborate food or perfect setup. It's about being together outside, enjoying food, and having quality conversation.
+
+## How to Plan a Picnic in Nature
+
+1. Pick a Spot
+
+Choose somewhere:
+- Beautiful and peaceful
+- You both enjoy
+- Has a nice view or setting
+- Is safe and accessible
+
+2. Pack Simple Food
+
+Bring:
+- Food you both like
+- Easy to eat
+- Doesn't require much prep
+- Something special but simple
+
+3. Bring the Basics
+
+Pack:
+- Blanket or something to sit on
+- Water
+- Plates, utensils if needed
+- Trash bag (leave no trace)
+
+4. Make It About Connection
+
+Use it as quality time. Talk, connect, be present. It's about being together, not just the food.
+
+5. Enjoy It
+
+Relax. Enjoy the food, the setting, and each other. It's about the experience, not perfection.
+
+## What Makes It Work
+
+It's simple: Not complicated, just together.
+
+It's outside: Nature, fresh air, peaceful setting.
+
+It's focused: You're there together, not distracted.
+
+It's relaxed: No pressure, just enjoying each other.
+
+## Common Mistakes
+
+Making it too elaborate: Keep it simple.
+
+Not picking a good spot: Choose somewhere you both enjoy.
+
+Being distracted: Put your phone away. Be present.
+
+Making it about the food: It's about connection, not a fancy meal.
+
+## The Win
+
+You planned a picnic in nature. You created an intimate setting. You had quality conversation. You connected outside. That's a win.`,
+  },
+  'stargazing-date': {
+    id: 45,
+    title: 'Plan a Stargazing Date',
+    category: 'Outdoor Activities',
+    difficulty: 'Easy',
+    time: '1-2 hours',
+    excerpt: 'Learn how to find a spot away from city lights and spend time stargazing together. Create quiet, meaningful moments of connection.',
+    content: `## Why This Matters
+
+Stargazing together creates quiet, meaningful moments of connection. You're away from distractions, in nature, and focused on each other and the experience.
+
+## The Secret: It's About Presence
+
+This isn't about knowing constellations. It's about being together, being present, and creating quiet moments of connection.
+
+## How to Plan a Stargazing Date
+
+1. Find a Dark Spot
+
+Look for:
+- Away from city lights
+- Safe and accessible
+- Somewhere you can see the sky
+- A place you both feel comfortable
+
+2. Check the Weather
+
+Make sure:
+- Clear skies
+- Comfortable temperature
+- Not too windy
+- Good conditions for stargazing
+
+3. Bring the Basics
+
+Pack:
+- Blanket or something to lie on
+- Warm clothes (it gets cold at night)
+- Water
+- Maybe a star map app (optional)
+
+4. Make It About Connection
+
+Talk while you stargaze. Use it as time to connect, not just look at stars. Make it about being together.
+
+5. Enjoy It
+
+Relax. Look at the stars. Talk. Be present. It's about the experience, not knowing every constellation.
+
+## What Makes It Work
+
+It's quiet: Away from distractions, peaceful.
+
+It's together: You're both there, both engaged.
+
+It's present: You're actually there, not distracted.
+
+It's meaningful: Quiet moments create connection.
+
+## Common Mistakes
+
+Making it too complicated: Keep it simple.
+
+Not checking weather: Make sure conditions are good.
+
+Being distracted: Put your phone away. Be present.
+
+Making it about astronomy: It's about connection, not science.
+
+## The Win
+
+You planned a stargazing date. You created quiet moments. You connected under the stars. You were present together. That's a win.`,
+  },
   'bike-ride-together': {
     id: 38,
     title: 'Go for a Bike Ride Together',
@@ -2808,6 +4151,202 @@ Skipping it: Make it a habit, don't skip it.
 You took an evening stroll. You processed the day together. You connected and unwound. That's a win.`,
   },
   // Additional Active guides
+  'run-together': {
+    id: 37,
+    title: 'Go for a Run Together',
+    category: 'Active Together',
+    difficulty: 'Medium',
+    time: '30-60 min',
+    excerpt: 'Learn how to run together even if you run at different paces. Create accountability, shared goals, and quality time.',
+    content: `## Why This Matters
+
+Running together creates accountability, shared goals, and quality time. Even if you run at different paces, you can still do it together and support each other.
+
+## The Secret: It's About Being Together, Not Speed
+
+This isn't about running the same pace. It's about doing it together, supporting each other, and creating shared experiences.
+
+## How to Run Together
+
+1. Adjust Your Pace
+
+If you're faster, slow down. If you're slower, don't stress about keeping up. Find a pace that works for both of you, or take turns leading.
+
+2. Use It as Quality Time
+
+Talk while you run. Use it as time to connect, not just exercise. Make it about being together, not just the run.
+
+3. Support Each Other
+
+Encourage each other. Celebrate progress. Be patient if one of you is having a tough day. It's about supporting each other, not competition.
+
+4. Make It Regular
+
+Schedule it. Make it a habit. Consistency builds connection and accountability.
+
+5. Focus on the Experience
+
+It's not about distance or speed. It's about doing it together, supporting each other, and creating shared experiences.
+
+## What Makes It Work
+
+You adjust for each other: It's about being together, not individual performance.
+
+You support each other: Encourage, don't compete.
+
+You make it regular: Consistency builds connection.
+
+You enjoy it: It's about the experience, not just the exercise.
+
+## Common Mistakes
+
+Making it competitive: That's not fun, that's stressful.
+
+Not adjusting pace: If you're much faster, slow down so you can actually be together.
+
+Focusing on performance: It's about connection, not personal bests.
+
+Not making it regular: One run doesn't build habits or connection.
+
+## The Win
+
+You went for a run together. You supported each other. You created accountability and quality time. That's a win.`,
+  },
+  'yoga-in-nature': {
+    id: 38,
+    title: 'Do Yoga Together Outdoors',
+    category: 'Active Together',
+    difficulty: 'Easy',
+    time: '30-60 min',
+    excerpt: 'Learn how to practice yoga together in your backyard, a park, or beach. Create calm, presence, and physical closeness.',
+    content: `## Why This Matters
+
+Yoga together creates calm, presence, and physical closeness. Doing it outdoors adds nature, fresh air, and a peaceful environment. It's a way to connect physically and mentally.
+
+## The Secret: It's About Presence, Not Perfection
+
+This isn't about perfect poses. It's about being present together, moving together, and creating calm and connection.
+
+## How to Do Yoga Together Outdoors
+
+1. Pick a Place
+
+Choose somewhere:
+- Peaceful and quiet
+- You both feel comfortable
+- Has enough space
+- Is safe
+
+2. Keep It Simple
+
+You don't need to be experts. Simple poses, breathing together, and being present is enough.
+
+3. Be Present
+
+Focus on being there together. Not on your phone, not distracted. Just present, moving together, breathing together.
+
+4. Support Each Other
+
+Help each other with poses if needed. Be patient. Encourage each other. It's about doing it together, not individual performance.
+
+5. Enjoy the Experience
+
+Relax. Breathe. Move together. Enjoy being outside, being together, and creating calm.
+
+## What Makes It Work
+
+You're present: Actually there, not distracted.
+
+You keep it simple: Not about perfect poses, just about being together.
+
+You support each other: Help, encourage, be patient.
+
+You enjoy it: It's about the experience, not perfection.
+
+## Common Mistakes
+
+Making it about perfection: It's about presence, not perfect poses.
+
+Being distracted: Put your phone away. Be present.
+
+Making it competitive: It's about connection, not comparison.
+
+Not being together: Actually do it together, not just in the same space.
+
+## The Win
+
+You did yoga together outdoors. You created calm and presence. You connected physically and mentally. That's a win.`,
+  },
+  'outdoor-workout': {
+    id: 39,
+    title: 'Do an Outdoor Workout Together',
+    category: 'Active Together',
+    difficulty: 'Medium',
+    time: '30-60 min',
+    excerpt: 'Learn how to do an outdoor workout together—running, calisthenics, or yoga in the park. Combine health, nature, and connection.',
+    content: `## Why This Matters
+
+An outdoor workout together combines health, nature, and connection. You're getting exercise, being outside, and doing it together. It's a way to be active and connected at the same time.
+
+## The Secret: Make It About Being Together
+
+This isn't about individual performance. It's about doing it together, supporting each other, and creating shared experiences.
+
+## How to Do an Outdoor Workout Together
+
+1. Pick an Activity
+
+Choose something you both enjoy:
+- Running or jogging
+- Calisthenics (push-ups, squats, etc.)
+- Yoga
+- Bodyweight exercises
+- A combination
+
+2. Find a Good Spot
+
+Look for:
+- A park or outdoor space
+- Somewhere safe
+- Enough room to move
+- Nice setting
+
+3. Adjust for Each Other
+
+If one of you is more fit, adjust. Make it about being together, not individual performance. Support each other.
+
+4. Make It Fun
+
+Keep it light. Encourage each other. Make it enjoyable, not stressful. It's about connection, not competition.
+
+5. Be Present
+
+Put your phone away. Actually be there together. Focus on the workout, each other, and the experience.
+
+## What Makes It Work
+
+You adjust for each other: It's about being together, not individual performance.
+
+You support each other: Encourage, don't compete.
+
+You make it fun: It's enjoyable, not stressful.
+
+You're present: Actually there, not distracted.
+
+## Common Mistakes
+
+Making it competitive: That's not fun, that's stressful.
+
+Not adjusting for each other: If you're much more fit, adjust so you can actually do it together.
+
+Focusing on performance: It's about connection, not personal bests.
+
+Being distracted: Put your phone away. Be present.
+
+## The Win
+
+You did an outdoor workout together. You got exercise, were outside, and connected. You created shared experiences. That's a win.`,
+  },
   'swim-together': {
     id: 40,
     title: 'Go Swimming Together',

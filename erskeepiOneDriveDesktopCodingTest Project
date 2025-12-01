@@ -1,0 +1,68 @@
+[1mdiff --git a/app/dashboard/how-to-guides/[slug]/page.tsx b/app/dashboard/how-to-guides/[slug]/page.tsx[m
+[1mindex e9e79a8..dc81308 100644[m
+[1m--- a/app/dashboard/how-to-guides/[slug]/page.tsx[m
+[1m+++ b/app/dashboard/how-to-guides/[slug]/page.tsx[m
+[36m@@ -1373,6 +1373,63 @@[m [mForcing it: Make it genuine. Don't just go through the motions.[m
+ ## The Win[m
+ [m
+ You identified her love language. You're speaking it regularly. She feels deeply loved in the way she needs. That's a win.`,[m
+[32m+[m[32m  },[m
+[32m+[m[32m  'create-love-map': {[m
+[32m+[m[32m    id: 30,[m
+[32m+[m[32m    title: 'Build Your Love Map (Know Her Inner World)',[m
+[32m+[m[32m    category: 'Intimacy',[m
+[32m+[m[32m    difficulty: 'Medium',[m
+[32m+[m[32m    time: 'Ongoing',[m
+[32m+[m[32m    excerpt: 'Learn how to ask questions and pay attention in ways that help you understand her hopes, fears, dreams, and stresses. Build true emotional intimacy.',[m
+[32m+[m[32m    content: `## Why This Matters[m
+[32m+[m
+[32m+[m[32mKnowing your partner's inner world—their hopes, fears, dreams, and stresses—is the foundation of emotional intimacy. When you know what matters to her, you can support her better, surprise her meaningfully, and connect on a deeper level. A love map is your understanding of her inner world.[m
+[32m+[m
+[32m+[m[32m## The Secret: Ask and Pay Attention[m
+[32m+[m
+[32m+[m[32mBuilding a love map isn't about one conversation. It's about ongoing curiosity. Ask questions. Pay attention to what she says. Remember the details. Show you care about who she is, not just what she does.[m
+[32m+[m
+[32m+[m[32m## What Building a Love Map Looks Like[m
+[32m+[m
+[32m+[m[32m1. Ask About Her Day[m
+[32m+[m
+[32m+[m[32mMove beyond "how was your day?" Ask specific questions: "What was the best part of your day?" "What was the hardest part?" "What are you looking forward to?" "What's on your mind?"[m
+[32m+[m
+[32m+[m[32m2. Ask About Her Inner World[m
+[32m+[m
+[32m+[m[32mAsk about her hopes, fears, dreams, and stresses: "What are you worried about right now?" "What are you excited about?" "What's something you've always wanted to do?" "What's stressing you out?"[m
+[32m+[m
+[32m+[m[32m3. Pay Attention to Details[m
+[32m+[m
+[32m+[m[32mWhen she mentions something—a friend, a project, a concern—remember it. Follow up later: "How did that thing with your friend go?" "How's that project coming along?" Show you're paying attention.[m
+[32m+[m
+[32m+[m[32m4. Ask About Her Past[m
+[32m+[m
+[32m+[m[32mLearn about her childhood, her family, her experiences: "What was it like growing up?" "What's a favorite memory from your childhood?" "What shaped who you are today?"[m
+[32m+[m
+[32m+[m[32m5. Ask About Her Future[m
+[32m+[m
+[32m+[m[32mLearn about her dreams and goals: "What do you want to do in the next year?" "What's something you've always wanted to try?" "Where do you see yourself in five years?"[m
+[32m+[m
+[32m+[m[32m6. Notice What Makes Her Light Up[m
+[32m+[m
+[32m+[m[32mPay attention to what she gets excited about, what she talks about with passion, what makes her happy. These are clues to her inner world.[m
+[32m+[m
+[32m+[m[32m## Common Mistakes[m
+[32m+[m
+[32m+[m[32mNot asking: Don't assume you know. Ask questions.[m
+[32m+[m
+[32m+[m[32mNot paying attention: If you ask but don't remember, it doesn't count.[m
+[32m+[m
+[32m+[m[32mOnly asking about logistics: Ask about feelings, dreams, fears, not just what happened.[m
+[32m+[m
+[32m+[m[32mMaking it about you: This is about learning about her, not sharing about yourself.[m
+[32m+[m
+[32m+[m[32mNot following up: If she mentions something, ask about it later. Show you remember.[m
+[32m+[m
+[32m+[m[32m## The Win[m
+[32m+[m
+[32m+[m[32mYou're building your love map. You know her hopes, fears, dreams, and stresses. You understand her inner world. You can support her better and connect on a deeper level. That's a win.`,[m
+   },[m
+   // Additional Partnership guides[m
+   'take-over-chore-completely': {[m
