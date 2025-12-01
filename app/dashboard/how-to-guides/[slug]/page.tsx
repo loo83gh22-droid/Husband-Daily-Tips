@@ -1273,6 +1273,68 @@ Making her manage you: Don't ask what to do—figure it out.
 
 You did something that made her life easier. She felt cared for. You showed love through action. That's a win.`,
   },
+  'share-gratitude-for-character': {
+    id: 26,
+    title: 'Express Gratitude for Who She Is',
+    category: 'Intimacy',
+    difficulty: 'Easy',
+    time: '5 min',
+    excerpt: 'Move beyond thanking her for what she does. Learn how to appreciate her character, values, and who she is as a person.',
+    content: `## Why This Matters
+
+When you express gratitude for who she is, not just what she does, you're acknowledging her character, values, and essence. This creates deeper connection and makes her feel truly seen and valued.
+
+## The Secret: Appreciate Character, Not Just Actions
+
+It's easy to thank her for what she does. It's deeper to appreciate who she is. Notice her character, her values, her essence—the things that make her who she is.
+
+## How to Express Gratitude for Who She Is
+
+1. Notice Her Character Traits
+
+What do you appreciate about who she is? Her patience, her kindness, her strength, her sense of humor, her thoughtfulness, her resilience.
+
+2. Notice Her Values
+
+What values does she live by? What principles guide her? How does she show up in the world?
+
+3. Notice How She Makes You Feel
+
+How does she make you feel? Safe, supported, understood, loved, inspired, challenged in good ways.
+
+4. Be Specific
+
+Generic: "You're great."
+Specific: "I'm grateful for how patient you are with me. Even when I'm difficult, you stay calm and understanding. That means a lot."
+
+5. Express It Regularly
+
+Don't wait for special occasions. Say it when you notice it. Make it a habit.
+
+## What to Express Gratitude For
+
+Her character: Who she is as a person.
+
+Her values: What she stands for.
+
+How she shows up: How she handles things, how she treats people, how she lives her life.
+
+How she makes you feel: The positive impact she has on your life.
+
+## Common Mistakes
+
+Only thanking for actions: Appreciate who she is, not just what she does.
+
+Being generic: Be specific about what you appreciate.
+
+Not saying it: If you notice it, say it.
+
+Focusing on appearance: Focus on character, not looks.
+
+## The Win
+
+You expressed gratitude for who she is. She felt truly seen and valued. You deepened your connection. That's a win.`,
+  },
   'practice-words-of-affirmation': {
     id: 25,
     title: 'Practice Words of Affirmation',
@@ -1649,6 +1711,71 @@ Making her manage it: You plan it, you handle it.
 
 You planned a surprise. She loved it. She felt special and cared for. That's a win.`,
   },
+  'non-sexual-physical-touch': {
+    id: 27,
+    title: 'Give Non-Sexual Physical Affection',
+    category: 'Intimacy',
+    difficulty: 'Easy',
+    time: 'Ongoing',
+    excerpt: 'Learn how to show physical affection that isn\'t about sex. Hugs, hand-holding, and cuddling rebuild the physical connection that makes you feel like partners.',
+    content: `## Why This Matters
+
+Physical touch releases oxytocin (the bonding hormone). But if every touch leads to sex, she'll start avoiding touch. Non-sexual physical affection rebuilds the physical connection that makes you feel like partners.
+
+## The Secret: Touch Without Agenda
+
+Touch her because you want to connect, not because you want something. Make it about connection, not expectation.
+
+## How to Give Non-Sexual Physical Affection
+
+1. Hug Her
+
+Hug her when you see her, when you leave, when you're just passing by. Make it genuine, not rushed.
+
+2. Hold Her Hand
+
+Hold her hand when you're walking, sitting, or just being together. It's simple but powerful.
+
+3. Cuddle
+
+Cuddle on the couch, in bed, or just when you're together. Make it about closeness, not sex.
+
+4. Touch Her Arm or Shoulder
+
+A gentle touch on her arm or shoulder when you're talking shows connection and presence.
+
+5. Give Her a Back Rub
+
+A back rub or shoulder massage can be intimate without being sexual. Focus on helping her relax.
+
+6. Kiss Her (Without It Leading to Sex)
+
+Kiss her hello, goodbye, or just because. Make it about affection, not foreplay.
+
+## What Makes It Non-Sexual
+
+No expectation: You're not touching her to get something.
+
+No pressure: It's about connection, not sex.
+
+It's regular: You do it often, not just when you want sex.
+
+It's genuine: You actually want to connect, not just get something.
+
+## Common Mistakes
+
+Making every touch sexual: Not every touch needs to lead to sex.
+
+Only touching when you want sex: Touch her regularly, not just when you want something.
+
+Rushing it: Take your time. Make it about connection.
+
+Having an agenda: Touch her because you want to connect, not because you want something.
+
+## The Win
+
+You gave non-sexual physical affection. She felt connected. You rebuilt physical intimacy. That's a win.`,
+  },
   'give-physical-affection': {
     id: 29,
     title: 'Give Physical Affection (Without Expecting Sex)',
@@ -1723,6 +1850,246 @@ Making it about you: It's about connection, not your needs.
 You gave physical affection. She felt connected. You rebuilt physical intimacy. That's a win.`,
   },
   // Additional Gratitude guides
+  'express-gratitude-daily': {
+    id: 28,
+    title: 'Express Gratitude Daily (The Right Way)',
+    category: 'Gratitude',
+    difficulty: 'Easy',
+    time: '1 min',
+    excerpt: 'Learn how to thank her for specific things in ways that feel genuine and meaningful, not like you\'re checking a box.',
+    content: `## Why This Matters
+
+Gratitude strengthens bonds. When you express genuine gratitude, you're showing you notice what she does and you appreciate it. This creates a positive atmosphere and makes her feel valued.
+
+## The Secret: Be Specific
+
+Generic "thanks" doesn't land. Specific gratitude shows you're paying attention and you actually appreciate what she did.
+
+## How to Express Gratitude
+
+1. Be Specific
+
+Generic: "Thanks for dinner."
+Specific: "Thanks for making that pasta dish. I know you were tired, and it meant a lot that you still cooked."
+
+2. Notice the Effort
+
+Acknowledge the work she put in, not just the result: "I appreciate how much thought you put into planning this." "Thank you for handling that stressful situation. I know that wasn't easy."
+
+3. Notice Character
+
+Thank her for who she is, not just what she does: "I'm grateful for how patient you are with me." "Thank you for always being so thoughtful."
+
+4. Express It Regularly
+
+Don't wait for special occasions. Say it when you notice it. Make it a habit.
+
+5. Express It When It Matters
+
+When she does something for you, when she handles something stressful, when she shows up for you, when she makes an effort, or just because (gratitude for who she is).
+
+## Common Mistakes
+
+Being generic: "Thanks" is better than nothing, but specific is better.
+
+Only thanking for big things: Notice and appreciate the small things too.
+
+Making it transactional: Don't only thank her when you want something.
+
+Forgetting to thank: If you notice it, say it.
+
+## The Win
+
+You expressed genuine gratitude. She felt seen and appreciated. You strengthened your bond. That's a win.`,
+  },
+  'gratitude-list': {
+    id: 29,
+    title: 'Create a Gratitude List About Her',
+    category: 'Gratitude',
+    difficulty: 'Easy',
+    time: '5 min',
+    excerpt: 'Learn how to identify and express multiple things you\'re grateful for about her. Shift your focus to what\'s working in your relationship.',
+    content: `## Why This Matters
+
+When you focus on what you're grateful for, you shift your perspective. Instead of noticing what's wrong, you notice what's right. This creates a positive foundation for your relationship.
+
+## The Secret: Notice What's Working
+
+It's easy to notice what's wrong. It takes effort to notice what's right. Make that effort. Create a list of things you're grateful for about her.
+
+## How to Create a Gratitude List
+
+1. Think About Who She Is
+
+What do you appreciate about her character? Her patience, her kindness, her sense of humor, her strength, her thoughtfulness.
+
+2. Think About What She Does
+
+What does she do that you appreciate? How she takes care of you, how she handles stress, how she shows up for you, how she makes you feel.
+
+3. Think About What She Brings to Your Life
+
+How does she make your life better? What would you miss if she wasn't there?
+
+4. Write It Down
+
+Actually write it down. A list of 5-10 things. Be specific. Not "she's nice" but "I'm grateful for how she always remembers the little things I like."
+
+5. Share It With Her
+
+Don't keep it to yourself. Share it with her. Tell her what you're grateful for. This strengthens your connection.
+
+## What to Include
+
+Her character traits: What you appreciate about who she is.
+
+What she does: Actions she takes that you're grateful for.
+
+How she makes you feel: The positive impact she has on your life.
+
+The little things: Small gestures and habits you appreciate.
+
+## Common Mistakes
+
+Being generic: Be specific about what you're grateful for.
+
+Only focusing on big things: Notice the small things too.
+
+Not sharing it: Share your gratitude list with her.
+
+Forgetting to update it: Add to it regularly as you notice new things.
+
+## The Win
+
+You created a gratitude list. You shifted your focus to what's working. You shared it with her. You strengthened your connection. That's a win.`,
+  },
+  'thank-her-for-chores': {
+    id: 32,
+    title: 'Thank Her for Things She Does (Without Being Asked)',
+    category: 'Gratitude',
+    difficulty: 'Easy',
+    time: '30 seconds',
+    excerpt: 'Acknowledge her efforts around the house and in your relationship. Learn how to recognize contributions in ways that make her feel seen.',
+    content: `## Why This Matters
+
+When she does things around the house or in your relationship, acknowledging it shows you notice and appreciate her efforts. It makes her feel seen and valued, not taken for granted.
+
+## The Secret: Notice and Acknowledge
+
+Don't take what she does for granted. Notice it. Acknowledge it. Thank her for it.
+
+## How to Thank Her
+
+1. Notice What She Does
+
+Pay attention to what she handles: household tasks, planning, managing things, taking care of things you don't have to think about.
+
+2. Be Specific
+
+Generic: "Thanks."
+Specific: "Thanks for handling the grocery shopping. I know that takes time, and I appreciate you doing it."
+
+3. Acknowledge the Effort
+
+Recognize the work she put in: "I appreciate you taking care of that. I know it wasn't easy." "Thank you for handling that. I know it was stressful."
+
+4. Say It Regularly
+
+Don't wait for special occasions. Say it when you notice it. Make it a habit.
+
+5. Don't Make It About You
+
+This isn't about how it benefits you. It's about acknowledging her effort and contribution.
+
+## What to Thank Her For
+
+Household tasks she handles regularly.
+
+Planning and organizing she does.
+
+Things she takes care of that you don't have to think about.
+
+Efforts she makes in your relationship.
+
+## Common Mistakes
+
+Taking it for granted: Don't assume she'll just do things without acknowledgment.
+
+Being generic: Be specific about what you're thanking her for.
+
+Only thanking for big things: Notice and thank her for the small things too.
+
+Not saying it: If you notice it, say it.
+
+## The Win
+
+You thanked her for what she does. She felt seen and appreciated. You acknowledged her contributions. That's a win.`,
+  },
+  'appreciate-her-effort': {
+    id: 33,
+    title: 'Acknowledge Her Effort (Not Just Results)',
+    category: 'Gratitude',
+    difficulty: 'Easy',
+    time: '1 min',
+    excerpt: 'Learn how to appreciate the work she puts in, even when things don\'t turn out perfectly. Recognize effort, not just outcomes.',
+    content: `## Why This Matters
+
+Results matter, but effort matters too. When you acknowledge her effort, even when things don't turn out perfectly, you show you value the work she puts in, not just the outcome.
+
+## The Secret: Recognize Effort, Not Just Results
+
+Don't only appreciate things when they turn out perfectly. Appreciate the effort she puts in, even when things don't go as planned.
+
+## How to Acknowledge Effort
+
+1. Notice the Work She Put In
+
+What did she do? What effort did she make? What time did she spend? What thought did she put into it?
+
+2. Acknowledge It Specifically
+
+"I appreciate all the work you put into planning that. I know that took a lot of time and thought."
+
+"Thank you for trying. I know you put a lot of effort into that."
+
+3. Don't Focus on the Outcome
+
+Even if things didn't turn out perfectly, acknowledge the effort: "I know that didn't go as planned, but I really appreciate all the work you put into it."
+
+4. Recognize the Intent
+
+Acknowledge what she was trying to do, not just what happened: "I appreciate that you were trying to [specific thing]. That meant a lot."
+
+5. Show You Value the Effort
+
+Make it clear that you value the effort itself, not just the result.
+
+## What to Acknowledge
+
+The time she spent on something.
+
+The thought she put into it.
+
+The effort she made.
+
+The intent behind what she did.
+
+The work she put in, even if it didn't work out.
+
+## Common Mistakes
+
+Only acknowledging perfect results: Recognize effort even when things don't turn out perfectly.
+
+Focusing on what went wrong: Acknowledge what she did right, not just what went wrong.
+
+Not saying it: If you notice the effort, acknowledge it.
+
+Being dismissive: Don't minimize her effort just because the result wasn't perfect.
+
+## The Win
+
+You acknowledged her effort. She felt valued for the work she put in, not just the outcome. You showed you appreciate her effort. That's a win.`,
+  },
   'send-gratitude-text': {
     id: 30,
     title: 'Send a Gratitude Text',
