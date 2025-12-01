@@ -534,7 +534,7 @@ export default async function Dashboard() {
                     </>
                   ) : (
                     <>
-                      One move today. One wife smile tomorrow. You got this.
+                      One move today. One smile tomorrow. You got this.
                     </>
                   )}
                 </p>

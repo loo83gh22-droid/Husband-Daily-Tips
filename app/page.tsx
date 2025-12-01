@@ -97,7 +97,7 @@ export default async function Home() {
             '@type': 'WebSite',
             name: 'Best Husband Ever',
             url: 'https://www.besthusbandever.com',
-            description: 'Daily actions to level up your marriage game. One move today. One wife smile tomorrow.',
+            description: 'Daily actions to level up your marriage game. One move today. One smile tomorrow.',
             potentialAction: {
               '@type': 'SearchAction',
               target: {

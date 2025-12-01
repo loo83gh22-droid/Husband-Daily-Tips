@@ -11,7 +11,7 @@ export const metadata: Metadata = {
     default: 'Best Husband Ever - Your Daily Action, Delivered',
     template: '%s | Best Husband Ever',
   },
-  description: 'Daily actions to level up your marriage game. One move today. One wife smile tomorrow. You got this. Become the husband you and your partner deserve with consistent, meaningful actions.',
+  description: 'Daily actions to level up your marriage game. One move today. One smile tomorrow. You got this. Become the husband you and your partner deserve with consistent, meaningful actions.',
   keywords: ['best husband', 'marriage tips', 'relationship advice', 'husband daily actions', 'marriage improvement', 'relationship goals', 'daily relationship tips', 'husband guide', 'marriage help', 'relationship building'],
   authors: [{ name: 'Best Husband Ever' }],
   creator: 'Best Husband Ever',
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Best Husband Ever - Your Daily Action, Delivered',
-    description: 'Daily actions to level up your marriage game. One move today. One wife smile tomorrow.',
+    description: 'Daily actions to level up your marriage game. One move today. One smile tomorrow.',
     images: ['/og-image.png'],
   },
   robots: {

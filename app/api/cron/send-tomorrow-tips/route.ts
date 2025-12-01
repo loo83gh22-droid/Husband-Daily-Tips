@@ -56,6 +56,10 @@ export async function GET(request: Request) {
   }
 
   try {
+    // Log cron job start
+    const now = new Date();
+    logger.log(`[Cron Job Started] send-tomorrow-tips at ${now.toISOString()}`);
+    
     // Check environment variables
     if (!process.env.SUPABASE_SERVICE_ROLE_KEY) {
       logger.error('SUPABASE_SERVICE_ROLE_KEY not configured');
@@ -74,7 +78,6 @@ export async function GET(request: Request) {
     }
 
     const supabase = getSupabaseAdmin();
-    const now = new Date();
 
     // Get all active users with their timezones and profile data
     const { data: users, error: usersError } = await supabase
@@ -130,12 +133,36 @@ export async function GET(request: Request) {
       const subscriptionTier = user.subscription_tier || 'free';
       
       try {
-        // Get current time in user's timezone
-        const userTime = new Date(now.toLocaleString('en-US', { timeZone: timezone }));
-        const hour = userTime.getHours();
-        const dayOfWeek = userTime.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
+        // Get current time in user's timezone using Intl.DateTimeFormat (most reliable)
+        const hourFormatter = new Intl.DateTimeFormat('en-US', {
+          timeZone: timezone,
+          hour: 'numeric',
+          hour12: false,
+        });
+        
+        // Format the current UTC time in the user's timezone to get hour
+        const hourStr = hourFormatter.format(now);
+        const hour = parseInt(hourStr, 10);
+        
+        // Get day of week in user's timezone
+        // Use a date formatter to get the day, then convert to 0-6 format
+        const dayFormatter = new Intl.DateTimeFormat('en-US', {
+          timeZone: timezone,
+          weekday: 'long',
+        });
+        const weekdayName = dayFormatter.format(now);
+        const weekdayMap: Record<string, number> = {
+          'Sunday': 0, 'Monday': 1, 'Tuesday': 2, 'Wednesday': 3,
+          'Thursday': 4, 'Friday': 5, 'Saturday': 6
+        };
+        const dayOfWeek = weekdayMap[weekdayName] ?? new Date().getDay();
 
-        // If it's 12pm (12:00) in their timezone
+        // Log for debugging (only log first few to avoid spam)
+        if (users.length <= 5 || users.indexOf(user) < 3) {
+          logger.log(`[Cron Debug] User ${user.email}: timezone=${timezone}, hour=${hour}, dayOfWeek=${dayOfWeek} (${weekdayName}), UTC=${now.toISOString()}, subscription=${subscriptionTier}`);
+        }
+
+        // If it's 12pm (12:00) in their timezone - check hour is 12
         if (hour === 12) {
           // For free users: only send on their first work day of the week
           if (subscriptionTier === 'free') {
@@ -157,6 +184,7 @@ export async function GET(request: Request) {
     }
 
     if (usersToEmail.length === 0) {
+      logger.log(`[Cron Job] No users to email at this time. Checked ${users.length} users. UTC time: ${now.toISOString()}`);
       return NextResponse.json({
         success: true,
         sent: 0,
@@ -167,6 +195,8 @@ export async function GET(request: Request) {
         currentUtcTime: now.toISOString(),
       });
     }
+
+    logger.log(`[Cron Job] Found ${usersToEmail.length} users to email at 12pm in their timezone`);
 
     // Get tomorrow's date
     const tomorrow = new Date();
@@ -430,6 +460,8 @@ export async function GET(request: Request) {
       }
     }
 
+    logger.log(`[Cron Job Completed] Sent ${sentCount} emails, ${errorCount} errors, out of ${usersToEmail.length} users to email`);
+    
     return NextResponse.json({
       success: true,
       sent: sentCount,
