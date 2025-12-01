@@ -1374,6 +1374,63 @@ Forcing it: Make it genuine. Don't just go through the motions.
 
 You identified her love language. You're speaking it regularly. She feels deeply loved in the way she needs. That's a win.`,
   },
+  'create-love-map': {
+    id: 30,
+    title: 'Build Your Love Map (Know Her Inner World)',
+    category: 'Intimacy',
+    difficulty: 'Medium',
+    time: 'Ongoing',
+    excerpt: 'Learn how to ask questions and pay attention in ways that help you understand her hopes, fears, dreams, and stresses. Build true emotional intimacy.',
+    content: `## Why This Matters
+
+Knowing your partner's inner world—their hopes, fears, dreams, and stresses—is the foundation of emotional intimacy. When you know what matters to her, you can support her better, surprise her meaningfully, and connect on a deeper level. A love map is your understanding of her inner world.
+
+## The Secret: Ask and Pay Attention
+
+Building a love map isn't about one conversation. It's about ongoing curiosity. Ask questions. Pay attention to what she says. Remember the details. Show you care about who she is, not just what she does.
+
+## What Building a Love Map Looks Like
+
+1. Ask About Her Day
+
+Move beyond "how was your day?" Ask specific questions: "What was the best part of your day?" "What was the hardest part?" "What are you looking forward to?" "What's on your mind?"
+
+2. Ask About Her Inner World
+
+Ask about her hopes, fears, dreams, and stresses: "What are you worried about right now?" "What are you excited about?" "What's something you've always wanted to do?" "What's stressing you out?"
+
+3. Pay Attention to Details
+
+When she mentions something—a friend, a project, a concern—remember it. Follow up later: "How did that thing with your friend go?" "How's that project coming along?" Show you're paying attention.
+
+4. Ask About Her Past
+
+Learn about her childhood, her family, her experiences: "What was it like growing up?" "What's a favorite memory from your childhood?" "What shaped who you are today?"
+
+5. Ask About Her Future
+
+Learn about her dreams and goals: "What do you want to do in the next year?" "What's something you've always wanted to try?" "Where do you see yourself in five years?"
+
+6. Notice What Makes Her Light Up
+
+Pay attention to what she gets excited about, what she talks about with passion, what makes her happy. These are clues to her inner world.
+
+## Common Mistakes
+
+Not asking: Don't assume you know. Ask questions.
+
+Not paying attention: If you ask but don't remember, it doesn't count.
+
+Only asking about logistics: Ask about feelings, dreams, fears, not just what happened.
+
+Making it about you: This is about learning about her, not sharing about yourself.
+
+Not following up: If she mentions something, ask about it later. Show you remember.
+
+## The Win
+
+You're building your love map. You know her hopes, fears, dreams, and stresses. You understand her inner world. You can support her better and connect on a deeper level. That's a win.`,
+  },
   // Additional Partnership guides
   'take-over-chore-completely': {
     id: 26,
