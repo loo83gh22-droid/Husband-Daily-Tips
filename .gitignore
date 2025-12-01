@@ -45,3 +45,15 @@ GET_FULL_RESPONSE.ps1
 # Temporary export files
 *.csv
 
+# Temporary test scripts
+scripts/calculate-*.js
+scripts/*-test*.js
+scripts/*-example*.js
+
+# Corrupted/temp files
+tatus
+*erskeepi*
+git-output.txt
+git-status-output.txt
+git-status.txt
+
