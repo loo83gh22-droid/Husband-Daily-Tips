@@ -30,11 +30,11 @@ async function getUserSubscription(auth0Id: string) {
     const trialStartedAt = user?.trial_started_at ? new Date(user.trial_started_at) : null;
     const now = new Date();
     // Active trial: premium tier, has trial dates, trial hasn't ended, and no paid subscription
-    const hasActiveTrial = user?.subscription_tier === 'premium' && 
+    const hasActiveTrial = !!(user?.subscription_tier === 'premium' && 
                           trialStartedAt && 
                           trialEndsAt && 
                           trialEndsAt > now && 
-                          !user?.stripe_subscription_id;
+                          !user?.stripe_subscription_id);
     const hasSubscription = !!user?.stripe_subscription_id;
     // If user has subscription, they're on premium (not trial)
     const isOnPremium = user?.subscription_tier === 'premium' && hasSubscription;
