@@ -305,7 +305,7 @@ export default async function Home() {
                 </div>
                 <h3 className="text-xl font-semibold text-slate-200 mb-2">Get Daily & Weekly Actions</h3>
                 <p className="text-slate-400">
-                  Premium members receive daily routine actions via email and on the dashboard, plus a selection of weekly planning actions that require a bit more planning. You&apos;ll also get a weekly summary email to reflect on your accomplishments.
+                  Daily actions delivered to your inbox and dashboard, plus weekly planning actions for bigger gestures. Track your progress with weekly summaries.
                 </p>
               </div>
               <div className="text-center">
