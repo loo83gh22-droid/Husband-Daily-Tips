@@ -74,28 +74,28 @@
 - **7-day free trial** for all users
 - **70% monthly active users** (7,000 MAU)
 - **5-10% conversion rate** from free to paid (industry standard for freemium)
-- **$19.99/month** paid subscription
+- **$7/month** paid subscription
 
 ### Scenario 1: Conservative (5% conversion)
 - Free users: 9,500
 - Paid users: 500
-- Monthly Revenue: 500 × $19.99 = **$9,995/month**
-- Annual Revenue: **$119,940/year**
-- **Net Profit**: $9,995 - $526 = **$9,469/month** (94.7% margin)
+- Monthly Revenue: 500 × $7 = **$3,500/month**
+- Annual Revenue: **$42,000/year**
+- **Net Profit**: $3,500 - $526 = **$2,974/month** (85% margin)
 
 ### Scenario 2: Optimistic (10% conversion)
 - Free users: 9,000
 - Paid users: 1,000
-- Monthly Revenue: 1,000 × $19.99 = **$19,990/month**
-- Annual Revenue: **$239,880/year**
-- **Net Profit**: $19,990 - $526 = **$19,464/month** (97.4% margin)
+- Monthly Revenue: 1,000 × $7 = **$7,000/month**
+- Annual Revenue: **$84,000/year**
+- **Net Profit**: $7,000 - $526 = **$6,474/month** (92.5% margin)
 
 ### Scenario 3: Aggressive (15% conversion)
 - Free users: 8,500
 - Paid users: 1,500
-- Monthly Revenue: 1,500 × $19.99 = **$29,985/month**
-- Annual Revenue: **$359,820/year**
-- **Net Profit**: $29,985 - $526 = **$29,459/month** (98.2% margin)
+- Monthly Revenue: 1,500 × $7 = **$10,500/month**
+- Annual Revenue: **$126,000/year**
+- **Net Profit**: $10,500 - $526 = **$9,974/month** (95% margin)
 
 ---
 

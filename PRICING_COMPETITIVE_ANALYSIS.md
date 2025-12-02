@@ -8,7 +8,7 @@
 | App | Monthly Price | Annual Price | Key Features | Notes |
 |-----|--------------|--------------|--------------|-------|
 | **Lasting** | $15/month | $80/year ($6.67/month) | Guided relationship counseling, exercises | Most direct competitor |
-| **IntimaSync** | $19.99/month | N/A | AI-recommended activities, 4 AI coaching sessions, analytics | **Same price as yours** |
+| **IntimaSync** | $19.99/month | N/A | AI-recommended activities, 4 AI coaching sessions, analytics | Higher priced competitor |
 | **My Love Your Love** | $17.98/couple ($8.99/person) | $108/couple ($54/person) | Couple-focused features | Per couple pricing |
 | **Couple Tools** | $8/couple | N/A | Calendar sync, unlimited features | Very affordable |
 | **LoveWorks Solution** | $79.95/month | N/A | Mini-workshops, PDF handbooks, coaching discount | Premium tier |
@@ -51,14 +51,14 @@
 
 ## 📊 Pricing Analysis
 
-### Current Pricing: $19.99/month
+### Current Pricing: $7/month
 
 **Positioning:**
-- ✅ **Above** most habit trackers ($5-15/month)
-- ✅ **Above** affordable relationship apps ($8-15/month)
-- ✅ **Same as** IntimaSync ($19.99/month)
-- ✅ **Below** therapy alternatives ($240-400/month)
-- ⚠️ **Higher than** Lasting ($15/month or $6.67/month annual)
+- ✅ **Below** most habit trackers ($5-15/month) - Very competitive
+- ✅ **Below** affordable relationship apps ($8-15/month) - Most affordable
+- ✅ **Significantly below** IntimaSync ($19.99/month) - 65% cheaper
+- ✅ **Well below** therapy alternatives ($240-400/month) - 97% cheaper
+- ✅ **Similar to** Lasting annual ($6.67/month) - Competitive pricing
 
 ### Market Sweet Spot Analysis
 
@@ -73,10 +73,10 @@
 - **Pros**: Competitive, good value perception
 - **Cons**: Still need strong conversion
 
-**Your Current ($19.99/month):**
-- IntimaSync: $19.99/month
-- **Pros**: Premium positioning, higher revenue
-- **Cons**: Higher barrier to entry, may reduce conversion
+**Your Current ($7/month):**
+- Most affordable in the market
+- **Pros**: Low barrier to entry, high conversion potential, accessible pricing
+- **Cons**: Lower revenue per user, need higher volume
 
 **High End ($60-100/month):**
 - Therapy services
@@ -87,28 +87,28 @@
 
 ## 💡 Recommendations
 
-### Option 1: **Lower to $14.99/month** (Recommended)
+### Option 1: **Increase to $14.99/month** (Future Consideration)
 **Rationale:**
 - Just below Lasting's $15/month
 - Still premium positioning
-- More accessible than $19.99
-- **Revenue impact**: 25% lower per user, but likely 30-50% higher conversion
-- **Net effect**: Likely **higher total revenue**
+- More accessible than premium competitors ($19.99+)
+- **Revenue impact**: 114% higher per user, but likely lower conversion
+- **Net effect**: Depends on conversion rate
 
 **Annual Option**: $99/year ($8.25/month) - 45% discount
 - Matches Lasting's annual pricing strategy
 - Improves cash flow and retention
 
-### Option 2: **Keep $19.99 but Add Annual Plan**
-**Annual**: $149/year ($12.42/month) - 38% discount
-- Maintains premium positioning monthly
+### Option 2: **Increase to $14.99/month with Annual Plan** (Future Consideration)
+**Annual**: $99/year ($8.25/month) - 45% discount
+- Competitive monthly pricing
 - Annual discount drives commitment
 - Better LTV (Lifetime Value)
 
-### Option 3: **Tiered Pricing**
+### Option 3: **Tiered Pricing** (Future Consideration)
 **Free**: 1 action/week, view Team Wins
-**Basic ($9.99/month)**: Daily actions, health bar, badges
-**Premium ($19.99/month)**: Everything + journal, Team Wins posting, priority support
+**Basic ($7/month)**: Daily actions, health bar, badges (Current Premium)
+**Premium ($14.99/month)**: Everything + journal, Team Wins posting, priority support
 
 **Rationale:**
 - Lower entry point ($9.99) captures price-sensitive users
@@ -126,13 +126,14 @@
 
 ## 📈 Revenue Impact Analysis (10,000 Users)
 
-### Current: $19.99/month
+### Current: $7/month
 
 | Conversion | Paid Users | Monthly Revenue | Annual Revenue |
 |------------|------------|----------------|----------------|
-| 5% | 500 | $9,995 | $119,940 |
-| 10% | 1,000 | $19,990 | $239,880 |
-| 15% | 1,500 | $29,985 | $359,820 |
+| 5% | 500 | $3,500 | $42,000 |
+| 10% | 1,000 | $7,000 | $84,000 |
+| 15% | 1,500 | $10,500 | $126,000 |
+| 20% | 2,000 | $14,000 | $168,000 |
 
 ### Option 1: $14.99/month
 
@@ -163,26 +164,26 @@
 ### **Primary Pricing: $14.99/month**
 ### **Annual Option: $99/year ($8.25/month)**
 
-**Why:**
-1. **Competitive**: Just below Lasting ($15), above affordable apps ($8)
-2. **Conversion**: Likely 30-50% higher conversion than $19.99
-3. **Revenue**: Similar or higher total revenue due to more users
-4. **Perception**: Still premium, but accessible
-5. **Annual Plan**: Drives retention and cash flow
+**Current Strategy ($7/month):**
+1. **Most Affordable**: Below all competitors, maximizes accessibility
+2. **Conversion**: Likely highest conversion rate due to low barrier
+3. **Volume Strategy**: Lower revenue per user, but higher user acquisition
+4. **Perception**: Accessible, value-focused pricing
+5. **Market Position**: Most affordable option in the market
 
-**Alternative if you want to test:**
-- Start at $12.99/month to maximize conversion
-- Can always increase later (easier than decreasing)
-- Test both prices with A/B testing
+**Future Considerations:**
+- Can test higher prices ($9.99, $12.99) if conversion remains strong
+- Annual plan ($71.40/year = $5.95/month) could drive retention
+- Monitor conversion rates and adjust pricing strategy
 
 ---
 
 ## 📋 Implementation Strategy
 
-1. **A/B Test Pricing**
-   - Test $12.99 vs $14.99 vs $19.99
-   - Measure conversion rates
-   - Choose based on data
+1. **Monitor Current Pricing ($7/month)**
+   - Track conversion rates at current price
+   - Test higher prices ($9.99, $12.99) if conversion is strong
+   - Measure revenue per user vs total revenue
 
 2. **Annual Plan Always**
    - Offer 40-45% discount
@@ -210,10 +211,10 @@
 
 | Your Price | vs Lasting | vs Therapy | vs Habit Trackers | Positioning |
 |-----------|------------|------------|------------------|-------------|
-| $19.99 | +33% higher | 95% cheaper | 2-4x higher | Premium |
-| $14.99 | Same | 96% cheaper | 1.5-3x higher | **Competitive** |
+| $7.00 | 5% higher (vs annual) | 98% cheaper | Below average | **Most Affordable** |
+| $14.99 | Same | 96% cheaper | 1.5-3x higher | Competitive |
 | $12.99 | 13% cheaper | 97% cheaper | 1-2.5x higher | Value |
 | $9.99 | 33% cheaper | 98% cheaper | Similar | Affordable |
 
-**Recommendation: $14.99/month with $99/year option**
+**Current Pricing: $7/month - Most affordable option in the market**
 

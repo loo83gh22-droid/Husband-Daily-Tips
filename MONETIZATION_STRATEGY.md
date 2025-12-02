@@ -39,7 +39,7 @@
 - Allows users to experience value
 - Creates upgrade path to paid tiers
 
-### Tier 2: Premium ($19.99/month)
+### Tier 2: Premium ($7/month)
 **Purpose**: Main revenue driver
 
 **Features**:
@@ -51,7 +51,7 @@
 - Basic analytics
 
 **Value Justification**:
-- Less than $0.67 per day
+- Less than $0.25 per day
 - Cheaper than a coffee
 - One good tip can save a relationship
 - Comparable to other self-improvement apps

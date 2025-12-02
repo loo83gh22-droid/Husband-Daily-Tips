@@ -166,7 +166,7 @@ See MONETIZATION_STRATEGY.md for detailed business strategy including:
 
 ## Key Selling Points
 
-1. **Affordable**: $19.99/month is less than therapy or counseling
+1. **Affordable**: $7/month is less than therapy or counseling
 2. **Convenient**: Daily tips delivered automatically
 3. **Expert-curated**: Professional relationship advice
 4. **Actionable**: Specific, practical tips
