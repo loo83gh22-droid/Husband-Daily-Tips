@@ -298,10 +298,16 @@ export default async function Home() {
               <p className="text-base md:text-lg text-slate-300 leading-relaxed mb-4 max-w-2xl">
                 Consistency transforms your relationship by building trust, connection, and genuine appreciation. It&apos;s the steady, reliable effort that shows you&apos;re committed that truly makes the difference.
               </p>
-              <p className="text-sm md:text-base text-slate-400 italic mb-8 max-w-2xl">
+              <p className="text-sm md:text-base text-slate-400 italic mb-6 max-w-2xl">
                 Designed for husbands, but it&apos;s not <span className="text-primary-400 font-semibold not-italic">just</span> for husbands. 
                 Boyfriends, partners, and anyone committed to leveling up their relationship can benefit.
               </p>
+
+              {/* Pricing Badge */}
+              <div className="mb-6 inline-flex items-center gap-2 px-4 py-2 bg-primary-500/10 border border-primary-500/30 rounded-lg">
+                <span className="text-sm font-semibold text-primary-300">Just $7/month</span>
+                <span className="text-xs text-slate-400">after free trial</span>
+              </div>
 
               <div className="mb-8 flex flex-col sm:flex-row gap-4">
                 <Link
@@ -316,6 +322,26 @@ export default async function Home() {
                 >
                   Start Free Trial →
                 </Link>
+              </div>
+              {/* Trust Signal */}
+              <div className="mt-4 flex items-center justify-center gap-2 text-sm text-slate-400">
+                <span className="text-emerald-400">✓</span>
+                <span>No credit card required</span>
+              </div>
+            </div>
+
+            {/* Mobile Stats Card */}
+            <div className="md:hidden mt-8">
+              <div className="relative bg-gradient-to-br from-slate-900/98 via-primary-950/30 to-slate-800/98 border-2 border-primary-500/50 rounded-2xl p-6 backdrop-blur-sm shadow-2xl shadow-primary-500/30 overflow-hidden">
+                <div className="text-center">
+                  <div className="inline-flex flex-col items-center justify-center bg-gradient-to-br from-primary-500/30 via-primary-600/25 to-emerald-500/25 rounded-2xl px-6 py-3 mb-3 border-2 border-primary-400/50 shadow-xl shadow-primary-500/30 backdrop-blur-sm">
+                    <div className="text-4xl font-black bg-gradient-to-r from-primary-300 via-primary-400 to-emerald-400 bg-clip-text text-transparent mb-1 leading-none">
+                      {actionCount}+
+                    </div>
+                    <div className="text-xs font-bold text-primary-300 uppercase tracking-widest">Daily Actions</div>
+                  </div>
+                  <p className="text-xs text-slate-400 mt-2">Across 8 categories</p>
+                </div>
               </div>
             </div>
 
@@ -528,13 +554,18 @@ export default async function Home() {
 
           {/* CTA Section */}
           <section className="mt-24 md:mt-32 text-center">
-            <div className="bg-gradient-to-br from-primary-500/20 to-primary-600/20 border border-primary-500/40 rounded-2xl p-12 max-w-3xl mx-auto">
-              <h2 className="text-3xl md:text-4xl font-bold text-slate-50 mb-4">
+            <div className="bg-gradient-to-br from-primary-500/20 to-primary-600/20 border border-primary-500/40 rounded-2xl p-12 max-w-4xl mx-auto">
+              <h2 className="text-2xl sm:text-3xl md:text-3xl lg:text-4xl font-bold text-slate-50 mb-4">
                 Ready to Become the Best Husband Ever?
               </h2>
-              <p className="text-lg text-slate-300 mb-8">
-                Start your 7-day free trial. No credit card required. Just commitment to showing up.
+              <p className="text-lg text-slate-300 mb-4">
+                Start your 7-day free trial. Just commitment to showing up.
               </p>
+              {/* Trust Signal - Prominent */}
+              <div className="mb-6 flex items-center justify-center gap-2 text-base font-semibold text-emerald-400">
+                <span>✓</span>
+                <span>No credit card required</span>
+              </div>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link
                   href="/survey"
@@ -548,6 +579,12 @@ export default async function Home() {
                 >
                   Start Free Trial →
                 </Link>
+              </div>
+              {/* Pricing Badge in CTA */}
+              <div className="mt-6 flex items-center justify-center gap-2 text-sm text-slate-300">
+                <span>After trial:</span>
+                <span className="font-semibold text-primary-400">$7/month</span>
+                <span className="text-slate-500">• Cancel anytime</span>
               </div>
             </div>
           </section>
