@@ -125,6 +125,121 @@ export default async function Home() {
           }),
         }}
       />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'FAQPage',
+            mainEntity: [
+              {
+                '@type': 'Question',
+                name: 'How does Best Husband Ever work?',
+                acceptedAnswer: {
+                  '@type': 'Answer',
+                  text: 'Take a quick survey about your relationship, then receive daily personalized actions delivered to your inbox and dashboard. Each action is tailored to your goals, schedule, and relationship stage. You\'ll also get weekly planning actions for bigger gestures and a weekly summary to track your progress.',
+                },
+              },
+              {
+                '@type': 'Question',
+                name: 'What makes this different from other relationship advice?',
+                acceptedAnswer: {
+                  '@type': 'Answer',
+                  text: 'We don\'t give generic tips. Every action is specific, actionable, and personalized. Instead of reading articles about what you "should" do, you get daily steps that tell you exactly what to do, when to do it, and why it matters. It\'s action-based, not advice-based.',
+                },
+              },
+              {
+                '@type': 'Question',
+                name: 'How much does it cost?',
+                acceptedAnswer: {
+                  '@type': 'Answer',
+                  text: 'Start with a 7-day free trial—no credit card required. After that, premium membership is $19.99/month. That\'s less than $0.67 per day for daily actions that can transform your relationship.',
+                },
+              },
+              {
+                '@type': 'Question',
+                name: 'Is there really a free trial?',
+                acceptedAnswer: {
+                  '@type': 'Answer',
+                  text: 'Yes. 7 days completely free. No credit card required. No automatic charges. Just sign up, take the survey, and start receiving daily actions. Cancel anytime during the trial with no obligation.',
+                },
+              },
+              {
+                '@type': 'Question',
+                name: 'What if I\'m not married yet?',
+                acceptedAnswer: {
+                  '@type': 'Answer',
+                  text: 'Best Husband Ever is designed for husbands, but it\'s not just for husbands. Boyfriends, partners, and anyone committed to leveling up their relationship can benefit. The actions are tailored to your relationship stage.',
+                },
+              },
+              {
+                '@type': 'Question',
+                name: 'How long does it take to see results?',
+                acceptedAnswer: {
+                  '@type': 'Answer',
+                  text: 'Many users notice a difference within the first week. Small daily actions compound over time—consistency is key. Track your progress with badges, streaks, and your Husband Health score to see measurable improvement over weeks and months.',
+                },
+              },
+              {
+                '@type': 'Question',
+                name: 'Can I cancel anytime?',
+                acceptedAnswer: {
+                  '@type': 'Answer',
+                  text: 'Absolutely. Cancel anytime from your account settings. No long-term contracts, no cancellation fees, no questions asked. Your subscription will remain active until the end of your current billing period.',
+                },
+              },
+              {
+                '@type': 'Question',
+                name: 'What types of actions will I receive?',
+                acceptedAnswer: {
+                  '@type': 'Answer',
+                  text: 'You\'ll get daily routine actions (quick wins you can do today) and weekly planning actions (bigger gestures that require more thought). Actions cover 8 categories: Communication, Intimacy, Partnership, Romance, Gratitude, Conflict Resolution, Reconnection, and Quality Time.',
+                },
+              },
+              {
+                '@type': 'Question',
+                name: 'Do I need to use the app every day?',
+                acceptedAnswer: {
+                  '@type': 'Answer',
+                  text: 'No pressure. You\'ll receive daily actions via email and can access them on the dashboard whenever you\'re ready. The weekly summary email helps you catch up if you miss a few days. Consistency helps, but flexibility is built in.',
+                },
+              },
+              {
+                '@type': 'Question',
+                name: 'Is my information private?',
+                acceptedAnswer: {
+                  '@type': 'Answer',
+                  text: 'Yes. Your relationship information is completely private and secure. We never share your data with third parties. Your survey responses are used solely to personalize your daily actions. Your privacy is our priority.',
+                },
+              },
+              {
+                '@type': 'Question',
+                name: 'How personalized are the actions?',
+                acceptedAnswer: {
+                  '@type': 'Answer',
+                  text: 'Very personalized. Based on your survey, we tailor actions to your work schedule, whether you have kids, your relationship goals, and your country (for holiday-specific actions). Actions adapt to your specific situation, not generic advice.',
+                },
+              },
+              {
+                '@type': 'Question',
+                name: 'What if I\'m in a long-distance relationship?',
+                acceptedAnswer: {
+                  '@type': 'Answer',
+                  text: 'Many actions work great for long-distance relationships. We have actions specifically designed for couples who are apart, including virtual date ideas, thoughtful messages, and ways to stay connected across distance.',
+                },
+              },
+              {
+                '@type': 'Question',
+                name: 'Can I use this if my relationship is struggling?',
+                acceptedAnswer: {
+                  '@type': 'Answer',
+                  text: 'Yes. Many users find value when their relationship needs attention. Daily actions can help rebuild connection, improve communication, and show consistent effort. However, if you\'re dealing with serious issues, we recommend also seeking professional counseling.',
+                },
+              },
+            ],
+          }),
+        }}
+      />
 
       <div className="min-h-screen bg-slate-950">
         <Suspense fallback={null}>
@@ -174,7 +289,7 @@ export default async function Home() {
                 STOP WINGING IT. START WINNING IT.
               </p>
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-slate-50 tracking-tight mb-4">
-                Your daily action, delivered.
+                Daily Actions to Become a Better Husband
               </h1>
               <p className="text-lg md:text-xl text-primary-400 font-semibold mb-4 max-w-2xl">
                 Daily actions that show you care. She&apos;ll notice. You&apos;ll both feel the difference.
@@ -342,6 +457,93 @@ export default async function Home() {
                 <h3 className="text-xl font-semibold text-slate-200 mb-3">📈 See Real Results</h3>
                 <p className="text-slate-400">
                   Track your progress, build streaks, and watch your relationship improve. Small daily actions compound into meaningful change.
+                </p>
+              </div>
+            </div>
+          </section>
+
+          {/* FAQ Section */}
+          <section className="mt-24 md:mt-32">
+            <h2 className="text-3xl md:text-4xl font-bold text-slate-50 text-center mb-12">
+              Frequently Asked Questions
+            </h2>
+            <div className="max-w-3xl mx-auto space-y-6">
+              <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-6">
+                <h3 className="text-xl font-semibold text-slate-200 mb-3">How does Best Husband Ever work?</h3>
+                <p className="text-slate-400">
+                  Take a quick survey about your relationship, then receive daily personalized actions delivered to your inbox and dashboard. Each action is tailored to your goals, schedule, and relationship stage. You&apos;ll also get weekly planning actions for bigger gestures and a weekly summary to track your progress.
+                </p>
+              </div>
+              <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-6">
+                <h3 className="text-xl font-semibold text-slate-200 mb-3">What makes this different from other relationship advice?</h3>
+                <p className="text-slate-400">
+                  We don&apos;t give generic tips. Every action is specific, actionable, and personalized. Instead of reading articles about what you &quot;should&quot; do, you get daily steps that tell you exactly what to do, when to do it, and why it matters. It&apos;s action-based, not advice-based.
+                </p>
+              </div>
+              <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-6">
+                <h3 className="text-xl font-semibold text-slate-200 mb-3">How much does it cost?</h3>
+                <p className="text-slate-400">
+                  Start with a 7-day free trial—no credit card required. After that, premium membership is $19.99/month. That&apos;s less than $0.67 per day for daily actions that can transform your relationship.
+                </p>
+              </div>
+              <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-6">
+                <h3 className="text-xl font-semibold text-slate-200 mb-3">Is there really a free trial?</h3>
+                <p className="text-slate-400">
+                  Yes. 7 days completely free. No credit card required. No automatic charges. Just sign up, take the survey, and start receiving daily actions. Cancel anytime during the trial with no obligation.
+                </p>
+              </div>
+              <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-6">
+                <h3 className="text-xl font-semibold text-slate-200 mb-3">What if I&apos;m not married yet?</h3>
+                <p className="text-slate-400">
+                  Best Husband Ever is designed for husbands, but it&apos;s not just for husbands. Boyfriends, partners, and anyone committed to leveling up their relationship can benefit. The actions are tailored to your relationship stage.
+                </p>
+              </div>
+              <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-6">
+                <h3 className="text-xl font-semibold text-slate-200 mb-3">How long does it take to see results?</h3>
+                <p className="text-slate-400">
+                  Many users notice a difference within the first week. Small daily actions compound over time—consistency is key. Track your progress with badges, streaks, and your Husband Health score to see measurable improvement over weeks and months.
+                </p>
+              </div>
+              <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-6">
+                <h3 className="text-xl font-semibold text-slate-200 mb-3">Can I cancel anytime?</h3>
+                <p className="text-slate-400">
+                  Absolutely. Cancel anytime from your account settings. No long-term contracts, no cancellation fees, no questions asked. Your subscription will remain active until the end of your current billing period.
+                </p>
+              </div>
+              <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-6">
+                <h3 className="text-xl font-semibold text-slate-200 mb-3">What types of actions will I receive?</h3>
+                <p className="text-slate-400">
+                  You&apos;ll get daily routine actions (quick wins you can do today) and weekly planning actions (bigger gestures that require more thought). Actions cover 8 categories: Communication, Intimacy, Partnership, Romance, Gratitude, Conflict Resolution, Reconnection, and Quality Time.
+                </p>
+              </div>
+              <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-6">
+                <h3 className="text-xl font-semibold text-slate-200 mb-3">Do I need to use the app every day?</h3>
+                <p className="text-slate-400">
+                  No pressure. You&apos;ll receive daily actions via email and can access them on the dashboard whenever you&apos;re ready. The weekly summary email helps you catch up if you miss a few days. Consistency helps, but flexibility is built in.
+                </p>
+              </div>
+              <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-6">
+                <h3 className="text-xl font-semibold text-slate-200 mb-3">Is my information private?</h3>
+                <p className="text-slate-400">
+                  Yes. Your relationship information is completely private and secure. We never share your data with third parties. Your survey responses are used solely to personalize your daily actions. Your privacy is our priority.
+                </p>
+              </div>
+              <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-6">
+                <h3 className="text-xl font-semibold text-slate-200 mb-3">How personalized are the actions?</h3>
+                <p className="text-slate-400">
+                  Very personalized. Based on your survey, we tailor actions to your work schedule, whether you have kids, your relationship goals, and your country (for holiday-specific actions). Actions adapt to your specific situation, not generic advice.
+                </p>
+              </div>
+              <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-6">
+                <h3 className="text-xl font-semibold text-slate-200 mb-3">What if I&apos;m in a long-distance relationship?</h3>
+                <p className="text-slate-400">
+                  Many actions work great for long-distance relationships. We have actions specifically designed for couples who are apart, including virtual date ideas, thoughtful messages, and ways to stay connected across distance.
+                </p>
+              </div>
+              <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-6">
+                <h3 className="text-xl font-semibold text-slate-200 mb-3">Can I use this if my relationship is struggling?</h3>
+                <p className="text-slate-400">
+                  Yes. Many users find value when their relationship needs attention. Daily actions can help rebuild connection, improve communication, and show consistent effort. However, if you&apos;re dealing with serious issues, we recommend also seeking professional counseling.
                 </p>
               </div>
             </div>
