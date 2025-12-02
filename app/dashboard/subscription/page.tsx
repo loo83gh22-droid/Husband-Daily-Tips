@@ -158,7 +158,7 @@ export default async function SubscriptionPage({
                 Blog
               </Link>
               <Link
-                href="/about"
+                href="/dashboard/about"
                 className="hidden md:inline-flex text-sm text-slate-300 hover:text-white transition-colors"
               >
                 About

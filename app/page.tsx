@@ -599,7 +599,7 @@ export default async function Home() {
                 <Link href="/blog" className="hover:text-slate-200 transition-colors">
                   Blog
                 </Link>
-                <Link href="/about" className="hover:text-slate-200 transition-colors">
+                <Link href="/dashboard/about" className="hover:text-slate-200 transition-colors">
                   About
                 </Link>
                 <Link href="/dashboard/subscription" className="hover:text-slate-200 transition-colors">
