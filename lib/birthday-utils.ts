@@ -102,7 +102,12 @@ export function getBirthdayWeekInfo(
   weekEnd.setDate(serveWeekStart.getDate() + 6); // 7 days total (Mon-Sun)
   weekEnd.setHours(23, 59, 59, 999);
 
-  const isBirthdayWeek = currentDateStart >= serveWeekStart && currentDateStart <= weekEnd;
+  // Only serve birthday actions if birthday is within the next 3 weeks
+  // This prevents serving birthday actions months in advance
+  const daysUntilBirthday = Math.floor((birthdayThisYear.getTime() - currentDateStart.getTime()) / (1000 * 60 * 60 * 24));
+  const isWithinReasonableTimeframe = daysUntilBirthday >= 0 && daysUntilBirthday <= 21; // Within next 3 weeks
+
+  const isBirthdayWeek = isWithinReasonableTimeframe && currentDateStart >= serveWeekStart && currentDateStart <= weekEnd;
 
   return {
     isBirthdayWeek,
