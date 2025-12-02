@@ -468,19 +468,19 @@ export default async function Home() {
               What Makes Us Different
             </h2>
             <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-              <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-6">
+              <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-6 text-center">
                 <h3 className="text-xl font-semibold text-slate-200 mb-3">⚡ Action-Based, Not Advice</h3>
                 <p className="text-slate-400">
                   No generic tips. Get specific, actionable steps delivered daily. You know exactly what to do, when to do it, and why it matters.
                 </p>
               </div>
-              <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-6">
+              <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-6 text-center">
                 <h3 className="text-xl font-semibold text-slate-200 mb-3">🎯 Personalized for Your Relationship</h3>
                 <p className="text-slate-400">
                   Actions tailored to your goals, schedule, and relationship stage. What you need, when you need it—not a one-size-fits-all approach.
                 </p>
               </div>
-              <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-6">
+              <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-6 text-center">
                 <h3 className="text-xl font-semibold text-slate-200 mb-3">📈 See Real Results</h3>
                 <p className="text-slate-400">
                   Track your progress, build streaks, and watch your relationship improve. Small daily actions compound into meaningful change.
