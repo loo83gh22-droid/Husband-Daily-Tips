@@ -9,7 +9,7 @@ async function getUserData(auth0Id: string) {
   const adminSupabase = getSupabaseAdmin();
   const { data: user, error } = await adminSupabase
     .from('users')
-    .select('*, username, name, email, has_kids, kids_live_with_you, country, partner_name, spouse_birthday, work_days')
+      .select('*, username, name, email, has_kids, kids_live_with_you, country, partner_name, spouse_birthday, work_days, show_all_country_actions')
     .eq('auth0_id', auth0Id)
     .single();
 
@@ -57,6 +57,7 @@ export default async function AccountPage() {
                     partner_name: user.partner_name || null,
                     spouse_birthday: user.spouse_birthday || null,
                     work_days: user.work_days || null,
+                    show_all_country_actions: user.show_all_country_actions || false,
                   }}
                 />
               </div>

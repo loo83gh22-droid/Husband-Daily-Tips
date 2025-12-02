@@ -6,6 +6,7 @@ interface UserProfile {
   country?: string | null;
   work_days?: number[] | null;
   spouse_birthday?: string | Date | null;
+  show_all_country_actions?: boolean;
 }
 
 interface CategoryScores {
@@ -116,16 +117,20 @@ export async function selectTomorrowAction(
     const { isActionAvailableOnDate } = await import('@/lib/seasonal-dates');
     const today = new Date();
     const userCountry = userProfile?.country as 'US' | 'CA' | null || null;
+    const showAllCountries = userProfile?.show_all_country_actions === true;
     actions = actions.filter((action) => {
-      // Filter by country: if action is country-specific, user must match
-      if (action.country && action.country !== userCountry) {
-        return false;
+      // If user wants to see all countries, skip country filtering (but still check seasonal dates)
+      if (!showAllCountries) {
+        // Filter by country: if action is country-specific, user must match
+        if (action.country && action.country !== userCountry) {
+          return false;
+        }
+        // If action is country-specific but user has no country, don't show it
+        if (action.country && !userCountry) {
+          return false;
+        }
       }
-      // If action is country-specific but user has no country, don't show it
-      if (action.country && !userCountry) {
-        return false;
-      }
-      // Check seasonal date availability
+      // Check seasonal date availability (use user's country for date calculations)
       return isActionAvailableOnDate(action, today, userCountry);
     });
   }
@@ -486,12 +491,16 @@ export async function selectWeeklyPlanningActions(
     const { isActionAvailableOnDate } = await import('@/lib/seasonal-dates');
     const today = new Date();
     const userCountry = userProfile?.country as 'US' | 'CA' | null || null;
+    const showAllCountries = userProfile?.show_all_country_actions === true;
     actions = actions.filter((action) => {
-      if (action.country && action.country !== userCountry) {
-        return false;
-      }
-      if (action.country && !userCountry) {
-        return false;
+      // If user wants to see all countries, skip country filtering (but still check seasonal dates)
+      if (!showAllCountries) {
+        if (action.country && action.country !== userCountry) {
+          return false;
+        }
+        if (action.country && !userCountry) {
+          return false;
+        }
       }
       return isActionAvailableOnDate(action, today, userCountry);
     });
@@ -598,12 +607,16 @@ export async function selectBirthdayActions(
     const { isActionAvailableOnDate } = await import('@/lib/seasonal-dates');
     const today = new Date();
     const userCountry = userProfile?.country as 'US' | 'CA' | null || null;
+    const showAllCountries = userProfile?.show_all_country_actions === true;
     actions = actions.filter((action) => {
-      if (action.country && action.country !== userCountry) {
-        return false;
-      }
-      if (action.country && !userCountry) {
-        return false;
+      // If user wants to see all countries, skip country filtering (but still check seasonal dates)
+      if (!showAllCountries) {
+        if (action.country && action.country !== userCountry) {
+          return false;
+        }
+        if (action.country && !userCountry) {
+          return false;
+        }
       }
       return isActionAvailableOnDate(action, today, userCountry);
     });
@@ -730,12 +743,16 @@ export async function selectHolidayActions(
     const { isActionAvailableOnDate } = await import('@/lib/seasonal-dates');
     const today = new Date();
     const userCountry = userProfile?.country as 'US' | 'CA' | null || null;
+    const showAllCountries = userProfile?.show_all_country_actions === true;
     actions = actions.filter((action) => {
-      if (action.country && action.country !== userCountry) {
-        return false;
-      }
-      if (action.country && !userCountry) {
-        return false;
+      // If user wants to see all countries, skip country filtering (but still check seasonal dates)
+      if (!showAllCountries) {
+        if (action.country && action.country !== userCountry) {
+          return false;
+        }
+        if (action.country && !userCountry) {
+          return false;
+        }
       }
       return isActionAvailableOnDate(action, today, userCountry);
     });

@@ -15,7 +15,7 @@ async function updateProfile(request: Request) {
     }
 
     const auth0Id = session.user.sub;
-    const { username, wedding_date, post_anonymously, timezone, profile_picture, has_kids, kids_live_with_you, country, partner_name, spouse_birthday, work_days } = await request.json();
+    const { username, wedding_date, post_anonymously, timezone, profile_picture, has_kids, kids_live_with_you, country, partner_name, spouse_birthday, work_days, show_all_country_actions } = await request.json();
 
     // Use admin client to bypass RLS (Auth0 context isn't set for RLS)
     const adminSupabase = getSupabaseAdmin();
@@ -144,6 +144,9 @@ async function updateProfile(request: Request) {
       }
       updateData.work_days = Array.isArray(work_days) && work_days.length > 0 ? work_days : null;
     }
+    if (show_all_country_actions !== undefined) {
+      updateData.show_all_country_actions = show_all_country_actions === true;
+    }
 
     const { error: updateError } = await adminSupabase
       .from('users')
@@ -188,7 +191,7 @@ export async function GET() {
     
     const { data: user, error: userError } = await adminSupabase
       .from('users')
-      .select('username, wedding_date, post_anonymously, name, timezone, profile_picture, has_kids, kids_live_with_you, country, partner_name, spouse_birthday, work_days')
+      .select('username, wedding_date, post_anonymously, name, timezone, profile_picture, has_kids, kids_live_with_you, country, partner_name, spouse_birthday, work_days, show_all_country_actions')
       .eq('auth0_id', auth0Id)
       .single();
 
@@ -209,6 +212,7 @@ export async function GET() {
           partner_name: user.partner_name,
           spouse_birthday: user.spouse_birthday,
           work_days: user.work_days,
+          show_all_country_actions: user.show_all_country_actions || false,
         });
   } catch (error) {
     console.error('Unexpected error fetching profile:', error);

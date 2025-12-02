@@ -82,7 +82,7 @@ export async function GET(request: Request) {
     // Get all active users with their timezones and profile data
     const { data: users, error: usersError } = await supabase
       .from('users')
-      .select('id, email, name, timezone, subscription_tier, has_kids, kids_live_with_you, country, work_days, spouse_birthday')
+      .select('id, email, name, timezone, subscription_tier, has_kids, kids_live_with_you, country, work_days, spouse_birthday, show_all_country_actions')
       .not('email', 'is', null);
 
     if (usersError) {
@@ -236,12 +236,14 @@ export async function GET(request: Request) {
           country?: string | null;
           work_days?: number[] | null;
           spouse_birthday?: string | Date | null;
+          show_all_country_actions?: boolean;
         } = {
           has_kids: user.has_kids ?? null,
           kids_live_with_you: user.kids_live_with_you ?? null,
           country: user.country ?? null,
           work_days: user.work_days ?? null,
           spouse_birthday: user.spouse_birthday ?? null,
+          show_all_country_actions: user.show_all_country_actions ?? false,
         };
 
         // For Sunday-Thursday, only select weekly_routine actions for daily action

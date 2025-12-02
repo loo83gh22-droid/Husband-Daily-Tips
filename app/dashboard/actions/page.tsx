@@ -13,7 +13,7 @@ async function getActions(auth0Id: string) {
   const adminSupabase = getSupabaseAdmin();
   const { data: user } = await adminSupabase
     .from('users')
-    .select('id, partner_name, subscription_tier, trial_ends_at, stripe_subscription_id, country')
+    .select('id, partner_name, subscription_tier, trial_ends_at, stripe_subscription_id, country, show_all_country_actions')
     .eq('auth0_id', auth0Id)
     .single();
 
@@ -38,10 +38,16 @@ async function getActions(auth0Id: string) {
 
   // Filter actions by country: if action is country-specific, user must match
   // Actions without a country are available to everyone
+  // If user has show_all_country_actions enabled, skip country filtering
   let filteredActions = actions || [];
   if (actions) {
     const userCountry = user.country as 'US' | 'CA' | null;
+    const showAllCountries = user.show_all_country_actions === true;
     filteredActions = actions.filter((action) => {
+      // If user wants to see all countries, skip country filtering
+      if (showAllCountries) {
+        return true;
+      }
       // If action has a country, user must match
       if (action.country && action.country !== userCountry) {
         return false;
