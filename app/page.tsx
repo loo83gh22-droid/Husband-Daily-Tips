@@ -431,30 +431,30 @@ export default async function Home() {
             <h2 className="text-3xl md:text-4xl font-bold text-slate-50 text-center mb-12">
               How It Works
             </h2>
-            <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
-              <div className="text-center">
+            <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+              <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-6 text-center">
                 <div className="w-16 h-16 bg-primary-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
                   <span className="text-2xl">📝</span>
                 </div>
-                <h3 className="text-xl font-semibold text-slate-200 mb-2">Take the Survey</h3>
+                <h3 className="text-xl font-semibold text-slate-200 mb-3">Take the Survey</h3>
                 <p className="text-slate-400">
                   Answer a few questions about your relationship. We&apos;ll create a personalized baseline and identify areas to focus on.
                 </p>
               </div>
-              <div className="text-center">
+              <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-6 text-center">
                 <div className="w-16 h-16 bg-primary-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
                   <span className="text-2xl">📅</span>
                 </div>
-                <h3 className="text-xl font-semibold text-slate-200 mb-2">Get Daily & Weekly Actions</h3>
+                <h3 className="text-xl font-semibold text-slate-200 mb-3">Get Daily & Weekly Actions</h3>
                 <p className="text-slate-400">
                   Daily actions delivered to your inbox and dashboard, plus weekly planning actions for bigger gestures. Track your progress with weekly summaries.
                 </p>
               </div>
-              <div className="text-center">
+              <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-6 text-center">
                 <div className="w-16 h-16 bg-primary-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
                   <span className="text-2xl">🏆</span>
                 </div>
-                <h3 className="text-xl font-semibold text-slate-200 mb-2">Track Progress</h3>
+                <h3 className="text-xl font-semibold text-slate-200 mb-3">Track Progress</h3>
                 <p className="text-slate-400">
                   Feel the difference in your relationship. Visual dashboards show your growth.
                 </p>
