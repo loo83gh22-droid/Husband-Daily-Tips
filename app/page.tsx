@@ -137,12 +137,6 @@ export default async function Home() {
 
             <div className="flex items-center gap-3">
               <Link
-                href="#how-it-works"
-                className="hidden md:inline-flex text-sm text-slate-300 hover:text-white transition-colors"
-              >
-                How it works
-              </Link>
-              <Link
                 href="/blog"
                 className="hidden md:inline-flex text-sm text-slate-300 hover:text-white transition-colors"
               >
