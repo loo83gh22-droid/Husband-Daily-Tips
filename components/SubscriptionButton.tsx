@@ -14,13 +14,22 @@ interface SubscriptionButtonProps {
   hasActiveTrial?: boolean | null;
   trialEndsAt?: string | null;
   isOnPremium?: boolean;
+  isLoggedIn?: boolean;
 }
 
-export default function SubscriptionButton({ plan, currentTier, hasActiveTrial, trialEndsAt, isOnPremium }: SubscriptionButtonProps) {
+export default function SubscriptionButton({ plan, currentTier, hasActiveTrial, trialEndsAt, isOnPremium, isLoggedIn = false }: SubscriptionButtonProps) {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
   const handleStartTrial = async () => {
+    // Check if user is logged in
+    if (!isLoggedIn) {
+      // Redirect to login with return URL
+      const returnUrl = encodeURIComponent(window.location.pathname + window.location.search);
+      window.location.href = `/api/auth/login?returnTo=${returnUrl}`;
+      return;
+    }
+
     setIsLoading(true);
 
     try {
@@ -48,6 +57,14 @@ export default function SubscriptionButton({ plan, currentTier, hasActiveTrial, 
   };
 
   const handleSubscribeNow = async () => {
+    // Check if user is logged in
+    if (!isLoggedIn) {
+      // Redirect to login with return URL
+      const returnUrl = encodeURIComponent(window.location.pathname + window.location.search);
+      window.location.href = `/api/auth/login?returnTo=${returnUrl}`;
+      return;
+    }
+
     setIsLoading(true);
 
     try {
@@ -64,7 +81,8 @@ export default function SubscriptionButton({ plan, currentTier, hasActiveTrial, 
       });
 
       if (!response.ok) {
-        throw new Error('Failed to create checkout session');
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || 'Failed to create checkout session');
       }
 
       const data = await response.json();
@@ -83,6 +101,14 @@ export default function SubscriptionButton({ plan, currentTier, hasActiveTrial, 
   };
 
   const handleAction = async () => {
+    // Check if user is logged in
+    if (!isLoggedIn) {
+      // Redirect to login with return URL
+      const returnUrl = encodeURIComponent(window.location.pathname + window.location.search);
+      window.location.href = `/api/auth/login?returnTo=${returnUrl}`;
+      return;
+    }
+
     setIsLoading(true);
 
     try {
@@ -100,7 +126,8 @@ export default function SubscriptionButton({ plan, currentTier, hasActiveTrial, 
         });
 
         if (!response.ok) {
-          throw new Error('Failed to create checkout session');
+          const errorData = await response.json().catch(() => ({}));
+          throw new Error(errorData.error || 'Failed to create checkout session');
         }
 
         const data = await response.json();

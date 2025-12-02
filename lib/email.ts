@@ -308,10 +308,66 @@ export function generateFreeUserEmailHTML(tip: EmailTip, baseUrl: string): strin
             </div>
           </div>
           
+          <!-- What You're Missing Section -->
+          <div style="background-color: #fef2f2; border-left: 4px solid #ef4444; border-radius: 8px; padding: 25px; margin-bottom: 30px;">
+            <h3 style="color: #991b1b; font-size: 18px; margin: 0 0 15px 0; font-weight: 600;">
+              ⚠️ What You're Missing as a Free Member
+            </h3>
+            <p style="color: #7f1d1d; font-size: 14px; margin: 0 0 20px 0; line-height: 1.6;">
+              You're currently receiving <strong>1 action per week</strong>. Here's what Premium members get that you don't:
+            </p>
+            <div style="background-color: #ffffff; border-radius: 6px; padding: 20px; margin-bottom: 15px;">
+              <div style="display: grid; gap: 12px;">
+                <div style="display: flex; align-items: flex-start; gap: 12px;">
+                  <span style="color: #dc2626; font-size: 18px; line-height: 1.2;">❌</span>
+                  <div>
+                    <p style="color: #991b1b; font-size: 14px; margin: 0; font-weight: 600;">Only 1 action per week</p>
+                    <p style="color: #7f1d1d; font-size: 12px; margin: 4px 0 0 0;">Premium members get <strong>daily actions</strong> every work day</p>
+                  </div>
+                </div>
+                <div style="display: flex; align-items: flex-start; gap: 12px;">
+                  <span style="color: #dc2626; font-size: 18px; line-height: 1.2;">❌</span>
+                  <div>
+                    <p style="color: #991b1b; font-size: 14px; margin: 0; font-weight: 600;">No weekly planning actions</p>
+                    <p style="color: #7f1d1d; font-size: 12px; margin: 4px 0 0 0;">Premium members get <strong>5 planning actions</strong> every Monday for bigger gestures</p>
+                  </div>
+                </div>
+                <div style="display: flex; align-items: flex-start; gap: 12px;">
+                  <span style="color: #dc2626; font-size: 18px; line-height: 1.2;">❌</span>
+                  <div>
+                    <p style="color: #991b1b; font-size: 14px; margin: 0; font-weight: 600;">No weekly review</p>
+                    <p style="color: #7f1d1d; font-size: 12px; margin: 4px 0 0 0;">Premium members get a <strong>weekly summary</strong> to track progress</p>
+                  </div>
+                </div>
+                <div style="display: flex; align-items: flex-start; gap: 12px;">
+                  <span style="color: #dc2626; font-size: 18px; line-height: 1.2;">❌</span>
+                  <div>
+                    <p style="color: #991b1b; font-size: 14px; margin: 0; font-weight: 600;">No Husband Health tracking</p>
+                    <p style="color: #7f1d1d; font-size: 12px; margin: 4px 0 0 0;">Premium members track their <strong>relationship health score</strong> and earn badges</p>
+                  </div>
+                </div>
+                <div style="display: flex; align-items: flex-start; gap: 12px;">
+                  <span style="color: #dc2626; font-size: 18px; line-height: 1.2;">❌</span>
+                  <div>
+                    <p style="color: #991b1b; font-size: 14px; margin: 0; font-weight: 600;">Limited action access</p>
+                    <p style="color: #7f1d1d; font-size: 12px; margin: 4px 0 0 0;">Premium members can <strong>complete any action</strong> from the full library</p>
+                  </div>
+                </div>
+                <div style="display: flex; align-items: flex-start; gap: 12px;">
+                  <span style="color: #dc2626; font-size: 18px; line-height: 1.2;">❌</span>
+                  <div>
+                    <p style="color: #991b1b; font-size: 14px; margin: 0; font-weight: 600;">No journal or Team Wins</p>
+                    <p style="color: #7f1d1d; font-size: 12px; margin: 4px 0 0 0;">Premium members get <strong>private journaling</strong> and can share wins with the community</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <!-- Upgrade CTA Section -->
           <div style="background: linear-gradient(135deg, #0ea5e9 0%, #3b82f6 100%); border-radius: 8px; padding: 30px; margin-bottom: 30px; text-align: center;">
             <h3 style="color: #ffffff; font-size: 20px; margin: 0 0 15px 0; font-weight: 600;">
-              Want More? Upgrade to Premium
+              🚀 Upgrade to Premium and Get It All
             </h3>
             <p style="color: #e0f2fe; font-size: 15px; margin: 0 0 20px 0; line-height: 1.6;">
               As a Premium member, you'll receive:

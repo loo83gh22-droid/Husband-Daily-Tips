@@ -219,6 +219,7 @@ export default async function SubscriptionPage({
             hasActiveTrial={subscriptionInfo.hasActiveTrial || undefined}
             trialEndsAt={subscriptionInfo.trial_ends_at}
             isOnPremium={subscriptionInfo.isOnPremium}
+            isLoggedIn={isLoggedIn}
           />
         </div>
       </main>

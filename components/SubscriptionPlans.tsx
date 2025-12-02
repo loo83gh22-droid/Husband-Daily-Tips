@@ -19,6 +19,7 @@ interface SubscriptionPlansProps {
   hasActiveTrial?: boolean | null;
   trialEndsAt?: string | null;
   isOnPremium?: boolean;
+  isLoggedIn?: boolean;
 }
 
 export default function SubscriptionPlans({
@@ -27,6 +28,7 @@ export default function SubscriptionPlans({
   hasActiveTrial,
   trialEndsAt,
   isOnPremium,
+  isLoggedIn = false,
 }: SubscriptionPlansProps) {
   const [billingInterval, setBillingInterval] = useState<'month' | 'year'>('month');
 
@@ -140,6 +142,7 @@ export default function SubscriptionPlans({
                 hasActiveTrial={hasActiveTrial}
                 trialEndsAt={trialEndsAt}
                 isOnPremium={isOnPremium}
+                isLoggedIn={isLoggedIn}
               />
             </div>
           );
