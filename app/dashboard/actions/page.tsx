@@ -13,7 +13,7 @@ async function getActions(auth0Id: string) {
   const adminSupabase = getSupabaseAdmin();
   const { data: user } = await adminSupabase
     .from('users')
-    .select('id, partner_name, subscription_tier, trial_ends_at, stripe_subscription_id')
+    .select('id, partner_name, subscription_tier, trial_ends_at, stripe_subscription_id, country')
     .eq('auth0_id', auth0Id)
     .single();
 
@@ -36,9 +36,28 @@ async function getActions(auth0Id: string) {
     .order('display_order', { ascending: true, nullsFirst: false })
     .order('name', { ascending: true });
 
+  // Filter actions by country: if action is country-specific, user must match
+  // Actions without a country are available to everyone
+  let filteredActions = actions || [];
+  if (actions) {
+    const userCountry = user.country as 'US' | 'CA' | null;
+    filteredActions = actions.filter((action) => {
+      // If action has a country, user must match
+      if (action.country && action.country !== userCountry) {
+        return false;
+      }
+      // If action has a country but user has no country, don't show it
+      if (action.country && !userCountry) {
+        return false;
+      }
+      // Actions without a country or matching country are shown
+      return true;
+    });
+  }
+
   // Remove any duplicates by ID (in case database has duplicates)
-  const uniqueActions = actions
-    ? actions.filter(
+  const uniqueActions = filteredActions
+    ? filteredActions.filter(
         (action, index, self) =>
           index === self.findIndex((a) => a.id === action.id),
       )
