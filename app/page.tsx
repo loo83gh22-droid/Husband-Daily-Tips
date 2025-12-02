@@ -314,7 +314,7 @@ export default async function Home() {
                 </div>
                 <h3 className="text-xl font-semibold text-slate-200 mb-2">Track Progress</h3>
                 <p className="text-slate-400">
-                  Complete actions, earn badges, and watch your &quot;Husband Health&quot; score improve. See real progress over time.
+                  Feel the difference in your relationship. Visual dashboards show your growth.
                 </p>
               </div>
             </div>
