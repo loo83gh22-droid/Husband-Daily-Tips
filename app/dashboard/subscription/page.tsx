@@ -1,8 +1,9 @@
 import { getSession } from '@auth0/nextjs-auth0';
-import { redirect } from 'next/navigation';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import DashboardNav from '@/components/DashboardNav';
 import SubscriptionPlans from '@/components/SubscriptionPlans';
+import BrandLogo from '@/components/BrandLogo';
+import Link from 'next/link';
 
 async function getUserSubscription(auth0Id: string) {
   try {
@@ -65,14 +66,24 @@ export default async function SubscriptionPage({
   searchParams: { upgrade?: string };
 }) {
   const session = await getSession();
-
-  if (!session?.user) {
-    redirect('/api/auth/login');
-  }
+  const isLoggedIn = !!session?.user;
 
   try {
-    const auth0Id = session.user.sub;
-    const subscriptionInfo = await getUserSubscription(auth0Id);
+    // Only fetch subscription info if user is logged in
+    let subscriptionInfo = {
+      tier: 'free' as const,
+      trial_started_at: null,
+      trial_ends_at: null,
+      hasActiveTrial: false,
+      hasSubscription: false,
+      isOnPremium: false,
+    };
+
+    if (isLoggedIn && session.user) {
+      const auth0Id = session.user.sub;
+      subscriptionInfo = await getUserSubscription(auth0Id);
+    }
+    
     // If user has active trial, they should see Premium as their current tier
     const currentTier = subscriptionInfo.hasActiveTrial ? 'premium' : subscriptionInfo.tier;
     const upgradeReason = searchParams?.upgrade;
@@ -133,7 +144,47 @@ export default async function SubscriptionPage({
 
   return (
     <div className="min-h-screen bg-slate-950">
-      <DashboardNav />
+      {isLoggedIn ? (
+        <DashboardNav />
+      ) : (
+        <nav className="border-b border-slate-800 bg-slate-950/80 backdrop-blur">
+          <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+            <BrandLogo variant="nav" showTagline={false} />
+            <div className="flex items-center gap-3">
+              <Link
+                href="/blog"
+                className="hidden md:inline-flex text-sm text-slate-300 hover:text-white transition-colors"
+              >
+                Blog
+              </Link>
+              <Link
+                href="/about"
+                className="hidden md:inline-flex text-sm text-slate-300 hover:text-white transition-colors"
+              >
+                About
+              </Link>
+              <Link
+                href="/survey"
+                className="hidden md:inline-flex px-4 py-2 text-sm font-medium text-slate-300 hover:text-white transition-colors"
+              >
+                Take Survey
+              </Link>
+              <Link
+                href="/api/auth/login"
+                className="px-4 py-2 text-sm font-medium text-slate-300 hover:text-white transition-colors"
+              >
+                Sign In
+              </Link>
+              <Link
+                href="/api/auth/login"
+                className="px-4 py-2 text-sm font-semibold bg-primary-500 text-slate-950 rounded-lg hover:bg-primary-400 transition-colors"
+              >
+                Sign Up
+              </Link>
+            </div>
+          </div>
+        </nav>
+      )}
 
       <main className="container mx-auto px-4 py-8 md:py-10">
         <div className="max-w-5xl mx-auto">
