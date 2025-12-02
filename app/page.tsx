@@ -325,29 +325,23 @@ export default async function Home() {
             <h2 className="text-3xl md:text-4xl font-bold text-slate-50 text-center mb-12">
               What Makes Us Different
             </h2>
-            <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
               <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-6">
-                <h3 className="text-xl font-semibold text-slate-200 mb-3">🎯 Daily Routine + Weekly Planning</h3>
+                <h3 className="text-xl font-semibold text-slate-200 mb-3">⚡ Action-Based, Not Advice</h3>
                 <p className="text-slate-400">
-                  Premium members get daily routine actions for quick wins, plus weekly planning actions that require more thought and planning. Choose what fits your schedule.
+                  No generic tips. Get specific, actionable steps delivered daily. You know exactly what to do, when to do it, and why it matters.
                 </p>
               </div>
               <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-6">
-                <h3 className="text-xl font-semibold text-slate-200 mb-3">📊 Track Your Growth</h3>
+                <h3 className="text-xl font-semibold text-slate-200 mb-3">🎯 Personalized for Your Relationship</h3>
                 <p className="text-slate-400">
-                  See your progress with badges, streaks, and your &quot;Husband Health&quot; score. Real metrics for real improvement.
+                  Actions tailored to your goals, schedule, and relationship stage. What you need, when you need it—not a one-size-fits-all approach.
                 </p>
               </div>
               <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-6">
-                <h3 className="text-xl font-semibold text-slate-200 mb-3">🎮 Gamified & Fun</h3>
+                <h3 className="text-xl font-semibold text-slate-200 mb-3">📈 See Real Results</h3>
                 <p className="text-slate-400">
-                  Make relationship improvement engaging. Earn badges, build streaks, and stay motivated to keep showing up.
-                </p>
-              </div>
-              <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-6">
-                <h3 className="text-xl font-semibold text-slate-200 mb-3">📧 Daily Emails & Weekly Summaries</h3>
-                <p className="text-slate-400">
-                  Premium members get daily emails with routine actions, plus a weekly summary email that reminds you to look back on your accomplishments, especially helpful if you haven&apos;t been updating daily.
+                  Track your progress, build streaks, and watch your relationship improve. Small daily actions compound into meaningful change.
                 </p>
               </div>
             </div>
