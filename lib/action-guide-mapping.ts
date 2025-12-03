@@ -76,6 +76,7 @@ export function getGuideSlugForAction(actionName: string, actionTheme?: string):
     'handle a problem before she notices': 'notice-what-needs-doing',
     'ask about her work/projects': 'support-her-goals',
     'take initiative on household maintenance': 'handle-household-tasks',
+    'organize attendance at a remembrance day ceremony': 'plan-together',
 
     // Romance
     'plan perfect date night': 'plan-perfect-date-night',
@@ -269,7 +270,7 @@ export function getGuideSlugForAction(actionName: string, actionTheme?: string):
     { keywords: ['stressed', 'overwhelmed', 'help'], slug: 'help-when-shes-stressed' },
     { keywords: ['household', 'chore', 'task'], slug: 'handle-household-tasks' },
     { keywords: ['goals', 'support', 'dreams'], slug: 'support-her-goals' },
-    { keywords: ['plan', 'together', 'collaborate'], slug: 'plan-together' },
+    { keywords: ['plan', 'together', 'collaborate', 'organize'], slug: 'plan-together' },
 
     // Romance
     { keywords: ['date night', 'date'], slug: 'plan-perfect-date-night' },

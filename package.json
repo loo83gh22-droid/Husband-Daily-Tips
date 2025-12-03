@@ -15,7 +15,8 @@
     "deploy": "node scripts/deploy.js",
     "deploy:msg": "node scripts/deploy.js",
     "git:status": "node scripts/git-status-with-output.js",
-    "git:commit": "node scripts/git-commit-push-with-output.js"
+    "git:commit": "node scripts/git-commit-push-with-output.js",
+    "monitor:emails": "node scripts/monitor-email-delivery.js"
   },
   "dependencies": {
     "@auth0/nextjs-auth0": "^3.0.0",
