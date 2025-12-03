@@ -546,6 +546,42 @@ export async function selectBirthdayActions(
   categoryScores?: CategoryScores,
   userProfile?: UserProfile
 ) {
+  // CRITICAL: Double-check that birthday is within reasonable timeframe (21 days)
+  // This prevents serving birthday actions months in advance
+  if (userProfile?.spouse_birthday) {
+    const { getBirthdayWeekInfo } = await import('@/lib/birthday-utils');
+    const today = new Date();
+    const birthdayInfo = getBirthdayWeekInfo(
+      userProfile.spouse_birthday,
+      userProfile.work_days || null,
+      today
+    );
+    
+    // If birthday is not within the next 21 days, return empty array immediately
+    // This is a safeguard even if getBirthdayWeekInfo.isBirthdayWeek is incorrectly true
+    const birthdayDate = birthdayInfo.birthdayDate;
+    if (birthdayDate) {
+      const todayStart = new Date(today);
+      todayStart.setHours(0, 0, 0, 0);
+      const daysUntilBirthday = Math.floor((birthdayDate.getTime() - todayStart.getTime()) / (1000 * 60 * 60 * 24));
+      
+      // Only serve if birthday is within next 21 days (3 weeks)
+      if (daysUntilBirthday < 0 || daysUntilBirthday > 21) {
+        console.log(`[selectBirthdayActions] Skipping birthday actions for user ${userId}: birthday is ${daysUntilBirthday} days away (too far)`);
+        return [];
+      }
+    }
+    
+    // Additional check: if getBirthdayWeekInfo says it's NOT birthday week, don't serve
+    if (!birthdayInfo.isBirthdayWeek) {
+      console.log(`[selectBirthdayActions] Skipping birthday actions for user ${userId}: not in birthday week`);
+      return [];
+    }
+  } else {
+    // No birthday set, return empty
+    return [];
+  }
+
   const adminSupabase = getSupabaseAdmin();
 
   // Get actions user hasn't seen in the last 30 days
