@@ -66,3 +66,4 @@ export default function AboutContent({ isLoggedIn = false }: AboutContentProps) 
   );
 }
 
+
