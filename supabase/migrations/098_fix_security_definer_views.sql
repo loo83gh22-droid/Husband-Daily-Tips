@@ -1,10 +1,14 @@
 -- Fix SECURITY DEFINER issue on views
 -- Views should use SECURITY INVOKER (run with querying user's permissions)
 -- instead of SECURITY DEFINER (run with view creator's permissions)
--- By default, views are SECURITY INVOKER unless explicitly set to SECURITY DEFINER
+-- 
+-- IMPORTANT: We must DROP and CREATE (not REPLACE) to ensure SECURITY DEFINER is removed
+-- CREATE OR REPLACE may not change the security property if it was already set
 
--- Recreate outdoor_activity_actions view (defaults to SECURITY INVOKER)
-CREATE OR REPLACE VIEW outdoor_activity_actions AS
+-- Drop and recreate outdoor_activity_actions view (defaults to SECURITY INVOKER)
+DROP VIEW IF EXISTS outdoor_activity_actions CASCADE;
+
+CREATE VIEW outdoor_activity_actions AS
 SELECT 
   id,
   name,
@@ -34,8 +38,13 @@ WHERE name ILIKE '%outdoor%'
    OR description ILIKE '%picnic%'
    OR description ILIKE '%garden%';
 
--- Recreate adventure_activity_actions view (defaults to SECURITY INVOKER)
-CREATE OR REPLACE VIEW adventure_activity_actions AS
+-- Restore comment on outdoor_activity_actions view
+COMMENT ON VIEW outdoor_activity_actions IS 'Actions that count toward Outdoor Activities badges. Identified by keyword matching on name and description fields. Keywords: outdoor, hiking, walk, camping, nature, park, trail, beach, picnic, garden.';
+
+-- Drop and recreate adventure_activity_actions view (defaults to SECURITY INVOKER)
+DROP VIEW IF EXISTS adventure_activity_actions CASCADE;
+
+CREATE VIEW adventure_activity_actions AS
 SELECT 
   id,
   name,
@@ -60,4 +69,7 @@ WHERE name ILIKE '%adventure%'
    OR description ILIKE '%journey%'
    OR description ILIKE '%discover%'
    OR description ILIKE '%expedition%';
+
+-- Restore comment on adventure_activity_actions view
+COMMENT ON VIEW adventure_activity_actions IS 'Actions that count toward Adventure Activities badges. Identified by keyword matching on name and description fields. Keywords: adventure, explore, explorer, challenge, quest, journey, discover, expedition.';
 
