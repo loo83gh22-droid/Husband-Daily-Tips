@@ -12,6 +12,7 @@ interface Quote {
 export default function FreeFloatingQuote() {
   const [quote, setQuote] = useState<Quote | null>(null);
   const [profilePicture, setProfilePicture] = useState<string | null>(null);
+  const [imageError, setImageError] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -49,15 +50,25 @@ export default function FreeFloatingQuote() {
   return (
     <div className="relative w-full min-h-[300px] sm:min-h-[400px] md:min-h-[500px] rounded-xl overflow-hidden border border-slate-800">
       {/* Profile Picture Background */}
-      {profilePicture ? (
-        <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{ backgroundImage: `url(${profilePicture})` }}
-        >
+      {profilePicture && !imageError ? (
+        <>
+          <img
+            src={profilePicture}
+            alt="Profile background"
+            className="absolute inset-0 w-full h-full object-cover"
+            onError={() => {
+              console.error('Failed to load profile picture for quote background:', profilePicture);
+              setImageError(true);
+            }}
+            onLoad={() => {
+              console.log('Profile picture loaded successfully for quote background');
+            }}
+          />
           {/* Dark overlay for better text readability */}
           <div className="absolute inset-0 bg-slate-950/60"></div>
-        </div>
+        </>
       ) : (
+        /* Fallback gradient background (shown if no picture or if picture fails to load) */
         <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900"></div>
       )}
 
