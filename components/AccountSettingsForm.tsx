@@ -43,6 +43,13 @@ export default function AccountSettingsForm({ initialData }: AccountSettingsForm
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
 
+  // Sync with initialData when it changes (after page refresh)
+  useEffect(() => {
+    if (initialData.profile_picture !== profilePictureUrl) {
+      setProfilePictureUrl(initialData.profile_picture);
+    }
+  }, [initialData.profile_picture]);
+
   // Common timezones
   const timezones = [
     { value: 'America/New_York', label: 'Eastern Time (ET)' },
@@ -116,9 +123,19 @@ export default function AccountSettingsForm({ initialData }: AccountSettingsForm
 
         const uploadData = await uploadResponse.json();
         pictureUrl = uploadData.url;
+        
+        // Log for debugging
+        console.log('Profile picture uploaded, URL:', pictureUrl);
+        
+        if (!pictureUrl) {
+          throw new Error('Upload succeeded but no URL returned');
+        }
       }
 
       // Then update profile
+      // Log what we're sending
+      console.log('Updating profile with picture URL:', pictureUrl);
+      
       const response = await fetch('/api/user/profile', {
         method: 'PUT',
         headers: {
@@ -142,8 +159,12 @@ export default function AccountSettingsForm({ initialData }: AccountSettingsForm
 
       if (!response.ok) {
         const errorData = await response.json();
+        console.error('Profile update failed:', errorData);
         throw new Error(errorData.error || 'Failed to update profile');
       }
+      
+      const responseData = await response.json();
+      console.log('Profile update successful:', responseData);
 
       setSuccess(true);
       
@@ -151,11 +172,20 @@ export default function AccountSettingsForm({ initialData }: AccountSettingsForm
       if (pictureUrl) {
         setProfilePictureUrl(pictureUrl);
         setProfilePicture(null); // Clear the file input
-      }
-      
-      setTimeout(() => {
+        
+        // Force a hard refresh to ensure the image displays
+        // Also refresh the router to get updated data from server
         router.refresh();
-      }, 1000);
+        
+        // Small delay to ensure state updates are visible
+        setTimeout(() => {
+          // Force a re-render by updating state again
+          setProfilePictureUrl(pictureUrl);
+        }, 100);
+      } else {
+        // Even if no new picture, refresh to get latest data
+        router.refresh();
+      }
     } catch (err: any) {
       setError(err.message || 'Failed to save settings');
     } finally {
@@ -201,13 +231,26 @@ export default function AccountSettingsForm({ initialData }: AccountSettingsForm
           Profile Picture
         </label>
         <div className="flex items-center gap-4">
-          {profilePictureUrl && (
-            <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-slate-700">
+          {profilePictureUrl ? (
+            <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-slate-700 flex-shrink-0">
               <img
+                key={profilePictureUrl} // Force re-render when URL changes
                 src={profilePictureUrl}
                 alt="Profile"
                 className="w-full h-full object-cover"
+                onError={(e) => {
+                  console.error('Failed to load profile picture:', profilePictureUrl);
+                  // Hide broken image
+                  e.currentTarget.style.display = 'none';
+                }}
+                onLoad={() => {
+                  console.log('Profile picture loaded successfully:', profilePictureUrl);
+                }}
               />
+            </div>
+          ) : (
+            <div className="w-20 h-20 rounded-full bg-slate-800 border-2 border-slate-700 flex items-center justify-center flex-shrink-0">
+              <span className="text-xs text-slate-500">No image</span>
             </div>
           )}
           <div className="flex-1">
