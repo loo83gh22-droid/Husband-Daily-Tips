@@ -67,8 +67,9 @@ export async function POST(request: Request) {
     // Use consistent filename per user (so upsert works and we can delete old files)
     const fileExt = file.name.split('.').pop()?.toLowerCase() || 'jpg';
     const fileName = `${user.id}.${fileExt}`;
-    // Store files in profile-pictures folder (matches existing structure)
-    const filePath = `profile-pictures/${fileName}`;
+    // Store files at root of bucket (not in a subfolder)
+    // This matches the URL structure: /storage/v1/object/public/profile-pictures/filename.jpg
+    const filePath = fileName;
 
     // Get current profile picture URL before uploading new one
     const { data: currentUser } = await adminSupabase
@@ -161,21 +162,25 @@ export async function POST(request: Request) {
 
     // Get public URL using admin client
     // Note: getPublicUrl expects the path relative to the bucket root
-    // The filePath is "profile-pictures/filename.jpg"
+    // Since we're storing at root (just fileName), the URL should be correct
     const { data: urlData } = adminSupabase.storage
       .from('profile-pictures')
       .getPublicUrl(filePath);
 
     let publicUrl = urlData.publicUrl;
     
-    // Fix duplicate path issue - Supabase sometimes adds the folder name twice
-    // If URL contains profile-pictures/profile-pictures, remove the duplicate
+    console.log('Raw URL from Supabase:', publicUrl);
+    console.log('File path used:', filePath);
+    
+    // The URL should be: /storage/v1/object/public/profile-pictures/filename.jpg
+    // Supabase getPublicUrl should handle this correctly when filePath is just the filename
+    // If it has a duplicate path, fix it (shouldn't happen with root-level files)
     if (publicUrl.includes('/profile-pictures/profile-pictures/')) {
       publicUrl = publicUrl.replace('/profile-pictures/profile-pictures/', '/profile-pictures/');
       console.log('Fixed duplicate path in URL');
     }
     
-    console.log('Generated public URL:', publicUrl);
+    console.log('Final public URL:', publicUrl);
 
     // Verify the URL is valid
     if (!publicUrl) {
