@@ -82,6 +82,7 @@ async function getUserStats(userId: string | null) {
       totalTips: 0,
       currentStreak: 0,
       totalDays: 0,
+      totalCompletions: 0,
       badgesCompleted: 0,
       healthScore: 0,
       baselineHealth: null,
@@ -119,6 +120,7 @@ async function getUserStats(userId: string | null) {
       totalTips: 0,
       currentStreak: 0,
       totalDays: 0,
+      totalCompletions: 0,
       badgesCompleted,
       healthScore: baselineHealth || 0,
       baselineHealth,
@@ -128,21 +130,50 @@ async function getUserStats(userId: string | null) {
   const totalTips = tips.length;
   const uniqueDays = new Set(tips.map((t) => t.date)).size;
 
-  // Calculate streak
-  let streak = 0;
+  // Calculate weekly streak (consecutive weeks with at least one action)
+  // Week is defined as Monday-Sunday
+  let weeklyStreak = 0;
   const today = new Date();
   today.setHours(0, 0, 0, 0);
-
-  for (let i = 0; i < 365; i++) {
-    const checkDate = new Date(today);
-    checkDate.setDate(today.getDate() - i);
-    const dateStr = checkDate.toISOString().split('T')[0];
-
-    if (tips.some((t) => t.date === dateStr)) {
-      streak++;
+  
+  // Get all unique dates with actions
+  const actionDates = new Set(tips.map((t) => t.date));
+  
+  // Helper to get the Monday of the week for a given date
+  const getWeekStart = (date: Date): string => {
+    const d = new Date(date);
+    const day = d.getDay();
+    const diff = d.getDate() - day + (day === 0 ? -6 : 1); // Adjust to Monday
+    const monday = new Date(d.setDate(diff));
+    return monday.toISOString().split('T')[0]; // Return YYYY-MM-DD of Monday
+  };
+  
+  // Get all weeks (by Monday date) that have at least one action
+  const weeksWithActions = new Set<string>();
+  actionDates.forEach(dateStr => {
+    const date = new Date(dateStr + 'T00:00:00');
+    const weekStart = getWeekStart(date);
+    weeksWithActions.add(weekStart);
+  });
+  
+  // Calculate current week's Monday
+  const currentWeekStart = getWeekStart(today);
+  
+  // Check consecutive weeks backwards from current week
+  let checkDate = new Date(currentWeekStart + 'T00:00:00');
+  
+  while (true) {
+    const weekStartStr = checkDate.toISOString().split('T')[0];
+    if (weeksWithActions.has(weekStartStr)) {
+      weeklyStreak++;
+      // Go to previous week (subtract 7 days)
+      checkDate.setDate(checkDate.getDate() - 7);
     } else {
       break;
     }
+    
+    // Safety limit (100 weeks = ~2 years)
+    if (weeklyStreak > 100) break;
   }
 
   // Get last action date for decay
@@ -242,8 +273,9 @@ async function getUserStats(userId: string | null) {
 
   return { 
     totalTips, 
-    currentStreak: streak, 
+    currentStreak: weeklyStreak, 
     totalDays: uniqueDays,
+    totalCompletions, // Add total completions to return value
     badgesCompleted,
     healthScore, 
     baselineHealth,
@@ -578,16 +610,16 @@ export default async function Dashboard() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4 md:gap-5 lg:gap-6" data-tour="stats">
               <StatsCard
-                title="Current streak"
+                title="Weekly streak"
                 value={stats.currentStreak}
-                subtitle="days in a row"
+                subtitle="weeks in a row"
                 icon="🔥"
                 color="warm"
                 currentStreak={stats.currentStreak}
               />
               <StatsCard
                 title="Total actions"
-                value={stats.totalTips}
+                value={stats.totalCompletions || 0}
                 subtitle="completed so far"
                 icon="📈"
                 color="blue"
