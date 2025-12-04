@@ -584,7 +584,7 @@ export default async function Home() {
               <div className="mt-6 flex items-center justify-center gap-2 text-sm text-slate-300">
                 <span>After trial:</span>
                 <span className="font-semibold text-primary-400">$7/month</span>
-                <span className="text-slate-500">• Cancel anytime</span>
+                <span className="text-slate-400">• Cancel anytime</span>
               </div>
             </div>
           </section>
@@ -607,7 +607,7 @@ export default async function Home() {
                 </Link>
               </div>
             </div>
-            <div className="mt-6 text-center text-xs text-slate-500">
+            <div className="mt-6 text-center text-xs text-slate-400">
               © {new Date().getFullYear()} Best Husband Ever. All rights reserved.
             </div>
           </div>

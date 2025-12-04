@@ -141,7 +141,7 @@ export default function BlogPage() {
               </Link>
             </div>
           </div>
-          <div className="mt-6 text-center text-xs text-slate-500">
+          <div className="mt-6 text-center text-xs text-slate-400">
             © {new Date().getFullYear()} Best Husband Ever. All rights reserved.
           </div>
         </div>
