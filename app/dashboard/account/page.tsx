@@ -4,12 +4,13 @@ import { getSupabaseAdmin } from '@/lib/supabase';
 import DashboardNav from '@/components/DashboardNav';
 import HiddenActionsManager from '@/components/HiddenActionsManager';
 import AccountSettingsForm from '@/components/AccountSettingsForm';
+import EmailPreferencesForm from '@/components/EmailPreferencesForm';
 
 async function getUserData(auth0Id: string) {
   const adminSupabase = getSupabaseAdmin();
   const { data: user, error } = await adminSupabase
     .from('users')
-      .select('*, username, name, email, profile_picture, post_anonymously, timezone, wedding_date, has_kids, kids_live_with_you, country, partner_name, spouse_birthday, work_days, show_all_country_actions')
+      .select('*, username, name, email, profile_picture, post_anonymously, timezone, wedding_date, has_kids, kids_live_with_you, country, partner_name, spouse_birthday, work_days, show_all_country_actions, email_preferences')
     .eq('auth0_id', auth0Id)
     .single();
 
@@ -89,6 +90,11 @@ export default async function AccountPage() {
                   }}
                 />
               </div>
+            )}
+
+            {/* Email Preferences */}
+            {user && (
+              <EmailPreferencesForm initialPreferences={user.email_preferences as any} />
             )}
 
             {/* Hidden Actions Manager */}

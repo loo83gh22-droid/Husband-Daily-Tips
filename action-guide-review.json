@@ -1,0 +1,49 @@
+{
+  "totalActions": 6,
+  "actionsWithMappings": 0,
+  "actionsWithoutMappings": 6,
+  "actions": [
+    {
+      "name": "Active Together",
+      "description": "active",
+      "category": "outdoor_actions",
+      "theme": ");\r\n\r\n-- ============================================================================\r\n-- NEW BADGES (40+ badges including simple, outdoor, and exciting ones)\r\n-- ============================================================================\r\n\r\n-- Simple 3-Day Consistency Badges (5 badges)\r\nINSERT INTO badges (name, description, icon, badge_type, requirement_type, requirement_value, health_bonus)\r\nSELECT ",
+      "currentGuide": "NO_MAPPING"
+    },
+    {
+      "name": "daily",
+      "description": "💬",
+      "category": "Specific appreciation makes her feel seen and valued.",
+      "theme": ") < 7;\r\n\r\n-- Intimacy Actions (add if less than 7 exist)\r\nINSERT INTO actions (name, description, category, theme, requirement_type, icon, benefit, display_order)\r\nSELECT * FROM (VALUES\r\n  (",
+      "currentGuide": "NO_MAPPING"
+    },
+    {
+      "name": "intimacy",
+      "description": "intimacy_actions",
+      "category": "👫",
+      "theme": ");\r\n\r\n-- ============================================================================\r\n-- ADD BADGES FOR ROOMMATE SYNDROME RECOVERY\r\n-- ============================================================================\r\n\r\n-- Add category column to badges table if it doesn",
+      "currentGuide": "NO_MAPPING"
+    },
+    {
+      "name": "Outdoor Activities",
+      "description": "outdoor",
+      "category": "outdoor_actions",
+      "theme": ");\r\n\r\n-- Adventure/Exploration Category (10 actions)\r\nINSERT INTO actions (name, description, category, theme, requirement_type, icon) VALUES\r\n  (",
+      "currentGuide": "NO_MAPPING"
+    },
+    {
+      "name": "partnership",
+      "description": "action_completion",
+      "category": "📅",
+      "theme": ", 2);\r\n\r\n-- Pet Responsibility Actions (Partnership theme)\r\nINSERT INTO actions (name, description, category, theme, requirement_type, icon, benefit, display_order) VALUES\r\n  (",
+      "currentGuide": "NO_MAPPING"
+    },
+    {
+      "name": "romance",
+      "description": "action_completion",
+      "category": "🍷",
+      "theme": ", 1);\r\n\r\n-- Financial Communication Actions (Partnership theme)\r\nINSERT INTO actions (name, description, category, theme, requirement_type, icon, benefit, display_order) VALUES\r\n  (",
+      "currentGuide": "NO_MAPPING"
+    }
+  ]
+}

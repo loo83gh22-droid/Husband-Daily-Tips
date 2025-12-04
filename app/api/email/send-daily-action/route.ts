@@ -36,6 +36,16 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
+    // Check email preferences
+    const { shouldSendEmail } = await import('@/lib/email-preferences');
+    const canSend = await shouldSendEmail(userId, 'daily_actions');
+    if (!canSend) {
+      return NextResponse.json({ 
+        message: 'User has unsubscribed from daily action emails',
+        skipped: true 
+      }, { status: 200 });
+    }
+
     // Get tomorrow's action (same logic as dashboard)
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
@@ -230,7 +240,10 @@ export async function POST(request: Request) {
             
             <div style="text-align: center; margin-top: 20px; color: #94a3b8; font-size: 12px;">
               <p>You&apos;re getting this because you signed up for Best Husband Ever. Your daily action, delivered.</p>
-              <p><a href="${process.env.AUTH0_BASE_URL || 'https://besthusbandever.com'}/dashboard/account" style="color: #64748b;">Manage email preferences</a></p>
+              <p>
+                <a href="${process.env.AUTH0_BASE_URL || 'https://besthusbandever.com'}/dashboard/account" style="color: #64748b;">Manage email preferences</a> | 
+                <a href="${(await import('@/lib/email-preferences')).generateUnsubscribeUrl(user.id, 'daily_actions')}" style="color: #64748b;">Unsubscribe from daily action emails</a>
+              </p>
             </div>
           </body>
         </html>
