@@ -153,7 +153,7 @@ export async function POST(request: Request) {
 
     // Send email
     const { data: emailData, error: emailError } = await resend.emails.send({
-      from: process.env.RESEND_FROM_EMAIL || 'Best Husband Ever - Tomorrow\'s Action! <action@besthusbandever.com>',
+      from: process.env.RESEND_FROM_EMAIL || 'Best Husband Ever <action@besthusbandever.com>',
       to: user.email,
       subject: `Tomorrow's Action: ${action.name}`,
       html: `

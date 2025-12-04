@@ -5,11 +5,11 @@ import { getSupabaseAdmin } from '@/lib/supabase';
 export const dynamic = 'force-dynamic';
 
 /**
- * Cron job endpoint to send daily action emails at 7pm in each user's timezone
+ * Cron job endpoint to send daily action emails at 12 noon in each user's timezone
  * 
  * This should be called by Vercel Cron or an external cron service.
  * Schedule: Run every hour, and this endpoint will determine which users should receive emails
- * based on their timezone (7pm in their local time).
+ * based on their timezone (12 noon in their local time).
  * 
  * Vercel Cron config (vercel.json):
  * {
@@ -53,7 +53,7 @@ export async function GET(request: Request) {
       return NextResponse.json({ message: 'No users found' });
     }
 
-    // For each user, check if it's 7pm in their timezone
+    // For each user, check if it's 12 noon in their timezone
     const usersToEmail: string[] = [];
 
     for (const user of users) {
@@ -64,8 +64,8 @@ export async function GET(request: Request) {
         const userTime = new Date(now.toLocaleString('en-US', { timeZone: timezone }));
         const hour = userTime.getHours();
 
-        // If it's 7pm (19:00) in their timezone, add to list
-        if (hour === 19) {
+        // If it's 12 noon (12:00) in their timezone, add to list
+        if (hour === 12) {
           usersToEmail.push(user.id);
         }
       } catch (error) {
