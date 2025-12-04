@@ -170,7 +170,7 @@ export default async function Home() {
                 name: 'What if I\'m not married yet?',
                 acceptedAnswer: {
                   '@type': 'Answer',
-                  text: 'Best Husband Ever is designed for husbands, but it\'s not just for husbands. Boyfriends, partners, and anyone committed to leveling up their relationship can benefit. The actions are tailored to your relationship stage.',
+                  text: 'Best Husband Ever is designed for husbands, but it\'s not just for husbands. Boyfriends, partners, and anyone committed to leveling up their relationship can benefit.',
                 },
               },
               {
@@ -178,7 +178,7 @@ export default async function Home() {
                 name: 'How long does it take to see results?',
                 acceptedAnswer: {
                   '@type': 'Answer',
-                  text: 'Many users notice a difference within the first week. Small daily actions compound over time—consistency is key. Track your progress with badges, streaks, and your Husband Health score to see measurable improvement over weeks and months.',
+                  text: 'Small daily actions compound over time, and consistency is key. Track your progress with badges, streaks, and your Husband Health score to see measurable improvement over weeks and months. You\'ll also start feeling the positive impact in your relationship as you consistently show up.',
                 },
               },
               {
@@ -218,7 +218,7 @@ export default async function Home() {
                 name: 'How personalized are the actions?',
                 acceptedAnswer: {
                   '@type': 'Answer',
-                  text: 'Very personalized. Based on your survey, we tailor actions to your work schedule, whether you have kids, your relationship goals, and your country (for holiday-specific actions). Actions adapt to your specific situation, not generic advice.',
+                  text: 'Based on your survey, we tailor actions to your work schedule, whether you have kids, your relationship goals, and your country (for holiday-specific actions). Actions adapt to your specific situation, not generic advice.',
                 },
               },
               {
@@ -514,11 +514,11 @@ export default async function Home() {
                 },
                 {
                   question: 'What if I\'m not married yet?',
-                  answer: 'Best Husband Ever is designed for husbands, but it\'s not just for husbands. Boyfriends, partners, and anyone committed to leveling up their relationship can benefit. The actions are tailored to your relationship stage.',
+                  answer: 'Best Husband Ever is designed for husbands, but it\'s not just for husbands. Boyfriends, partners, and anyone committed to leveling up their relationship can benefit.',
                 },
                 {
                   question: 'How long does it take to see results?',
-                  answer: 'Many users notice a difference within the first week. Small daily actions compound over time—consistency is key. Track your progress with badges, streaks, and your Husband Health score to see measurable improvement over weeks and months.',
+                  answer: 'Small daily actions compound over time, and consistency is key. Track your progress with badges, streaks, and your Husband Health score to see measurable improvement over weeks and months. You\'ll also start feeling the positive impact in your relationship as you consistently show up.',
                 },
                 {
                   question: 'Can I cancel anytime?',
@@ -538,7 +538,7 @@ export default async function Home() {
                 },
                 {
                   question: 'How personalized are the actions?',
-                  answer: 'Very personalized. Based on your survey, we tailor actions to your work schedule, whether you have kids, your relationship goals, and your country (for holiday-specific actions). Actions adapt to your specific situation, not generic advice.',
+                  answer: 'Based on your survey, we tailor actions to your work schedule, whether you have kids, your relationship goals, and your country (for holiday-specific actions). Actions adapt to your specific situation, not generic advice.',
                 },
                 {
                   question: 'What if I\'m in a long-distance relationship?',

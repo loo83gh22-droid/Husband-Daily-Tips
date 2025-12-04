@@ -232,12 +232,14 @@ export default function FollowUpSurveyModal({ surveyType, onComplete, onDismiss 
             {currentQuestion.question_type === 'scale' && (() => {
               // Check if this is an NPS question (0-10 scale)
               const isNPS = surveyType === 'day_90_nps' && currentQuestion.order_index === 1;
+              // Check if this is the recommendation question (use 4 options instead of 5)
+              const isRecommendationQuestion = currentQuestion.question_text.toLowerCase().includes('recommend');
               const scaleMin = isNPS ? 0 : 1;
-              const scaleMax = isNPS ? 10 : 5;
+              const scaleMax = isNPS ? 10 : (isRecommendationQuestion ? 4 : 5);
               const scaleValues = Array.from({ length: scaleMax - scaleMin + 1 }, (_, i) => i + scaleMin);
               
               return (
-                <div className={`grid gap-2 ${isNPS ? 'grid-cols-11' : 'grid-cols-5'}`}>
+                <div className={`grid gap-2 ${isNPS ? 'grid-cols-11' : (isRecommendationQuestion ? 'grid-cols-4' : 'grid-cols-5')}`}>
                   {scaleValues.map((value) => {
                     const isSelected = responses[currentQuestion.id]?.value === value.toString();
                     return (
@@ -252,11 +254,20 @@ export default function FollowUpSurveyModal({ surveyType, onComplete, onDismiss 
                         } disabled:opacity-50 disabled:cursor-not-allowed ${isNPS ? 'p-2' : 'p-4'}`}
                       >
                         <div className={`font-bold mb-1 ${isNPS ? 'text-base' : 'text-2xl'}`}>{value}</div>
-                        {!isNPS && (
-                          <div className="text-[10px] text-slate-400">
-                            {value === 1 ? 'Poor' : value === 2 ? 'Fair' : value === 3 ? 'Good' : value === 4 ? 'Very Good' : 'Excellent'}
-                          </div>
-                        )}
+                        {!isNPS && (() => {
+                          if (isRecommendationQuestion) {
+                            return (
+                              <div className="text-[10px] text-slate-400">
+                                {value === 1 ? 'No' : value === 2 ? 'Maybe' : value === 3 ? 'Probably' : 'Hell Yeah'}
+                              </div>
+                            );
+                          }
+                          return (
+                            <div className="text-[10px] text-slate-400">
+                              {value === 1 ? 'Poor' : value === 2 ? 'Fair' : value === 3 ? 'Good' : value === 4 ? 'Very Good' : 'Excellent'}
+                            </div>
+                          );
+                        })()}
                         {isNPS && value === 0 && (
                           <div className="text-[8px] text-slate-400">Not at all</div>
                         )}
