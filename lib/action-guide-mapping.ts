@@ -129,6 +129,13 @@ export function getGuideSlugForAction(actionName: string, actionTheme?: string):
     'arrange a birthday photo shoot': 'plan-surprise-that-shows-you-know-her',
     'plan a birthday staycation': 'plan-weekend-getaway',
 
+    // Anniversary actions
+    'plan a romantic anniversary getaway': 'plan-anniversary-celebration',
+    'recreate your first date': 'plan-anniversary-celebration',
+    'plan an anniversary surprise party': 'plan-anniversary-celebration',
+    'write and read anniversary vows': 'plan-anniversary-celebration',
+    'plan an anniversary photo session': 'plan-anniversary-celebration',
+
     // Date night actions
     'go dancing': 'plan-perfect-date-night',
     'go for beer & wings': 'plan-perfect-date-night',

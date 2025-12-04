@@ -5693,6 +5693,152 @@ You need both. But most couples only have problem-solving conversations. This cr
 
 You had a conversation with no problems, no fixing, no managing. You just talked and listened. You connected. You built intimacy. That's a win.`,
   },
+  'plan-anniversary-celebration': {
+    id: 62,
+    title: 'Plan an Anniversary Celebration (Make It Meaningful)',
+    category: 'Romance',
+    difficulty: 'Medium',
+    time: '2-4 hours planning',
+    excerpt: 'Learn how to plan an anniversary celebration that honors your relationship journey. Create something meaningful that reflects your shared history and shows you remember what matters.',
+    content: `## Why This Matters
+
+Anniversaries are milestones. They're a chance to celebrate how far you've come, remember why you fell in love, and recommit to your future together. A well-planned anniversary celebration shows you value your relationship and the time you've spent building it together.
+
+## The Secret: Make It About Your Story
+
+The best anniversary celebrations aren't generic—they're personal. They reflect your unique relationship, your shared history, and what makes your partnership special.
+
+## How to Plan an Anniversary Celebration
+
+### 1. Reflect on Your Journey
+
+Before planning, think about:
+- What were the highlights of this past year together?
+- What challenges did you overcome?
+- What memories do you both treasure?
+- What traditions have you created?
+- What would make her feel celebrated?
+
+Use this reflection to guide your planning.
+
+### 2. Consider the Milestone
+
+Different anniversaries call for different approaches:
+- **Early anniversaries (1-5 years):** Focus on creating new traditions and celebrating your growth
+- **Milestone anniversaries (5, 10, 15, etc.):** These deserve something extra special
+- **Every anniversary:** Should feel meaningful, regardless of the number
+
+### 3. Choose the Right Approach
+
+**Recreate a Memory:**
+- Revisit your first date location
+- Go back to where you got engaged
+- Return to your honeymoon destination
+- Recreate a favorite date or experience
+
+**Create a New Experience:**
+- Plan something you've both wanted to do
+- Try something new together
+- Go somewhere you've never been
+- Create a new tradition
+
+**Celebrate Your Growth:**
+- Write and share anniversary vows or letters
+- Create a photo book or video of your year together
+- Plan a reflection conversation about your journey
+- Set goals for the year ahead
+
+### 4. Plan Thoughtful Details
+
+The details make it special:
+- **Location:** Choose somewhere meaningful or beautiful
+- **Timing:** Plan it for when you can both be present and relaxed
+- **Atmosphere:** Create the right mood (romantic, fun, reflective, etc.)
+- **Personal touches:** Include things that show you know her
+- **Surprises:** Small surprises throughout the day add magic
+
+### 5. Handle All the Logistics
+
+You take care of:
+- Making reservations or bookings
+- Planning the timeline
+- Coordinating any surprises
+- Handling any necessary arrangements
+- Making sure everything runs smoothly
+
+She shouldn't have to think about any of this.
+
+### 6. Make It About Both of You
+
+While you're planning it, make sure it's something you'll both enjoy:
+- Consider her preferences and interests
+- Think about what would make her feel special
+- But also include things you'll both love
+- Balance romance with fun and connection
+
+### 7. Create Lasting Memories
+
+Think about how to capture the moment:
+- Take photos (but don't let it distract from being present)
+- Write down what you want to remember
+- Create something tangible (a letter, a gift, a keepsake)
+- Make it something you'll both look back on fondly
+
+## What Makes It Work
+
+**It's personal:** Reflects your unique relationship and history.
+
+**You put thought into it:** Shows you care enough to plan something meaningful.
+
+**It honors your journey:** Celebrates where you've been and where you're going.
+
+**It's about connection:** Focuses on being together, not just doing something.
+
+**You handle the details:** She can relax and enjoy without managing anything.
+
+## Common Mistakes
+
+**Making it generic:** A generic dinner isn't special. Make it personal.
+
+**Not planning ahead:** Last-minute plans feel rushed and less thoughtful.
+
+**Making it all about you:** Consider what she would actually enjoy.
+
+**Overcomplicating it:** Simple and meaningful beats elaborate and stressful.
+
+**Forgetting the meaning:** Don't get so caught up in planning that you forget why you're celebrating.
+
+## Anniversary Ideas by Type
+
+**Romantic Getaway:**
+- Plan a weekend trip to a place you both love
+- Book a special hotel or Airbnb
+- Plan activities that allow for connection and relaxation
+
+**Recreate a Memory:**
+- Go back to your first date location
+- Recreate your wedding day meal
+- Visit a place that's meaningful to your relationship
+
+**Experience Together:**
+- Try something new you've both wanted to do
+- Book a special experience (cooking class, wine tasting, etc.)
+- Plan an adventure that creates new memories
+
+**Intimate Celebration:**
+- Plan a special dinner at home or favorite restaurant
+- Create a romantic evening with thoughtful details
+- Focus on connection and conversation
+
+**Celebration with Others:**
+- Plan a gathering with close friends or family
+- Organize a party that celebrates your relationship
+- Include people who've been part of your journey
+
+## The Win
+
+You planned an anniversary celebration that honored your relationship. You reflected on your journey. You created something meaningful. She felt celebrated and loved. You both felt closer and more connected. That's a win.`,
+  },
 };
 
 export default async function GuidePage({ params }: { params: { slug: string } }) {
