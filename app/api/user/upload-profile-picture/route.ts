@@ -141,6 +141,18 @@ export async function POST(request: Request) {
 
     if (uploadError) {
       console.error('Error uploading file:', uploadError);
+      
+      // Check if it's a bucket not found error
+      if (uploadError.message?.includes('Bucket not found') || uploadError.message?.includes('not found')) {
+        return NextResponse.json(
+          { 
+            error: 'Storage bucket not found. Please contact support - the profile-pictures bucket needs to be created in Supabase Storage.',
+            details: 'The profile-pictures bucket must be created in Supabase Dashboard → Storage and set to Public.'
+          },
+          { status: 500 }
+        );
+      }
+      
       return NextResponse.json(
         { error: 'Failed to upload file. Please make sure the profile-pictures bucket exists in Supabase Storage.' },
         { status: 500 }
