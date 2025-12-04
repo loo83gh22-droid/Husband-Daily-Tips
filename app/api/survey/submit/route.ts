@@ -252,7 +252,8 @@ export async function POST(request: Request) {
     };
 
     // Count points for baseline questions (questions 1-18)
-    // All baseline questions now use scale 1-3: 1=No (0 points), 2=Sometimes (0.5 points), 3=Yes (1 point)
+    // Most baseline questions use scale 1-3: 1=No (0 points), 2=Sometimes (0.5 points), 3=Yes (1 point)
+    // Exception: Question 7 uses yes_no: Yes = 1 point, No = 0 points
     let yesCount = 0;
     let totalBaselineQuestions = 0;
     

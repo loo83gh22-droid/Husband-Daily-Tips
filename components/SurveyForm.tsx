@@ -330,7 +330,10 @@ export default function SurveyForm({ userId, questions, isPublic = false }: Surv
           <div className="space-y-3">
             {(() => {
               // Baseline questions (1-18) use 3-option scale: No, Sometimes, Yes
-              const isBaselineQuestion = currentQuestion.id >= 1 && currentQuestion.id <= 18;
+              // Exception: Question 7 is yes_no only
+              const isBaselineQuestion = currentQuestion.id >= 1 && currentQuestion.id <= 18 && currentQuestion.id !== 7;
+              // Goal-setting questions (14-29) use 5-option scale but hide numbers
+              const isGoalSettingQuestion = currentQuestion.id >= 14 && currentQuestion.id <= 29;
               
               const scaleValues = isBaselineQuestion ? [1, 2, 3] : [1, 2, 3, 4, 5];
               
@@ -378,9 +381,9 @@ export default function SurveyForm({ userId, questions, isPublic = false }: Surv
                       : 'border-slate-700 bg-slate-800/50 text-slate-300 hover:border-slate-600 hover:bg-slate-800'
                   }`}
                 >
-                  <div className={`flex items-center ${isBaselineQuestion ? 'justify-center' : 'justify-between'}`}>
+                  <div className={`flex items-center ${(isBaselineQuestion || isGoalSettingQuestion) ? 'justify-center' : 'justify-between'}`}>
                     <span className="font-medium">{label}</span>
-                    {!isBaselineQuestion && <span className="text-2xl">{value}</span>}
+                    {!(isBaselineQuestion || isGoalSettingQuestion) && <span className="text-2xl">{value}</span>}
                   </div>
                 </button>
               );
