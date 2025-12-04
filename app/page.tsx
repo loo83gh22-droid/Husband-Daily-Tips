@@ -154,7 +154,7 @@ export default async function Home() {
                 name: 'How much does it cost?',
                 acceptedAnswer: {
                   '@type': 'Answer',
-                  text: 'Start with a 7-day free trial—no credit card required. After that, premium membership is $7/month. That\'s less than $0.25 per day for daily actions that can transform your relationship.',
+                  text: 'Start with a 7-day free trial, no credit card required. After that, premium membership is $7/month. That\'s less than $0.25 per day for daily actions that can transform your relationship.',
                 },
               },
               {
@@ -477,7 +477,7 @@ export default async function Home() {
               <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-6 text-center">
                 <h3 className="text-xl font-semibold text-slate-200 mb-3">🎯 Personalized for Your Relationship</h3>
                 <p className="text-slate-400">
-                  Actions tailored to your goals, schedule, and relationship stage. What you need, when you need it—not a one-size-fits-all approach.
+                  Actions tailored to your goals, schedule, and relationship stage. What you need, when you need it, not a one-size-fits-all approach.
                 </p>
               </div>
               <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-6 text-center">
@@ -506,7 +506,7 @@ export default async function Home() {
                 },
                 {
                   question: 'How much does it cost?',
-                  answer: 'Start with a 7-day free trial—no credit card required. After that, premium membership is $7/month. That\'s less than $0.25 per day for daily actions that can transform your relationship.',
+                  answer: 'Start with a 7-day free trial, no credit card required. After that, premium membership is $7/month. That\'s less than $0.25 per day for daily actions that can transform your relationship.',
                 },
                 {
                   question: 'Is there really a free trial?',
