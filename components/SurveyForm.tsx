@@ -378,9 +378,9 @@ export default function SurveyForm({ userId, questions, isPublic = false }: Surv
                       : 'border-slate-700 bg-slate-800/50 text-slate-300 hover:border-slate-600 hover:bg-slate-800'
                   }`}
                 >
-                  <div className="flex items-center justify-between">
+                  <div className={`flex items-center ${isBaselineQuestion ? 'justify-center' : 'justify-between'}`}>
                     <span className="font-medium">{label}</span>
-                    <span className="text-2xl">{value}</span>
+                    {!isBaselineQuestion && <span className="text-2xl">{value}</span>}
                   </div>
                 </button>
               );
