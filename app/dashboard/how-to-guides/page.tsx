@@ -103,7 +103,7 @@ export default async function HowToGuidesPage({
           slug: 'share-your-feelings',
           title: 'Share Your Feelings (Without Making It About You)',
           excerpt:
-            'Learn how to open up and be vulnerable in a way that builds connection, not walls. Express what you\'re feeling without turning it into a problem she needs to solve.',
+            'Learn how to open up and be vulnerable in a way that builds connection. Express what you\'re feeling without turning it into a problem she needs to solve.',
           difficulty: 'Medium',
           time: 'Ongoing',
         },

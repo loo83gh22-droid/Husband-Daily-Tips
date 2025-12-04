@@ -13,7 +13,7 @@ export const guides: Record<string, any> = {
     category: 'Communication',
     difficulty: 'Medium',
     time: 'Ongoing',
-    excerpt: 'Learn how to open up and be vulnerable in a way that builds connection, not walls. Express what you\'re feeling without turning it into a problem she needs to solve.',
+    excerpt: 'Learn how to open up and be vulnerable in a way that builds connection. Express what you\'re feeling without turning it into a problem she needs to solve.',
     content: `## Why This Matters
 
 Sharing your feelings creates emotional intimacy. But if you do it wrong, it becomes a burden she has to carry. Learn how to express yourself in ways that build connection instead of creating distance.
