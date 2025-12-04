@@ -165,13 +165,4 @@ export async function GET(request: NextRequest) {
   }
 }
 
-/**
- * Helper function to generate unsubscribe token
- * Used when sending emails
- */
-export function generateUnsubscribeToken(userId: string, emailType: string): string {
-  const timestamp = Date.now().toString();
-  const tokenString = `${userId}:${emailType}:${timestamp}`;
-  return Buffer.from(tokenString).toString('base64');
-}
 
