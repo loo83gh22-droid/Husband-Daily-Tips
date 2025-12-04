@@ -251,9 +251,8 @@ export async function POST(request: Request) {
       consistency: { total: 0, count: 0 },
     };
 
-    // Count Yes answers for baseline questions (questions 1-18)
-    // Yes = 1 point, No = 0 points
-    // Special case: Question 12 (apologize) uses scale 1-3: 1=No (0), 2=Sometimes (0.5), 3=Yes (1)
+    // Count points for baseline questions (questions 1-18)
+    // All baseline questions now use scale 1-3: 1=No (0 points), 2=Sometimes (0.5 points), 3=Yes (1 point)
     let yesCount = 0;
     let totalBaselineQuestions = 0;
     
@@ -262,8 +261,8 @@ export async function POST(request: Request) {
       // Only count baseline questions (1-18), not goal-setting questions (19-29)
       if (questionId <= 18) {
         totalBaselineQuestions++;
-        if (questionId === 12 && response.response_type === 'scale') {
-          // Special handling for apologize question (scale 1-3)
+        if (response.response_type === 'scale') {
+          // All baseline questions use scale 1-3
           if (response.response_value === 3) {
             yesCount += 1; // Yes = 1 point
           } else if (response.response_value === 2) {
@@ -271,6 +270,7 @@ export async function POST(request: Request) {
           }
           // No (value 1) = 0 points
         } else if (response.response_type === 'yes_no' && response.response_value === 1) {
+          // Legacy support for old yes_no format
           yesCount++;
         }
       }
@@ -278,11 +278,12 @@ export async function POST(request: Request) {
       // Still calculate category scores for goal-setting and other purposes
       const category = response.category.toLowerCase();
       if (categoryScores[category]) {
+        // For baseline questions (1-18): scale 1-3 normalized to 1-5
         // For yes/no: 1 = 5, 0 = 1 (normalize to 1-5 scale)
-        // For scale: already 1-5, except question 12 which is 1-3
+        // For other scale questions: already 1-5
         let normalizedValue = response.response_value;
-        if (response.question_id === 12 && response.response_type === 'scale') {
-          // Special handling for apologize question: 1=No (1), 2=Sometimes (3), 3=Yes (5)
+        if (response.question_id <= 18 && response.response_type === 'scale') {
+          // Baseline questions use scale 1-3: 1=No (1), 2=Sometimes (3), 3=Yes (5)
           normalizedValue = response.response_value === 1 ? 1 : 
                            response.response_value === 2 ? 3 : 5;
         } else if (response.response_type === 'yes_no') {
@@ -444,8 +445,8 @@ export async function POST(request: Request) {
 
           let formattedValue = '';
           if (question.response_type === 'scale') {
-            // Special handling for question 12 (apologize question)
-            if (question.id === 12) {
+            // Baseline questions (1-18) use scale 1-3: No, Sometimes, Yes
+            if (question.id >= 1 && question.id <= 18) {
               const labels: Record<number, string> = {
                 1: '1 (No)',
                 2: '2 (Sometimes)',

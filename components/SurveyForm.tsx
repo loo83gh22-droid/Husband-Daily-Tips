@@ -329,19 +329,18 @@ export default function SurveyForm({ userId, questions, isPublic = false }: Surv
         ) : currentQuestion.response_type === 'scale' ? (
           <div className="space-y-3">
             {(() => {
-              // Special case for question 12 (apologize question): 3-option scale
-              const isApologizeQuestion = currentQuestion.id === 12 || 
-                                         currentQuestion.question_text.toLowerCase().includes('apologize when you\'re wrong');
+              // Baseline questions (1-18) use 3-option scale: No, Sometimes, Yes
+              const isBaselineQuestion = currentQuestion.id >= 1 && currentQuestion.id <= 18;
               
-              const scaleValues = isApologizeQuestion ? [1, 2, 3] : [1, 2, 3, 4, 5];
+              const scaleValues = isBaselineQuestion ? [1, 2, 3] : [1, 2, 3, 4, 5];
               
               return scaleValues.map((value) => {
                 // Determine scale labels based on question text
                 const questionText = currentQuestion.question_text.toLowerCase();
                 
                 let label = '';
-                if (isApologizeQuestion) {
-                  // Special labels for apologize question
+                if (isBaselineQuestion) {
+                  // Labels for baseline questions: No, Sometimes, Yes
                   label = value === 1 ? 'No' : 
                          value === 2 ? 'Sometimes' : 
                          'Yes';
