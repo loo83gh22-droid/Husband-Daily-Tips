@@ -150,16 +150,6 @@ export default function ActionDetailModal({
                   </div>
                 )}
 
-                {/* Requirement type */}
-                {action.requirement_type && (
-                  <div className="mb-6">
-                    <p className="text-xs text-slate-400 mb-1">Type:</p>
-                    <p className="text-sm text-slate-300 capitalize">
-                      {action.requirement_type.replace('_', ' ')}
-                    </p>
-                  </div>
-                )}
-
                 {/* How-To Guide button */}
                 {guideSlug && (
                   <div className="mb-6">
