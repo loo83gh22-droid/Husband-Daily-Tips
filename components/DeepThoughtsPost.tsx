@@ -147,8 +147,23 @@ export default function DeepThoughtsPost({ thought, currentUserId }: DeepThought
   return (
     <article className="bg-slate-900/80 border border-slate-800 rounded-xl p-6 md:p-8">
       <div className="flex items-start justify-between mb-4">
-        <div>
+        <div className="flex-1">
           <div className="flex items-center gap-2 mb-2 flex-wrap">
+            {/* Profile picture - only show if not anonymous */}
+            {!user?.post_anonymously && user?.profile_picture && (
+              <img
+                src={user.profile_picture}
+                alt={displayName}
+                className="w-8 h-8 rounded-full object-cover border border-slate-700 flex-shrink-0"
+              />
+            )}
+            {!user?.post_anonymously && !user?.profile_picture && (
+              <div className="w-8 h-8 rounded-full bg-primary-500/20 border border-primary-500/30 flex items-center justify-center flex-shrink-0">
+                <span className="text-xs font-semibold text-primary-300">
+                  {displayName.charAt(0).toUpperCase()}
+                </span>
+              </div>
+            )}
             <span className="text-xs text-slate-500">From</span>
             <span className="text-sm font-medium text-slate-200">{displayName}</span>
             {yearsMarried !== null && yearsMarried !== undefined && (
@@ -250,6 +265,21 @@ export default function DeepThoughtsPost({ thought, currentUserId }: DeepThought
                   className="bg-slate-800/50 rounded-lg p-4 border border-slate-700/50"
                 >
                   <div className="flex items-center gap-2 mb-2">
+                    {/* Profile picture for comment - only show if not anonymous */}
+                    {!commentUser?.post_anonymously && commentUser?.profile_picture && (
+                      <img
+                        src={commentUser.profile_picture}
+                        alt={commentName}
+                        className="w-6 h-6 rounded-full object-cover border border-slate-700 flex-shrink-0"
+                      />
+                    )}
+                    {!commentUser?.post_anonymously && !commentUser?.profile_picture && (
+                      <div className="w-6 h-6 rounded-full bg-primary-500/20 border border-primary-500/30 flex items-center justify-center flex-shrink-0">
+                        <span className="text-[10px] font-semibold text-primary-300">
+                          {commentName.charAt(0).toUpperCase()}
+                        </span>
+                      </div>
+                    )}
                     <span className="text-xs font-medium text-slate-300">{commentName}</span>
                     <time className="text-xs text-slate-500">
                       {new Date(comment.created_at).toLocaleDateString('en-US', {

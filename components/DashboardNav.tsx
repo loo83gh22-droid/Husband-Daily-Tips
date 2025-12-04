@@ -11,6 +11,7 @@ export default function DashboardNav() {
   const pathname = usePathname();
   const { user, isLoading, error: userError } = useUser();
   const [displayName, setDisplayName] = useState<string | null>(null);
+  const [profilePicture, setProfilePicture] = useState<string | null>(null);
 
   const navLinks = [
     { href: '/dashboard', label: 'Dashboard' },
@@ -39,12 +40,15 @@ export default function DashboardNav() {
         if (response.ok) {
           const data = await response.json();
           setDisplayName(data.displayName || user?.name || null);
+          setProfilePicture(data.profilePicture || null);
         } else {
           setDisplayName(user?.name || null);
+          setProfilePicture(null);
         }
       } catch (error) {
         // Silently fail and use Auth0 name as fallback
         setDisplayName(user?.name || null);
+        setProfilePicture(null);
       }
     }
 
@@ -62,9 +66,27 @@ export default function DashboardNav() {
                 <span className="text-xs sm:text-sm md:text-base text-slate-300 font-semibold hidden sm:inline">
                   is
                 </span>
-                <span className="text-xs sm:text-sm md:text-base text-slate-300 font-semibold hidden sm:inline truncate max-w-[100px] sm:max-w-[150px] md:max-w-none">
-                  {displayName}
-                </span>
+                <Link 
+                  href="/dashboard/account"
+                  className="flex items-center gap-2 hover:opacity-80 transition-opacity"
+                >
+                  {profilePicture ? (
+                    <img
+                      src={profilePicture}
+                      alt={displayName}
+                      className="w-6 h-6 sm:w-7 sm:h-7 rounded-full object-cover border border-slate-700 hidden sm:block"
+                    />
+                  ) : (
+                    <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-primary-500/20 border border-primary-500/30 flex items-center justify-center hidden sm:flex">
+                      <span className="text-xs sm:text-sm font-semibold text-primary-300">
+                        {displayName.charAt(0).toUpperCase()}
+                      </span>
+                    </div>
+                  )}
+                  <span className="text-xs sm:text-sm md:text-base text-slate-300 font-semibold hidden sm:inline truncate max-w-[100px] sm:max-w-[150px] md:max-w-none">
+                    {displayName}
+                  </span>
+                </Link>
               </>
             )}
           </div>

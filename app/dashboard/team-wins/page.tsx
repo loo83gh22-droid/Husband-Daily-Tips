@@ -25,10 +25,10 @@ async function getTeamWins() {
     .from('deep_thoughts')
     .select(`
       *,
-      users:user_id (name, username, wedding_date, post_anonymously),
+      users:user_id (name, username, wedding_date, post_anonymously, profile_picture),
       deep_thoughts_comments (
         *,
-        users:user_id (name, username, post_anonymously)
+        users:user_id (name, username, post_anonymously, profile_picture)
       )
     `)
     .eq('is_removed', false) // Filter out removed posts

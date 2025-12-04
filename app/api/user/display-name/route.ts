@@ -23,7 +23,7 @@ export async function GET() {
     
     const { data: user, error } = await adminSupabase
       .from('users')
-      .select('username, name, email')
+      .select('username, name, email, profile_picture')
       .eq('auth0_id', auth0Id)
       .single();
 
@@ -31,6 +31,7 @@ export async function GET() {
       // Fallback to Auth0 data
       return NextResponse.json({
         displayName: session.user.name?.split(' ')[0] || session.user.email || 'User',
+        profilePicture: null,
       });
     }
 
@@ -44,7 +45,10 @@ export async function GET() {
       displayName = user.email;
     }
 
-    return NextResponse.json({ displayName });
+    return NextResponse.json({ 
+      displayName,
+      profilePicture: user.profile_picture || null,
+    });
   } catch (error) {
     console.error('Error fetching display name:', error);
     return NextResponse.json({ error: 'Unexpected error' }, { status: 500 });
