@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 
 interface Quote {
   id: string;
@@ -10,26 +11,35 @@ interface Quote {
 
 export default function FreeFloatingQuote() {
   const [quote, setQuote] = useState<Quote | null>(null);
+  const [profilePicture, setProfilePicture] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    async function fetchQuote() {
+    async function fetchData() {
       try {
-        const response = await fetch('/api/quotes/random', {
-          credentials: 'include',
-        });
-        if (response.ok) {
-          const data = await response.json();
-          setQuote(data.quote);
+        // Fetch quote and profile picture in parallel
+        const [quoteResponse, profileResponse] = await Promise.all([
+          fetch('/api/quotes/random', { credentials: 'include' }),
+          fetch('/api/user/display-name', { credentials: 'include' }),
+        ]);
+
+        if (quoteResponse.ok) {
+          const quoteData = await quoteResponse.json();
+          setQuote(quoteData.quote);
+        }
+
+        if (profileResponse.ok) {
+          const profileData = await profileResponse.json();
+          setProfilePicture(profileData.profilePicture || null);
         }
       } catch (error) {
-        console.error('Error fetching quote:', error);
+        console.error('Error fetching data:', error);
       } finally {
         setLoading(false);
       }
     }
 
-    fetchQuote();
+    fetchData();
   }, []);
 
   if (loading || !quote) {
@@ -37,15 +47,41 @@ export default function FreeFloatingQuote() {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center py-8 sm:py-12 md:py-16 text-center">
-      <p className="text-base sm:text-lg md:text-xl text-slate-300 font-medium italic leading-relaxed max-w-2xl px-4 mb-3">
-        &ldquo;{quote.quote_text}&rdquo;
-      </p>
-      {quote.author && (
-        <p className="text-sm sm:text-base text-slate-400">
-          — {quote.author}
-        </p>
+    <div className="relative w-full min-h-[300px] sm:min-h-[400px] md:min-h-[500px] rounded-xl overflow-hidden border border-slate-800">
+      {/* Profile Picture Background */}
+      {profilePicture ? (
+        <div 
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{ backgroundImage: `url(${profilePicture})` }}
+        >
+          {/* Dark overlay for better text readability */}
+          <div className="absolute inset-0 bg-slate-950/60"></div>
+        </div>
+      ) : (
+        <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900"></div>
       )}
+
+      {/* Quote Bubble Overlay */}
+      <div className="relative z-10 flex flex-col items-center justify-center h-full py-8 sm:py-12 md:py-16 px-4 sm:px-6 md:px-8 text-center">
+        <div className="bg-slate-900/90 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-6 sm:p-8 md:p-10 max-w-2xl shadow-2xl">
+          <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-slate-100 font-medium italic leading-relaxed mb-4">
+            &ldquo;{quote.quote_text}&rdquo;
+          </p>
+          {quote.author && (
+            <p className="text-sm sm:text-base md:text-lg text-slate-300">
+              — {quote.author}
+            </p>
+          )}
+        </div>
+        
+        {/* Link to view previous actions */}
+        <Link
+          href="/dashboard/journal"
+          className="mt-6 text-primary-300 hover:text-primary-200 text-sm sm:text-base font-semibold transition-colors relative z-10"
+        >
+          View your previous actions →
+        </Link>
+      </div>
     </div>
   );
 }

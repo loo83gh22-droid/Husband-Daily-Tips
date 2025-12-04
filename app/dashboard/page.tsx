@@ -565,17 +565,7 @@ export default async function Dashboard() {
               <OutstandingActions userId={user.id} hasPremiumAccess={hasPremiumAccess ?? false} />
             </div>
 
-            {/* Previous Actions Link */}
-            <div className="mt-4 sm:mt-6 md:mt-8 text-center">
-              <Link
-                href="/dashboard/journal"
-                className="text-primary-300 hover:text-primary-200 text-sm sm:text-base font-semibold transition-colors"
-              >
-                View your previous actions →
-              </Link>
-            </div>
-
-            {/* Free-Floating Quote in Dead Space */}
+            {/* Free-Floating Quote with Profile Picture Background */}
             <FreeFloatingQuote />
           </div>
 

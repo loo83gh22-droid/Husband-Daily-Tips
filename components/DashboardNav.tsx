@@ -12,6 +12,7 @@ export default function DashboardNav() {
   const { user, isLoading, error: userError } = useUser();
   const [displayName, setDisplayName] = useState<string | null>(null);
   const [profilePicture, setProfilePicture] = useState<string | null>(null);
+  const [imageError, setImageError] = useState(false);
 
   const navLinks = [
     { href: '/dashboard', label: 'Dashboard' },
@@ -41,9 +42,11 @@ export default function DashboardNav() {
           const data = await response.json();
           setDisplayName(data.displayName || user?.name || null);
           setProfilePicture(data.profilePicture || null);
+          setImageError(false); // Reset error state when new picture is loaded
         } else {
           setDisplayName(user?.name || null);
           setProfilePicture(null);
+          setImageError(false);
         }
       } catch (error) {
         // Silently fail and use Auth0 name as fallback
@@ -70,16 +73,17 @@ export default function DashboardNav() {
                   href="/dashboard/account"
                   className="flex items-center gap-2 hover:opacity-80 transition-opacity"
                 >
-                  {profilePicture ? (
+                  {profilePicture && !imageError ? (
                     <img
                       src={profilePicture}
-                      alt={displayName}
+                      alt={displayName || 'User'}
                       className="w-6 h-6 sm:w-7 sm:h-7 rounded-full object-cover border border-slate-700 hidden sm:block"
+                      onError={() => setImageError(true)}
                     />
                   ) : (
                     <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-primary-500/20 border border-primary-500/30 flex items-center justify-center hidden sm:flex">
                       <span className="text-xs sm:text-sm font-semibold text-primary-300">
-                        {displayName.charAt(0).toUpperCase()}
+                        {displayName?.charAt(0).toUpperCase() || 'U'}
                       </span>
                     </div>
                   )}
