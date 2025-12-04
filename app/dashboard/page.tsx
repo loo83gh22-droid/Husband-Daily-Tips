@@ -564,9 +564,12 @@ export default async function Dashboard() {
             <div id="outstanding-actions" className="mt-4 sm:mt-6 md:mt-8 scroll-mt-4">
               <OutstandingActions userId={user.id} hasPremiumAccess={hasPremiumAccess ?? false} />
             </div>
+
+            {/* Free-Floating Quote in Dead Space */}
+            <FreeFloatingQuote />
           </div>
 
-          {/* Right column: Health bar + stats + quote */}
+          {/* Right column: Health bar + stats */}
           <div className="w-full min-w-0 space-y-4 sm:space-y-6 md:space-y-8">
             <div data-tour="hit-points">
               <HealthBar value={stats.healthScore} />
@@ -604,11 +607,6 @@ export default async function Dashboard() {
 
             <div>
               <ReferralCard />
-            </div>
-
-            {/* Free-Floating Quote with Profile Picture Background - Bottom Right */}
-            <div className="mt-4 sm:mt-6 md:mt-8">
-              <FreeFloatingQuote />
             </div>
           </div>
         </div>
