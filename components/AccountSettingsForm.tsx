@@ -146,6 +146,13 @@ export default function AccountSettingsForm({ initialData }: AccountSettingsForm
       }
 
       setSuccess(true);
+      
+      // Update local state with new picture URL immediately
+      if (pictureUrl) {
+        setProfilePictureUrl(pictureUrl);
+        setProfilePicture(null); // Clear the file input
+      }
+      
       setTimeout(() => {
         router.refresh();
       }, 1000);

@@ -163,14 +163,26 @@ async function updateProfile(request: Request) {
       updateData.show_all_country_actions = show_all_country_actions === true;
     }
 
-    const { error: updateError } = await adminSupabase
+    // Log what we're updating (especially profile_picture)
+    if (updateData.profile_picture !== undefined) {
+      console.log(`Updating profile_picture for user ${user.id}:`, updateData.profile_picture || 'null');
+    }
+
+    const { error: updateError, data: updatedUser } = await adminSupabase
       .from('users')
       .update(updateData)
-      .eq('id', user.id);
+      .eq('id', user.id)
+      .select('profile_picture')
+      .single();
 
     if (updateError) {
       console.error('Error updating profile:', updateError);
       return NextResponse.json({ error: 'Failed to update profile' }, { status: 500 });
+    }
+
+    // Verify the update worked
+    if (updateData.profile_picture !== undefined) {
+      console.log(`Profile picture after update:`, updatedUser?.profile_picture || 'null');
     }
 
     return NextResponse.json({ success: true });

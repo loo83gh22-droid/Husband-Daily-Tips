@@ -85,9 +85,16 @@ export async function POST(request: Request) {
           const oldFileName = oldUrl.split('/profile-pictures/')[1]?.split('?')[0];
           if (oldFileName && oldFileName !== fileName) {
             // Only delete if it's a different file (not the same one we're about to upload)
-            await adminSupabase.storage
+            // Note: remove() expects just the file path, not the full path with bucket name
+            const { error: removeError } = await adminSupabase.storage
               .from('profile-pictures')
-              .remove([`profile-pictures/${oldFileName}`]);
+              .remove([oldFileName]);
+            
+            if (removeError) {
+              console.error('Error removing old file:', removeError);
+            } else {
+              console.log(`Deleted old profile picture: ${oldFileName}`);
+            }
           }
         }
       } catch (deleteError) {
