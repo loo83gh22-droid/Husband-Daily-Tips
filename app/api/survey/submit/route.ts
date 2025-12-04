@@ -253,6 +253,7 @@ export async function POST(request: Request) {
 
     // Count Yes answers for baseline questions (questions 1-18)
     // Yes = 1 point, No = 0 points
+    // Special case: Question 12 (apologize) uses scale 1-3: 1=No (0), 2=Sometimes (0.5), 3=Yes (1)
     let yesCount = 0;
     let totalBaselineQuestions = 0;
     
@@ -261,7 +262,15 @@ export async function POST(request: Request) {
       // Only count baseline questions (1-18), not goal-setting questions (19-29)
       if (questionId <= 18) {
         totalBaselineQuestions++;
-        if (response.response_type === 'yes_no' && response.response_value === 1) {
+        if (questionId === 12 && response.response_type === 'scale') {
+          // Special handling for apologize question (scale 1-3)
+          if (response.response_value === 3) {
+            yesCount += 1; // Yes = 1 point
+          } else if (response.response_value === 2) {
+            yesCount += 0.5; // Sometimes = 0.5 points
+          }
+          // No (value 1) = 0 points
+        } else if (response.response_type === 'yes_no' && response.response_value === 1) {
           yesCount++;
         }
       }
@@ -270,9 +279,13 @@ export async function POST(request: Request) {
       const category = response.category.toLowerCase();
       if (categoryScores[category]) {
         // For yes/no: 1 = 5, 0 = 1 (normalize to 1-5 scale)
-        // For scale: already 1-5
+        // For scale: already 1-5, except question 12 which is 1-3
         let normalizedValue = response.response_value;
-        if (response.response_type === 'yes_no') {
+        if (response.question_id === 12 && response.response_type === 'scale') {
+          // Special handling for apologize question: 1=No (1), 2=Sometimes (3), 3=Yes (5)
+          normalizedValue = response.response_value === 1 ? 1 : 
+                           response.response_value === 2 ? 3 : 5;
+        } else if (response.response_type === 'yes_no') {
           normalizedValue = response.response_value === 1 ? 5 : 1;
         }
         categoryScores[category].total += normalizedValue;
@@ -431,14 +444,24 @@ export async function POST(request: Request) {
 
           let formattedValue = '';
           if (question.response_type === 'scale') {
-            const labels: Record<number, string> = {
-              1: '1 (Strongly Disagree)',
-              2: '2 (Disagree)',
-              3: '3 (Neutral)',
-              4: '4 (Agree)',
-              5: '5 (Strongly Agree)',
-            };
-            formattedValue = labels[responseValue] || responseValue.toString();
+            // Special handling for question 12 (apologize question)
+            if (question.id === 12) {
+              const labels: Record<number, string> = {
+                1: '1 (No)',
+                2: '2 (Sometimes)',
+                3: '3 (Yes)',
+              };
+              formattedValue = labels[responseValue] || responseValue.toString();
+            } else {
+              const labels: Record<number, string> = {
+                1: '1 (Strongly Disagree)',
+                2: '2 (Disagree)',
+                3: '3 (Neutral)',
+                4: '4 (Agree)',
+                5: '5 (Strongly Agree)',
+              };
+              formattedValue = labels[responseValue] || responseValue.toString();
+            }
           } else if (question.response_type === 'yes_no') {
             formattedValue = responseValue === 1 ? 'Yes' : 'No';
           } else {

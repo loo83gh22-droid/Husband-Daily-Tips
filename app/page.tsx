@@ -234,7 +234,7 @@ export default async function Home() {
                 name: 'Can I use this if my relationship is struggling?',
                 acceptedAnswer: {
                   '@type': 'Answer',
-                  text: 'Yes. Many users find value when their relationship needs attention. Daily actions can help rebuild connection, improve communication, and show consistent effort. However, if you\'re dealing with serious issues, we recommend also seeking professional counseling.',
+                  text: 'Yes. Daily actions can help rebuild connection, improve communication, and show consistent effort. However, if you\'re dealing with serious issues, we recommend also seeking professional counseling.',
                 },
               },
             ],
@@ -546,7 +546,7 @@ export default async function Home() {
                 },
                 {
                   question: 'Can I use this if my relationship is struggling?',
-                  answer: 'Yes. Many users find value when their relationship needs attention. Daily actions can help rebuild connection, improve communication, and show consistent effort. However, if you\'re dealing with serious issues, we recommend also seeking professional counseling.',
+                  answer: 'Yes. Daily actions can help rebuild connection, improve communication, and show consistent effort. However, if you\'re dealing with serious issues, we recommend also seeking professional counseling.',
                 },
               ]}
             />
