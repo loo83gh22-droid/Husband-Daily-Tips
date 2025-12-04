@@ -211,12 +211,29 @@ export async function POST(request: NextRequest) {
                       <div style="background-color: #f3f4f6; border-radius: 8px; padding: 20px; margin-bottom: 30px;">
                         <h2 style="color: #1f2937; font-size: 18px; margin: 0 0 15px 0;">What to expect:</h2>
                         <ul style="color: #374151; font-size: 14px; margin: 0; padding-left: 20px;">
-                          <li style="margin-bottom: 8px;"><strong>Daily Action Emails:</strong> You'll receive tomorrow's action every day at 12 noon in your timezone</li>
+                          <li style="margin-bottom: 8px;"><strong>Daily Action Emails:</strong> You'll receive your action every day at 12 noon in your timezone (you can set this in your Account Settings)</li>
                           <li style="margin-bottom: 8px;"><strong>Personalized Actions:</strong> Based on your survey, relationship goals, and preferences</li>
                           <li style="margin-bottom: 8px;"><strong>Progress Tracking:</strong> Track your Husband Health score, streaks, and badges</li>
                           <li style="margin-bottom: 8px;"><strong>Private Journal:</strong> Log your wins and see your progress over time</li>
                           <li style="margin-bottom: 8px;"><strong>Team Wins:</strong> Share your completed actions with your partner</li>
                         </ul>
+                      </div>
+                      
+                      <div style="background-color: #eff6ff; border-left: 4px solid #3b82f6; padding: 20px; margin-bottom: 30px; border-radius: 4px;">
+                        <h2 style="color: #1e40af; font-size: 18px; margin: 0 0 12px 0;">✨ Get the Most Out of Your Subscription:</h2>
+                        <p style="color: #1e3a8a; font-size: 14px; margin: 0 0 10px 0; line-height: 1.6;">
+                          <strong>Personalize your experience</strong> by updating your Account Settings with:
+                        </p>
+                        <ul style="color: #1e3a8a; font-size: 14px; margin: 0; padding-left: 20px; line-height: 1.8;">
+                          <li style="margin-bottom: 6px;">Your partner's name (for personalized action messages)</li>
+                          <li style="margin-bottom: 6px;">Your partner's birthday (for birthday-specific actions and reminders)</li>
+                          <li style="margin-bottom: 6px;">Your wedding date (to track years married in Team Wins)</li>
+                          <li style="margin-bottom: 6px;">Your timezone (so daily emails arrive at the perfect time)</li>
+                          <li style="margin-bottom: 6px;">Your work days (to avoid actions during your work hours)</li>
+                        </ul>
+                        <p style="color: #1e3a8a; font-size: 13px; margin: 12px 0 0 0; font-style: italic;">
+                          The more details you share, the more personalized and relevant your daily actions will be!
+                        </p>
                       </div>
                       
                       <div style="text-align: center; margin-bottom: 30px;">
