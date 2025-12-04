@@ -8,7 +8,7 @@ const resend = new Resend(process.env.RESEND_API_KEY || '');
 
 /**
  * Send daily action email to a user
- * This is called by the cron job for each user at 7pm in their timezone
+ * This is called by the cron job for each user at 12 noon in their timezone
  */
 export async function POST(request: Request) {
   try {

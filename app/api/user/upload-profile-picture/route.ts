@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getSession } from '@auth0/nextjs-auth0';
-import { supabase } from '@/lib/supabase';
+import { supabase, getSupabaseAdmin } from '@/lib/supabase';
 
 /**
  * Upload profile picture to Supabase Storage
@@ -15,8 +15,11 @@ export async function POST(request: Request) {
 
     const auth0Id = session.user.sub;
 
+    // Use admin client to bypass RLS (Auth0 context isn't set for RLS)
+    const adminSupabase = getSupabaseAdmin();
+
     // Get user ID
-    const { data: user, error: userError } = await supabase
+    const { data: user, error: userError } = await adminSupabase
       .from('users')
       .select('id')
       .eq('auth0_id', auth0Id)
@@ -66,10 +69,9 @@ export async function POST(request: Request) {
     const fileName = `${user.id}-${Date.now()}.${fileExt}`;
     const filePath = `profile-pictures/${fileName}`;
 
-    // Upload to Supabase Storage
+    // Upload to Supabase Storage using admin client to bypass RLS
     // Note: You'll need to create a 'profile-pictures' bucket in Supabase Storage
-    // and set up appropriate RLS policies
-    const { data: uploadData, error: uploadError } = await supabase.storage
+    const { data: uploadData, error: uploadError } = await adminSupabase.storage
       .from('profile-pictures')
       .upload(filePath, buffer, {
         contentType: file.type,
@@ -84,8 +86,8 @@ export async function POST(request: Request) {
       );
     }
 
-    // Get public URL
-    const { data: urlData } = supabase.storage
+    // Get public URL using admin client
+    const { data: urlData } = adminSupabase.storage
       .from('profile-pictures')
       .getPublicUrl(filePath);
 

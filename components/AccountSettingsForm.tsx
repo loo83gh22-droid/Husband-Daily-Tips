@@ -262,7 +262,7 @@ export default function AccountSettingsForm({ initialData }: AccountSettingsForm
           ))}
         </select>
         <p className="mt-1 text-xs text-slate-500">
-          Used for scheduling your daily email at 7 PM in your timezone
+          Used for scheduling your daily email at 12 noon in your timezone
         </p>
       </div>
 

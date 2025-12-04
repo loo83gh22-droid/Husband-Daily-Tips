@@ -30,6 +30,27 @@ export default async function AccountPage() {
   const auth0Id = session.user.sub;
   const user = await getUserData(auth0Id);
 
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-slate-950">
+        <DashboardNav />
+        <main className="container mx-auto px-4 py-8 md:py-12 max-w-full overflow-x-hidden">
+          <div className="max-w-4xl mx-auto">
+            <h1 className="text-3xl md:text-4xl font-bold mb-2 bg-gradient-to-r from-primary-400 to-primary-600 bg-clip-text text-transparent">
+              Account Settings
+            </h1>
+            <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-6 text-red-300">
+              <p className="font-semibold mb-2">User not found</p>
+              <p className="text-sm text-red-200">
+                Your account may not be fully set up yet. Please try refreshing the page or contact support if this issue persists.
+              </p>
+            </div>
+          </div>
+        </main>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-slate-950">
       <DashboardNav />
