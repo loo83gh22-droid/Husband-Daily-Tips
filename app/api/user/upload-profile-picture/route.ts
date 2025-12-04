@@ -67,6 +67,7 @@ export async function POST(request: Request) {
     // Use consistent filename per user (so upsert works and we can delete old files)
     const fileExt = file.name.split('.').pop()?.toLowerCase() || 'jpg';
     const fileName = `${user.id}.${fileExt}`;
+    // Store files in profile-pictures folder (matches existing structure)
     const filePath = `profile-pictures/${fileName}`;
 
     // Get current profile picture URL before uploading new one
@@ -79,9 +80,10 @@ export async function POST(request: Request) {
     // Delete old profile picture files for this user (handle different extensions)
     // Since files are stored as profile-pictures/user-id.jpg, list from that folder
     try {
+      // List files from root of bucket (files are stored at root level)
       const { data: existingFiles, error: listError } = await adminSupabase.storage
         .from('profile-pictures')
-        .list('profile-pictures', {
+        .list('', {
           limit: 1000,
         });
 
@@ -95,7 +97,7 @@ export async function POST(request: Request) {
                                    file.name.startsWith(`${user.id}-`);
             return startsWithUserId && file.name !== fileName;
           })
-          .map(file => `profile-pictures/${file.name}`); // Full path for removal
+          .map(file => file.name); // Just the filename for removal (stored at root)
 
         if (filesToDelete.length > 0) {
           console.log(`Found ${filesToDelete.length} old file(s) to delete for user ${user.id}`);
@@ -146,11 +148,22 @@ export async function POST(request: Request) {
     }
 
     // Get public URL using admin client
+    // Note: getPublicUrl expects the path relative to the bucket root
+    // The filePath is "profile-pictures/filename.jpg"
     const { data: urlData } = adminSupabase.storage
       .from('profile-pictures')
       .getPublicUrl(filePath);
 
-    const publicUrl = urlData.publicUrl;
+    let publicUrl = urlData.publicUrl;
+    
+    // Fix duplicate path issue - Supabase sometimes adds the folder name twice
+    // If URL contains profile-pictures/profile-pictures, remove the duplicate
+    if (publicUrl.includes('/profile-pictures/profile-pictures/')) {
+      publicUrl = publicUrl.replace('/profile-pictures/profile-pictures/', '/profile-pictures/');
+      console.log('Fixed duplicate path in URL');
+    }
+    
+    console.log('Generated public URL:', publicUrl);
 
     // Verify the URL is valid
     if (!publicUrl) {
