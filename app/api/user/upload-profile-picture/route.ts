@@ -76,31 +76,55 @@ export async function POST(request: Request) {
       .eq('id', user.id)
       .single();
 
-    // Delete old profile picture if it exists and is in our storage
-    if (currentUser?.profile_picture) {
-      try {
-        // Extract file path from URL if it's a Supabase Storage URL
-        const oldUrl = currentUser.profile_picture;
-        if (oldUrl.includes('/storage/v1/object/public/profile-pictures/')) {
-          const oldFileName = oldUrl.split('/profile-pictures/')[1]?.split('?')[0];
-          if (oldFileName && oldFileName !== fileName) {
-            // Only delete if it's a different file (not the same one we're about to upload)
-            // Note: remove() expects just the file path, not the full path with bucket name
-            const { error: removeError } = await adminSupabase.storage
-              .from('profile-pictures')
-              .remove([oldFileName]);
-            
-            if (removeError) {
-              console.error('Error removing old file:', removeError);
-            } else {
-              console.log(`Deleted old profile picture: ${oldFileName}`);
-            }
+    // Delete old profile picture files for this user (handle different extensions)
+    // Since files are stored as profile-pictures/user-id.jpg, list from that folder
+    try {
+      const { data: existingFiles, error: listError } = await adminSupabase.storage
+        .from('profile-pictures')
+        .list('profile-pictures', {
+          limit: 1000,
+        });
+
+      if (!listError && existingFiles) {
+        // Filter files that belong to this user (start with user.id) but aren't the new file
+        const filesToDelete = existingFiles
+          .filter(file => {
+            // Match files like: user-id.jpg, user-id.png, etc.
+            // Also handle old timestamped files: user-id-timestamp.jpg
+            const startsWithUserId = file.name.startsWith(`${user.id}.`) || 
+                                   file.name.startsWith(`${user.id}-`);
+            return startsWithUserId && file.name !== fileName;
+          })
+          .map(file => `profile-pictures/${file.name}`); // Full path for removal
+
+        if (filesToDelete.length > 0) {
+          console.log(`Found ${filesToDelete.length} old file(s) to delete for user ${user.id}`);
+          console.log('Files to delete:', filesToDelete);
+          
+          const { error: removeError } = await adminSupabase.storage
+            .from('profile-pictures')
+            .remove(filesToDelete);
+          
+          if (removeError) {
+            console.error('Error removing old files:', removeError);
+          } else {
+            console.log(`✅ Successfully deleted ${filesToDelete.length} old profile picture file(s)`);
           }
+        } else {
+          console.log(`No old files to delete for user ${user.id}`);
         }
-      } catch (deleteError) {
-        // Log but don't fail - old file cleanup is not critical
-        console.error('Error deleting old profile picture:', deleteError);
+      } else if (listError) {
+        console.error('Error listing existing files:', listError);
+        // Try listing from root as fallback
+        console.log('Attempting to list from root...');
+        const { data: rootFiles } = await adminSupabase.storage
+          .from('profile-pictures')
+          .list('', { limit: 1000 });
+        console.log('Root files:', rootFiles);
       }
+    } catch (deleteError) {
+      // Log but don't fail - old file cleanup is not critical
+      console.error('Error cleaning up old profile pictures:', deleteError);
     }
 
     // Upload to Supabase Storage using admin client to bypass RLS
