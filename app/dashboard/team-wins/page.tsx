@@ -31,7 +31,7 @@ async function getTeamWins() {
         users:user_id (name, username, post_anonymously, profile_picture)
       )
     `)
-    .eq('is_removed', false) // Filter out removed posts
+    .neq('is_removed', true) // Filter out removed posts (includes false and NULL)
     .order('created_at', { ascending: false })
     .limit(50);
 
