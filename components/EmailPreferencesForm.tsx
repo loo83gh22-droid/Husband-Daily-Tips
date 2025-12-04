@@ -18,14 +18,19 @@ interface EmailPreferencesFormProps {
 export default function EmailPreferencesForm({
   initialPreferences,
 }: EmailPreferencesFormProps) {
-  const [preferences, setPreferences] = useState<EmailPreferences>({
+  // Default preferences
+  const defaultPreferences: EmailPreferences = {
     daily_actions: true,
     surveys: true,
     marketing: true,
     updates: true,
     challenges: true,
     trial_reminders: true,
-    ...initialPreferences,
+  };
+
+  const [preferences, setPreferences] = useState<EmailPreferences>({
+    ...defaultPreferences,
+    ...(initialPreferences || {}),
   });
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -34,12 +39,7 @@ export default function EmailPreferencesForm({
   useEffect(() => {
     if (initialPreferences) {
       setPreferences({
-        daily_actions: true,
-        surveys: true,
-        marketing: true,
-        updates: true,
-        challenges: true,
-        trial_reminders: true,
+        ...defaultPreferences,
         ...initialPreferences,
       });
     }
