@@ -15,13 +15,14 @@ BEGIN
 
     -- If it doesn't exist, create it
     IF example_user_id IS NULL THEN
-        INSERT INTO users (auth0_id, email, name, subscription_tier, post_anonymously, created_at)
+        INSERT INTO users (auth0_id, email, name, subscription_tier, post_anonymously, referral_code, created_at)
         VALUES (
             'auth0|example_user_for_team_wins',
             'example@besthusbandever.com',
             'Example User',
             'premium',
             true, -- Posts will show as Anonymous
+            'EXAMPLE', -- Provide referral_code to bypass trigger
             NOW() - INTERVAL '30 days' -- Created 30 days ago to look realistic
         )
         RETURNING id INTO example_user_id;

@@ -42,7 +42,7 @@ AS $$
 BEGIN
   -- Only assign if referral_code is not already set
   IF NEW.referral_code IS NULL THEN
-    NEW.referral_code := generate_referral_code();
+    NEW.referral_code := public.generate_referral_code();
   END IF;
   RETURN NEW;
 END;
