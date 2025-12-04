@@ -260,10 +260,10 @@ export default async function Home() {
               </Link>
               <div className="flex items-center gap-3">
                 <Link
-                  href="/survey"
+                  href="/api/auth/login"
                   className="hidden md:inline-flex px-4 py-2 text-sm font-medium text-slate-300 hover:text-white transition-colors"
                 >
-                  Take Survey
+                  Sign Up & Take Test
                 </Link>
                 <Link
                   href="/api/auth/login"
@@ -311,10 +311,10 @@ export default async function Home() {
 
               <div className="mb-8 flex flex-col sm:flex-row gap-4">
                 <Link
-                  href="/survey"
+                  href="/api/auth/login"
                   className="inline-flex items-center justify-center px-10 py-5 rounded-xl bg-primary-500 text-slate-950 text-lg font-bold shadow-2xl shadow-primary-500/30 hover:bg-primary-400 transition-all transform hover:scale-105"
                 >
-                  Get Your Husband Score →
+                  Sign Up & Take Test →
                 </Link>
                 <Link
                   href="/api/auth/login"
@@ -436,9 +436,9 @@ export default async function Home() {
                 <div className="w-16 h-16 bg-primary-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
                   <span className="text-2xl">📝</span>
                 </div>
-                <h3 className="text-xl font-semibold text-slate-200 mb-3">Take the Survey</h3>
+                <h3 className="text-xl font-semibold text-slate-200 mb-3">Sign Up & Take the Test</h3>
                 <p className="text-slate-400">
-                  Answer a few questions about your relationship. We&apos;ll create a personalized baseline and identify areas to focus on.
+                  Sign up for free, then answer a few questions about your relationship. We&apos;ll create a personalized baseline and identify areas to focus on.
                 </p>
               </div>
               <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-6 text-center">
@@ -568,10 +568,10 @@ export default async function Home() {
               </div>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link
-                  href="/survey"
+                  href="/api/auth/login"
                   className="inline-flex items-center justify-center px-10 py-5 rounded-xl bg-primary-500 text-slate-950 text-lg font-bold shadow-2xl shadow-primary-500/30 hover:bg-primary-400 transition-all transform hover:scale-105"
                 >
-                  Get Your Husband Score →
+                  Sign Up & Take Test →
                 </Link>
                 <Link
                   href="/api/auth/login"
