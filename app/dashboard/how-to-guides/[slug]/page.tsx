@@ -5481,6 +5481,218 @@ You went on a walk together. You noticed beautiful things. You created something
 
 `,
   },
+  'take-initiative-in-planning': {
+    id: 60,
+    title: 'Take Initiative in Planning (Without Making Her Manage You)',
+    category: 'Partnership',
+    difficulty: 'Medium',
+    time: 'Varies',
+    excerpt: 'Learn how to take charge of planning holidays, events, and activities in a way that shows leadership and thoughtfulness—without making her do the mental work of managing you.',
+    content: `## Why This Matters
+
+Taking initiative in planning shows leadership, thoughtfulness, and care. When you take charge of planning something special, you're saying "I see this needs to happen, and I'm going to make it happen." This reduces her mental load and shows you're a true partner.
+
+But there's a right way and a wrong way. The wrong way: Asking "what should we do?" and making her plan it. The right way: Doing the research, making decisions, and handling the details yourself—while still checking in for her preferences.
+
+## The Secret: Do the Work, Check for Preferences
+
+You handle the research, logistics, and decision-making. She provides preferences and feedback. You don't ask her to plan it. You plan it, then check in.
+
+## How to Take Initiative in Planning
+
+### 1. Do the Research Yourself
+
+Don't ask "where should we go?" Research options:
+- Look up restaurants, activities, or destinations
+- Check reviews and availability
+- Compare prices and options
+- Find the best times and locations
+
+You do the legwork. She doesn't have to.
+
+### 2. Make Decisions, But Check Preferences
+
+Don't ask "what do you want to do?" Instead:
+- "I'm thinking we could do [option A] or [option B]. Which sounds better?"
+- "I found this place that looks great. Does this work for you?"
+- "I'm planning [thing]. Any preferences I should know about?"
+
+You're making decisions, but you're checking in for her input.
+
+### 3. Handle All the Logistics
+
+You take care of:
+- Making reservations or bookings
+- Creating a timeline or schedule
+- Coordinating with others (if needed)
+- Handling any necessary arrangements
+- Planning the details
+
+She doesn't have to think about any of this.
+
+### 4. Show You Know Her
+
+Incorporate things you know about her:
+- Her favorite foods or restaurants
+- Activities she enjoys
+- Her schedule and preferences
+- Things she's mentioned wanting to do
+
+This shows you're paying attention and you care.
+
+### 5. Be Thoughtful About Details
+
+Think through:
+- What will make this special?
+- What could go wrong? (Plan for it)
+- What would make her feel cared for?
+- What details matter to her?
+
+The little things show you're really thinking about her.
+
+### 6. Follow Through Completely
+
+Don't just plan it—execute it:
+- Show up on time
+- Have everything ready
+- Handle any issues that come up
+- Don't make her manage you through it
+
+You planned it, so you own it all the way through.
+
+## What Taking Initiative Looks Like
+
+**Holiday Planning:**
+- Research restaurants, make reservations, plan the day
+- Don't ask "where do you want to go?"—propose options
+- Handle all the details yourself
+
+**Event Planning:**
+- Research venues, compare options, make bookings
+- Coordinate with guests or family
+- Create a timeline and handle logistics
+
+**Activity Planning:**
+- Research options, check availability, make plans
+- Consider her preferences and schedule
+- Handle all arrangements
+
+## Common Mistakes
+
+**Asking her to plan it:** "What should we do?" puts the mental load on her.
+
+**Making her manage you:** "What time should I make the reservation?"—you should decide.
+
+**Not following through:** Planning it but then making her handle the details.
+
+**Not checking preferences:** Making all decisions without any input from her.
+
+**Half-doing it:** Starting to plan but then asking her to finish it.
+
+## The Difference: Initiative vs. Collaboration
+
+**Taking Initiative (this guide):** You do the research, make decisions, handle logistics. You check in for preferences, but you own the planning.
+
+**Planning Together (different guide):** You both research, both decide, both contribute equally. It's collaborative from the start.
+
+Use initiative when: You want to surprise her, reduce her mental load, or show leadership.
+
+Use collaboration when: It's a big decision, you both need to be involved, or it affects both of you equally.
+
+## The Win
+
+You took initiative. You did the research. You made decisions. You handled the logistics. You checked in for her preferences. She felt cared for and relieved of mental load. You showed leadership and thoughtfulness. That's a win.`,
+  },
+  'have-no-problem-solving-conversation': {
+    id: 61,
+    title: 'Have a "No Problem Solving" Conversation',
+    category: 'Communication',
+    difficulty: 'Easy',
+    time: '20 min',
+    excerpt: 'Set a timer and talk about anything except problems. No solutions. No fixing. Just connection. Learn how to create space for intimacy without the pressure of solving things.',
+    content: `## Why This Matters
+
+Most conversations between couples end up being about problems: work stress, household tasks, relationship issues, logistics. These conversations are necessary, but they're not connecting. They're managing.
+
+A "no problem solving" conversation creates space for actual connection. No agenda. No fixing. Just talking and listening. This builds intimacy in a way that problem-solving conversations can't.
+
+## The Secret: No Problems, Just Connection
+
+Set a timer. Talk about anything except problems. No solutions. No fixing. No managing. Just connection.
+
+## How to Have a "No Problem Solving" Conversation
+
+### 1. Set a Timer
+
+20 minutes is perfect. Long enough to actually connect, short enough to be realistic.
+
+### 2. Put Everything Away
+
+Phones, devices, distractions—all away. This is just the two of you, talking.
+
+### 3. Pick a Topic (That's Not a Problem)
+
+Talk about:
+- Dreams and hopes
+- Memories and stories
+- Things you're excited about
+- Things you're curious about
+- What you've been thinking about
+- What you've been learning
+- Things that made you laugh
+- Things that inspired you
+
+Anything except problems, tasks, or things that need fixing.
+
+### 4. Actually Listen
+
+Don't just wait for your turn to talk. Actually listen. Ask follow-up questions. Show you're interested.
+
+### 5. No Problem Solving
+
+If a problem comes up:
+- Acknowledge it: "I hear that's on your mind"
+- Don't solve it: "Let's talk about that later"
+- Redirect: "But right now, let's just talk"
+
+This conversation is for connection, not management.
+
+## What to Talk About
+
+**Dreams and hopes:** What are you hoping for? What are you dreaming about?
+
+**Memories:** Remember when...? Tell me about...
+
+**Curiosity:** What have you been curious about lately? What have you been learning?
+
+**Stories:** What happened that made you laugh? What inspired you?
+
+**Thoughts:** What have you been thinking about? What's been on your mind (that's not a problem)?
+
+## Common Mistakes
+
+**Letting problems creep in:** "Oh, that reminds me, we need to..." No. Not in this conversation.
+
+**Trying to fix things:** "You know what you should do about that?" No fixing. Just listening.
+
+**Being distracted:** Put your phone away. Actually be there.
+
+**Not actually listening:** Don't just wait for your turn to talk. Actually hear what she's saying.
+
+**Making it about you:** This is about connection, not about you sharing all your thoughts.
+
+## The Difference: Problem-Solving vs. Connection
+
+**Problem-solving conversations:** Necessary for managing life together. But they're not connecting.
+
+**Connection conversations:** About intimacy, understanding, and being together. No agenda, no fixing.
+
+You need both. But most couples only have problem-solving conversations. This creates space for actual connection.
+
+## The Win
+
+You had a conversation with no problems, no fixing, no managing. You just talked and listened. You connected. You built intimacy. That's a win.`,
+  },
 };
 
 export default async function GuidePage({ params }: { params: { slug: string } }) {
