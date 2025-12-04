@@ -89,7 +89,22 @@ async function updateProfile(request: Request) {
       updateData.timezone = timezone || 'America/New_York';
     }
     if (profile_picture !== undefined) {
-      updateData.profile_picture = profile_picture || null;
+      // Validate URL format if provided
+      if (profile_picture && typeof profile_picture === 'string' && profile_picture.trim()) {
+        // Basic URL validation
+        try {
+          new URL(profile_picture);
+          updateData.profile_picture = profile_picture.trim();
+        } catch (error) {
+          console.error('Invalid profile picture URL:', profile_picture);
+          return NextResponse.json(
+            { error: 'Invalid profile picture URL' },
+            { status: 400 }
+          );
+        }
+      } else {
+        updateData.profile_picture = null;
+      }
     }
     if (has_kids !== undefined) {
       updateData.has_kids = has_kids;

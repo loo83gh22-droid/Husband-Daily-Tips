@@ -64,18 +64,46 @@ export async function POST(request: Request) {
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
 
-    // Generate unique filename
-    const fileExt = file.name.split('.').pop();
-    const fileName = `${user.id}-${Date.now()}.${fileExt}`;
+    // Use consistent filename per user (so upsert works and we can delete old files)
+    const fileExt = file.name.split('.').pop()?.toLowerCase() || 'jpg';
+    const fileName = `${user.id}.${fileExt}`;
     const filePath = `profile-pictures/${fileName}`;
+
+    // Get current profile picture URL before uploading new one
+    const { data: currentUser } = await adminSupabase
+      .from('users')
+      .select('profile_picture')
+      .eq('id', user.id)
+      .single();
+
+    // Delete old profile picture if it exists and is in our storage
+    if (currentUser?.profile_picture) {
+      try {
+        // Extract file path from URL if it's a Supabase Storage URL
+        const oldUrl = currentUser.profile_picture;
+        if (oldUrl.includes('/storage/v1/object/public/profile-pictures/')) {
+          const oldFileName = oldUrl.split('/profile-pictures/')[1]?.split('?')[0];
+          if (oldFileName && oldFileName !== fileName) {
+            // Only delete if it's a different file (not the same one we're about to upload)
+            await adminSupabase.storage
+              .from('profile-pictures')
+              .remove([`profile-pictures/${oldFileName}`]);
+          }
+        }
+      } catch (deleteError) {
+        // Log but don't fail - old file cleanup is not critical
+        console.error('Error deleting old profile picture:', deleteError);
+      }
+    }
 
     // Upload to Supabase Storage using admin client to bypass RLS
     // Note: You'll need to create a 'profile-pictures' bucket in Supabase Storage
+    // Using consistent filename so upsert replaces the old file
     const { data: uploadData, error: uploadError } = await adminSupabase.storage
       .from('profile-pictures')
       .upload(filePath, buffer, {
         contentType: file.type,
-        upsert: true, // Replace if exists
+        upsert: true, // Replace if exists (same filename = same user)
       });
 
     if (uploadError) {
@@ -91,7 +119,20 @@ export async function POST(request: Request) {
       .from('profile-pictures')
       .getPublicUrl(filePath);
 
-    return NextResponse.json({ url: urlData.publicUrl });
+    const publicUrl = urlData.publicUrl;
+
+    // Verify the URL is valid
+    if (!publicUrl) {
+      console.error('Failed to generate public URL for profile picture');
+      return NextResponse.json(
+        { error: 'Failed to generate image URL' },
+        { status: 500 }
+      );
+    }
+
+    console.log(`Profile picture uploaded successfully for user ${user.id}: ${publicUrl}`);
+
+    return NextResponse.json({ url: publicUrl });
   } catch (error) {
     console.error('Unexpected error uploading profile picture:', error);
     return NextResponse.json({ error: 'Unexpected error' }, { status: 500 });
