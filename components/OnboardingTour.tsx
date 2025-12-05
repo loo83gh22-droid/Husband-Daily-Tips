@@ -302,7 +302,9 @@ export default function OnboardingTour({ onComplete }: OnboardingTourProps) {
       if (autoAdvanceTimerRef.current) {
         clearTimeout(autoAdvanceTimerRef.current);
       }
-      // Note: maxAutoAdvanceTimeoutRef is scoped to the effect, so it will be cleaned up automatically
+      if (maxAutoAdvanceTimeoutRef.current) {
+        clearTimeout(maxAutoAdvanceTimeoutRef.current);
+      }
     };
   }, [currentStep, isActive, highlightedElement]);
 
