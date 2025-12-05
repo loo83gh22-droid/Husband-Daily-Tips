@@ -260,19 +260,19 @@ export default async function Home() {
               </Link>
               <div className="flex items-center gap-3">
                 <Link
-                  href="/api/auth/login"
+                  href="/api/auth/login?returnTo=/dashboard"
                   className="hidden md:inline-flex px-4 py-2 text-sm font-medium text-slate-300 hover:text-white transition-colors"
                 >
                   Sign Up & Take Test
                 </Link>
                 <Link
-                  href="/api/auth/login"
+                  href="/api/auth/login?returnTo=/dashboard"
                   className="px-4 py-2 text-sm font-medium text-slate-300 hover:text-white transition-colors"
                 >
                   Sign In
                 </Link>
                 <Link
-                  href="/api/auth/login"
+                  href="/api/auth/login?returnTo=/dashboard"
                   className="px-4 py-2 text-sm font-semibold bg-primary-500 text-slate-950 rounded-lg hover:bg-primary-400 transition-colors"
                 >
                   Sign Up
@@ -311,13 +311,13 @@ export default async function Home() {
 
               <div className="mb-8 flex flex-col sm:flex-row gap-4">
                 <Link
-                  href="/api/auth/login"
+                  href="/api/auth/login?returnTo=/dashboard"
                   className="inline-flex items-center justify-center px-10 py-5 rounded-xl bg-primary-500 text-slate-950 text-lg font-bold shadow-2xl shadow-primary-500/30 hover:bg-primary-400 transition-all transform hover:scale-105"
                 >
                   Sign Up & Take Test →
                 </Link>
                 <Link
-                  href="/api/auth/login"
+                  href="/api/auth/login?returnTo=/dashboard"
                   className="inline-flex items-center justify-center px-10 py-5 rounded-xl border-2 border-primary-500 text-primary-400 text-lg font-bold hover:bg-primary-500/10 transition-all transform hover:scale-105"
                 >
                   Start Free Trial →

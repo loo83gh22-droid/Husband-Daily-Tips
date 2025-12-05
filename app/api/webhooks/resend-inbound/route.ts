@@ -153,6 +153,59 @@ export async function POST(request: Request) {
 
     logger.log('Email reply received:', { fromEmail, toEmail, subject });
 
+    // Filter out automated emails (DMARC reports, bounces, etc.)
+    const automatedEmailPatterns = [
+      /^dmarcreport@/i,
+      /^dmarc@/i,
+      /^postmaster@/i,
+      /^mailer-daemon@/i,
+      /^noreply@/i,
+      /^no-reply@/i,
+      /^bounce@/i,
+      /^feedback@/i,
+      /^abuse@/i,
+      /^security@/i,
+      /@microsoft\.com$/i,
+      /@protection\.outlook\.com$/i,
+      /@google\.com$/i,
+      /@googlemail\.com$/i,
+    ];
+
+    const isAutomatedEmail = automatedEmailPatterns.some(pattern => 
+      pattern.test(fromEmail) || pattern.test(subject)
+    );
+
+    // Check for DMARC report indicators in subject
+    const isDMARCReport = 
+      subject.toLowerCase().includes('report domain:') ||
+      subject.toLowerCase().includes('dmarc') ||
+      subject.toLowerCase().includes('report-id:') ||
+      fromEmail.toLowerCase().includes('dmarcreport') ||
+      fromEmail.toLowerCase().includes('dmarc@');
+
+    if (isAutomatedEmail || isDMARCReport) {
+      logger.log('Skipping automated email (DMARC/bounce/etc):', { fromEmail, subject });
+      // Store it with a special status but don't process as user reply
+      const supabase = getSupabaseAdmin();
+      try {
+        await storeEmailReply(supabase, {
+          from_email: fromEmail,
+          from_name: 'Automated System',
+          subject,
+          content: text || html || 'Automated email - no content',
+          user_id: null,
+          status: 'automated_email',
+        });
+      } catch (error) {
+        // Log but don't fail - automated emails aren't critical
+        logger.warn('Failed to store automated email:', error);
+      }
+      return NextResponse.json({ 
+        message: 'Automated email filtered out',
+        filtered: true 
+      }, { status: 200 });
+    }
+
     // Extract original email address (the user who replied)
     const userEmail = fromEmail.toLowerCase().trim();
 
@@ -265,7 +318,7 @@ async function storeEmailReply(
     subject: string;
     content: string;
     user_id: string | null;
-    status: 'received' | 'unknown_user';
+    status: 'received' | 'unknown_user' | 'automated_email';
   }
 ) {
   try {
