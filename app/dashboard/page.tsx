@@ -482,6 +482,13 @@ export default async function Dashboard() {
   // Don't redirect - show optional survey prompt modal instead
   // Survey is now optional and can be skipped
 
+  // If user is still null after all creation attempts, redirect to login
+  // This should rarely happen, but prevents crashes
+  if (!user) {
+    console.error('Dashboard: User is null after all creation attempts. Redirecting to login.');
+    redirect('/api/auth/login');
+  }
+
   const subscriptionTier = user.subscription_tier || 'free';
   
   // Check if user has premium access (paid subscription or active trial)
