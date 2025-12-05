@@ -66,6 +66,7 @@ export default function OnboardingTour({ onComplete }: OnboardingTourProps) {
   const [highlightedElement, setHighlightedElement] = useState<HTMLElement | null>(null);
   const highlightedRef = useRef<HTMLElement | null>(null);
   const autoAdvanceTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const maxAutoAdvanceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const retryCountRef = useRef(0);
 
   useEffect(() => {
@@ -109,9 +110,12 @@ export default function OnboardingTour({ onComplete }: OnboardingTourProps) {
         highlightedRef.current.classList.remove('ring-4', 'ring-primary-500', 'ring-opacity-75', 'z-50', 'relative');
       }
       
-      // Clear any existing timer
+      // Clear any existing timers
       if (autoAdvanceTimerRef.current) {
         clearTimeout(autoAdvanceTimerRef.current);
+      }
+      if (maxAutoAdvanceTimeoutRef.current) {
+        clearTimeout(maxAutoAdvanceTimeoutRef.current);
       }
 
       // CRITICAL: Always ensure highlightedElement is set so tooltip renders
@@ -132,6 +136,15 @@ export default function OnboardingTour({ onComplete }: OnboardingTourProps) {
         }
       }
 
+      // Set a maximum timeout to ensure card always auto-advances (even if element search takes too long)
+      // This ensures consistent behavior across all cards
+      maxAutoAdvanceTimeoutRef.current = setTimeout(() => {
+        // Only auto-advance if we haven't already moved to next step and timer still exists
+        if (autoAdvanceTimerRef.current) {
+          handleNext();
+        }
+      }, 5000); // 5 seconds max - gives time to read but ensures it advances
+
       // Try to find element with retry logic
       const tryFindElement = (attempt = 0) => {
         const element = document.querySelector(step.target) as HTMLElement;
@@ -147,6 +160,12 @@ export default function OnboardingTour({ onComplete }: OnboardingTourProps) {
           if (isVisible) {
             // Element found and visible
             retryCountRef.current = 0;
+            
+            // Clear max timeout since we found the element
+            if (maxAutoAdvanceTimeoutRef.current) {
+              clearTimeout(maxAutoAdvanceTimeoutRef.current);
+              maxAutoAdvanceTimeoutRef.current = null;
+            }
             
             // Remove dummy element if it exists
             const dummy = document.querySelector('[data-tour-dummy]');
@@ -194,17 +213,23 @@ export default function OnboardingTour({ onComplete }: OnboardingTourProps) {
               }, 150);
             }
             
-            // Auto-advance after 4 seconds
+            // Auto-advance after 4 seconds (consistent with other cards)
             autoAdvanceTimerRef.current = setTimeout(() => {
               handleNext();
             }, 4000);
-          } else if (attempt < 15) {
-            // Element found but not visible yet - retry
+          } else if (attempt < 10) {
+            // Element found but not visible yet - retry (reduced from 15 to 10)
             retryCountRef.current = attempt + 1;
             setTimeout(() => tryFindElement(attempt + 1), 200 + (attempt * 50));
           } else {
             // Element exists but never became visible - show tooltip centered anyway
             retryCountRef.current = 0;
+            
+            // Clear max timeout since we're setting our own timer
+            if (maxAutoAdvanceTimeoutRef.current) {
+              clearTimeout(maxAutoAdvanceTimeoutRef.current);
+              maxAutoAdvanceTimeoutRef.current = null;
+            }
             
             // Keep dummy element so tooltip shows centered
             if (typeof document !== 'undefined' && !document.querySelector('[data-tour-dummy]')) {
@@ -221,18 +246,23 @@ export default function OnboardingTour({ onComplete }: OnboardingTourProps) {
               setHighlightedElement(dummy);
             }
             
-            // Auto-advance after 3 seconds
+            // Auto-advance after 4 seconds (same as visible elements for consistency)
             autoAdvanceTimerRef.current = setTimeout(() => {
               handleNext();
-            }, 3000);
+            }, 4000);
           }
-        } else if (attempt < 15) {
-          // Element not found - retry with exponential backoff
+        } else if (attempt < 10) {
+          // Element not found - retry with exponential backoff (reduced from 15 to 10)
           retryCountRef.current = attempt + 1;
           setTimeout(() => tryFindElement(attempt + 1), 200 + (attempt * 50));
         } else {
           // After retries, ensure dummy element exists for centered tooltip
           retryCountRef.current = 0;
+          
+          // Clear max timeout since we're setting our own timer
+          if (maxAutoAdvanceTimeoutRef) {
+            clearTimeout(maxAutoAdvanceTimeoutRef);
+          }
           
           if (typeof document !== 'undefined' && !document.querySelector('[data-tour-dummy]')) {
             const dummy = document.createElement('div');
@@ -248,10 +278,10 @@ export default function OnboardingTour({ onComplete }: OnboardingTourProps) {
             setHighlightedElement(dummy);
           }
           
-          // Auto-advance after 3 seconds
+          // Auto-advance after 4 seconds (same as visible elements for consistency)
           autoAdvanceTimerRef.current = setTimeout(() => {
             handleNext();
-          }, 3000);
+          }, 4000);
         }
       };
 
@@ -272,6 +302,7 @@ export default function OnboardingTour({ onComplete }: OnboardingTourProps) {
       if (autoAdvanceTimerRef.current) {
         clearTimeout(autoAdvanceTimerRef.current);
       }
+      // Note: maxAutoAdvanceTimeoutRef is scoped to the effect, so it will be cleaned up automatically
     };
   }, [currentStep, isActive, highlightedElement]);
 
