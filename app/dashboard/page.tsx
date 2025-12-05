@@ -312,7 +312,7 @@ export default async function Dashboard() {
       .single();
 
     if (error) {
-      console.error('Error creating user:', error);
+      console.error('Error creating user in dashboard:', error);
       // If user already exists (duplicate key), try to fetch them
       if (error.code === '23505' || error.message?.includes('duplicate') || error.message?.includes('unique')) {
         console.log('User already exists, fetching...');
@@ -324,12 +324,51 @@ export default async function Dashboard() {
         if (existingUser) {
           user = existingUser;
         } else {
-          // Still can't find user, redirect to logout
-          redirect('/api/auth/logout');
+          // Still can't find user after duplicate error - this is unusual
+          // Log it but don't redirect to logout - let them see the page
+          console.error('User creation failed with duplicate error but user not found. This should not happen.');
+          // Try one more time with upsert
+          const { data: upsertedUser } = await adminSupabase
+            .from('users')
+            .upsert({
+              auth0_id: auth0Id,
+              email: session.user.email!,
+              name: session.user.name || session.user.email || null,
+              subscription_tier: 'free',
+              survey_completed: false,
+            }, {
+              onConflict: 'auth0_id'
+            })
+            .select()
+            .single();
+          if (upsertedUser) {
+            user = upsertedUser;
+          }
         }
       } else {
-        // Other error - redirect to logout
-        redirect('/api/auth/logout');
+        // Other error - try upsert as fallback
+        console.log('Trying upsert as fallback...');
+        const { data: upsertedUser, error: upsertError } = await adminSupabase
+          .from('users')
+          .upsert({
+            auth0_id: auth0Id,
+            email: session.user.email!,
+            name: session.user.name || session.user.email || null,
+            subscription_tier: 'free',
+            survey_completed: false,
+          }, {
+            onConflict: 'auth0_id'
+          })
+          .select()
+          .single();
+        if (upsertedUser) {
+          user = upsertedUser;
+          console.log('User created via upsert fallback');
+        } else {
+          console.error('All user creation attempts failed:', upsertError);
+          // Don't redirect to logout - show error message instead
+          // User can still use the app, we'll retry on next page load
+        }
       }
     } else {
       user = newUser;

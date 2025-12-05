@@ -28,14 +28,21 @@ async function afterCallback(req: NextRequest, session: Session, state?: Record<
     const adminSupabase = getSupabaseAdmin();
     
     // Check if user already exists
-    const { data: existingUser } = await adminSupabase
+    const { data: existingUser, error: lookupError } = await adminSupabase
       .from('users')
       .select('id')
       .eq('auth0_id', auth0Id)
       .single();
 
+    // If lookup error is "not found" (PGRST116), user doesn't exist
+    // If it's another error, log it but continue
+    if (lookupError && lookupError.code !== 'PGRST116') {
+      console.error('Error looking up user in afterCallback:', lookupError);
+    }
+
     // If user doesn't exist, create them
     if (!existingUser) {
+      console.log(`Creating new user in Supabase: ${email} (${auth0Id})`);
       const { data: newUser, error } = await adminSupabase
         .from('users')
         .insert({
@@ -53,10 +60,21 @@ async function afterCallback(req: NextRequest, session: Session, state?: Record<
         if (error.code === '23505' || error.message?.includes('duplicate') || error.message?.includes('unique')) {
           console.log('User already exists (race condition), continuing...');
         } else {
-          console.error('Error creating user in afterCallback:', error);
+          console.error('Error creating user in afterCallback:', {
+            error: error.message,
+            code: error.code,
+            details: error.details,
+            hint: error.hint,
+            email,
+            auth0Id
+          });
           // Don't fail the auth flow, just log the error
+          // User will be created when they visit dashboard
         }
-      } else if (newUser && process.env.RESEND_API_KEY) {
+      } else if (newUser) {
+        console.log(`✅ User created successfully in Supabase: ${email} (ID: ${newUser.id})`);
+        
+        if (process.env.RESEND_API_KEY) {
         // Send welcome email for new users (fire and forget)
         try {
           const { Resend } = await import('resend');
@@ -155,10 +173,18 @@ async function afterCallback(req: NextRequest, session: Session, state?: Record<
           // Don't fail auth if email fails
           console.error('Error sending welcome email:', emailError);
         }
+        }
+      } else {
+        console.log(`User already exists in Supabase: ${email}`);
       }
     }
   } catch (error: any) {
-    console.error('Error in afterCallback:', error);
+    console.error('Error in afterCallback:', {
+      error: error.message,
+      stack: error.stack,
+      email,
+      auth0Id
+    });
     // Don't fail the auth flow if user creation fails
     // User can still be created when they visit the dashboard
   }
