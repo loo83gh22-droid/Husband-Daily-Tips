@@ -121,9 +121,9 @@ async function afterCallback(req: NextRequest, session: Session | null | undefin
         console.log(`afterCallback: ✅ User created successfully in Supabase: ${email} (ID: ${newUser.id})`);
         
         // Send welcome email for new users (fire and forget - don't block auth)
+        // Use Promise.resolve().then() to ensure errors are caught
         if (process.env.RESEND_API_KEY) {
-          // Don't await - send email asynchronously without blocking auth flow
-          (async () => {
+          Promise.resolve().then(async () => {
             try {
               const { Resend } = await import('resend');
               const resend = new Resend(process.env.RESEND_API_KEY);
@@ -221,6 +221,9 @@ async function afterCallback(req: NextRequest, session: Session | null | undefin
               // Don't fail auth if email fails
               console.error('afterCallback: Error sending welcome email:', emailError.message);
             }
+          }).catch((err: any) => {
+            // Catch any unhandled promise rejections
+            console.error('afterCallback: Unhandled error in email promise:', err.message);
           });
         }
       }
