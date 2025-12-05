@@ -260,8 +260,9 @@ export default function OnboardingTour({ onComplete }: OnboardingTourProps) {
           retryCountRef.current = 0;
           
           // Clear max timeout since we're setting our own timer
-          if (maxAutoAdvanceTimeoutRef) {
-            clearTimeout(maxAutoAdvanceTimeoutRef);
+          if (maxAutoAdvanceTimeoutRef.current) {
+            clearTimeout(maxAutoAdvanceTimeoutRef.current);
+            maxAutoAdvanceTimeoutRef.current = null;
           }
           
           if (typeof document !== 'undefined' && !document.querySelector('[data-tour-dummy]')) {
