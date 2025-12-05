@@ -26,18 +26,47 @@ if (!supabaseUrl || !supabaseKey) {
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 async function findUser(identifier) {
-  // Try to find by email
+  // Try to find by username first (most common)
   let { data: user, error } = await supabase
     .from('users')
-    .select('id, email, auth0_id, name')
-    .eq('email', identifier)
+    .select('id, email, auth0_id, name, username')
+    .eq('username', identifier)
     .single();
+
+  if (!user && !error) {
+    // Try by email
+    ({ data: user, error } = await supabase
+      .from('users')
+      .select('id, email, auth0_id, name, username')
+      .eq('email', identifier)
+      .single());
+  }
+
+  if (!user && !error) {
+    // Try by username (case-insensitive partial match)
+    ({ data: user, error } = await supabase
+      .from('users')
+      .select('id, email, auth0_id, name, username')
+      .ilike('username', `%${identifier}%`)
+      .limit(1)
+      .single());
+  }
+
+  if (!user && !error) {
+    // Try by email (case-insensitive partial match)
+    ({ data: user, error } = await supabase
+      .from('users')
+      .select('id, email, auth0_id, name, username')
+      .ilike('email', `%${identifier}%`)
+      .limit(1)
+      .single());
+  }
 
   if (!user && !error) {
     // Try by auth0_id
     ({ data: user, error } = await supabase
       .from('users')
-      .select('id, email, auth0_id, name')
+      .select('id, email, auth0_id, name, username')
       .eq('auth0_id', identifier)
       .single());
   }
@@ -46,7 +75,7 @@ async function findUser(identifier) {
     // Try by user_id (UUID)
     ({ data: user, error } = await supabase
       .from('users')
-      .select('id, email, auth0_id, name')
+      .select('id, email, auth0_id, name, username')
       .eq('id', identifier)
       .single());
   }
@@ -379,6 +408,7 @@ async function main() {
   console.log(`✅ Found user:`);
   console.log(`   ID: ${user.id}`);
   console.log(`   Email: ${user.email}`);
+  console.log(`   Username: ${user.username || 'N/A'}`);
   console.log(`   Auth0 ID: ${user.auth0_id}`);
   console.log(`   Name: ${user.name || 'N/A'}`);
 
