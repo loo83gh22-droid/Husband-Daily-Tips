@@ -1,14 +1,14 @@
 /**
- * Calculate health score based on new algorithm:
+ * Calculate health score based on Option 1: Conservative & Steady algorithm:
  * 
  * 1. Baseline from initial survey (0-100)
- * 2. Daily actions: 1, 2, or 3 points (based on action health_point_value)
- * 3. Daily cap: 3 points max per day
- * 4. Weekly cap: 15 points max per rolling 7-day window
- * 5. 7-day event completion: +3 bonus points
- * 6. Decay: -2 points per missed day
- * 7. Repetition penalty: -1 point if same action within 30 days
- * 8. Badges: Do NOT affect health (reference only)
+ * 2. Daily routine actions: +0.5 points per action, max 1.0 point per day
+ * 3. Weekly planning actions: +2.0 points per action, max 2.0 points per week
+ * 4. 7-day event completion: +3.0 bonus points
+ * 5. Decay: -0.5 points per missed day (max -3.5 points per week)
+ * 6. Badges: Do NOT affect health (reference only)
+ * 
+ * Philosophy: Slow, steady progress. Rewards consistency over speed.
  */
 
 interface HealthCalculationInput {
@@ -36,40 +36,26 @@ function getWeekStart(date: Date): string {
 }
 
 /**
- * Calculate repetition penalty for an action
- * Returns the points to deduct (0, 1, 2, or 3)
+ * Determine if an action is a weekly planning action or daily routine action
+ * Returns 'weekly' if planning_required, 'daily' otherwise
  */
-async function calculateRepetitionPenalty(
+async function getActionType(
   supabase: any,
-  userId: string,
-  actionId: string,
-  basePoints: number
-): Promise<number> {
-  // Get last completion of this action within 30 days
-  const thirtyDaysAgo = new Date();
-  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-  const thirtyDaysAgoStr = thirtyDaysAgo.toISOString().split('T')[0];
+  actionId: string
+): Promise<'daily' | 'weekly'> {
+  const { data: action } = await supabase
+    .from('actions')
+    .select('day_of_week_category')
+    .eq('id', actionId)
+    .single();
 
-  const { data: recentCompletions } = await supabase
-    .from('action_completion_history')
-    .select('completed_at, penalty_applied')
-    .eq('user_id', userId)
-    .eq('action_id', actionId)
-    .gte('completed_at', thirtyDaysAgoStr)
-    .order('completed_at', { ascending: false })
-    .limit(1);
-
-  if (!recentCompletions || recentCompletions.length === 0) {
-    // No recent completion, no penalty
-    return 0;
+  // If action has day_of_week_category = 'planning_required', it's a weekly action
+  if (action?.day_of_week_category === 'planning_required') {
+    return 'weekly';
   }
-
-  // Get the penalty level from last completion
-  const lastPenalty = recentCompletions[0].penalty_applied || 0;
-  const newPenalty = lastPenalty + 1;
-
-  // Penalty cannot exceed base points (can't go negative)
-  return Math.min(newPenalty, basePoints);
+  
+  // Otherwise, it's a daily routine action
+  return 'daily';
 }
 
 /**
@@ -100,10 +86,17 @@ export async function calculateHealthScore(input: HealthCalculationInput): Promi
     return Math.max(0, Math.min(100, baselineHealth || 50));
   }
 
-  // Get all action completions with their points
+  // Get all action completions with action type info
+  // For old records without action_type, we'll determine it from the action itself
   const { data: completions, error: completionsError } = await supabase
     .from('action_completion_history')
-    .select('action_id, completed_at, points_earned, base_points')
+    .select(`
+      action_id,
+      completed_at,
+      points_earned,
+      action_type,
+      actions(day_of_week_category)
+    `)
     .eq('user_id', userId)
     .order('completed_at', { ascending: true });
 
@@ -118,54 +111,48 @@ export async function calculateHealthScore(input: HealthCalculationInput): Promi
     }
   }
 
-  // Group completions by date
-  const completionsByDate = new Map<string, ActionCompletion[]>();
-  completions.forEach((c: any) => {
-    const date = new Date(c.completed_at).toISOString().split('T')[0];
-    if (!completionsByDate.has(date)) {
-      completionsByDate.set(date, []);
-    }
-    completionsByDate.get(date)!.push({
-      action_id: c.action_id,
-      completed_at: c.completed_at,
-      points_earned: c.points_earned,
-      date,
-    });
-  });
+  // Separate daily and weekly completions
+  const dailyCompletionsByDate = new Map<string, number>(); // date -> total points (capped at 1.0)
+  const weeklyCompletionsByWeek = new Map<string, number>(); // week_start -> total points (capped at 2.0)
 
-  // Calculate points from actions (with daily and weekly caps)
-  const weeklyPoints = new Map<string, number>(); // week_start -> total points
-  let totalActionPoints = 0;
-
-  const dateEntries = Array.from(completionsByDate.entries());
-  for (let i = 0; i < dateEntries.length; i++) {
-    const [date, dayCompletions] = dateEntries[i];
-    // Daily cap: max 3 points per day
-    const dayPoints = Math.min(
-      dayCompletions.reduce((sum: number, c: ActionCompletion) => sum + c.points_earned, 0),
-      3
-    );
-
-    // Add to weekly total
+  for (const completion of completions) {
+    const date = new Date(completion.completed_at).toISOString().split('T')[0];
     const weekStart = getWeekStart(new Date(date));
-    const currentWeekPoints = weeklyPoints.get(weekStart) || 0;
-    weeklyPoints.set(weekStart, currentWeekPoints + dayPoints);
+    
+    // Determine action type: use stored action_type if available, otherwise check action's day_of_week_category
+    let actionType: 'daily' | 'weekly' = 'daily';
+    if (completion.action_type) {
+      actionType = completion.action_type as 'daily' | 'weekly';
+    } else if (completion.actions?.day_of_week_category === 'planning_required') {
+      actionType = 'weekly';
+    }
 
-    totalActionPoints += dayPoints;
+    if (actionType === 'weekly') {
+      // Weekly planning action: +2.0 points, max 2.0 per week
+      const currentWeekPoints = weeklyCompletionsByWeek.get(weekStart) || 0;
+      const newWeekPoints = Math.min(currentWeekPoints + 2.0, 2.0);
+      weeklyCompletionsByWeek.set(weekStart, newWeekPoints);
+    } else {
+      // Daily routine action: +0.5 points, max 1.0 per day
+      const currentDayPoints = dailyCompletionsByDate.get(date) || 0;
+      const newDayPoints = Math.min(currentDayPoints + 0.5, 1.0);
+      dailyCompletionsByDate.set(date, newDayPoints);
+    }
   }
 
-  // Apply weekly cap: max 15 points per week
-  // Need to recalculate with weekly cap
-  let totalPointsAfterWeeklyCap = 0;
-  const weeklyTotals = Array.from(weeklyPoints.entries());
-  
-  for (let i = 0; i < weeklyTotals.length; i++) {
-    const [weekStart, weekPoints] = weeklyTotals[i];
-    const cappedWeekPoints = Math.min(weekPoints, 15);
-    totalPointsAfterWeeklyCap += cappedWeekPoints;
+  // Sum all daily points
+  let totalDailyPoints = 0;
+  for (const points of Array.from(dailyCompletionsByDate.values())) {
+    totalDailyPoints += points;
   }
 
-  // Add event completion bonuses (+3 each)
+  // Sum all weekly points (already capped at 2.0 per week)
+  let totalWeeklyPoints = 0;
+  for (const points of Array.from(weeklyCompletionsByWeek.values())) {
+    totalWeeklyPoints += points;
+  }
+
+  // Add event completion bonuses (+3.0 each)
   let eventBonusTotal = 0;
   try {
     const { data: eventBonuses } = await supabase
@@ -184,7 +171,7 @@ export async function calculateHealthScore(input: HealthCalculationInput): Promi
 
   // Calculate total health
   const baseline = baselineHealth || 50;
-  health = baseline + totalPointsAfterWeeklyCap + eventBonusTotal;
+  health = baseline + totalDailyPoints + totalWeeklyPoints + eventBonusTotal;
 
   // Apply decay for missed days
   health = await applyDecay(health, userId, supabase);
@@ -194,7 +181,7 @@ export async function calculateHealthScore(input: HealthCalculationInput): Promi
 }
 
 /**
- * Apply decay for missed days (-2 points per missed day)
+ * Apply decay for missed days (-0.5 points per missed day, max -3.5 per week)
  */
 async function applyDecay(
   currentHealth: number,
@@ -205,7 +192,7 @@ async function applyDecay(
   try {
     const { data: missedDays, error } = await supabase
       .from('health_decay_log')
-      .select('decay_applied')
+      .select('missed_date, decay_applied')
       .eq('user_id', userId);
 
     // If table doesn't exist, return current health without decay
@@ -213,8 +200,20 @@ async function applyDecay(
       return currentHealth;
     }
 
-    const totalDecay = (missedDays || []).reduce(
-      (sum: number, md: any) => sum + (md.decay_applied || 2),
+    // Group decay by week and apply weekly cap of -3.5
+    const decayByWeek = new Map<string, number>(); // week_start -> total decay
+    
+    for (const missedDay of missedDays || []) {
+      const weekStart = getWeekStart(new Date(missedDay.missed_date));
+      const currentWeekDecay = decayByWeek.get(weekStart) || 0;
+      const decayAmount = missedDay.decay_applied || 0.5;
+      const newWeekDecay = Math.min(currentWeekDecay + decayAmount, 3.5); // Cap at -3.5 per week
+      decayByWeek.set(weekStart, newWeekDecay);
+    }
+
+    // Sum all decay (already capped per week)
+    const totalDecay = Array.from(decayByWeek.values()).reduce(
+      (sum: number, decay: number) => sum + decay,
       0
     );
 
@@ -226,106 +225,114 @@ async function applyDecay(
 }
 
 /**
- * Calculate points for a completed action (with repetition penalty)
- * This should be called when an action is completed
+ * Calculate points for a completed action (Option 1: Conservative & Steady)
+ * Daily routine actions: +0.5 points
+ * Weekly planning actions: +2.0 points
+ * No repetition penalty
  */
 export async function calculateActionPoints(
   supabase: any,
   userId: string,
   actionId: string,
-  actionPointValue: number // 1, 2, or 3
-): Promise<{ pointsEarned: number; penaltyApplied: number }> {
-  const penalty = await calculateRepetitionPenalty(
-    supabase,
-    userId,
-    actionId,
-    actionPointValue
-  );
-
-  const pointsEarned = Math.max(0, actionPointValue - penalty);
+  actionPointValue?: number // Not used in Option 1, kept for compatibility
+): Promise<{ pointsEarned: number; penaltyApplied: number; actionType: 'daily' | 'weekly' }> {
+  const actionType = await getActionType(supabase, actionId);
+  
+  // Option 1: Fixed points based on action type
+  const pointsEarned = actionType === 'weekly' ? 2.0 : 0.5;
 
   return {
     pointsEarned,
-    penaltyApplied: penalty,
+    penaltyApplied: 0, // No repetition penalty in Option 1
+    actionType,
   };
 }
 
 /**
- * Check and apply daily/weekly caps when recording action completion
+ * Check and apply daily/weekly caps when recording action completion (Option 1)
+ * Daily routine: +0.5 points, max 1.0 per day
+ * Weekly planning: +2.0 points, max 2.0 per week
  */
 export async function recordActionCompletion(
   supabase: any,
   userId: string,
   actionId: string,
-  actionPointValue: number,
+  actionPointValue: number, // Not used in Option 1, kept for compatibility
   completionDate: string // YYYY-MM-DD
 ): Promise<{ pointsEarned: number; capped: boolean }> {
-  // Calculate points with repetition penalty
-  const { pointsEarned, penaltyApplied } = await calculateActionPoints(
+  // Calculate points and determine action type
+  const { pointsEarned, penaltyApplied, actionType } = await calculateActionPoints(
     supabase,
     userId,
     actionId,
     actionPointValue
   );
 
-  // Check daily cap (3 points max per day)
-  const { data: dailyPoints } = await supabase
-    .from('daily_health_points')
-    .select('action_points')
-    .eq('user_id', userId)
-    .eq('date', completionDate)
-    .single();
+  const weekStart = getWeekStart(new Date(completionDate));
+  let actualPointsEarned = pointsEarned;
+  let wasCapped = false;
 
-  const existingDailyPoints = dailyPoints?.action_points || 0;
-  const availableDailyPoints = Math.max(0, 3 - existingDailyPoints);
-  const actualPointsEarned = Math.min(pointsEarned, availableDailyPoints);
-  const wasCapped = pointsEarned > availableDailyPoints;
+  if (actionType === 'weekly') {
+    // Weekly planning action: check weekly cap (max 2.0 per week)
+    const { data: weeklyPoints } = await supabase
+      .from('weekly_health_points')
+      .select('points_earned')
+      .eq('user_id', userId)
+      .eq('week_start', weekStart)
+      .single();
 
-  // Record in action_completion_history
+    const existingWeeklyPoints = weeklyPoints?.points_earned || 0;
+    const availableWeeklyPoints = Math.max(0, 2.0 - existingWeeklyPoints);
+    actualPointsEarned = Math.min(pointsEarned, availableWeeklyPoints);
+    wasCapped = pointsEarned > availableWeeklyPoints;
+
+    // Update weekly_health_points
+    await supabase
+      .from('weekly_health_points')
+      .upsert({
+        user_id: userId,
+        week_start: weekStart,
+        points_earned: existingWeeklyPoints + actualPointsEarned,
+      }, {
+        onConflict: 'user_id,week_start',
+      });
+  } else {
+    // Daily routine action: check daily cap (max 1.0 per day)
+    const { data: dailyPoints } = await supabase
+      .from('daily_health_points')
+      .select('action_points')
+      .eq('user_id', userId)
+      .eq('date', completionDate)
+      .single();
+
+    const existingDailyPoints = dailyPoints?.action_points || 0;
+    const availableDailyPoints = Math.max(0, 1.0 - existingDailyPoints);
+    actualPointsEarned = Math.min(pointsEarned, availableDailyPoints);
+    wasCapped = pointsEarned > availableDailyPoints;
+
+    // Update daily_health_points
+    await supabase
+      .from('daily_health_points')
+      .upsert({
+        user_id: userId,
+        date: completionDate,
+        action_points: existingDailyPoints + actualPointsEarned,
+        total_points: existingDailyPoints + actualPointsEarned,
+      }, {
+        onConflict: 'user_id,date',
+      });
+  }
+
+  // Record in action_completion_history with action_type
   await supabase.from('action_completion_history').insert({
     user_id: userId,
     action_id: actionId,
     completed_at: new Date(completionDate).toISOString(),
     points_earned: actualPointsEarned,
-    base_points: actionPointValue,
+    base_points: actionType === 'weekly' ? 2.0 : 0.5,
     penalty_applied: penaltyApplied,
+    action_type: actionType,
   });
-
-  // Update daily_health_points
-  const weekStart = getWeekStart(new Date(completionDate));
-  
-  await supabase
-    .from('daily_health_points')
-    .upsert({
-      user_id: userId,
-      date: completionDate,
-      action_points: existingDailyPoints + actualPointsEarned,
-      total_points: existingDailyPoints + actualPointsEarned,
-    }, {
-      onConflict: 'user_id,date',
-    });
-
-  // Update weekly_health_points (check weekly cap of 15)
-  const { data: weeklyPoints } = await supabase
-    .from('weekly_health_points')
-    .select('points_earned')
-    .eq('user_id', userId)
-    .eq('week_start', weekStart)
-    .single();
-
-  const existingWeeklyPoints = weeklyPoints?.points_earned || 0;
-  const newWeeklyTotal = existingWeeklyPoints + actualPointsEarned;
-  const cappedWeeklyTotal = Math.min(newWeeklyTotal, 15);
-
-  await supabase
-    .from('weekly_health_points')
-    .upsert({
-      user_id: userId,
-      week_start: weekStart,
-      points_earned: cappedWeeklyTotal,
-    }, {
-      onConflict: 'user_id,week_start',
-    });
 
   return {
     pointsEarned: actualPointsEarned,
@@ -334,7 +341,7 @@ export async function recordActionCompletion(
 }
 
 /**
- * Record 7-day event completion bonus (+3 points)
+ * Record 7-day event completion bonus (+3.0 points for Option 1)
  */
 export async function recordEventCompletionBonus(
   supabase: any,
@@ -347,7 +354,7 @@ export async function recordEventCompletionBonus(
     user_id: userId,
     challenge_id: challengeId,
     completed_date: completionDate,
-    bonus_points: 3,
+    bonus_points: 3.0,
   });
 
   // Add to daily_health_points
@@ -358,19 +365,19 @@ export async function recordEventCompletionBonus(
     .eq('date', completionDate)
     .single();
 
-  const existingBonus = dailyPoints?.event_bonus || 0;
-  const newTotal = (dailyPoints?.total_points || 0) + 3;
+    const existingBonus = dailyPoints?.event_bonus || 0;
+    const newTotal = (dailyPoints?.total_points || 0) + 3.0;
 
   await supabase
     .from('daily_health_points')
-    .upsert({
-      user_id: userId,
-      date: completionDate,
-      event_bonus: existingBonus + 3,
-      total_points: newTotal,
-    }, {
-      onConflict: 'user_id,date',
-    });
+      .upsert({
+        user_id: userId,
+        date: completionDate,
+        event_bonus: existingBonus + 3.0,
+        total_points: newTotal,
+      }, {
+        onConflict: 'user_id,date',
+      });
 }
 
 /**
@@ -391,11 +398,12 @@ export async function recordMissedDay(
     .single();
 
   // If no action completed (or 0 points), record as missed
+  // Option 1: -0.5 points per missed day
   if (!dailyPoints || dailyPoints.action_points === 0) {
     await supabase.from('health_decay_log').insert({
       user_id: userId,
       missed_date: missedDate,
-      decay_applied: 2,
+      decay_applied: 0.5,
     });
   }
 }

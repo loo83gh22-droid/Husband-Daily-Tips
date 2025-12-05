@@ -136,6 +136,18 @@ export function getGuideSlugForAction(actionName: string, actionTheme?: string):
     'write and read anniversary vows': 'plan-anniversary-celebration',
     'plan an anniversary photo session': 'plan-anniversary-celebration',
 
+    // Long-distance / Virtual actions
+    'plan a virtual date night': 'plan-virtual-date',
+    'cook the same meal together over video': 'plan-virtual-date',
+    'watch a movie together remotely': 'plan-virtual-date',
+    'play an online game together': 'plan-virtual-date',
+    'send a surprise video message': 'stay-connected-video-calls',
+    'have a video call just to talk': 'stay-connected-video-calls',
+    'send a thoughtful care package': 'send-thoughtful-care-package',
+    'plan a future visit together': 'plan-future-visit',
+    'send a good morning or good night message': 'daily-connection-messages',
+    'share your day through photos': 'share-day-through-photos',
+
     // Date night actions
     'go dancing': 'plan-perfect-date-night',
     'go for beer & wings': 'plan-perfect-date-night',
@@ -353,6 +365,12 @@ export function getGuideSlugForAction(actionName: string, actionTheme?: string):
     { keywords: ['compliment'], slug: 'give-genuine-compliment' },
     { keywords: ['love note', 'note', 'letter'], slug: 'write-love-note' },
     { keywords: ['weekend getaway', 'getaway', 'trip'], slug: 'plan-weekend-getaway' },
+    { keywords: ['virtual date', 'video date', 'online date', 'long distance date'], slug: 'plan-virtual-date' },
+    { keywords: ['video call', 'video chat', 'video message', 'surprise video'], slug: 'stay-connected-video-calls' },
+    { keywords: ['care package', 'send package', 'thoughtful gift'], slug: 'send-thoughtful-care-package' },
+    { keywords: ['plan visit', 'future visit', 'next visit', 'plan trip'], slug: 'plan-future-visit' },
+    { keywords: ['good morning', 'good night', 'morning message', 'night message', 'daily message'], slug: 'daily-connection-messages' },
+    { keywords: ['share photos', 'send photos', 'photo message', 'daily photos'], slug: 'share-day-through-photos' },
 
     // Gratitude
     { keywords: ['gratitude list', 'grateful'], slug: 'gratitude-list' },

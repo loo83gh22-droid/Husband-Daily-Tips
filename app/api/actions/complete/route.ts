@@ -185,54 +185,19 @@ export async function POST(request: Request) {
         }
       }
 
-      // Calculate action points using the new health algorithm
-      // Get action point value (1, 2, or 3)
+      // Calculate action points using Option 1: Conservative & Steady algorithm
+      // Get action point value (for compatibility, not used in Option 1)
       const actionPointValue = action.health_point_value || 2;
       
-      // Calculate points with repetition penalty
-      const { calculateActionPoints } = await import('@/lib/health');
-      const { pointsEarned, penaltyApplied } = await calculateActionPoints(
+      // Use recordActionCompletion which handles daily/weekly distinction and caps
+      const { recordActionCompletion } = await import('@/lib/health');
+      await recordActionCompletion(
         supabase,
         user.id,
         actionId,
-        actionPointValue
+        actionPointValue,
+        actionDate
       );
-
-      // Record in action_completion_history
-      await supabase
-        .from('action_completion_history')
-        .insert({
-          user_id: user.id,
-          action_id: actionId,
-          completed_at: new Date().toISOString(),
-          points_earned: pointsEarned,
-          base_points: actionPointValue,
-          penalty_applied: penaltyApplied,
-        });
-
-      // Track daily health points with the new algorithm
-      // Get existing daily points for this date
-      const { data: existingDailyPoints } = await supabase
-        .from('daily_health_points')
-        .select('action_points, total_points')
-        .eq('user_id', user.id)
-        .eq('date', actionDate)
-        .single();
-
-      const currentActionPoints = existingDailyPoints?.action_points || 0;
-      const newActionPoints = Math.min(currentActionPoints + pointsEarned, 3); // Daily cap of 3
-      const totalPoints = newActionPoints + (existingDailyPoints?.total_points || 0) - (currentActionPoints || 0);
-
-      await supabase
-        .from('daily_health_points')
-        .upsert({
-          user_id: user.id,
-          date: actionDate,
-          action_points: newActionPoints,
-          total_points: totalPoints,
-        }, {
-          onConflict: 'user_id,date',
-        });
     }
 
     // Check for badge progress (if action has requirement_type)

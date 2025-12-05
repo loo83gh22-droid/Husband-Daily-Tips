@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Best Husband Ever - Dashboard Mockup</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #020617; /* slate-950 */
+            color: #e2e8f0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Navigation */
+        nav {
+            background-color: rgba(2, 6, 23, 0.8);
+            border-bottom: 1px solid #0f172a;
+            padding: 12px 24px;
+            margin-bottom: 24px;
+            border-radius: 8px;
+            backdrop-filter: blur(8px);
+        }
+
+        .nav-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: bold;
+            background: linear-gradient(to right, #38bdf8, #0ea5e9);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: #cbd5e1;
+            text-decoration: none;
+            font-size: 14px;
+            padding: 8px 12px;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        .nav-link:hover {
+            color: #fff;
+            background-color: rgba(56, 189, 248, 0.1);
+        }
+
+        .nav-link.active {
+            color: #38bdf8;
+            background-color: rgba(56, 189, 248, 0.15);
+        }
+
+        /* Main Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1.4fr 1fr;
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        /* Today's Action Card */
+        .action-card {
+            background: linear-gradient(to bottom right, rgba(15, 23, 42, 0.9), rgba(30, 41, 59, 0.9));
+            border: 1px solid rgba(51, 65, 85, 0.5);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+        }
+
+        .action-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .action-title {
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #38bdf8;
+        }
+
+        .action-badge {
+            background: linear-gradient(to right, #38bdf8, #0ea5e9);
+            color: #020617;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .action-name {
+            font-size: 24px;
+            font-weight: bold;
+            color: #f1f5f9;
+            margin-bottom: 12px;
+        }
+
+        .action-description {
+            color: #cbd5e1;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .action-button {
+            background: linear-gradient(to right, #38bdf8, #0ea5e9);
+            color: #020617;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+            width: 100%;
+        }
+
+        .action-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(56, 189, 248, 0.3);
+        }
+
+        /* Health Bar */
+        .health-card {
+            background: linear-gradient(to bottom right, rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.9));
+            border: 1px solid rgba(51, 65, 85, 0.5);
+            border-radius: 16px;
+            padding: 28px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+            margin-bottom: 24px;
+        }
+
+        .health-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .health-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #f1f5f9;
+            margin-bottom: 8px;
+        }
+
+        .health-subtitle {
+            font-size: 14px;
+            color: #cbd5e1;
+        }
+
+        .health-score {
+            text-align: right;
+        }
+
+        .health-label {
+            font-size: 18px;
+            font-weight: bold;
+            color: #4ade80;
+            margin-bottom: 4px;
+        }
+
+        .health-value {
+            font-size: 20px;
+            font-weight: 600;
+            color: #e2e8f0;
+        }
+
+        .health-bar-container {
+            height: 24px;
+            background-color: rgba(30, 41, 59, 0.8);
+            border-radius: 12px;
+            border: 2px solid rgba(51, 65, 85, 0.6);
+            overflow: hidden;
+            position: relative;
+            margin-bottom: 16px;
+        }
+
+        .health-bar {
+            height: 100%;
+            background: linear-gradient(to right, #ef4444, #f59e0b, #4ade80, #10b981);
+            width: 78%;
+            position: relative;
+            transition: width 0.5s ease;
+        }
+
+        .health-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.2), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .health-info {
+            font-size: 13px;
+            color: #94a3b8;
+            line-height: 1.6;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: linear-gradient(to bottom right, rgba(15, 23, 42, 0.9), rgba(30, 41, 59, 0.9));
+            border: 1px solid rgba(51, 65, 85, 0.5);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .stat-icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: bold;
+            color: #f1f5f9;
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: #94a3b8;
+        }
+
+        /* Badges Section */
+        .badges-card {
+            background: linear-gradient(to bottom right, rgba(15, 23, 42, 0.9), rgba(30, 41, 59, 0.9));
+            border: 1px solid rgba(51, 65, 85, 0.5);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+        }
+
+        .badges-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #f1f5f9;
+            margin-bottom: 16px;
+        }
+
+        .badges-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+
+        .badge {
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(51, 65, 85, 0.5);
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+            font-size: 24px;
+        }
+
+        .badge.earned {
+            border-color: #38bdf8;
+            background: rgba(56, 189, 248, 0.1);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Navigation -->
+        <nav>
+            <div class="nav-content">
+                <div class="logo">Best Husband Ever</div>
+                <div class="nav-links">
+                    <a href="#" class="nav-link active">Dashboard</a>
+                    <a href="#" class="nav-link">Journal</a>
+                    <a href="#" class="nav-link">Team Wins</a>
+                    <a href="#" class="nav-link">Account</a>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Dashboard Grid -->
+        <div class="dashboard-grid">
+            <!-- Left Column: Today's Action -->
+            <div>
+                <div class="action-card">
+                    <div class="action-header">
+                        <div class="action-title">Today's Action</div>
+                        <div class="action-badge">Communication</div>
+                    </div>
+                    <h2 class="action-name">Listen Without Fixing</h2>
+                    <p class="action-description">
+                        When your partner shares something that's bothering them, just listen. Don't offer solutions. Don't try to fix it. Just be present, acknowledge their feelings, and let them know you hear them. Sometimes the best thing you can do is nothing.
+                    </p>
+                    <button class="action-button">Mark as Complete</button>
+                </div>
+            </div>
+
+            <!-- Right Column: Health & Stats -->
+            <div>
+                <!-- Health Bar -->
+                <div class="health-card">
+                    <div class="health-header">
+                        <div>
+                            <h2 class="health-title">Husband Health</h2>
+                            <p class="health-subtitle">A simple mirror of how consistently you're showing up.</p>
+                        </div>
+                        <div class="health-score">
+                            <div class="health-label">Good</div>
+                            <div class="health-value">78.5%</div>
+                        </div>
+                    </div>
+                    <div class="health-bar-container">
+                        <div class="health-bar"></div>
+                    </div>
+                    <p class="health-info">
+                        • Completing today's action nudges this up.<br>
+                        • Missing Daily Actions slowly drains it.
+                    </p>
+                </div>
+
+                <!-- Stats Grid -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">🔥</div>
+                        <div class="stat-value">12</div>
+                        <div class="stat-label">Day Streak</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">📅</div>
+                        <div class="stat-value">45</div>
+                        <div class="stat-label">Total Days</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🏆</div>
+                        <div class="stat-value">8</div>
+                        <div class="stat-label">Badges</div>
+                    </div>
+                </div>
+
+                <!-- Badges -->
+                <div class="badges-card">
+                    <h3 class="badges-title">Recent Badges</h3>
+                    <div class="badges-grid">
+                        <div class="badge earned">💬</div>
+                        <div class="badge earned">❤️</div>
+                        <div class="badge earned">🤝</div>
+                        <div class="badge earned">🎉</div>
+                        <div class="badge">🌟</div>
+                        <div class="badge">🎁</div>
+                        <div class="badge">📝</div>
+                        <div class="badge">🎯</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

@@ -5839,6 +5839,637 @@ Think about how to capture the moment:
 
 You planned an anniversary celebration that honored your relationship. You reflected on your journey. You created something meaningful. She felt celebrated and loved. You both felt closer and more connected. That's a win.`,
   },
+  'plan-virtual-date': {
+    id: 30,
+    title: 'Plan a Virtual Date That Actually Feels Special',
+    category: 'Romance',
+    difficulty: 'Easy',
+    time: '30-60 min',
+    excerpt: 'Distance doesn\'t have to mean disconnection. Learn how to plan virtual dates that create real connection and shared experiences, even when you\'re miles apart.',
+    content: `## Why This Matters
+
+When you're apart, it's easy to let connection slip. Text messages and quick calls aren't enough. Virtual dates create intentional time together. They show you're prioritizing your relationship despite the distance. They create shared experiences and memories, even when you can't be in the same room.
+
+## The Secret: Make It Intentional
+
+A virtual date isn't just a video call. It's planned time together with a purpose. You're not just catching up—you're creating an experience. That intention is what makes it feel special, not just convenient.
+
+## What Planning a Virtual Date Looks Like
+
+1. Choose the Activity
+
+Pick something you can do together over video. Good options:
+- Cook the same meal together
+- Watch a movie simultaneously
+- Play an online game
+- Have a themed conversation (questions, topics, etc.)
+- Do a virtual tour of a museum or city
+- Read to each other
+- Work on a project together (planning, creating, etc.)
+
+2. Set a Specific Time
+
+Don't just say "let's talk later." Pick a day and time. Put it on both your calendars. Treat it like a real date—something you commit to and look forward to.
+
+3. Prepare Ahead
+
+If you're cooking, both get the ingredients. If you're watching a movie, both have it ready. If you're playing a game, both download it. The preparation shows you're taking it seriously.
+
+4. Set the Mood
+
+Dress up a bit if you want. Light a candle. Put your phone away. Create an environment that feels special, not just another video call. Make it feel like a date, not a meeting.
+
+5. Be Present
+
+When you're on the date, actually be there. Don't multitask. Don't check your phone. Make eye contact. Engage. This is quality time, not background noise.
+
+6. Have a Plan, But Be Flexible
+
+Have an activity planned, but be open to conversation. Sometimes the best virtual dates are the ones where you start with a plan but end up just talking. The structure helps, but don't let it get in the way of connection.
+
+## Virtual Date Ideas
+
+**Cooking Together:**
+- Choose a recipe you both want to try
+- Get the ingredients ahead of time
+- Cook it together over video
+- Eat together virtually
+- Share the experience and laugh at mistakes
+
+**Movie Night:**
+- Pick a movie you both want to watch
+- Sync up the start time (countdown: 3, 2, 1, play)
+- Watch together over video call
+- Share reactions, pause to discuss
+- Make it feel like you're in the same room
+
+**Game Night:**
+- Play an online board game (Tabletopia, Board Game Arena)
+- Play a multiplayer video game
+- Play something simple like Words With Friends
+- Make it competitive or collaborative
+- Have fun together
+
+**Virtual Tour:**
+- Take a virtual tour of a museum together
+- Explore a city via Google Street View
+- Visit a place you both want to go
+- Share what you're seeing and discuss it
+- Plan a future visit
+
+**Themed Conversation:**
+- Pick a topic or set of questions
+- Have a deep conversation about something meaningful
+- Share stories, memories, or dreams
+- Create connection through conversation
+- Make it feel like a real date conversation
+
+**Read Together:**
+- Read a book together (same book, different chapters)
+- Read to each other
+- Share favorite passages
+- Discuss what you're reading
+- Create a shared experience through stories
+
+## Common Mistakes
+
+**Making it last-minute:** "Want to video call?" isn't a date. Plan it ahead.
+
+**Not preparing:** If you're cooking, get ingredients. If you're watching, have the movie ready. Preparation shows effort.
+
+**Multitasking:** Don't check your phone or work during the date. Be present.
+
+**Making it generic:** "Let's just talk" is fine sometimes, but make some dates special with an activity.
+
+**Not committing:** If you schedule it, show up. Don't cancel unless it's really necessary.
+
+**Forgetting the purpose:** It's about connection, not just doing something. Make sure you're actually connecting.
+
+## Making It Feel Special
+
+**Dress up:** Even if you're just at home, dressing up a bit makes it feel special.
+
+**Set the scene:** Light a candle, put on music, create an environment that feels like a date.
+
+**Have something to look forward to:** Plan something fun or meaningful, not just another call.
+
+**Be romantic:** Tell her she looks nice. Compliment her. Make it feel like a real date.
+
+**End with intention:** Don't just hang up. Tell her you loved spending time with her. Plan the next one.
+
+## The Win
+
+You planned a virtual date. You created intentional time together. You had a shared experience despite the distance. She felt special and prioritized. You both felt closer and more connected. That's a win.`,
+  },
+  'stay-connected-video-calls': {
+    id: 31,
+    title: 'Have Meaningful Video Calls When You\'re Apart',
+    category: 'Communication',
+    difficulty: 'Easy',
+    time: '15-30 min',
+    excerpt: 'Learn how to make video calls feel like real connection, not just another screen time. Create meaningful conversations that maintain intimacy across distance.',
+    content: `## Why This Matters
+
+When you\'re apart, video calls are your lifeline. But not all video calls are created equal. Some feel like connection. Others feel like obligation. Learn how to make your calls meaningful and maintain emotional intimacy even when you\'re miles apart.
+
+## The Secret: Be Present, Not Just Present
+
+A video call isn't just about seeing each other. It's about being together. That means being fully present—not multitasking, not distracted, not just going through the motions.
+
+## What a Meaningful Video Call Looks Like
+
+1. Schedule It
+
+Don't just call randomly. Schedule it. Put it on both your calendars. Treat it like an appointment you're both committed to. This shows you're prioritizing time together.
+
+2. Have No Agenda
+
+Sometimes the best calls are the ones with no agenda. Just talk. Ask about her day. Share yours. Be present and see where the conversation goes. Don't force it.
+
+3. Put Away Distractions
+
+Close your laptop. Put your phone away. Turn off notifications. Give her your full attention. She can tell when you're distracted, and it makes her feel unimportant.
+
+4. Make Eye Contact
+
+Look at the camera, not the screen. It feels more like you're looking at each other. Make it feel like a real conversation, not a video conference.
+
+5. Ask Real Questions
+
+Move beyond "how was your day?" Ask:
+- "What made you smile today?"
+- "What was challenging?"
+- "What are you looking forward to?"
+- "What's on your mind?"
+
+6. Share Your World
+
+Tell her about your day. Show her things around you. Let her into your world. Make her feel included in your life, even when you're apart.
+
+7. End With Intention
+
+Don't just hang up. Tell her you loved talking to her. Tell her you miss her. Plan the next call. Make it feel like a real goodbye, not just ending a call.
+
+## Common Mistakes
+
+**Multitasking:** Don't check your phone or work during the call. Be present.
+
+**Making it transactional:** "Did you do X? Did you call Y?" This isn't a status update. It's connection time.
+
+**Not scheduling:** Random calls are fine sometimes, but scheduled calls show you're prioritizing her.
+
+**Being distracted:** She can tell when you're not really there. Put everything away.
+
+**Rushing:** Don't make it feel like you're trying to get off the call. Take your time.
+
+**Not asking questions:** Don't just talk about yourself. Ask about her. Show interest.
+
+## Making It Feel Special
+
+**Dress up a bit:** Even if you're just at home, looking nice makes it feel special.
+
+**Set the scene:** Find a good spot with good lighting. Make it look nice.
+
+**Have something to share:** Think about what you want to tell her. Have stories or updates ready.
+
+**Be romantic:** Tell her she looks nice. Compliment her. Make it feel like a real conversation.
+
+**End with love:** Don't just hang up. Tell her you love her. Tell her you miss her.
+
+## The Win
+
+You had a meaningful video call. You were present. You connected. She felt heard and valued. You both felt closer despite the distance. That's a win.`,
+  },
+  'send-thoughtful-care-package': {
+    id: 32,
+    title: 'Send a Thoughtful Care Package',
+    category: 'Romance',
+    difficulty: 'Medium',
+    time: '1-2 hours',
+    excerpt: 'Learn how to put together a care package that shows you know her, you\'re thinking of her, and you care. Make distance feel smaller with a thoughtful surprise.',
+    content: `## Why This Matters
+
+A care package is more than stuff in a box. It\'s a physical reminder that you\'re thinking of her. It shows you know what she likes. It creates a moment of connection even when you\'re apart. It\'s a surprise that arrives at her door, making her feel special and loved.
+
+## The Secret: Make It Personal
+
+A generic care package is nice. A personal one is meaningful. The difference is knowing her—what she likes, what she needs, what reminds her of you.
+
+## What a Thoughtful Care Package Looks Like
+
+1. Think About Her
+
+What does she love? What does she need? What would make her smile? Think about:
+- Her favorite snacks or treats
+- Things she mentioned wanting
+- Items that remind her of you or your relationship
+- Things that would help her (comfort items, self-care, etc.)
+
+2. Choose Meaningful Items
+
+Don't just throw random stuff in a box. Choose things with intention:
+- **Favorite snacks:** Things she loves but might not buy for herself
+- **Books or magazines:** Something she mentioned wanting to read
+- **Self-care items:** Bath bombs, candles, face masks, cozy socks
+- **Something personal:** A photo, a handwritten note, something that reminds her of you
+- **Something fun:** A small game, puzzle, or activity she'd enjoy
+
+3. Write a Note
+
+Include a handwritten note explaining:
+- Why you chose each item
+- What you were thinking about when you picked it
+- How much you miss her
+- How much you love her
+
+Make it personal. Make it from the heart.
+
+4. Package It Thoughtfully
+
+Don't just throw it in a box. Package it nicely:
+- Use tissue paper or bubble wrap
+- Add a personal touch (ribbon, stickers, etc.)
+- Make it look like you put effort into it
+- Include the note on top or in an envelope
+
+5. Send It as a Surprise
+
+Don't tell her it's coming. Let it be a surprise. The unexpected arrival makes it even more special.
+
+## Care Package Ideas
+
+**Comfort Package:**
+- Her favorite tea or coffee
+- Cozy socks or slippers
+- A soft blanket or throw
+- A good book
+- A handwritten note
+
+**Self-Care Package:**
+- Bath bombs or bath salts
+- Face masks
+- Candles
+- Her favorite lotion
+- A note about taking care of herself
+
+**Fun Package:**
+- Her favorite snacks
+- A puzzle or game
+- A fun book or magazine
+- Something silly that makes her laugh
+- A note about having fun
+
+**Memory Package:**
+- Photos of you together
+- Something from a place you visited
+- A playlist of songs that remind you of her
+- A note about your favorite memories
+
+**Needs-Based Package:**
+- Things she mentioned needing
+- Items that would help her (if she's stressed, sick, etc.)
+- Practical but thoughtful items
+- A note showing you're paying attention
+
+## Common Mistakes
+
+**Being generic:** Don't send the same package you'd send anyone. Make it personal.
+
+**Not including a note:** The note is what makes it meaningful. Don't skip it.
+
+**Sending it when she's not home:** Make sure she'll be there to receive it, or send it to her work.
+
+**Not thinking about her:** Don't send things YOU like. Send things SHE likes.
+
+**Making it about you:** It's about her. Think about what would make her happy.
+
+**Not packaging it well:** Put effort into how it looks. It shows you care.
+
+## Making It Extra Special
+
+**Time it right:** Send it when she might need it—after a hard week, on a random Tuesday, just because.
+
+**Add something unexpected:** Include something she wouldn't expect but would love.
+
+**Make it themed:** Create a theme (cozy night, self-care, fun, etc.) and build around it.
+
+**Include something from you:** A photo, a playlist, something that's specifically from you.
+
+**Follow up:** After she receives it, ask what she thought. Show you care about her reaction.
+
+## The Win
+
+You sent a thoughtful care package. You put effort into it. You made it personal. She felt loved and thought about. She felt special. The distance felt smaller. That's a win.`,
+  },
+  'plan-future-visit': {
+    id: 33,
+    title: 'Plan a Future Visit Together',
+    category: 'Partnership',
+    difficulty: 'Medium',
+    time: '1-2 hours',
+    excerpt: 'Take initiative to plan your next visit. Show you\'re committed to making time together happen. Remove the burden from her and demonstrate you\'re actively working to close the distance.',
+    content: `## Why This Matters
+
+When you\'re apart, visits are everything. But planning them can be stressful. Taking initiative shows you\'re committed to making time together happen. It removes the burden from her. It demonstrates you\'re actively working to close the distance, not just waiting for it to happen.
+
+## The Secret: Take Initiative
+
+Don't wait for her to plan it. Don't make her do all the work. Take the lead. Research options. Present ideas. Show you're thinking ahead and prioritizing time together.
+
+## What Planning a Future Visit Looks Like
+
+1. Research Dates
+
+Look at both your calendars. Find dates that work. Consider:
+- Work schedules
+- Important events
+- Travel time
+- Budget
+- What makes sense for both of you
+
+2. Research Travel Options
+
+Look at flights, trains, buses, or driving options. Compare:
+- Prices
+- Times
+- Convenience
+- What works best for both of you
+
+3. Present Options
+
+Don't just say "when do you want to visit?" Present 2-3 specific options:
+- "I found flights for these dates..."
+- "Here are a few options that work..."
+- "What do you think about these dates?"
+
+Make it easy for her to choose, not hard for her to plan.
+
+4. Consider Logistics
+
+Think about:
+- Where you'll stay
+- What you'll do
+- How you'll get around
+- What you'll need
+
+Don't make her figure it all out.
+
+5. Make It Special
+
+Plan something special for the visit:
+- A date night
+- An activity you both want to do
+- Something that makes it feel like more than just "visiting"
+
+6. Confirm and Book
+
+Once you agree, book it. Don't wait. Make it real. Put it on both calendars. Make it something you're both looking forward to.
+
+## Planning Tips
+
+**Start early:** Don't wait until the last minute. Plan ahead.
+
+**Be flexible:** Have backup options. Be willing to adjust.
+
+**Consider her schedule:** Make sure it works for her, not just you.
+
+**Think about budget:** Be realistic about what you can afford.
+
+**Make it a priority:** Show that visits are important to you.
+
+**Plan activities:** Don't just show up. Have things to do together.
+
+## Common Mistakes
+
+**Making her do all the work:** Don't just say "when do you want to visit?" Do the research.
+
+**Not considering her schedule:** Make sure it works for her, not just you.
+
+**Being vague:** "Sometime in the spring" isn't planning. Be specific.
+
+**Not following through:** If you say you'll plan it, actually plan it.
+
+**Not making it special:** Visits should feel special, not just convenient.
+
+**Not confirming:** Once you agree, book it. Don't leave it hanging.
+
+## Making It Feel Special
+
+**Plan something unique:** Don't just do the same things. Plan something special.
+
+**Count down together:** Share the excitement. Count down the days.
+
+**Talk about it:** Build anticipation. Talk about what you'll do.
+
+**Make it a priority:** Show that visits are important to you.
+
+**Be excited:** Show you're looking forward to it. Make her feel wanted.
+
+## The Win
+
+You planned a future visit. You took initiative. You did the research. You made it easy for her. You showed you're committed to making time together happen. She felt prioritized. You both have something to look forward to. That's a win.`,
+  },
+  'daily-connection-messages': {
+    id: 34,
+    title: 'Send Thoughtful Daily Messages',
+    category: 'Communication',
+    difficulty: 'Easy',
+    time: '2-5 min',
+    excerpt: 'Learn how to send good morning and good night messages that create daily connection. Make her feel thought about and loved, even when you\'re apart.',
+    content: `## Why This Matters
+
+When you\'re apart, daily messages keep you connected. They show you\'re thinking of her. They create moments of connection throughout the day. They make distance feel smaller. A thoughtful message can brighten her day and make her feel loved.
+
+## The Secret: Make It Personal, Not Generic
+
+"Good morning" is nice. "Good morning, I'm thinking about how you looked so beautiful yesterday when you laughed" is meaningful. The difference is specificity and thoughtfulness.
+
+## What a Thoughtful Daily Message Looks Like
+
+1. Be Specific
+
+Don't just say "good morning" or "good night." Be specific:
+- Mention something you're thinking about
+- Reference something from your last conversation
+- Share something you appreciate about her
+- Tell her what you're looking forward to
+
+2. Make It Personal
+
+Make it about her, not generic:
+- "Good morning, beautiful. I'm thinking about our conversation last night..."
+- "Good night, love. I'm grateful for you because..."
+- "Morning! I can't stop thinking about how you..."
+
+3. Show You're Thinking About Her
+
+Let her know she's on your mind:
+- "I was just thinking about you..."
+- "This reminded me of you..."
+- "I'm looking forward to..."
+
+4. Be Genuine
+
+Don't force it. Don't be fake. Be genuine. If you're having a hard day, you can share that too (but don't make it about you).
+
+5. Time It Right
+
+Send it when it makes sense:
+- Good morning: When she wakes up (consider time zones)
+- Good night: Before she goes to bed
+- Random messages: Throughout the day, just because
+
+## Message Ideas
+
+**Good Morning Messages:**
+- "Good morning, beautiful. I'm thinking about you and hoping you have an amazing day."
+- "Morning! I woke up thinking about our conversation last night. Can't wait to talk to you later."
+- "Good morning, love. I'm grateful for you today. Hope your day is wonderful."
+
+**Good Night Messages:**
+- "Good night, beautiful. I'm so grateful for you. Sleep well."
+- "Night, love. I'm thinking about you and looking forward to talking tomorrow."
+- "Good night. I miss you, but I'm so grateful we're in each other's lives."
+
+**Random Messages:**
+- "Just thinking about you and wanted to say hi."
+- "This [photo/thing] reminded me of you."
+- "I'm so grateful for you today."
+
+## Common Mistakes
+
+**Being generic:** "Good morning" is fine sometimes, but make some messages special.
+
+**Not being specific:** Generic messages don't create connection. Be specific.
+
+**Making it about you:** "I'm having a hard day" is fine, but don't make every message about you.
+
+**Not timing it right:** Consider time zones. Don't wake her up.
+
+**Forgetting:** Consistency matters. If you say you'll send good morning messages, do it.
+
+**Being fake:** Don't force it. Be genuine.
+
+## Making It Feel Special
+
+**Vary it:** Don't send the same message every day. Mix it up.
+
+**Be creative:** Use photos, voice messages, or videos sometimes.
+
+**Reference your relationship:** Mention things you've done together or conversations you've had.
+
+**Show appreciation:** Tell her what you appreciate about her.
+
+**Be romantic:** Tell her you love her. Tell her you miss her. Make her feel wanted.
+
+## The Win
+
+You sent a thoughtful daily message. You made it personal. You showed you're thinking about her. She felt loved and thought about. You both felt more connected. That's a win.`,
+  },
+  'share-day-through-photos': {
+    id: 35,
+    title: 'Share Your Day Through Photos',
+    category: 'Communication',
+    difficulty: 'Easy',
+    time: 'Ongoing',
+    excerpt: 'Learn how to share your daily life through photos. Make her feel included in your world. Create a visual conversation that makes distance feel smaller.',
+    content: `## Why This Matters
+
+When you\'re apart, photos are windows into each other\'s worlds. They help her feel included in your daily life. They create connection and conversation. They make distance feel smaller. A photo can say "I\'m thinking about you" or "I want you to see this" in a way words sometimes can\'t.
+
+## The Secret: Make It a Conversation
+
+Don't just send random photos. Make it a visual conversation. Share moments. Tell stories. Make her feel included in your day.
+
+## What Sharing Your Day Through Photos Looks Like
+
+1. Share Moments
+
+Take photos of things that matter:
+- What you're seeing
+- What you're doing
+- What you're thinking about
+- What reminds you of her
+
+2. Add Context
+
+Don't just send a photo. Add a message:
+- "This reminded me of you..."
+- "Wish you were here to see this..."
+- "This is what I'm doing right now..."
+- "This made me think of our conversation about..."
+
+3. Make It Personal
+
+Share things that connect to your relationship:
+- Places you've been together
+- Things she'd find interesting
+- Moments you wish she could experience
+- Things that remind you of her
+
+4. Be Consistent
+
+Don't just send photos randomly. Make it a habit. Share your day regularly. It becomes something she looks forward to.
+
+5. Respond to Hers
+
+If she sends photos, respond. Show interest. Ask questions. Make it a two-way conversation.
+
+## Photo Ideas
+
+**Daily Life:**
+- What you're eating
+- Where you are
+- What you're working on
+- Your surroundings
+
+**Interesting Things:**
+- Something cool you saw
+- A beautiful view
+- Something funny
+- Something that made you think
+
+**Relationship Moments:**
+- Places you've been together
+- Things that remind you of her
+- Moments you wish she could experience
+- Things you want to do together
+
+**Random Thoughts:**
+- "This made me think of you"
+- "Wish you were here"
+- "This is what I'm doing right now"
+
+## Common Mistakes
+
+**Sending too many:** Don't spam her. Be thoughtful about what you share.
+
+**Not adding context:** A photo without context is just a photo. Add a message.
+
+**Being generic:** Don't just send random photos. Make them meaningful.
+
+**Not responding:** If she sends photos, respond. Make it a conversation.
+
+**Forgetting:** Consistency matters. If you start sharing, keep it up.
+
+**Making it about you:** Share things that include her in your world, not just show off.
+
+## Making It Feel Special
+
+**Be creative:** Use different angles, filters, or styles sometimes.
+
+**Tell stories:** Use photos to tell stories about your day.
+
+**Show interest:** Ask about her photos. Make it a two-way conversation.
+
+**Be romantic:** Send photos that show you're thinking about her.
+
+**Make it fun:** Don't take it too seriously. Have fun with it.
+
+## The Win
+
+You shared your day through photos. You made her feel included in your world. You created a visual conversation. She felt connected to your daily life. The distance felt smaller. That's a win.`,
+  },
 };
 
 export default async function GuidePage({ params }: { params: { slug: string } }) {
