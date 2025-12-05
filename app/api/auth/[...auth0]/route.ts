@@ -1,13 +1,16 @@
 import { handleAuth, handleCallback } from '@auth0/nextjs-auth0';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import { Session } from '@auth0/nextjs-auth0';
+import { NextRequest } from 'next/server';
 
 /**
  * After Auth0 callback, create user in Supabase if they don't exist
  * This ensures users are created immediately after authentication,
  * not just when they visit the dashboard
+ * 
+ * Note: App Router signature is (req, session, state?) - no res parameter
  */
-async function afterCallback(req: any, res: any, session: Session | null): Promise<Session | null> {
+async function afterCallback(req: NextRequest, session: Session, state?: Record<string, any>): Promise<Session | undefined> {
   if (!session?.user?.sub) {
     return session;
   }
@@ -161,7 +164,7 @@ async function afterCallback(req: any, res: any, session: Session | null): Promi
   }
 
   return session;
-}
+};
 
 export const GET = handleAuth({
   callback: handleCallback({ afterCallback }),
