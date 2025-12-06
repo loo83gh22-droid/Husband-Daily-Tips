@@ -12,11 +12,12 @@ const getMondayOfWeek = (date: Date): Date => {
 };
 
 /**
- * Cron endpoint to send today's action at 12pm (noon) in each user's timezone
+ * Cron endpoint to send today's action at 6am in each user's timezone
  * 
  * This endpoint runs every hour and checks which users should receive emails
- * based on their timezone (12pm in their local time).
- * Email and dashboard now show the same action (today's) for consistency.
+ * based on their timezone (6am in their local time).
+ * Email and dashboard show the same action (today's) for consistency.
+ * Email arrives early morning so users can plan and execute during the day.
  * 
  * Set up in Vercel (vercel.json):
  * {
@@ -206,7 +207,7 @@ export async function GET(request: Request) {
     let sentCount = 0;
     let errorCount = 0;
 
-    // For each user where it's 12pm, get an action for tomorrow
+    // For each user where it's 6am, get an action for today (email and dashboard now in sync)
     for (const user of usersToEmail) {
       try {
         const dayOfWeek = user.dayOfWeek; // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
