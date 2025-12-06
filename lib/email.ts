@@ -220,7 +220,7 @@ export function generateEmailHTML(tip: EmailTip, baseUrl: string): string {
               Here&apos;s the deal:
             </p>
             <p style="color: #6b7280; font-size: 14px; margin: 0; line-height: 1.6;">
-              Today&apos;s action arrives at 12pm. You can complete it right away or plan it for later today. No scrambling, no forgetting, just execution. You got this.
+              Today&apos;s action arrives at 6am. You can complete it right away or plan it for later today. Start your day right and make it happen. You got this.
             </p>
           </div>
           

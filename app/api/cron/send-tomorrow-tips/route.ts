@@ -124,7 +124,7 @@ export async function GET(request: Request) {
       return workDays.includes(dayOfWeek);
     };
 
-    // Filter users: only send to those where it's 12pm (12:00) in their timezone
+    // Filter users: only send to those where it's 6am (6:00) in their timezone
     // For free users: only send on their first work day of the week
     // For premium users: send on their work days (respects their work_days setting)
     // Also determine the day of week for each user to format emails accordingly
@@ -163,8 +163,8 @@ export async function GET(request: Request) {
           logger.log(`[Cron Debug] User ${user.email}: timezone=${timezone}, hour=${hour}, dayOfWeek=${dayOfWeek} (${weekdayName}), UTC=${now.toISOString()}, subscription=${subscriptionTier}`);
         }
 
-        // If it's 12pm (12:00) in their timezone - check hour is 12
-        if (hour === 12) {
+        // If it's 6am (6:00) in their timezone - check hour is 6
+        if (hour === 6) {
           // For free users: only send on their first work day of the week
           if (subscriptionTier === 'free') {
             const firstWorkDay = getFirstWorkDay(user.work_days);
@@ -191,13 +191,13 @@ export async function GET(request: Request) {
         sent: 0,
         errors: 0,
         total: users.length,
-        message: 'No users to email at this time (not 12pm in any user timezone)',
+        message: 'No users to email at this time (not 6am in any user timezone)',
         checked: users.length,
         currentUtcTime: now.toISOString(),
       });
     }
 
-    logger.log(`[Cron Job] Found ${usersToEmail.length} users to email at 12pm in their timezone`);
+    logger.log(`[Cron Job] Found ${usersToEmail.length} users to email at 6am in their timezone`);
 
     // Get today's date (email now sends today's action, not tomorrow's)
     const today = new Date();
@@ -478,7 +478,7 @@ export async function GET(request: Request) {
       errors: errorCount,
       total: users.length,
       usersEmailed: usersToEmail.length,
-      message: `Sent ${sentCount} emails to users where it's 12pm in their timezone`,
+      message: `Sent ${sentCount} emails to users where it's 6am in their timezone`,
     });
   } catch (error: any) {
     logger.error('Unexpected error in cron job:', error);
