@@ -1,7 +1,7 @@
 -- Add fun, husband-friendly quotes to the database
 -- These quotes are funny, uplifting, and enjoyable for husbands
 -- They don't need to be directly about being a husband, but should resonate with men
--- Note: Some quotes may already exist in migration 077, but this ensures we have a good variety
+-- Note: This migration adds NEW quotes that don't exist in migration 077
 
 INSERT INTO quotes (quote_text, author) VALUES
   -- Light-hearted relationship humor
@@ -62,9 +62,9 @@ INSERT INTO quotes (quote_text, author) VALUES
   -- Fun observations
   ('I asked my wife if I was the only one she''s been with. She laughed and laughed. I''m still not sure what that means.', NULL),
   ('My wife told me to stop impersonating a flamingo. I had to put my foot down.', NULL),
-  ('I told my wife she was drawing her eyebrows too high. She looked surprised.', NULL),
   ('My wife said I should do lunges to stay in shape. That would be a big step forward.', NULL),
-  ('I told my wife she should embrace her mistakes. She gave me a hug.', NULL),
+  ('My wife says I never listen to her. At least I think that''s what she said.', NULL),
+  ('I asked my wife what she wanted for our anniversary. She said "Nothing would make me happier." So I got her nothing.', NULL),
   
   -- Encouraging quotes for men
   ('The greatest thing a man can do for his children is to love their mother.', 'Theodore Hesburgh'),
@@ -86,18 +86,16 @@ INSERT INTO quotes (quote_text, author) VALUES
   ('I''m not perfect, but I''m perfectly me.', NULL),
   ('I may not be perfect, but parts of me are excellent.', NULL),
   ('I''m not arguing, I''m just explaining why I''m right. There''s a difference.', NULL),
+  ('I don''t always know what I''m doing, but I know I''m doing it with confidence.', NULL),
   
   -- Positive relationship quotes
   ('The best relationships are built on a foundation of friendship, respect, and a shared sense of humor.', NULL),
   ('A good marriage is one where each partner secretly suspects they got the better deal.', NULL),
   ('The secret to staying married? Stay married.', 'Ruth Bell Graham'),
   ('Marriage is not 50-50. Divorce is 50-50. Marriage has to be 100-100. It isn''t dividing everything in half, but giving everything you''ve got!', 'Dave Willis'),
-  ('A great marriage is not when the perfect couple comes together. It is when an imperfect couple learns to enjoy their differences.', 'Dave Meurer'),
   
   -- Fun quotes about life
-  ('I''m not saying I''m Wonder Woman, but have you ever seen me and Wonder Woman in the same room?', NULL),
   ('I don''t need a hairstylist, my pillow gives me a new hairstyle every morning.', NULL),
-  ('I''m not saying I''m Batman, but you''ve never seen me and Batman in the same room.', NULL),
   ('I''m not saying I''m Superman, but no one has ever seen me and Superman in the same room.', NULL),
   ('I''m not saying I''m a superhero, but I do wear my underwear on the outside sometimes.', NULL),
   
@@ -109,30 +107,8 @@ INSERT INTO quotes (quote_text, author) VALUES
   ('Marriage is like a fine wine - if tended to properly, it gets better with age.', NULL),
   
   -- More fun quotes
-  ('I don''t always know what I''m doing, but I know I''m doing it with confidence.', NULL),
-  ('I''m not saying I''m the best husband in the world, but I''m definitely in the top one.', NULL),
-  ('My wife says I never listen to her. At least I think that''s what she said.', NULL),
-  ('I asked my wife what she wanted for our anniversary. She said "Nothing would make me happier." So I got her nothing.', NULL),
-  ('Marriage is 50-50. I do 50% of what I want, and she does 50% of what she wants. It just so happens that 50% of what she wants is for me to do the other 50%.', NULL),
-  
-  -- Life wisdom with humor
-  ('The best time to plant a tree was 20 years ago. The second best time is now.', 'Chinese Proverb'),
-  ('Success is not final, failure is not fatal: it is the courage to continue that counts.', 'Winston Churchill'),
-  ('It''s not about being perfect. It''s about being better than you were yesterday.', NULL),
-  ('The only way to do great work is to love what you do.', 'Steve Jobs'),
-  ('Life is what happens to you while you''re busy making other plans.', 'John Lennon'),
-  
-  -- More relationship humor
+  ('I''m not saying I''m Wonder Woman, but have you ever seen me and Wonder Woman in the same room?', NULL),
+  ('I''m not saying I''m Batman, but you''ve never seen me and Batman in the same room.', NULL),
   ('I told my wife she was drawing her eyebrows too high. She looked surprised.', NULL),
-  ('My wife said I should do lunges to stay in shape. That would be a big step forward.', NULL),
   ('I told my wife she should embrace her mistakes. She gave me a hug.', NULL),
-  ('My wife told me to stop impersonating a flamingo. I had to put my foot down.', NULL),
-  ('I asked my wife if I was the only one she''s been with. She laughed and laughed. I''m still not sure what that means.', NULL),
-  
-  -- Encouraging quotes
-  ('The greatest thing a man can do for his children is to love their mother.', 'Theodore Hesburgh'),
-  ('A man who finds a wife finds a good thing and obtains favor from the Lord.', 'Proverbs 18:22'),
-  ('The best way to find out if you can trust somebody is to trust them.', 'Ernest Hemingway'),
-  ('It''s not the years in your life that count. It''s the life in your years.', 'Abraham Lincoln'),
-  ('The only impossible journey is the one you never begin.', 'Tony Robbins');
-
+  ('Marriage is 50-50. I do 50% of what I want, and she does 50% of what she wants. It just so happens that 50% of what she wants is for me to do the other 50%.', NULL);
