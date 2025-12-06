@@ -136,9 +136,29 @@ export async function POST(request: Request) {
       .single();
 
     if (insertError) {
-      console.error('Error completing action:', insertError);
+      console.error('Error completing action:', {
+        error: insertError,
+        code: insertError.code,
+        message: insertError.message,
+        details: insertError.details,
+        hint: insertError.hint,
+        user_id: user.id,
+        action_id: actionId,
+        journal_entry_id: journalEntryId,
+      });
+      
+      // Provide more specific error message based on error type
+      let errorMessage = 'Failed to complete action';
+      if (insertError.code === '23505') {
+        errorMessage = 'This action has already been completed';
+      } else if (insertError.code === '23503') {
+        errorMessage = 'Invalid action or user data';
+      } else if (insertError.message?.includes('timeout') || insertError.message?.includes('network')) {
+        errorMessage = 'Network error. Please check your connection and try again';
+      }
+      
       return NextResponse.json(
-        { error: 'Failed to complete action' },
+        { error: errorMessage, details: insertError.message },
         { status: 500 },
       );
     }
@@ -190,14 +210,25 @@ export async function POST(request: Request) {
       const actionPointValue = action.health_point_value || 2;
       
       // Use recordActionCompletion which handles daily/weekly distinction and caps
-      const { recordActionCompletion } = await import('@/lib/health');
-      await recordActionCompletion(
-        supabase,
-        user.id,
-        actionId,
-        actionPointValue,
-        actionDate
-      );
+      try {
+        const { recordActionCompletion } = await import('@/lib/health');
+        await recordActionCompletion(
+          supabase,
+          user.id,
+          actionId,
+          actionPointValue,
+          actionDate
+        );
+      } catch (healthError: any) {
+        console.error('Error recording action completion for health:', {
+          error: healthError,
+          user_id: user.id,
+          action_id: actionId,
+          actionDate,
+        });
+        // Don't fail the action completion if health recording fails
+        // The action is already marked as complete
+      }
     }
 
     // Check for badge progress (if action has requirement_type)
@@ -245,17 +276,28 @@ export async function POST(request: Request) {
       });
 
       // Check badges with updated action counts
-      const newlyEarned = await checkAndAwardBadges(
-        supabase,
-        user.id,
-        {
-          totalTips,
-          currentStreak: streak,
-          totalDays: uniqueDays,
-          actionCounts, // Now using actionCounts directly
-        },
-        action.category,
-      );
+      let newlyEarned: any[] = [];
+      try {
+        newlyEarned = await checkAndAwardBadges(
+          supabase,
+          user.id,
+          {
+            totalTips,
+            currentStreak: streak,
+            totalDays: uniqueDays,
+            actionCounts, // Now using actionCounts directly
+          },
+          action.category,
+        );
+      } catch (badgeError: any) {
+        console.error('Error checking badges:', {
+          error: badgeError,
+          user_id: user.id,
+          action_id: actionId,
+        });
+        // Don't fail the action completion if badge checking fails
+        // The action is already marked as complete
+      }
 
       // Return newly earned badges if any
       if (newlyEarned.length > 0) {
@@ -271,9 +313,25 @@ export async function POST(request: Request) {
     }
 
     return NextResponse.json({ success: true });
-  } catch (error) {
-    console.error('Unexpected error completing action:', error);
-    return NextResponse.json({ error: 'Unexpected error' }, { status: 500 });
+  } catch (error: any) {
+    console.error('Unexpected error completing action:', {
+      error: error?.message || error,
+      stack: error?.stack,
+      name: error?.name,
+    });
+    
+    // Provide more helpful error message
+    let errorMessage = 'An unexpected error occurred';
+    if (error?.message?.includes('timeout') || error?.message?.includes('network')) {
+      errorMessage = 'Network error. Please check your connection and try again';
+    } else if (error?.message?.includes('fetch')) {
+      errorMessage = 'Connection error. Please try again';
+    }
+    
+    return NextResponse.json(
+      { error: errorMessage, details: error?.message },
+      { status: 500 }
+    );
   }
 }
 

@@ -132,16 +132,33 @@ export default function DailyTipCard({ tip, subscriptionTier = 'free', onActionR
         ? { actionId: tip.id }
         : { tipId: tip.id };
       
-      const response = await fetch(endpoint, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(body),
-      });
+      // Add timeout for mobile networks (30 seconds)
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 30000);
+      
+      let response: Response;
+      try {
+        response = await fetch(endpoint, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(body),
+          signal: controller.signal,
+        });
+        clearTimeout(timeoutId);
+      } catch (fetchError: any) {
+        clearTimeout(timeoutId);
+        if (fetchError.name === 'AbortError') {
+          throw new Error('Request timed out. Please check your connection and try again.');
+        }
+        throw new Error('Network error. Please check your connection and try again.');
+      }
 
       if (!response.ok) {
-        throw new Error('Failed to mark as done');
+        const errorData = await response.json().catch(() => ({}));
+        const errorMessage = errorData.error || errorData.message || 'Failed to mark as done';
+        throw new Error(errorMessage);
       }
 
       const data = await response.json();
@@ -184,10 +201,11 @@ export default function DailyTipCard({ tip, subscriptionTier = 'free', onActionR
           setShowReflection(true);
         }, 500); // Small delay to let the toast appear first
       }
-    } catch (error) {
-      console.error(error);
-      setErrorMessage('Could not save this action. You can try again in a moment.');
-      toast.error('Failed to save action. Please try again.', 4000);
+    } catch (error: any) {
+      console.error('Error completing action:', error);
+      const errorMessage = error?.message || 'Could not save this action. You can try again in a moment.';
+      setErrorMessage(errorMessage);
+      toast.error(errorMessage, 5000);
     } finally {
       setIsSubmitting(false);
     }
