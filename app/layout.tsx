@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google';
 import './globals.css';
 import AuthProvider from '@/components/AuthProvider';
 import { ToastProvider } from '@/components/Toast';
+import GoogleAnalytics from '@/components/GoogleAnalytics';
 
 const inter = Inter({ 
   subsets: ['latin'],
@@ -98,6 +99,7 @@ export default function RootLayout({
         />
       </head>
       <body className={`${inter.className} font-sans`} suppressHydrationWarning style={{ fontFamily: 'Inter, system-ui, -apple-system, sans-serif' }}>
+        <GoogleAnalytics />
         <AuthProvider>
           <ToastProvider>{children}</ToastProvider>
         </AuthProvider>
