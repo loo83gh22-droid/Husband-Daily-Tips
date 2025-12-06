@@ -34,7 +34,7 @@ export function generateEmailHTML(tip: EmailTip, baseUrl: string): string {
       <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Tomorrow's Action</title>
+        <title>Today's Action</title>
       </head>
       <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #1f2937; background-color: #f9fafb; margin: 0; padding: 0;">
         <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 40px 20px;">
@@ -43,7 +43,7 @@ export function generateEmailHTML(tip: EmailTip, baseUrl: string): string {
             <p style="color: #6b7280; font-size: 14px; margin: 5px 0 0 0;">Your daily action, delivered.</p>
           </div>
           
-          <!-- Tomorrow's Daily Action -->
+          <!-- Today's Daily Action -->
           <div style="background-color: #0f172a; border-radius: 8px; padding: 30px; margin-bottom: 30px; border-left: 4px solid #0ea5e9;">
             <div style="margin-bottom: 15px;">
               <span style="background-color: rgba(14, 165, 233, 0.1); color: #7dd3fc; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;">
@@ -220,7 +220,7 @@ export function generateEmailHTML(tip: EmailTip, baseUrl: string): string {
               Here&apos;s the deal:
             </p>
             <p style="color: #6b7280; font-size: 14px; margin: 0; line-height: 1.6;">
-              Tomorrow&apos;s action arrives today at 12pm. Why? Because winners plan ahead, and that&apos;s what you&apos;re becoming. Plus, it gives you time to actually make it happen. No scrambling, no forgetting, just execution. You got this.
+              Today&apos;s action arrives at 12pm. You can complete it right away or plan it for later today. No scrambling, no forgetting, just execution. You got this.
             </p>
           </div>
           
@@ -246,7 +246,7 @@ export function generateEmailHTML(tip: EmailTip, baseUrl: string): string {
               <div style="margin: 15px 0; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
                 <a href="${baseUrl}/api/calendar/actions/download?days=1&userId=${tip.userId}" 
                    style="display: inline-block; background-color: #0f172a; color: #0ea5e9; padding: 10px 18px; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 13px; border: 2px solid #0ea5e9;">
-                  📅 Download Tomorrow's Action
+                  📅 Download Today's Action
                 </a>
                 <a href="${baseUrl}/api/calendar/actions/download?days=7&userId=${tip.userId}" 
                    style="display: inline-block; background-color: #0f172a; color: #0ea5e9; padding: 10px 18px; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 13px; border: 2px solid #0ea5e9;">
@@ -464,10 +464,10 @@ export async function sendTomorrowTipEmail(
 
   try {
     const { data, error } = await resend.emails.send({
-      from: process.env.RESEND_FROM_EMAIL || 'Best Husband Ever Tomorrow\'s Action! <action@besthusbandever.com>',
+      from: process.env.RESEND_FROM_EMAIL || 'Best Husband Ever Today\'s Action! <action@besthusbandever.com>',
       replyTo: 'action@besthusbandever.com',
       to: email,
-      subject: isFreeUser ? `This Week's Action: Make Her Smile` : `Tomorrow: Make Her Smile (Here's How)`,
+      subject: isFreeUser ? `This Week's Action: Make Her Smile` : `Today's Action: Make Her Smile (Here's How)`,
       html: isFreeUser ? generateFreeUserEmailHTML(tip, baseUrl) : generateEmailHTML(tip, baseUrl),
     });
 

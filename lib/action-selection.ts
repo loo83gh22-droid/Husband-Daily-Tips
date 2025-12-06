@@ -20,31 +20,36 @@ interface CategoryScores {
 }
 
 /**
- * Shared function to select tomorrow's action for a user
+ * Shared function to select an action for a specific date for a user
  * This ensures the email and dashboard use the same logic
+ * @param targetDate - The date to select an action for (defaults to tomorrow)
  * @param weeklyRoutineOnly - If true, only select from weekly_routine actions (for Sun-Thu emails)
  */
-export async function selectTomorrowAction(
+export async function selectActionForDate(
   userId: string,
   subscriptionTier: string,
   categoryScores?: CategoryScores,
   userProfile?: UserProfile,
-  weeklyRoutineOnly: boolean = false
+  weeklyRoutineOnly: boolean = false,
+  targetDate?: Date
 ) {
   const adminSupabase = getSupabaseAdmin();
 
-  // Get tomorrow's date in YYYY-MM-DD format
-  const tomorrow = new Date();
-  tomorrow.setDate(tomorrow.getDate() + 1);
-  const tomorrowStr = tomorrow.toISOString().split('T')[0];
+  // Get target date (defaults to tomorrow for backward compatibility)
+  const target = targetDate || (() => {
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    return tomorrow;
+  })();
+  const targetStr = target.toISOString().split('T')[0];
 
-  // Check if user has already been assigned an action for tomorrow
+  // Check if user has already been assigned an action for the target date
   // This could be from a manual change or 7-day event
   const { data: existingAction } = await adminSupabase
     .from('user_daily_actions')
     .select('*, actions(*)')
     .eq('user_id', userId)
-    .eq('date', tomorrowStr)
+    .eq('date', targetStr)
     .single();
 
   if (existingAction?.actions) {
@@ -78,21 +83,21 @@ export async function selectTomorrowAction(
 
   const hiddenActionIds = hiddenActions?.map((ha) => ha.action_id) || [];
 
-  // Get day of week for tomorrow (0 = Sunday, 1 = Monday, ..., 6 = Saturday)
-  const tomorrowDayOfWeek = tomorrow.getDay();
+  // Get day of week for target date (0 = Sunday, 1 = Monday, ..., 6 = Saturday)
+  const targetDayOfWeek = target.getDay();
   
-  // Determine if tomorrow is a work day or day off based on user's work_days
+  // Determine if target date is a work day or day off based on user's work_days
   // If work_days is set, use it; otherwise fall back to weekend/weekday logic
   let isWorkDay = false;
   let isDayOff = false;
   
   if (userProfile?.work_days && Array.isArray(userProfile.work_days) && userProfile.work_days.length > 0) {
-    // User has specified work days - check if tomorrow is a work day
-    isWorkDay = userProfile.work_days.includes(tomorrowDayOfWeek);
+    // User has specified work days - check if target date is a work day
+    isWorkDay = userProfile.work_days.includes(targetDayOfWeek);
     isDayOff = !isWorkDay;
   } else {
     // Fall back to weekend/weekday logic if work_days not set
-    isDayOff = tomorrowDayOfWeek === 0 || tomorrowDayOfWeek === 6; // Sunday or Saturday
+    isDayOff = targetDayOfWeek === 0 || targetDayOfWeek === 6; // Sunday or Saturday
     isWorkDay = !isDayOff;
   }
   
@@ -373,7 +378,7 @@ export async function selectTomorrowAction(
     await adminSupabase.from('user_daily_actions').insert({
       user_id: userId,
       action_id: randomAction.id,
-      date: tomorrowStr,
+      date: targetStr,
     });
 
     return randomAction;
@@ -385,10 +390,39 @@ export async function selectTomorrowAction(
   await adminSupabase.from('user_daily_actions').insert({
     user_id: userId,
     action_id: randomAction.id,
-    date: tomorrowStr,
+    date: targetStr,
   });
 
   return randomAction;
+}
+
+/**
+ * Wrapper function to select tomorrow's action (for backward compatibility)
+ */
+export async function selectTomorrowAction(
+  userId: string,
+  subscriptionTier: string,
+  categoryScores?: CategoryScores,
+  userProfile?: UserProfile,
+  weeklyRoutineOnly: boolean = false
+) {
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  return selectActionForDate(userId, subscriptionTier, categoryScores, userProfile, weeklyRoutineOnly, tomorrow);
+}
+
+/**
+ * Wrapper function to select today's action
+ */
+export async function selectTodayAction(
+  userId: string,
+  subscriptionTier: string,
+  categoryScores?: CategoryScores,
+  userProfile?: UserProfile,
+  weeklyRoutineOnly: boolean = false
+) {
+  const today = new Date();
+  return selectActionForDate(userId, subscriptionTier, categoryScores, userProfile, weeklyRoutineOnly, today);
 }
 
 /**

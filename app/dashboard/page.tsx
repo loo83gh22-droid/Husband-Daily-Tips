@@ -42,13 +42,14 @@ async function getUserData(auth0Id: string) {
   return user;
 }
 
-async function getTomorrowAction(userId: string | null, subscriptionTier: string, categoryScores?: any, userProfile?: { has_kids?: boolean | null; kids_live_with_you?: boolean | null; country?: string | null; work_days?: number[] | null; spouse_birthday?: string | Date | null; show_all_country_actions?: boolean }) {
+async function getTodayAction(userId: string | null, subscriptionTier: string, categoryScores?: any, userProfile?: { has_kids?: boolean | null; kids_live_with_you?: boolean | null; country?: string | null; work_days?: number[] | null; spouse_birthday?: string | Date | null; show_all_country_actions?: boolean }) {
   if (!userId) return null;
 
   // Use the shared action selection function (same logic as email cron)
   // This ensures consistency between email and dashboard
-  const { selectTomorrowAction } = await import('@/lib/action-selection');
-  const action = await selectTomorrowAction(userId, subscriptionTier, categoryScores, userProfile);
+  // Now using TODAY's action so email and dashboard are in sync
+  const { selectTodayAction } = await import('@/lib/action-selection');
+  const action = await selectTodayAction(userId, subscriptionTier, categoryScores, userProfile);
 
   if (!action) {
     return null;
@@ -56,15 +57,14 @@ async function getTomorrowAction(userId: string | null, subscriptionTier: string
 
   // Get the user_daily_actions record to include favorited and completed status
   const adminSupabase = getSupabaseAdmin();
-  const tomorrow = new Date();
-  tomorrow.setDate(tomorrow.getDate() + 1);
-  const tomorrowStr = tomorrow.toISOString().split('T')[0];
+  const today = new Date();
+  const todayStr = today.toISOString().split('T')[0];
 
   const { data: existingAction } = await adminSupabase
     .from('user_daily_actions')
     .select('id, favorited, completed')
     .eq('user_id', userId)
-    .eq('date', tomorrowStr)
+    .eq('date', todayStr)
     .single();
 
   return {
@@ -618,7 +618,7 @@ export default async function Dashboard() {
 
   // If no active 7-day event action, get tomorrow's action
   if (!displayAction) {
-    displayAction = await getTomorrowAction(
+    displayAction = await getTodayAction(
       user.id,
       user.subscription_tier || 'free',
       stats.categoryScores,

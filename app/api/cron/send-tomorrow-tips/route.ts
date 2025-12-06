@@ -12,10 +12,11 @@ const getMondayOfWeek = (date: Date): Date => {
 };
 
 /**
- * Cron endpoint to send tomorrow's tips at 12pm (noon) in each user's timezone
+ * Cron endpoint to send today's action at 12pm (noon) in each user's timezone
  * 
  * This endpoint runs every hour and checks which users should receive emails
  * based on their timezone (12pm in their local time).
+ * Email and dashboard now show the same action (today's) for consistency.
  * 
  * Set up in Vercel (vercel.json):
  * {
@@ -198,10 +199,9 @@ export async function GET(request: Request) {
 
     logger.log(`[Cron Job] Found ${usersToEmail.length} users to email at 12pm in their timezone`);
 
-    // Get tomorrow's date
-    const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    const tomorrowStr = tomorrow.toISOString().split('T')[0];
+    // Get today's date (email now sends today's action, not tomorrow's)
+    const today = new Date();
+    const todayStr = today.toISOString().split('T')[0];
 
     let sentCount = 0;
     let errorCount = 0;
@@ -248,10 +248,11 @@ export async function GET(request: Request) {
 
         // For Sunday-Thursday, only select weekly_routine actions for daily action
         // For Friday-Saturday, use normal selection (planning_required allowed)
-        const { selectTomorrowAction } = await import('@/lib/action-selection');
+        // Use TODAY's action so email and dashboard are in sync
+        const { selectTodayAction } = await import('@/lib/action-selection');
         const weeklyRoutineOnly = dayOfWeek >= 0 && dayOfWeek <= 4; // Sunday-Thursday
         
-        const dailyAction = await selectTomorrowAction(
+        const dailyAction = await selectTodayAction(
           user.id,
           user.subscription_tier || 'free',
           categoryScores,
