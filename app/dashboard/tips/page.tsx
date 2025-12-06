@@ -48,7 +48,7 @@ export default async function TipsPage() {
           {tips.length === 0 ? (
             <div className="bg-slate-900/80 border border-slate-800 rounded-xl p-8 text-center">
               <p className="text-slate-300">
-                You haven't completed any actions yet. Check back tomorrow!
+                You haven't completed any actions yet. Complete your first action to see it here!
               </p>
             </div>
           ) : (
