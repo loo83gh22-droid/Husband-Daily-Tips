@@ -593,9 +593,10 @@ export default function ActionsPageClient({
                           </svg>
                         </>
                       )}
-                    </button>
-                  </div>
-                )}
+                      </button>
+                    </div>
+                  );
+                })()}
               </section>
             );
           })}
