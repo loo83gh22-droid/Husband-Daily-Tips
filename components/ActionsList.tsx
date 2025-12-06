@@ -10,6 +10,7 @@ import { getGuideSlugForAction } from '@/lib/action-guide-mapping';
 import { personalizeText } from '@/lib/personalize-text';
 import { canCompleteFromActionsPage, type SubscriptionStatus } from '@/lib/subscription-utils';
 import { isNewContent } from '@/lib/is-new-content';
+import { getCategoryColors } from '@/lib/category-colors';
 
 interface Action {
   id: string;
@@ -211,7 +212,7 @@ export default function ActionsList({
           return (
             <div
               key={`action-${action.id}`}
-              className={`p-4 rounded-lg border transition-all cursor-pointer hover:border-primary-500/50 ${
+              className={`p-4 rounded-lg border transition-all cursor-pointer hover:border-primary-500/50 ${getCategoryColors(action.category).borderAccent} ${
                 completionCount > 0
                   ? 'bg-primary-500/10 border-primary-500/30'
                   : 'bg-slate-800/30 border-slate-700/50'
@@ -274,6 +275,11 @@ export default function ActionsList({
                         <span className="text-yellow-400 text-base sm:text-lg" title="Favorited">⭐</span>
                       )}
                     </div>
+                  </div>
+                  <div className="mb-2">
+                    <span className={`inline-block px-2 py-0.5 ${getCategoryColors(action.category).badgeBg} ${getCategoryColors(action.category).badgeText} text-xs font-semibold rounded-full border ${getCategoryColors(action.category).badgeBorder}`}>
+                      {action.category}
+                    </span>
                   </div>
                   <p className="text-sm sm:text-base text-slate-400 leading-relaxed mb-2">
                     {personalizeText(action.description, partnerName)}

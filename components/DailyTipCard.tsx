@@ -14,6 +14,7 @@ import { toast } from './Toast';
 import { getGuideSlugForAction } from '@/lib/action-guide-mapping';
 import { isNewContent } from '@/lib/is-new-content';
 import { trackActionCompletion } from '@/lib/analytics';
+import { getCategoryColors } from '@/lib/category-colors';
 
 interface Tip {
   id: string;
@@ -672,14 +673,14 @@ END:VCALENDAR`;
         initial={false}
         animate={isCompleted ? { scale: [1, 1.02, 1], boxShadow: ['0 0 0px rgba(251, 191, 36, 0)', '0 0 20px rgba(251, 191, 36, 0.5)', '0 0 0px rgba(251, 191, 36, 0)'] } : {}}
         transition={{ duration: 0.6, ease: 'easeOut' }}
-        className="bg-gradient-to-br from-slate-900/95 via-amber-950/10 to-slate-900/95 rounded-xl sm:rounded-2xl shadow-2xl p-4 sm:p-6 md:p-8 lg:p-10 mb-4 sm:mb-6 border-2 border-primary-500/20 hover:border-primary-500/30 transition-all relative overflow-hidden"
+        className={`bg-gradient-to-br from-slate-900/95 via-amber-950/10 to-slate-900/95 rounded-xl sm:rounded-2xl shadow-2xl p-4 sm:p-6 md:p-8 lg:p-10 mb-4 sm:mb-6 border-2 border-primary-500/20 hover:border-primary-500/30 transition-all relative overflow-hidden ${getCategoryColors(tip.category).borderAccent}`}
       >
         {/* Subtle glow effect */}
         <div className="absolute inset-0 bg-gradient-to-r from-primary-500/0 via-primary-500/5 to-primary-500/0 opacity-50 pointer-events-none" />
         <div className="relative z-10">
           <div className="mb-4 sm:mb-6">
             <div className="flex items-center justify-between mb-3 gap-3">
-              <span className="inline-block px-3 sm:px-4 py-1 sm:py-1.5 bg-primary-500/20 text-primary-300 text-xs sm:text-sm font-semibold rounded-full border border-primary-500/30">
+              <span className={`inline-block px-3 sm:px-4 py-1 sm:py-1.5 ${getCategoryColors(tip.category).badgeBg} ${getCategoryColors(tip.category).badgeText} text-xs sm:text-sm font-semibold rounded-full border ${getCategoryColors(tip.category).badgeBorder}`}>
                 {tip.category}
               </span>
               <div className="flex items-center gap-2 sm:gap-2 flex-shrink-0">
