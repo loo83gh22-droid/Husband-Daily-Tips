@@ -20,26 +20,12 @@ INSERT INTO quotes (quote_text, author) VALUES
   ('The secret of a happy marriage is finding the right person. You know they''re right if you love to be with them all the time.', NULL),
   ('Marriage is not a noun; it''s a verb. It isn''t something you get. It''s something you do.', 'Barbara De Angelis'),
   
-  -- Humorous observations
-  ('I asked my wife where she wanted to go for our anniversary. She said, "Somewhere I''ve never been!" I told her, "How about the kitchen?"', NULL),
-  ('My wife and I were happy for twenty years. Then we met.', 'Rodney Dangerfield'),
-  ('Marriage is a workshop where the husband works and the wife shops.', NULL),
-  ('I told my wife she was drawing her eyebrows too high. She looked surprised.', NULL),
-  ('My wife is on a tropical food diet. The food has to be from a tropical place. Hawaii, the Caribbean, you know...', NULL),
-  
   -- Encouraging quotes
   ('The best time to plant a tree was 20 years ago. The second best time is now.', 'Chinese Proverb'),
   ('Success is not final, failure is not fatal: it is the courage to continue that counts.', 'Winston Churchill'),
   ('It''s not about being perfect. It''s about being better than you were yesterday.', NULL),
   ('The only way to do great work is to love what you do.', 'Steve Jobs'),
   ('Life is what happens to you while you''re busy making other plans.', 'John Lennon'),
-  
-  -- Fun dad/husband quotes
-  ('I''m not saying I''m Wonder Woman, but have you ever seen me and Wonder Woman in the same room?', NULL),
-  ('I''m not arguing, I''m just passionately expressing my point of view while completely dismissing yours.', NULL),
-  ('I don''t have a favorite child, but I do have a least favorite.', NULL),
-  ('I''m not saying I''m Batman, but you''ve never seen me and Batman in the same room.', NULL),
-  ('I told my wife she should embrace her mistakes. She gave me a hug.', NULL),
   
   -- Relationship wisdom with humor
   ('The best marriages are built on teamwork, a mutual respect, a healthy dose of admiration, and a never-ending portion of love and grace.', 'Fawn Weaver'),
@@ -58,13 +44,6 @@ INSERT INTO quotes (quote_text, author) VALUES
   ('A great husband is one who knows when to speak and when to listen. Most of the time, it''s listen.', NULL),
   ('The secret to a happy marriage? It''s a secret.', NULL),
   ('A good husband is like a good wine. He gets better with age, and you can''t have just one glass.', NULL),
-  
-  -- Fun observations
-  ('I asked my wife if I was the only one she''s been with. She laughed and laughed. I''m still not sure what that means.', NULL),
-  ('My wife told me to stop impersonating a flamingo. I had to put my foot down.', NULL),
-  ('My wife said I should do lunges to stay in shape. That would be a big step forward.', NULL),
-  ('My wife says I never listen to her. At least I think that''s what she said.', NULL),
-  ('I asked my wife what she wanted for our anniversary. She said "Nothing would make me happier." So I got her nothing.', NULL),
   
   -- Encouraging quotes for men
   ('The greatest thing a man can do for his children is to love their mother.', 'Theodore Hesburgh'),
@@ -104,8 +83,4 @@ INSERT INTO quotes (quote_text, author) VALUES
   ('Marriage is a partnership in which both people get to be right, but not at the same time.', NULL),
   ('The secret of a happy marriage is finding the right person. You know they''re right if you love to be with them all the time.', NULL),
   ('A good marriage is like a good wine. It gets better with age.', NULL),
-  ('Marriage is like a fine wine - if tended to properly, it gets better with age.', NULL),
-  
-  -- Additional fun quotes
-  ('I''m not saying I''m Wonder Woman, but have you ever seen me and Wonder Woman in the same room?', NULL),
-  ('I''m not saying I''m Batman, but you''ve never seen me and Batman in the same room.', NULL);
+  ('Marriage is like a fine wine - if tended to properly, it gets better with age.', NULL);
