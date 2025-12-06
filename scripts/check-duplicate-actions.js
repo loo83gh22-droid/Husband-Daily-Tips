@@ -19,10 +19,10 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 async function checkDuplicates() {
   console.log('Checking for duplicate actions...\n');
 
-  // Get all actions
+  // Get all actions (including country to check for country-specific duplicates)
   const { data: actions, error } = await supabase
     .from('actions')
-    .select('id, name, description, category, theme')
+    .select('id, name, description, category, theme, country')
     .order('name');
 
   if (error) {
@@ -32,20 +32,31 @@ async function checkDuplicates() {
 
   console.log(`Total actions: ${actions.length}\n`);
 
-  // Check for exact name duplicates
+  // Check for exact name duplicates (excluding country-specific variations)
   const nameMap = new Map();
   const duplicatesByName = [];
 
   actions.forEach(action => {
     const normalizedName = action.name?.toLowerCase().trim();
+    const key = `${normalizedName}:${action.country || 'all'}`;
+    
     if (nameMap.has(normalizedName)) {
-      duplicatesByName.push({
-        name: action.name,
-        id: action.id,
-        existingId: nameMap.get(normalizedName).id,
-        category: action.category,
-        theme: action.theme,
-      });
+      const existing = nameMap.get(normalizedName);
+      // Only flag as duplicate if they have the same country (or both NULL)
+      if ((existing.country === action.country) || (!existing.country && !action.country)) {
+        duplicatesByName.push({
+          name: action.name,
+          id: action.id,
+          existingId: existing.id,
+          category: action.category,
+          theme: action.theme,
+          country: action.country || 'all countries',
+          existingCountry: existing.country || 'all countries',
+        });
+      } else {
+        // Different countries - not a duplicate, just log it
+        console.log(`  ℹ️  Same name, different countries: "${action.name}" (${action.country || 'all'}) vs (${existing.country || 'all'})`);
+      }
     } else {
       nameMap.set(normalizedName, action);
     }
@@ -108,10 +119,10 @@ async function checkDuplicates() {
     console.log('⚠️  EXACT NAME DUPLICATES FOUND:');
     duplicatesByName.forEach(dup => {
       console.log(`  - "${dup.name}" (ID: ${dup.id}) duplicates (ID: ${dup.existingId})`);
-      console.log(`    Category: ${dup.category}, Theme: ${dup.theme}\n`);
+      console.log(`    Category: ${dup.category}, Theme: ${dup.theme}, Country: ${dup.country}\n`);
     });
   } else {
-    console.log('✅ No exact name duplicates found');
+    console.log('✅ No exact name duplicates found (excluding country-specific variations)');
   }
 
   console.log('\n');
