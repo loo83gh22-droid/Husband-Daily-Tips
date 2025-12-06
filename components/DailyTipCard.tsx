@@ -676,7 +676,21 @@ END:VCALENDAR`;
         className={`bg-gradient-to-br ${getCategoryColors(tip.category).cardBg} rounded-xl sm:rounded-2xl shadow-2xl p-4 sm:p-6 md:p-8 lg:p-10 mb-4 sm:mb-6 ${getCategoryColors(tip.category).cardBorder} ${getCategoryColors(tip.category).cardHoverBorder} ${getCategoryColors(tip.category).borderAccent} transition-all relative overflow-hidden`}
       >
         {/* Category-specific glow effect - OPTION C: Bold */}
-        <div className={`absolute inset-0 bg-gradient-to-r from-transparent via-${getCategoryColors(tip.category).badgeBg.includes('cyan') ? 'cyan' : getCategoryColors(tip.category).badgeBg.includes('purple') ? 'purple' : getCategoryColors(tip.category).badgeBg.includes('emerald') ? 'emerald' : getCategoryColors(tip.category).badgeBg.includes('pink') ? 'pink' : getCategoryColors(tip.category).badgeBg.includes('amber') ? 'amber' : getCategoryColors(tip.category).badgeBg.includes('orange') ? 'orange' : getCategoryColors(tip.category).badgeBg.includes('indigo') ? 'indigo' : 'blue'}-500/10 to-transparent opacity-50 pointer-events-none`} />
+        <div 
+          className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-transparent opacity-50 pointer-events-none"
+          style={{
+            background: `linear-gradient(to right, transparent, ${
+              getCategoryColors(tip.category).badgeBg.includes('cyan') ? 'rgba(6, 182, 212, 0.1)' :
+              getCategoryColors(tip.category).badgeBg.includes('purple') ? 'rgba(168, 85, 247, 0.1)' :
+              getCategoryColors(tip.category).badgeBg.includes('emerald') ? 'rgba(16, 185, 129, 0.1)' :
+              getCategoryColors(tip.category).badgeBg.includes('pink') ? 'rgba(236, 72, 153, 0.1)' :
+              getCategoryColors(tip.category).badgeBg.includes('amber') ? 'rgba(245, 158, 11, 0.1)' :
+              getCategoryColors(tip.category).badgeBg.includes('orange') ? 'rgba(249, 115, 22, 0.1)' :
+              getCategoryColors(tip.category).badgeBg.includes('indigo') ? 'rgba(99, 102, 241, 0.1)' :
+              'rgba(59, 130, 246, 0.1)'
+            }, transparent)`
+          }}
+        />
         <div className="relative z-10">
           <div className="mb-4 sm:mb-6">
             <div className="flex items-center justify-between mb-3 gap-3">
