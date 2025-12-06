@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { isNewContent } from '@/lib/is-new-content';
+import { getCategoryColors } from '@/lib/category-colors';
 
 interface Badge {
   id: string;
@@ -10,6 +11,7 @@ interface Badge {
   description: string;
   icon: string;
   badge_type: 'consistency' | 'big_idea';
+  category?: string | null;
   earned_at?: string;
   created_at?: string;
   progress?: {
@@ -124,6 +126,10 @@ export default function BadgesDisplay({ userId, hasPremiumAccess = false }: Badg
     const percentage = progress.percentage || 0;
     const isVeryClose = percentage >= 90;
 
+    // Get category colors - use badge category if available, otherwise default
+    const badgeCategory = badge.category || 'Consistency';
+    const colors = getCategoryColors(badgeCategory);
+
     // Get motivational message based on completion
     let motivationalMessage = '';
     if (isAlmostThere) {
@@ -141,7 +147,7 @@ export default function BadgesDisplay({ userId, hasPremiumAccess = false }: Badg
         key={badge.id}
         className={`p-2 bg-slate-800/30 rounded-lg border transition-all ${
           isVeryClose
-            ? 'border-primary-500/50 shadow-lg shadow-primary-500/10'
+            ? `${colors.badgeBorder} shadow-lg ${colors.badgeBg.replace('/20', '/10')}`
             : 'border-slate-700/50'
         }`}
         title={`${badge.name}: ${badge.description}`}
@@ -161,7 +167,7 @@ export default function BadgesDisplay({ userId, hasPremiumAccess = false }: Badg
                 </span>
               )}
               {isAlmostThere && motivationalMessage && (
-                <span className="text-[9px] text-primary-400 font-medium">
+                <span className={`text-[9px] ${colors.badgeText} font-medium`}>
                   {motivationalMessage}
                 </span>
               )}
@@ -169,10 +175,19 @@ export default function BadgesDisplay({ userId, hasPremiumAccess = false }: Badg
             <div className="flex items-center gap-2">
               <div className="flex-1 bg-slate-700/50 rounded-full h-1 overflow-hidden">
                 <div
-                  className={`h-full rounded-full transition-all ${
-                    isVeryClose ? 'bg-primary-400' : 'bg-primary-500'
-                  }`}
-                  style={{ width: `${percentage}%` }}
+                  className="h-full rounded-full transition-all"
+                  style={{ 
+                    width: `${percentage}%`,
+                    backgroundColor: colors.badgeBg.includes('cyan') ? 'rgb(6 182 212)' :
+                                    colors.badgeBg.includes('purple') ? 'rgb(168 85 247)' :
+                                    colors.badgeBg.includes('emerald') ? 'rgb(16 185 129)' :
+                                    colors.badgeBg.includes('pink') ? 'rgb(236 72 153)' :
+                                    colors.badgeBg.includes('amber') ? 'rgb(245 158 11)' :
+                                    colors.badgeBg.includes('orange') ? 'rgb(249 115 22)' :
+                                    colors.badgeBg.includes('indigo') ? 'rgb(99 102 241)' :
+                                    colors.badgeBg.includes('blue') ? 'rgb(59 130 246)' :
+                                    'rgb(14 165 233)'
+                  }}
                 />
               </div>
               <span className="text-[9px] text-slate-400 font-medium whitespace-nowrap">

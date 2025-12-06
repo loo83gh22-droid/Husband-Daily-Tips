@@ -6,6 +6,7 @@ import { calculateBadgeProgress } from '@/lib/badges';
 import Link from 'next/link';
 import BackToTop from '@/components/BackToTop';
 import { isNewContent } from '@/lib/is-new-content';
+import { getCategoryColors } from '@/lib/category-colors';
 
 /**
  * Filter badges to only show progressive badges when previous is completed
@@ -375,8 +376,11 @@ export default async function BadgesPage() {
               const themeBadges = badgeThemes[theme];
               if (!themeBadges || themeBadges.length === 0) return null;
 
+              // Get category colors for this theme
+              const categoryColors = getCategoryColors(theme);
+              
               return (
-                <section key={theme} className="bg-slate-900/50 border border-slate-800 rounded-xl p-6 md:p-8 scroll-mt-24">
+                <section key={theme} className={`bg-slate-900/50 border ${categoryColors.cardBorder} rounded-xl p-6 md:p-8 scroll-mt-24`}>
                   <h2 className="text-xl md:text-2xl font-semibold text-slate-50 mb-6 flex items-center gap-2">
                     <span>
                       {theme === 'Communication' ? '💬' : 
@@ -427,7 +431,7 @@ export default async function BadgesPage() {
                           key={badge.id}
                           className={`p-4 rounded-lg border transition-all scroll-mt-20 ${
                             isEarned
-                              ? 'bg-primary-500/10 border-primary-500/30'
+                              ? `${categoryColors.badgeBg} ${categoryColors.badgeBorder}`
                               : 'bg-slate-800/30 border-slate-700/50 opacity-60'
                           }`}
                         >
@@ -455,8 +459,19 @@ export default async function BadgesPage() {
                                 <div className="flex items-center justify-center gap-2 mb-1">
                                   <div className="flex-1 bg-slate-700/50 rounded-full h-2 overflow-hidden max-w-[120px]">
                                     <div
-                                      className="bg-primary-500 h-full rounded-full transition-all"
-                                      style={{ width: `${progress.percentage}%` }}
+                                      className="h-full rounded-full transition-all"
+                                      style={{ 
+                                        width: `${progress.percentage}%`,
+                                        backgroundColor: categoryColors.badgeBg.includes('cyan') ? 'rgb(6 182 212)' :
+                                                        categoryColors.badgeBg.includes('purple') ? 'rgb(168 85 247)' :
+                                                        categoryColors.badgeBg.includes('emerald') ? 'rgb(16 185 129)' :
+                                                        categoryColors.badgeBg.includes('pink') ? 'rgb(236 72 153)' :
+                                                        categoryColors.badgeBg.includes('amber') ? 'rgb(245 158 11)' :
+                                                        categoryColors.badgeBg.includes('orange') ? 'rgb(249 115 22)' :
+                                                        categoryColors.badgeBg.includes('indigo') ? 'rgb(99 102 241)' :
+                                                        categoryColors.badgeBg.includes('blue') ? 'rgb(59 130 246)' :
+                                                        'rgb(14 165 233)'
+                                      }}
                                     />
                                   </div>
                                   <span className="text-[10px] text-slate-400 font-medium whitespace-nowrap">
