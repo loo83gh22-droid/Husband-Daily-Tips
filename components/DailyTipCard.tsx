@@ -673,7 +673,7 @@ END:VCALENDAR`;
         initial={false}
         animate={isCompleted ? { scale: [1, 1.02, 1], boxShadow: ['0 0 0px rgba(251, 191, 36, 0)', '0 0 20px rgba(251, 191, 36, 0.5)', '0 0 0px rgba(251, 191, 36, 0)'] } : {}}
         transition={{ duration: 0.6, ease: 'easeOut' }}
-        className={`bg-gradient-to-br from-slate-900/95 via-amber-950/10 to-slate-900/95 rounded-xl sm:rounded-2xl shadow-2xl p-4 sm:p-6 md:p-8 lg:p-10 mb-4 sm:mb-6 border-2 border-primary-500/20 hover:border-primary-500/30 transition-all relative overflow-hidden ${getCategoryColors(tip.category).borderAccent}`}
+        className={`bg-gradient-to-br ${getCategoryColors(tip.category).cardBg} rounded-xl sm:rounded-2xl shadow-2xl p-4 sm:p-6 md:p-8 lg:p-10 mb-4 sm:mb-6 border-2 ${getCategoryColors(tip.category).cardBorder} ${getCategoryColors(tip.category).cardHoverBorder} ${getCategoryColors(tip.category).borderAccent} transition-all relative overflow-hidden`}
       >
         {/* Subtle glow effect */}
         <div className="absolute inset-0 bg-gradient-to-r from-primary-500/0 via-primary-500/5 to-primary-500/0 opacity-50 pointer-events-none" />
