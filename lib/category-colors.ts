@@ -108,15 +108,15 @@ export function getCategoryColors(category: string): CategoryColorScheme {
       cardHoverBorder: 'hover:border-indigo-500/50',
     },
     
-    // Quality Time - Sky Blue (calm, togetherness)
+    // Quality Time - Blue (calm, togetherness) - Changed from Sky Blue to regular Blue for better distinction from Reconnection
     'Quality Time': {
-      badgeBg: 'bg-sky-500/20',
-      badgeText: 'text-sky-300',
-      badgeBorder: 'border-sky-500/30',
-      borderAccent: 'border-l-4 border-sky-500/60',
-      cardBg: 'from-slate-900/95 via-sky-950/20 to-slate-900/95',
-      cardBorder: 'border-sky-500/30',
-      cardHoverBorder: 'hover:border-sky-500/50',
+      badgeBg: 'bg-blue-500/20',
+      badgeText: 'text-blue-300',
+      badgeBorder: 'border-blue-500/30',
+      borderAccent: 'border-l-4 border-blue-500/60',
+      cardBg: 'from-slate-900/95 via-blue-950/20 to-slate-900/95',
+      cardBorder: 'border-blue-500/30',
+      cardHoverBorder: 'hover:border-blue-500/50',
     },
   };
 
