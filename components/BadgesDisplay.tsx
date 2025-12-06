@@ -145,10 +145,10 @@ export default function BadgesDisplay({ userId, hasPremiumAccess = false }: Badg
     return (
       <div
         key={badge.id}
-        className={`p-2 bg-gradient-to-br ${colors.cardBg} rounded-lg transition-all ${
+        className={`p-2 bg-slate-800/30 rounded-lg border transition-all ${
           isVeryClose
-            ? `border-2 ${colors.cardBorder} shadow-lg ${colors.badgeBg.replace('/20', '/10')}`
-            : `border ${colors.cardBorder.replace('border-2', 'border')}`
+            ? `${colors.badgeBorder} shadow-lg ${colors.badgeBg.replace('/20', '/10')}`
+            : 'border-slate-700/50'
         }`}
         title={`${badge.name}: ${badge.description}`}
       >

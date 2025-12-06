@@ -212,7 +212,7 @@ export default function ActionsList({
           return (
             <div
               key={`action-${action.id}`}
-              className={`p-4 rounded-lg transition-all cursor-pointer bg-gradient-to-br ${getCategoryColors(action.category).cardBg} ${getCategoryColors(action.category).cardBorder} ${getCategoryColors(action.category).cardHoverBorder} ${getCategoryColors(action.category).borderAccent}`}
+              className={`p-4 rounded-lg border-2 transition-all cursor-pointer bg-gradient-to-br ${getCategoryColors(action.category).cardBg} ${getCategoryColors(action.category).cardBorder} ${getCategoryColors(action.category).cardHoverBorder} ${getCategoryColors(action.category).borderAccent}`}
               onClick={(e) => {
                 // Don't trigger if clicking the + button or links
                 const target = e.target as HTMLElement;
