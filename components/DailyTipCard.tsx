@@ -673,10 +673,10 @@ END:VCALENDAR`;
         initial={false}
         animate={isCompleted ? { scale: [1, 1.02, 1], boxShadow: ['0 0 0px rgba(251, 191, 36, 0)', '0 0 20px rgba(251, 191, 36, 0.5)', '0 0 0px rgba(251, 191, 36, 0)'] } : {}}
         transition={{ duration: 0.6, ease: 'easeOut' }}
-        className={`bg-gradient-to-br ${getCategoryColors(tip.category).cardBg} rounded-xl sm:rounded-2xl shadow-2xl p-4 sm:p-6 md:p-8 lg:p-10 mb-4 sm:mb-6 border-2 ${getCategoryColors(tip.category).cardBorder} ${getCategoryColors(tip.category).cardHoverBorder} ${getCategoryColors(tip.category).borderAccent} transition-all relative overflow-hidden`}
+        className={`bg-gradient-to-br ${getCategoryColors(tip.category).cardBg} rounded-xl sm:rounded-2xl shadow-2xl p-4 sm:p-6 md:p-8 lg:p-10 mb-4 sm:mb-6 ${getCategoryColors(tip.category).cardBorder} ${getCategoryColors(tip.category).cardHoverBorder} ${getCategoryColors(tip.category).borderAccent} transition-all relative overflow-hidden`}
       >
-        {/* Subtle glow effect */}
-        <div className="absolute inset-0 bg-gradient-to-r from-primary-500/0 via-primary-500/5 to-primary-500/0 opacity-50 pointer-events-none" />
+        {/* Category-specific glow effect - OPTION C: Bold */}
+        <div className={`absolute inset-0 bg-gradient-to-r from-transparent via-${getCategoryColors(tip.category).badgeBg.includes('cyan') ? 'cyan' : getCategoryColors(tip.category).badgeBg.includes('purple') ? 'purple' : getCategoryColors(tip.category).badgeBg.includes('emerald') ? 'emerald' : getCategoryColors(tip.category).badgeBg.includes('pink') ? 'pink' : getCategoryColors(tip.category).badgeBg.includes('amber') ? 'amber' : getCategoryColors(tip.category).badgeBg.includes('orange') ? 'orange' : getCategoryColors(tip.category).badgeBg.includes('indigo') ? 'indigo' : 'blue'}-500/10 to-transparent opacity-50 pointer-events-none`} />
         <div className="relative z-10">
           <div className="mb-4 sm:mb-6">
             <div className="flex items-center justify-between mb-3 gap-3">

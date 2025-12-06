@@ -429,10 +429,10 @@ export default async function BadgesPage() {
                         <div
                           id={badgeSlug}
                           key={badge.id}
-                          className={`p-4 rounded-lg border transition-all scroll-mt-20 ${
+                          className={`p-4 rounded-lg transition-all scroll-mt-20 ${
                             isEarned
-                              ? `${categoryColors.badgeBg} ${categoryColors.badgeBorder}`
-                              : 'bg-slate-800/30 border-slate-700/50 opacity-60'
+                              ? `bg-gradient-to-br ${categoryColors.cardBg} border-2 ${categoryColors.cardBorder} ${categoryColors.badgeBg}`
+                              : 'bg-slate-800/30 border border-slate-700/50 opacity-60'
                           }`}
                         >
                           <div className="text-center">
