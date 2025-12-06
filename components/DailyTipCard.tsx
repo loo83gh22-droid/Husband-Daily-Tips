@@ -13,6 +13,7 @@ import { personalizeText } from '@/lib/personalize-text';
 import { toast } from './Toast';
 import { getGuideSlugForAction } from '@/lib/action-guide-mapping';
 import { isNewContent } from '@/lib/is-new-content';
+import { trackActionCompletion } from '@/lib/analytics';
 
 interface Tip {
   id: string;
@@ -178,6 +179,15 @@ export default function DailyTipCard({ tip, subscriptionTier = 'free', onActionR
       const data = await response.json();
       setIsCompleted(true);
       setHealthIncrease(healthIncreaseAmount);
+
+      // Track action completion in Google Analytics
+      if (tip.isAction) {
+        trackActionCompletion(
+          tip.name || tip.title || 'Unknown Action',
+          tip.category || tip.theme || 'general',
+          tip.id
+        );
+      }
 
       // Only show celebration for milestones (badges earned or significant achievements)
       const hasNewBadges = data.newlyEarnedBadges && data.newlyEarnedBadges.length > 0;

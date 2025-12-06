@@ -3,6 +3,7 @@ import { getSupabaseAdmin } from '@/lib/supabase';
 import DashboardNav from '@/components/DashboardNav';
 import SubscriptionPlans from '@/components/SubscriptionPlans';
 import BrandLogo from '@/components/BrandLogo';
+import AnalyticsTracker from '@/components/AnalyticsTracker';
 import Link from 'next/link';
 
 async function getUserSubscription(auth0Id: string) {
@@ -63,7 +64,7 @@ async function getUserSubscription(auth0Id: string) {
 export default async function SubscriptionPage({
   searchParams,
 }: {
-  searchParams: { upgrade?: string };
+  searchParams: { upgrade?: string; success?: string };
 }) {
   const session = await getSession();
   const isLoggedIn = !!session?.user;
@@ -142,8 +143,18 @@ export default async function SubscriptionPage({
     },
   ];
 
+  // Check for subscription success
+  const subscriptionSuccess = searchParams?.success === 'true';
+  const subscriptionPrice = 7; // Premium price
+
   return (
     <div className="min-h-screen bg-slate-950">
+      {isLoggedIn && (
+        <AnalyticsTracker
+          subscriptionTier={subscriptionInfo.tier}
+          subscriptionPrice={subscriptionSuccess ? subscriptionPrice : undefined}
+        />
+      )}
       {isLoggedIn ? (
         <DashboardNav />
       ) : (

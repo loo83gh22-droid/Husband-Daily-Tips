@@ -23,6 +23,7 @@ import HashScrollHandler from '@/components/HashScrollHandler';
 import ReferralCard from '@/components/ReferralCard';
 import GettingStarted from '@/components/GettingStarted';
 import FreeFloatingQuote from '@/components/FreeFloatingQuote';
+import AnalyticsTracker from '@/components/AnalyticsTracker';
 import Link from 'next/link';
 
 async function getUserData(auth0Id: string) {
@@ -668,8 +669,17 @@ export default async function Dashboard() {
 
   const lastActionDate = lastAction?.date || undefined;
 
+  // Check if user is new (created in last 5 minutes) for signup tracking
+  const userCreatedAt = user.created_at ? new Date(user.created_at) : null;
+  const isNewUser = userCreatedAt && (Date.now() - userCreatedAt.getTime()) < 5 * 60 * 1000; // 5 minutes
+
   return (
     <div className="min-h-screen bg-slate-950">
+      <AnalyticsTracker
+        isNewUser={!!isNewUser}
+        surveyCompleted={user.survey_completed || false}
+        subscriptionTier={subscriptionTier}
+      />
       <HashScrollHandler />
       <KeyboardShortcuts />
       <OnboardingTour />

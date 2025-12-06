@@ -172,8 +172,8 @@ export default function SurveyForm({ userId, questions, isPublic = false }: Surv
         throw new Error(errorMessage);
       }
 
-      // Redirect to dashboard after successful submission
-      router.push('/dashboard');
+      // Redirect to dashboard after successful submission with survey_completed param
+      router.push('/dashboard?survey_completed=true');
     } catch (err) {
       console.error('Error submitting survey:', err);
       setError(err instanceof Error ? err.message : 'Failed to submit survey. Please try again.');
