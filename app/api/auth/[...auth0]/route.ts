@@ -161,7 +161,7 @@ async function afterCallback(req: NextRequest, session: Session | null | undefin
                         <div style="background-color: #f3f4f6; border-radius: 8px; padding: 20px; margin-bottom: 30px;">
                           <h2 style="color: #1f2937; font-size: 18px; margin: 0 0 15px 0;">What to expect:</h2>
                           <ul style="color: #374151; font-size: 14px; margin: 0; padding-left: 20px;">
-                            <li style="margin-bottom: 8px;"><strong>Daily Action Emails:</strong> You'll receive your action every day at 12 noon in your timezone (you can set this in your Account Settings)</li>
+                            <li style="margin-bottom: 8px;"><strong>Daily Action Emails:</strong> You'll receive your action every day at 6am in your timezone (you can set this in your Account Settings)</li>
                             <li style="margin-bottom: 8px;"><strong>Personalized Actions:</strong> Based on your survey, relationship goals, and preferences</li>
                             <li style="margin-bottom: 8px;"><strong>Progress Tracking:</strong> Track your Husband Health score, streaks, and badges</li>
                             <li style="margin-bottom: 8px;"><strong>Private Journal:</strong> Log your wins and see your progress over time</li>

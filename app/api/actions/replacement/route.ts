@@ -34,10 +34,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Get tomorrow's date (dashboard shows tomorrow's action)
-    const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    const tomorrowStr = tomorrow.toISOString().split('T')[0];
+    // Get today's date (dashboard shows today's action)
+    const today = new Date();
+    const todayStr = today.toISOString().split('T')[0];
 
     // Get actions user hasn't seen in the last 30 days
     const thirtyDaysAgo = new Date();
@@ -247,13 +246,13 @@ export async function POST(request: NextRequest) {
     // Pick random action from available
     const randomAction = actions[Math.floor(Math.random() * actions.length)];
 
-    // Save to user_daily_actions for tomorrow (replace existing if any)
-    // First, delete any existing action for tomorrow
+    // Save to user_daily_actions for today (replace existing if any)
+    // First, delete any existing action for today
     await adminSupabase
       .from('user_daily_actions')
       .delete()
       .eq('user_id', user.id)
-      .eq('date', tomorrowStr);
+      .eq('date', todayStr);
 
     // Insert the new replacement action
     const { data: newAction, error: insertError } = await adminSupabase
@@ -261,7 +260,7 @@ export async function POST(request: NextRequest) {
       .insert({
         user_id: user.id,
         action_id: randomAction.id,
-        date: tomorrowStr,
+        date: todayStr,
       })
       .select()
       .single();
