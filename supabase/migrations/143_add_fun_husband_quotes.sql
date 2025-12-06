@@ -106,9 +106,6 @@ INSERT INTO quotes (quote_text, author) VALUES
   ('A good marriage is like a good wine. It gets better with age.', NULL),
   ('Marriage is like a fine wine - if tended to properly, it gets better with age.', NULL),
   
-  -- More fun quotes
+  -- Additional fun quotes
   ('I''m not saying I''m Wonder Woman, but have you ever seen me and Wonder Woman in the same room?', NULL),
-  ('I''m not saying I''m Batman, but you''ve never seen me and Batman in the same room.', NULL),
-  ('I told my wife she was drawing her eyebrows too high. She looked surprised.', NULL),
-  ('I told my wife she should embrace her mistakes. She gave me a hug.', NULL),
-  ('Marriage is 50-50. I do 50% of what I want, and she does 50% of what she wants. It just so happens that 50% of what she wants is for me to do the other 50%.', NULL);
+  ('I''m not saying I''m Batman, but you''ve never seen me and Batman in the same room.', NULL);
