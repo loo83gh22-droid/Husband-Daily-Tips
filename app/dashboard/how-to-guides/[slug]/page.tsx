@@ -6470,6 +6470,157 @@ If she sends photos, respond. Show interest. Ask questions. Make it a two-way co
 
 You shared your day through photos. You made her feel included in your world. You created a visual conversation. She felt connected to your daily life. The distance felt smaller. That's a win.`,
   },
+  'give-wife-massage': {
+    id: 63,
+    title: 'Give Your Wife a Massage Tonight',
+    category: 'Intimacy',
+    difficulty: 'Easy',
+    time: '15-30 min',
+    excerpt: 'Learn how to give a meaningful massage that helps her relax and feel cared for. Focus on her comfort and relaxation, not your agenda.',
+    content: `## Why This Matters
+
+A good massage shows you care about her physical comfort and well-being. It's an act of service and physical touch combined. It relieves stress, creates intimacy, and demonstrates that you notice when she's tense or tired. It's one of the most direct ways to show love through touch.
+
+## The Secret: It's About Her, Not You
+
+This massage is for her relaxation and comfort. It's not about getting something in return. It's not about turning it into something else. It's about giving her the gift of physical relief and care.
+
+## How to Give a Meaningful Massage
+
+### 1. Set the Scene
+
+Create a relaxing environment:
+- Dim the lights or use candles
+- Put on soft, calming music (or silence)
+- Make sure the room is warm enough
+- Have lotion or massage oil ready
+- Have towels nearby
+- Put phones away and eliminate distractions
+
+### 2. Ask What She Needs
+
+Before you start, ask:
+- "Where are you holding tension?"
+- "Is there a specific area that hurts?"
+- "Do you want a full body or just focus on one area?"
+- "How firm do you like the pressure?"
+
+Listen to her answers. Don't assume you know what she needs.
+
+### 3. Start Gently
+
+Begin with gentle, broad strokes. Don't dig in right away:
+- Use both hands
+- Start with her shoulders and back (if doing full body)
+- Use slow, smooth motions
+- Let her body warm up before applying more pressure
+
+### 4. Focus on Common Tension Areas
+
+Most people hold tension in:
+- **Neck and shoulders**: Upper back area, where the neck meets the shoulders
+- **Lower back**: Above the hips, along the spine
+- **Feet**: Especially if she's been standing or walking a lot
+- **Hands and wrists**: If she works at a desk or computer
+
+Pay attention to areas that feel tight or knotted.
+
+### 5. Adjust Pressure Based on Her Feedback
+
+Ask during the massage:
+- "Is this pressure okay?"
+- "Too hard or too soft?"
+- "Does this feel good?"
+
+Watch her body language. If she tenses up, you're too hard. If she seems unfazed, you might be too gentle.
+
+### 6. Use Lotion or Oil
+
+Dry hands on skin creates friction and isn't comfortable:
+- Warm the lotion in your hands first
+- Use enough that your hands glide smoothly
+- Consider scented lotion or essential oils (if she likes that)
+- Keep towels nearby for cleanup
+
+### 7. Don't Rush
+
+Take your time:
+- A meaningful massage takes at least 15 minutes
+- Don't rush through areas
+- Spend extra time on areas that are tight
+- Let her relax into it
+
+### 8. End Gently
+
+When you're done:
+- Finish with gentle, light strokes
+- Let her know you're done
+- Give her a moment before she needs to move
+- Offer water if she wants it
+
+## What to Focus On
+
+**Areas that usually need attention:**
+- Upper back and shoulders (most common)
+- Neck (especially the base of the skull)
+- Lower back (above the hips)
+- Feet (especially the arch and heel)
+- Hands (palms and wrists)
+
+**Techniques:**
+- **Kneading**: Use your palms and fingers to work in circular motions
+- **Long strokes**: Smooth, gliding motions from top to bottom
+- **Circular motions**: Small circles with your thumbs on specific spots
+- **Gentle pressure**: Hold pressure on tight spots for a few seconds, then release
+
+## What Makes It Meaningful
+
+**You're present:** You're focused on her, not distracted
+
+**You're attentive:** You notice what she needs and adjust
+
+**You're patient:** You take your time and don't rush
+
+**You're focused on her comfort:** It's about what feels good to her, not what you want
+
+**You're giving without expecting:** This is a gift, not a transaction
+
+## Common Mistakes
+
+**Making it about you:** Don't turn it into something sexual unless she clearly wants that. This is about her relaxation.
+
+**Rushing:** Taking 5 minutes isn't a real massage. Take your time.
+
+**Not asking what she needs:** Don't assume you know where she's tense. Ask.
+
+**Too hard or too soft:** Pay attention to her feedback and adjust.
+
+**Distractions:** Don't have your phone out or be watching TV. Be present.
+
+**Expecting something in return:** This is a gift. Don't make it transactional.
+
+**Not having the right setup:** Cold room, no lotion, bright lights—these all matter.
+
+**Getting impatient:** If she doesn't relax immediately, be patient. Sometimes it takes a few minutes.
+
+## Making It Special
+
+**Do it regularly:** Make it a habit, not a one-time thing
+
+**Pay attention:** Notice when she's stressed or tense
+
+**Make it unexpected:** Surprise her with a massage when she needs it
+
+**Create a routine:** Maybe Sunday nights, or after a long week
+
+**Learn what she likes:** Remember the spots that make her relax
+
+**Vary it:** Sometimes full body, sometimes just feet, sometimes just shoulders
+
+## The Win
+
+You gave her a massage. She relaxed. She felt cared for. You showed love through touch. The stress melted away. You created intimacy and connection. That's a win.`,
+  },
 };
 
 export default async function GuidePage({ params }: { params: { slug: string } }) {

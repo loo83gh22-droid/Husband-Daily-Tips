@@ -32,6 +32,9 @@ export function getGuideSlugForAction(actionName: string, actionTheme?: string):
     'ask follow-up questions': 'ask-better-questions',
     'remember something she told you': 'create-love-map',
     'have a real conversation': 'have-20-minute-conversation',
+    'text your wife right now': 'daily-connection-messages',
+    'text your wife right now!': 'daily-connection-messages',
+    'send your wife a text': 'daily-connection-messages',
 
     // Intimacy
     'speak her love language': 'practice-love-languages',
@@ -45,6 +48,9 @@ export function getGuideSlugForAction(actionName: string, actionTheme?: string):
     'practice turning toward': 'practice-turning-toward',
     'non-sexual physical touch': 'non-sexual-physical-touch',
     'give non-sexual physical affection': 'non-sexual-physical-touch',
+    'give your wife a massage tonight': 'give-wife-massage',
+    'give her a massage': 'give-wife-massage',
+    'massage your wife': 'give-wife-massage',
     'express gratitude for who she is': 'share-gratitude-for-character',
     'practice acts of service': 'practice-acts-of-service',
     'practice words of affirmation': 'practice-words-of-affirmation',
@@ -369,8 +375,11 @@ export function getGuideSlugForAction(actionName: string, actionTheme?: string):
     { keywords: ['video call', 'video chat', 'video message', 'surprise video'], slug: 'stay-connected-video-calls' },
     { keywords: ['care package', 'send package', 'thoughtful gift'], slug: 'send-thoughtful-care-package' },
     { keywords: ['plan visit', 'future visit', 'next visit', 'plan trip'], slug: 'plan-future-visit' },
-    { keywords: ['good morning', 'good night', 'morning message', 'night message', 'daily message'], slug: 'daily-connection-messages' },
+    { keywords: ['good morning', 'good night', 'morning message', 'night message', 'daily message', 'text your wife', 'send text'], slug: 'daily-connection-messages' },
     { keywords: ['share photos', 'send photos', 'photo message', 'daily photos'], slug: 'share-day-through-photos' },
+
+    // Intimacy
+    { keywords: ['massage', 'give massage', 'back rub', 'shoulder rub'], slug: 'give-wife-massage' },
 
     // Gratitude
     { keywords: ['gratitude list', 'grateful'], slug: 'gratitude-list' },
