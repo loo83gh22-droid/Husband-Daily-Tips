@@ -380,7 +380,7 @@ export default async function BadgesPage() {
               const categoryColors = getCategoryColors(theme);
               
               return (
-                <section key={theme} className={`bg-slate-900/50 border ${categoryColors.cardBorder} rounded-xl p-6 md:p-8 scroll-mt-24`}>
+                <section key={theme} className={`bg-gradient-to-br ${categoryColors.cardBg} border-2 ${categoryColors.cardBorder} rounded-xl p-6 md:p-8 scroll-mt-24 ${categoryColors.cardHoverBorder}`}>
                   <h2 className="text-xl md:text-2xl font-semibold text-slate-50 mb-6 flex items-center gap-2">
                     <span>
                       {theme === 'Communication' ? '💬' : 
@@ -429,10 +429,10 @@ export default async function BadgesPage() {
                         <div
                           id={badgeSlug}
                           key={badge.id}
-                          className={`p-4 rounded-lg border transition-all scroll-mt-20 ${
+                          className={`p-4 rounded-lg transition-all scroll-mt-20 ${
                             isEarned
-                              ? `${categoryColors.badgeBg} ${categoryColors.badgeBorder}`
-                              : 'bg-slate-800/30 border-slate-700/50 opacity-60'
+                              ? `bg-gradient-to-br ${categoryColors.cardBg} border-2 ${categoryColors.cardBorder} ${categoryColors.badgeBg}`
+                              : 'bg-slate-800/30 border border-slate-700/50 opacity-60'
                           }`}
                         >
                           <div className="text-center">

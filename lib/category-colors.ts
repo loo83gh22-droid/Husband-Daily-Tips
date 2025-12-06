@@ -31,15 +31,15 @@ export function getCategoryColors(category: string): CategoryColorScheme {
   const normalizedCategory = category.trim();
   
   const colorMap: Record<string, CategoryColorScheme> = {
-    // Communication - Blue/Cyan (trust, clarity)
+    // Communication - Blue/Cyan (trust, clarity) - Option C: Bold
     'Communication': {
       badgeBg: 'bg-cyan-500/20',
       badgeText: 'text-cyan-300',
       badgeBorder: 'border-cyan-500/30',
-      borderAccent: 'border-l-4 border-cyan-500/60',
-      cardBg: 'from-slate-900/95 via-cyan-950/20 to-slate-900/95',
-      cardBorder: 'border-cyan-500/30',
-      cardHoverBorder: 'hover:border-cyan-500/50',
+      borderAccent: 'border-l-4 border-cyan-500',
+      cardBg: 'from-slate-900/95 via-cyan-950/40 to-slate-900/95',
+      cardBorder: 'border-2 border-cyan-500/50',
+      cardHoverBorder: 'hover:border-cyan-500',
     },
     
     // Intimacy - Purple/Violet (deep connection)
@@ -47,10 +47,10 @@ export function getCategoryColors(category: string): CategoryColorScheme {
       badgeBg: 'bg-purple-500/20',
       badgeText: 'text-purple-300',
       badgeBorder: 'border-purple-500/30',
-      borderAccent: 'border-l-4 border-purple-500/60',
-      cardBg: 'from-slate-900/95 via-purple-950/20 to-slate-900/95',
-      cardBorder: 'border-purple-500/30',
-      cardHoverBorder: 'hover:border-purple-500/50',
+      borderAccent: 'border-l-4 border-purple-500',
+      cardBg: 'from-slate-900/95 via-purple-950/40 to-slate-900/95',
+      cardBorder: 'border-2 border-purple-500/50',
+      cardHoverBorder: 'hover:border-purple-500',
     },
     
     // Partnership - Teal/Emerald (balance, teamwork)
@@ -58,10 +58,10 @@ export function getCategoryColors(category: string): CategoryColorScheme {
       badgeBg: 'bg-emerald-500/20',
       badgeText: 'text-emerald-300',
       badgeBorder: 'border-emerald-500/30',
-      borderAccent: 'border-l-4 border-emerald-500/60',
-      cardBg: 'from-slate-900/95 via-emerald-950/20 to-slate-900/95',
-      cardBorder: 'border-emerald-500/30',
-      cardHoverBorder: 'hover:border-emerald-500/50',
+      borderAccent: 'border-l-4 border-emerald-500',
+      cardBg: 'from-slate-900/95 via-emerald-950/40 to-slate-900/95',
+      cardBorder: 'border-2 border-emerald-500/50',
+      cardHoverBorder: 'hover:border-emerald-500',
     },
     
     // Romance - Pink/Rose (love, passion)
@@ -69,10 +69,10 @@ export function getCategoryColors(category: string): CategoryColorScheme {
       badgeBg: 'bg-pink-500/20',
       badgeText: 'text-pink-300',
       badgeBorder: 'border-pink-500/30',
-      borderAccent: 'border-l-4 border-pink-500/60',
-      cardBg: 'from-slate-900/95 via-pink-950/20 to-slate-900/95',
-      cardBorder: 'border-pink-500/30',
-      cardHoverBorder: 'hover:border-pink-500/50',
+      borderAccent: 'border-l-4 border-pink-500',
+      cardBg: 'from-slate-900/95 via-pink-950/40 to-slate-900/95',
+      cardBorder: 'border-2 border-pink-500/50',
+      cardHoverBorder: 'hover:border-pink-500',
     },
     
     // Gratitude - Gold/Amber (warmth, appreciation)
@@ -80,10 +80,10 @@ export function getCategoryColors(category: string): CategoryColorScheme {
       badgeBg: 'bg-amber-500/20',
       badgeText: 'text-amber-300',
       badgeBorder: 'border-amber-500/30',
-      borderAccent: 'border-l-4 border-amber-500/60',
-      cardBg: 'from-slate-900/95 via-amber-950/20 to-slate-900/95',
-      cardBorder: 'border-amber-500/30',
-      cardHoverBorder: 'hover:border-amber-500/50',
+      borderAccent: 'border-l-4 border-amber-500',
+      cardBg: 'from-slate-900/95 via-amber-950/40 to-slate-900/95',
+      cardBorder: 'border-2 border-amber-500/50',
+      cardHoverBorder: 'hover:border-amber-500',
     },
     
     // Conflict Resolution - Orange (energy, resolution)
@@ -91,10 +91,10 @@ export function getCategoryColors(category: string): CategoryColorScheme {
       badgeBg: 'bg-orange-500/20',
       badgeText: 'text-orange-300',
       badgeBorder: 'border-orange-500/30',
-      borderAccent: 'border-l-4 border-orange-500/60',
-      cardBg: 'from-slate-900/95 via-orange-950/20 to-slate-900/95',
-      cardBorder: 'border-orange-500/30',
-      cardHoverBorder: 'hover:border-orange-500/50',
+      borderAccent: 'border-l-4 border-orange-500',
+      cardBg: 'from-slate-900/95 via-orange-950/40 to-slate-900/95',
+      cardBorder: 'border-2 border-orange-500/50',
+      cardHoverBorder: 'hover:border-orange-500',
     },
     
     // Reconnection - Indigo (depth, presence)
@@ -102,10 +102,10 @@ export function getCategoryColors(category: string): CategoryColorScheme {
       badgeBg: 'bg-indigo-500/20',
       badgeText: 'text-indigo-300',
       badgeBorder: 'border-indigo-500/30',
-      borderAccent: 'border-l-4 border-indigo-500/60',
-      cardBg: 'from-slate-900/95 via-indigo-950/20 to-slate-900/95',
-      cardBorder: 'border-indigo-500/30',
-      cardHoverBorder: 'hover:border-indigo-500/50',
+      borderAccent: 'border-l-4 border-indigo-500',
+      cardBg: 'from-slate-900/95 via-indigo-950/40 to-slate-900/95',
+      cardBorder: 'border-2 border-indigo-500/50',
+      cardHoverBorder: 'hover:border-indigo-500',
     },
     
     // Quality Time - Blue (calm, togetherness)
@@ -113,10 +113,10 @@ export function getCategoryColors(category: string): CategoryColorScheme {
       badgeBg: 'bg-blue-500/20',
       badgeText: 'text-blue-300',
       badgeBorder: 'border-blue-500/30',
-      borderAccent: 'border-l-4 border-blue-500/60',
-      cardBg: 'from-slate-900/95 via-blue-950/20 to-slate-900/95',
-      cardBorder: 'border-blue-500/30',
-      cardHoverBorder: 'hover:border-blue-500/50',
+      borderAccent: 'border-l-4 border-blue-500',
+      cardBg: 'from-slate-900/95 via-blue-950/40 to-slate-900/95',
+      cardBorder: 'border-2 border-blue-500/50',
+      cardHoverBorder: 'hover:border-blue-500',
     },
   };
 
