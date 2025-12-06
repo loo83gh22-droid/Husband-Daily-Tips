@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import ChallengeDetailModal from './ChallengeDetailModal';
+import { getCategoryColors } from '@/lib/category-colors';
 
 interface Challenge {
   id: string;
@@ -38,18 +39,23 @@ interface CategoryCardProps {
   partnerName?: string | null;
 }
 
+// Convert theme to category name for color mapping
+const themeToCategory = (theme: string): string => {
+  if (theme === 'quality_time') return 'Quality Time';
+  if (theme === 'conflict_resolution') return 'Conflict Resolution';
+  if (theme === 'communication') return 'Communication';
+  if (theme === 'intimacy') return 'Intimacy';
+  if (theme === 'partnership') return 'Partnership';
+  if (theme === 'romance') return 'Romance';
+  if (theme === 'gratitude') return 'Gratitude';
+  if (theme === 'reconnection') return 'Reconnection';
+  return theme.charAt(0).toUpperCase() + theme.slice(1).replace(/_/g, ' ');
+};
+
 const getThemeColor = (theme: string) => {
-  const colors: Record<string, string> = {
-    communication: 'border-blue-500/30 bg-gradient-to-br from-slate-900/90 via-blue-950/20 to-slate-800/90 hover:border-blue-500/50',
-    intimacy: 'border-pink-500/30 bg-gradient-to-br from-slate-900/90 via-pink-950/20 to-slate-800/90 hover:border-pink-500/50',
-    partnership: 'border-emerald-500/30 bg-gradient-to-br from-slate-900/90 via-emerald-950/20 to-slate-800/90 hover:border-emerald-500/50',
-    romance: 'border-rose-500/30 bg-gradient-to-br from-slate-900/90 via-rose-950/20 to-slate-800/90 hover:border-rose-500/50',
-    gratitude: 'border-amber-500/30 bg-gradient-to-br from-slate-900/90 via-amber-950/20 to-slate-800/90 hover:border-amber-500/50',
-    conflict_resolution: 'border-purple-500/30 bg-gradient-to-br from-slate-900/90 via-purple-950/20 to-slate-800/90 hover:border-purple-500/50',
-    reconnection: 'border-cyan-500/30 bg-gradient-to-br from-slate-900/90 via-cyan-950/20 to-slate-800/90 hover:border-cyan-500/50',
-    quality_time: 'border-green-500/30 bg-gradient-to-br from-slate-900/90 via-green-950/20 to-slate-800/90 hover:border-green-500/50',
-  };
-  return colors[theme] || 'border-slate-700/50 bg-gradient-to-br from-slate-900/90 to-slate-800/90 hover:border-slate-600/50';
+  const categoryName = themeToCategory(theme);
+  const colors = getCategoryColors(categoryName);
+  return `${colors.cardBorder} bg-gradient-to-br ${colors.cardBg} ${colors.cardHoverBorder}`;
 };
 
 export default function CategoryCard({
@@ -102,7 +108,18 @@ export default function CategoryCard({
             initial={{ width: 0 }}
             animate={{ width: `${completionPercentage}%` }}
             transition={{ duration: 0.5, ease: 'easeOut' }}
-            className="h-full bg-primary-500 rounded-full"
+            style={{
+              backgroundColor: getCategoryColors(themeToCategory(theme)).badgeBg.includes('cyan') ? 'rgb(6 182 212)' :
+                              getCategoryColors(themeToCategory(theme)).badgeBg.includes('purple') ? 'rgb(168 85 247)' :
+                              getCategoryColors(themeToCategory(theme)).badgeBg.includes('emerald') ? 'rgb(16 185 129)' :
+                              getCategoryColors(themeToCategory(theme)).badgeBg.includes('pink') ? 'rgb(236 72 153)' :
+                              getCategoryColors(themeToCategory(theme)).badgeBg.includes('amber') ? 'rgb(245 158 11)' :
+                              getCategoryColors(themeToCategory(theme)).badgeBg.includes('orange') ? 'rgb(249 115 22)' :
+                              getCategoryColors(themeToCategory(theme)).badgeBg.includes('indigo') ? 'rgb(99 102 241)' :
+                              getCategoryColors(themeToCategory(theme)).badgeBg.includes('blue') ? 'rgb(59 130 246)' :
+                              'rgb(14 165 233)'
+            }}
+            className="h-full rounded-full"
           />
         </div>
       </div>
@@ -119,7 +136,7 @@ export default function CategoryCard({
           <>
             <button
               onClick={handleSeeEvent}
-              className="w-full px-3 py-1.5 text-xs font-medium rounded-md transition-colors bg-primary-500/20 text-primary-300 border border-primary-500/30 hover:bg-primary-500/30"
+              className={`w-full px-3 py-1.5 text-xs font-medium rounded-md transition-all ${getCategoryColors(themeToCategory(theme)).badgeBg} ${getCategoryColors(themeToCategory(theme)).badgeText} border ${getCategoryColors(themeToCategory(theme)).badgeBorder} hover:opacity-80`}
             >
               {isEnrolled ? 'Active' : 'See 7 Day Event'}
             </button>

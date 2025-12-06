@@ -6,6 +6,7 @@ import ActionsList from './ActionsList';
 import ActionsSearchModal from './ActionsSearchModal';
 import CategoryCard from './CategoryCard';
 import FavoritesModal from './FavoritesModal';
+import { getCategoryColors } from '@/lib/category-colors';
 import Link from 'next/link';
 
 interface Action {
@@ -249,6 +250,11 @@ export default function ActionsPageClient({
     if (theme === 'quality_time') return 'Quality Time';
     if (theme === 'conflict_resolution') return 'Conflict Resolution';
     return theme.charAt(0).toUpperCase() + theme.slice(1).replace(/_/g, ' ');
+  };
+
+  // Convert theme to category name for color mapping
+  const themeToCategory = (theme: string): string => {
+    return formatThemeName(theme);
   };
 
   const getThemeIcon = (theme: string) => {
@@ -563,12 +569,14 @@ export default function ActionsPageClient({
                   partnerName={partnerName}
                 />
 
-                {themeActions.length > 4 && (
-                  <div className="mt-6 text-center">
-                    <button
-                      onClick={() => toggleCategory(theme)}
-                      className="inline-flex items-center gap-2 px-6 py-2 bg-primary-500/10 border border-primary-500/30 text-primary-300 rounded-lg hover:bg-primary-500/20 transition-colors text-sm font-medium"
-                    >
+                {themeActions.length > 4 && (() => {
+                  const categoryColors = getCategoryColors(themeToCategory(theme));
+                  return (
+                    <div className="mt-6 text-center">
+                      <button
+                        onClick={() => toggleCategory(theme)}
+                        className={`inline-flex items-center gap-2 px-6 py-2 ${categoryColors.badgeBg} border ${categoryColors.badgeBorder} ${categoryColors.badgeText} rounded-lg transition-colors text-sm font-medium hover:opacity-80`}
+                      >
                       {expandedCategories.has(theme) ? (
                         <>
                           See Less
