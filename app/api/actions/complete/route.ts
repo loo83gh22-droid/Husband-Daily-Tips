@@ -80,10 +80,15 @@ export async function POST(request: Request) {
 
     // If not the daily action and user doesn't have premium, block completion
     if (!dailyAction && !hasPremiumAccess) {
+      // Check if user can start a trial (hasn't started one before)
+      const canStartTrial = !trialStartedAt;
+      
       return NextResponse.json(
         { 
           error: 'Premium required',
-          message: 'Free users can only complete the daily action served on the dashboard. Upgrade to Premium to complete any action from the Actions page.'
+          message: 'Free users can only complete the daily action served on the dashboard. Upgrade to Premium to complete any action from the Actions page.',
+          canStartTrial,
+          trialStartedAt: user.trial_started_at,
         },
         { status: 403 }
       );

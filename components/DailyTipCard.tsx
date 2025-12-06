@@ -48,6 +48,8 @@ export default function DailyTipCard({ tip, subscriptionTier = 'free', onActionR
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isCompleted, setIsCompleted] = useState(tip.completed || false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [errorData, setErrorData] = useState<{ canStartTrial?: boolean; trialStartedAt?: string | null } | null>(null);
+  const [isStartingTrial, setIsStartingTrial] = useState(false);
   const [showReflection, setShowReflection] = useState(false);
   const [newlyEarnedBadges, setNewlyEarnedBadges] = useState<
     Array<{ name: string; description: string; icon: string }>
@@ -120,6 +122,7 @@ export default function DailyTipCard({ tip, subscriptionTier = 'free', onActionR
     if (isSubmitting || isCompleted) return;
     setIsSubmitting(true);
     setErrorMessage(null);
+    setErrorData(null);
 
     try {
       // Get current health before completion (we'll estimate based on standard increase)
@@ -156,8 +159,19 @@ export default function DailyTipCard({ tip, subscriptionTier = 'free', onActionR
       }
 
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        const errorMessage = errorData.error || errorData.message || 'Failed to mark as done';
+        const errorDataResponse = await response.json().catch(() => ({}));
+        const errorMessage = errorDataResponse.error || errorDataResponse.message || 'Failed to mark as done';
+        
+        // Store error data for premium required errors to show trial/subscription links
+        if (errorDataResponse.error === 'Premium required' || errorDataResponse.error === 'premium required') {
+          setErrorData({
+            canStartTrial: errorDataResponse.canStartTrial,
+            trialStartedAt: errorDataResponse.trialStartedAt,
+          });
+        } else {
+          setErrorData(null);
+        }
+        
         throw new Error(errorMessage);
       }
 
@@ -206,6 +220,11 @@ export default function DailyTipCard({ tip, subscriptionTier = 'free', onActionR
       const errorMessage = error?.message || 'Could not save this action. You can try again in a moment.';
       setErrorMessage(errorMessage);
       toast.error(errorMessage, 5000);
+      
+      // Clear error data if it's not a premium required error
+      if (!errorMessage.includes('Premium') && !errorMessage.includes('premium')) {
+        setErrorData(null);
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -1009,7 +1028,58 @@ END:VCALENDAR`;
           </div>
 
           {errorMessage && (
-            <p className="mt-4 text-sm text-rose-400">{errorMessage}</p>
+            <div className="mt-4">
+              <p className="text-sm text-rose-400 mb-2">{errorMessage}</p>
+              {errorData && (errorMessage.includes('Premium') || errorMessage.includes('premium')) && (
+                <div className="flex flex-col gap-2 mt-2">
+                  {errorData.canStartTrial ? (
+                    <button
+                      onClick={async () => {
+                        setIsStartingTrial(true);
+                        try {
+                          const response = await fetch('/api/trial/start', {
+                            method: 'POST',
+                            headers: {
+                              'Content-Type': 'application/json',
+                            },
+                          });
+
+                          if (response.ok) {
+                            const data = await response.json();
+                            toast.success(data.message || '7-day free trial started! 🎉', 5000);
+                            setErrorMessage(null);
+                            setErrorData(null);
+                            // Reload the page to refresh subscription status
+                            setTimeout(() => {
+                              window.location.reload();
+                            }, 1000);
+                          } else {
+                            const errorData = await response.json().catch(() => ({}));
+                            toast.error(errorData.error || 'Failed to start trial. Please try again.', 4000);
+                          }
+                        } catch (error: any) {
+                          console.error('Error starting trial:', error);
+                          toast.error('Failed to start trial. Please try again.', 4000);
+                        } finally {
+                          setIsStartingTrial(false);
+                        }
+                      }}
+                      disabled={isStartingTrial}
+                      className="inline-flex items-center justify-center px-4 py-2 text-sm font-semibold text-slate-950 bg-primary-500 rounded-lg hover:bg-primary-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {isStartingTrial ? 'Starting Trial...' : 'Start 7-Day Free Trial →'}
+                    </button>
+                  ) : (
+                    <Link
+                      href="/dashboard/subscription"
+                      className="inline-flex items-center justify-center px-4 py-2 text-sm font-semibold text-slate-950 bg-primary-500 rounded-lg hover:bg-primary-400 transition-colors"
+                    >
+                      View Subscription Options →
+                    </Link>
+                  )}
+                </div>
+              )}
+            </div>
           )}
 
           {/* Badge notification */}
