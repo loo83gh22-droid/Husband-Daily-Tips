@@ -37,7 +37,7 @@ async function getGuideVisitCounts() {
 export default async function HowToGuidesPage({
   searchParams,
 }: {
-  searchParams: { category?: string };
+  searchParams: Promise<{ category?: string }>;
 }) {
   const session = await getSession();
 
@@ -49,7 +49,7 @@ export default async function HowToGuidesPage({
   const visitCounts = await getGuideVisitCounts();
   
   // Get the selected category from query params
-  const selectedCategory = searchParams?.category;
+  const { category: selectedCategory } = await searchParams;
 
   // Guide data organized by category (ordered by marriage importance - matching action categories)
   // Order: Communication, Intimacy, Partnership, Romance, Gratitude, Conflict, Reconnection, Quality Time, Outdoor, Active

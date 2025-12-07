@@ -56,7 +56,7 @@ async function getActionsByTheme(auth0Id: string, theme: string) {
 export default async function ActionsByThemePage({
   params,
 }: {
-  params: { theme: string };
+  params: Promise<{ theme: string }>;
 }) {
   const session = await getSession();
 
@@ -64,33 +64,34 @@ export default async function ActionsByThemePage({
     redirect('/api/auth/login');
   }
 
+  const { theme } = await params;
   const auth0Id = session.user.sub;
-  const { actions, completedMap, userId, partnerName } = await getActionsByTheme(auth0Id, params.theme);
+  const { actions, completedMap, userId, partnerName } = await getActionsByTheme(auth0Id, theme);
 
   // Format theme name - handle special cases
-  let themeName = params.theme.charAt(0).toUpperCase() + params.theme.slice(1).replace(/_/g, ' ');
-  if (params.theme === 'quality_time') {
+  let themeName = theme.charAt(0).toUpperCase() + theme.slice(1).replace(/_/g, ' ');
+  if (theme === 'quality_time') {
     themeName = 'Quality Time';
-  } else if (params.theme === 'conflict_resolution') {
+  } else if (theme === 'conflict_resolution') {
     themeName = 'Conflict Resolution';
   }
 
   const themeIcon =
-    params.theme === 'communication'
+    theme === 'communication'
       ? '💬'
-      : params.theme === 'intimacy'
+      : theme === 'intimacy'
         ? '💝'
-        : params.theme === 'partnership'
+        : theme === 'partnership'
           ? '🤝'
-          : params.theme === 'romance'
+          : theme === 'romance'
             ? '💕'
-            : params.theme === 'gratitude'
+            : theme === 'gratitude'
               ? '🙏'
-              : params.theme === 'conflict_resolution'
+              : theme === 'conflict_resolution'
                 ? '⚖️'
-                : params.theme === 'reconnection'
+                : theme === 'reconnection'
                   ? '🔗'
-                  : params.theme === 'quality_time'
+                  : theme === 'quality_time'
                     ? '⏰'
                     : '📋';
 

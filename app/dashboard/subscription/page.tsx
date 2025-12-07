@@ -64,7 +64,7 @@ async function getUserSubscription(auth0Id: string) {
 export default async function SubscriptionPage({
   searchParams,
 }: {
-  searchParams: { upgrade?: string; success?: string };
+  searchParams: Promise<{ upgrade?: string; success?: string }>;
 }) {
   const session = await getSession();
   const isLoggedIn = !!session?.user;
@@ -87,7 +87,8 @@ export default async function SubscriptionPage({
     
     // If user has active trial, they should see Premium as their current tier
     const currentTier = subscriptionInfo.hasActiveTrial ? 'premium' : subscriptionInfo.tier;
-    const upgradeReason = searchParams?.upgrade;
+    const resolvedSearchParams = await searchParams;
+    const upgradeReason = resolvedSearchParams?.upgrade;
 
     // Upgrade message based on reason
     const upgradeMessages: Record<string, { title: string; description: string }> = {
@@ -144,7 +145,8 @@ export default async function SubscriptionPage({
   ];
 
   // Check for subscription success
-  const subscriptionSuccess = searchParams?.success === 'true';
+  const { success } = await searchParams;
+  const subscriptionSuccess = success === 'true';
   const subscriptionPrice = 7; // Premium price
 
   return (

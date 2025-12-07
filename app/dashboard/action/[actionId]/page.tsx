@@ -39,7 +39,7 @@ async function getUserActionStatus(userId: string, actionId: string) {
 export default async function ActionDetailPage({
   params,
 }: {
-  params: { actionId: string };
+  params: Promise<{ actionId: string }>;
 }) {
   const session = await getSession();
 
@@ -47,6 +47,7 @@ export default async function ActionDetailPage({
     redirect('/api/auth/login');
   }
 
+  const { actionId } = await params;
   const auth0Id = session.user.sub;
   const adminSupabase = getSupabaseAdmin();
 
@@ -61,7 +62,7 @@ export default async function ActionDetailPage({
     redirect('/api/auth/login');
   }
 
-  const action = await getAction(params.actionId);
+  const action = await getAction(actionId);
 
   if (!action) {
     return (

@@ -6,10 +6,10 @@ import { getSupabaseAdmin } from '@/lib/supabase';
  */
 export async function GET(
   request: Request,
-  { params }: { params: { actionId: string } }
+  { params }: { params: Promise<{ actionId: string }> }
 ) {
   try {
-    const { actionId } = params;
+    const { actionId } = await params;
 
     if (!actionId) {
       return NextResponse.json({ error: 'Action ID required' }, { status: 400 });

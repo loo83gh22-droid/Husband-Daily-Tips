@@ -7,7 +7,7 @@ import { getSupabaseAdmin } from '@/lib/supabase';
  */
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getSession();
@@ -16,7 +16,7 @@ export async function GET(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const challengeId = params.id;
+    const { id: challengeId } = await params;
 
     if (!challengeId) {
       return NextResponse.json({ error: 'Missing challenge ID' }, { status: 400 });

@@ -4,8 +4,9 @@ import BrandLogo from '@/components/BrandLogo';
 import { guides } from '@/app/dashboard/how-to-guides/[slug]/page';
 
 // Generate metadata for SEO
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const guide = guides[params.slug];
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const guide = guides[slug];
   
   if (!guide) {
     return {
@@ -20,7 +21,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
       title: guide.title,
       description: guide.excerpt,
       type: 'article',
-      url: `https://www.besthusbandever.com/blog/how-to-guides/${params.slug}`,
+      url: `https://www.besthusbandever.com/blog/how-to-guides/${slug}`,
     },
   };
 }
@@ -32,8 +33,9 @@ export async function generateStaticParams() {
   }));
 }
 
-export default function PublicGuidePage({ params }: { params: { slug: string } }) {
-  const guide = guides[params.slug];
+export default async function PublicGuidePage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const guide = guides[slug];
 
   if (!guide) {
     return (

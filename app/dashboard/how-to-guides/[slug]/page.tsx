@@ -6623,14 +6623,15 @@ You gave her a massage. She relaxed. She felt cared for. You showed love through
   },
 };
 
-export default async function GuidePage({ params }: { params: { slug: string } }) {
+export default async function GuidePage({ params }: { params: Promise<{ slug: string }> }) {
   const session = await getSession();
 
   if (!session?.user) {
     redirect('/api/auth/login');
   }
 
-  const guide = guides[params.slug];
+  const { slug } = await params;
+  const guide = guides[slug];
 
   if (!guide) {
     redirect('/dashboard/how-to-guides');
@@ -6652,7 +6653,7 @@ export default async function GuidePage({ params }: { params: { slug: string } }
         await supabase
           .from('guide_visits')
           .insert({
-            guide_slug: params.slug,
+            guide_slug: slug,
             user_id: user.id,
           });
       } catch (error: any) {
