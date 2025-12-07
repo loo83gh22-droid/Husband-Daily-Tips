@@ -11,6 +11,24 @@ const getMondayOfWeek = (date: Date): Date => {
   return new Date(d.setDate(diff));
 };
 
+// Helper function to get the start of the week based on user's first work day
+const getWeekStartForUser = (date: Date, firstWorkDay: number): Date => {
+  const d = new Date(date);
+  const currentDay = d.getDay();
+  
+  // Calculate days to subtract to get to the first work day
+  let daysToSubtract = currentDay - firstWorkDay;
+  
+  // Handle week wrap-around (if current day is before first work day)
+  if (daysToSubtract < 0) {
+    daysToSubtract += 7;
+  }
+  
+  d.setDate(d.getDate() - daysToSubtract);
+  d.setHours(0, 0, 0, 0);
+  return d;
+};
+
 /**
  * Cron endpoint to send today's action at 6am in each user's timezone
  * 
@@ -173,10 +191,9 @@ export async function GET(request: Request) {
               usersToEmail.push({ ...user, dayOfWeek, timezone });
             }
           } else {
-            // Premium users: send on their work days (respects their work_days setting)
-            if (isWorkDay(dayOfWeek, user.work_days)) {
-              usersToEmail.push({ ...user, dayOfWeek, timezone });
-            }
+            // Premium users: send 7 days a week (days 0-6) regardless of work_days
+            // This accommodates users with erratic schedules who may work any day
+            usersToEmail.push({ ...user, dayOfWeek, timezone });
           }
         }
       } catch (error) {
@@ -211,9 +228,10 @@ export async function GET(request: Request) {
     for (const user of usersToEmail) {
       try {
         const dayOfWeek = user.dayOfWeek; // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
-        const isMonday = dayOfWeek === 1;
+        const firstWorkDay = getFirstWorkDay(user.work_days);
+        const isFirstWorkDay = dayOfWeek === firstWorkDay;
         const isSunday = dayOfWeek === 0;
-        const isWeekday = dayOfWeek >= 1 && dayOfWeek <= 5; // Monday-Friday
+        const isWeekday = dayOfWeek >= 1 && dayOfWeek <= 5; // Monday-Friday (for backward compatibility)
 
         // Get user's category scores from survey_summary for personalized action selection
         const { data: surveySummary } = await supabase
@@ -271,8 +289,8 @@ export async function GET(request: Request) {
         let weeklyPlanningActions = [];
         let weekStartDate: string | null = null;
 
-        if (isMonday) {
-          // Monday: Select 5 planning actions for the week
+        if (isFirstWorkDay) {
+          // First work day: Select 5 planning actions for the week
           const { selectWeeklyPlanningActions } = await import('@/lib/action-selection');
           weeklyPlanningActions = await selectWeeklyPlanningActions(
             user.id,
@@ -282,9 +300,9 @@ export async function GET(request: Request) {
           );
 
           if (weeklyPlanningActions.length > 0) {
-            // Store planning actions for the week
-            const mondayDate = getMondayOfWeek(new Date());
-            weekStartDate = mondayDate.toISOString().split('T')[0];
+            // Store planning actions for the week using user's first work day as week start
+            const weekStart = getWeekStartForUser(new Date(), firstWorkDay);
+            weekStartDate = weekStart.toISOString().split('T')[0];
             
             await supabase
               .from('user_weekly_planning_actions')
@@ -297,10 +315,10 @@ export async function GET(request: Request) {
                 onConflict: 'user_id,week_start_date',
               });
           }
-        } else if (isWeekday) {
-          // Tuesday-Friday: Retrieve stored planning actions
-          const mondayDate = getMondayOfWeek(new Date());
-          weekStartDate = mondayDate.toISOString().split('T')[0];
+        } else {
+          // Other days: Retrieve stored planning actions
+          const weekStart = getWeekStartForUser(new Date(), firstWorkDay);
+          weekStartDate = weekStart.toISOString().split('T')[0];
           
           const { data: weeklyPlan } = await supabase
             .from('user_weekly_planning_actions')
@@ -328,7 +346,10 @@ export async function GET(request: Request) {
           const today = new Date();
           const lastWeekStart = new Date(today);
           lastWeekStart.setDate(today.getDate() - 7); // Go back 7 days
-          const lastWeekMonday = getMondayOfWeek(lastWeekStart);
+          // Use user's first work day to calculate last week start
+          const firstWorkDay = getFirstWorkDay(user.work_days);
+          const lastWeekStartDate = getWeekStartForUser(lastWeekStart, firstWorkDay);
+          const lastWeekMonday = lastWeekStartDate; // Keep variable name for compatibility
           const lastWeekStartStr = lastWeekMonday.toISOString().split('T')[0];
           
           // Last week's Sunday (6 days after Monday)
@@ -425,7 +446,9 @@ export async function GET(request: Request) {
 
         // Send email with new format
         // For planning actions, include action IDs and user ID for "Mark as Done" buttons
-        const planningActionsWithIds = (isMonday ? weeklyPlanningActions : (isWeekday ? weeklyPlanningActions : [])).map(action => ({
+        // Include planning actions on first work day and other work days (but not weekends for email formatting)
+        const shouldIncludePlanningActions = isFirstWorkDay || (dayOfWeek >= 1 && dayOfWeek <= 5 && weeklyPlanningActions.length > 0);
+        const planningActionsWithIds = (shouldIncludePlanningActions ? weeklyPlanningActions : []).map(action => ({
           ...action,
           id: action.id, // Ensure ID is included
         }));
@@ -441,6 +464,7 @@ export async function GET(request: Request) {
           actionId: dailyAction.id,
           userId: user.id,
           dayOfWeek,
+          isFirstWorkDay: isFirstWorkDay, // Pass flag indicating if this is the user's first work day
           weeklyPlanningActions: isFreeUser ? [] : planningActionsWithIds, // No planning actions for free users
           allActionsLastWeek: isFreeUser ? [] : (isSunday ? allActionsLastWeek : []), // No weekly review for free users
         };

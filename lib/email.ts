@@ -16,13 +16,14 @@ export interface EmailTip {
   userId?: string; // Added for calendar links and "Mark as Done" button
   quote?: { quote_text: string; author: string | null }; // Optional quote to include
   dayOfWeek?: number; // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
+  isFirstWorkDay?: boolean; // Whether this is the user's first work day of the week (when planning actions are served)
   weeklyPlanningActions?: Array<{ id: string; name: string; description: string; benefit?: string; category: string }>; // Planning actions for the week
   allActionsLastWeek?: Array<{ id: string; name: string; description?: string; category: string; date: string; completed: boolean }>; // All actions served last week (Sunday only) with completion status
 }
 
 export function generateEmailHTML(tip: EmailTip, baseUrl: string): string {
   const dayOfWeek = tip.dayOfWeek ?? new Date().getDay();
-  const isMonday = dayOfWeek === 1;
+  const isFirstWorkDay = tip.isFirstWorkDay ?? (dayOfWeek === 1); // Default to Monday for backward compatibility
   const isSunday = dayOfWeek === 0;
   const isWeekday = dayOfWeek >= 1 && dayOfWeek <= 5;
   const weeklyPlanningActions = tip.weeklyPlanningActions || [];
@@ -64,8 +65,8 @@ export function generateEmailHTML(tip: EmailTip, baseUrl: string): string {
             </div>
           </div>
           
-          ${isMonday && weeklyPlanningActions.length > 0 ? `
-            <!-- Monday: Planning Actions - Choose 1 (Full Details) -->
+          ${isFirstWorkDay && weeklyPlanningActions.length > 0 ? `
+            <!-- First Work Day: Planning Actions - Choose 1 (Full Details) -->
             <div style="background-color: #fef3c7; border-left: 4px solid #f59e0b; border-radius: 8px; padding: 25px; margin-bottom: 30px;">
               ${weeklyPlanningActions.some(a => a.name?.toLowerCase().includes('birthday')) ? `
                 <h3 style="color: #78350f; font-size: 18px; margin: 0 0 15px 0; font-weight: 600;">
@@ -121,8 +122,8 @@ export function generateEmailHTML(tip: EmailTip, baseUrl: string): string {
             </div>
           ` : ''}
           
-          ${isWeekday && !isMonday && weeklyPlanningActions.length > 0 ? `
-            <!-- Tuesday-Friday: Planning Actions Summarized Table -->
+          ${isWeekday && !isFirstWorkDay && weeklyPlanningActions.length > 0 ? `
+            <!-- Other Work Days: Planning Actions Summarized Table -->
             <div style="background-color: #f3f4f6; border-left: 4px solid #6b7280; border-radius: 8px; padding: 20px; margin-bottom: 30px;">
               <h3 style="color: #374151; font-size: 16px; margin: 0 0 15px 0; font-weight: 600;">
                 ${weeklyPlanningActions.some(a => a.name?.toLowerCase().includes('birthday')) ? '🎉 This Week\'s Birthday Planning Actions' : weeklyPlanningActions.some(a => {
