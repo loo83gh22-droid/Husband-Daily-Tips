@@ -282,56 +282,84 @@ export default async function Home() {
           </div>
         </nav>
 
-        {/* Hero Section */}
-        <main className="container mx-auto px-4 py-16 md:py-24">
-          <div className="max-w-5xl mx-auto grid md:grid-cols-[3fr,2fr] gap-12 items-start">
-            <div>
-              <p className="text-xs font-bold tracking-[0.2em] text-primary-400 uppercase mb-4">
+        {/* Hero Section - Enhanced Visual Hierarchy */}
+        <main className="container mx-auto px-4 py-12 sm:py-16 md:py-24">
+          <div className="max-w-5xl mx-auto grid md:grid-cols-[3fr,2fr] gap-8 md:gap-12 items-start">
+            <div className="order-2 md:order-1">
+              <p className="text-xs sm:text-sm font-bold tracking-[0.2em] text-primary-400 uppercase mb-3 sm:mb-4">
                 STOP WINGING IT. START WINNING IT.
               </p>
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-slate-50 tracking-tight mb-4">
+              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-slate-50 tracking-tight mb-4 sm:mb-6 leading-tight">
                 Daily Actions to Become a Better Husband
               </h1>
-              <p className="text-lg md:text-xl text-primary-400 font-semibold mb-4 max-w-2xl">
+              <p className="text-lg sm:text-xl md:text-2xl text-primary-400 font-bold mb-4 sm:mb-6 max-w-2xl">
                 Daily actions that show you care. She&apos;ll notice. You&apos;ll both feel the difference.
               </p>
-              <p className="text-base md:text-lg text-slate-300 leading-relaxed mb-4 max-w-2xl">
+              <p className="text-base sm:text-lg md:text-xl text-slate-300 leading-relaxed mb-4 sm:mb-6 max-w-2xl">
                 Consistency transforms your relationship by building trust, connection, and genuine appreciation. It&apos;s the steady, reliable effort that shows you&apos;re committed that truly makes the difference.
               </p>
-              <p className="text-sm md:text-base text-slate-400 italic mb-6 max-w-2xl">
+              <p className="text-sm sm:text-base md:text-lg text-slate-400 italic mb-6 sm:mb-8 max-w-2xl">
                 Designed for husbands, but it&apos;s not <span className="text-primary-400 font-semibold not-italic">just</span> for husbands. 
                 Boyfriends, partners, and anyone committed to leveling up their relationship can benefit.
               </p>
 
-              {/* Pricing Badge */}
-              <div className="mb-6 inline-flex items-center gap-2 px-4 py-2 bg-primary-500/10 border border-primary-500/30 rounded-lg">
-                <span className="text-sm font-semibold text-primary-300">Just $7/month</span>
-                <span className="text-xs text-slate-400">after free trial</span>
+              {/* Pricing Badge - Enhanced */}
+              <div className="mb-6 sm:mb-8 inline-flex items-center gap-2 px-4 sm:px-5 py-2 sm:py-2.5 bg-primary-500/10 border-2 border-primary-500/40 rounded-lg shadow-lg">
+                <span className="text-base sm:text-lg font-bold text-primary-300">Just $7/month</span>
+                <span className="text-xs sm:text-sm text-slate-400">after free trial</span>
               </div>
 
-              <div className="mb-8 flex flex-col sm:flex-row gap-4">
+              {/* Enhanced CTAs - Mobile Optimized */}
+              <div className="mb-6 sm:mb-8 flex flex-col sm:flex-row gap-3 sm:gap-4">
                 <Link
                   href="/api/auth/login?returnTo=/dashboard"
-                  className="inline-flex items-center justify-center px-10 py-5 rounded-xl bg-primary-500 text-slate-950 text-lg font-bold shadow-2xl shadow-primary-500/30 hover:bg-primary-400 transition-all transform hover:scale-105"
+                  className="inline-flex items-center justify-center px-8 sm:px-10 py-4 sm:py-5 rounded-xl bg-primary-500 text-slate-950 text-base sm:text-lg md:text-xl font-bold shadow-2xl shadow-primary-500/30 hover:bg-primary-400 transition-all transform hover:scale-105 active:scale-95"
                 >
                   Sign Up & Take Test →
                 </Link>
                 <Link
                   href="/api/auth/login?returnTo=/dashboard"
-                  className="inline-flex items-center justify-center px-10 py-5 rounded-xl border-2 border-primary-500 text-primary-400 text-lg font-bold hover:bg-primary-500/10 transition-all transform hover:scale-105"
+                  className="inline-flex items-center justify-center px-8 sm:px-10 py-4 sm:py-5 rounded-xl border-2 border-primary-500 text-primary-400 text-base sm:text-lg md:text-xl font-bold hover:bg-primary-500/10 transition-all transform hover:scale-105 active:scale-95"
                 >
                   Start Free Trial →
                 </Link>
               </div>
-              {/* Trust Signal */}
-              <div className="mt-4 flex items-center justify-center gap-2 text-sm text-slate-400">
-                <span className="text-emerald-400">✓</span>
-                <span>No credit card required</span>
+              
+              {/* Enhanced Trust Signals */}
+              <div className="space-y-3 sm:space-y-4">
+                <div className="flex flex-wrap items-center gap-3 sm:gap-4 text-sm sm:text-base text-slate-300">
+                  <div className="flex items-center gap-2">
+                    <span className="text-emerald-400 text-lg">✓</span>
+                    <span className="font-semibold">No credit card required</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-emerald-400 text-lg">🔒</span>
+                    <span className="font-semibold">100% Private & Secure</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-emerald-400 text-lg">↩️</span>
+                    <span className="font-semibold">Cancel anytime</span>
+                  </div>
+                </div>
+                <div className="flex flex-wrap items-center gap-4 sm:gap-6 pt-2 border-t border-slate-800">
+                  <div className="flex items-center gap-2">
+                    <span className="text-primary-400 text-xl">🛡️</span>
+                    <span className="text-xs sm:text-sm text-slate-400">SSL Encrypted</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-primary-400 text-xl">🔐</span>
+                    <span className="text-xs sm:text-sm text-slate-400">GDPR Compliant</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-primary-400 text-xl">✓</span>
+                    <span className="text-xs sm:text-sm text-slate-400">7-Day Money-Back Guarantee</span>
+                  </div>
+                </div>
               </div>
             </div>
 
-            {/* Mobile Stats Card */}
-            <div className="md:hidden mt-8">
+            {/* Mobile Stats Card - Enhanced */}
+            <div className="md:hidden mt-6 order-1 md:order-2">
               <div className="relative bg-gradient-to-br from-slate-900/98 via-primary-950/30 to-slate-800/98 border-2 border-primary-500/50 rounded-2xl p-6 backdrop-blur-sm shadow-2xl shadow-primary-500/30 overflow-hidden">
                 <div className="text-center">
                   <div className="inline-flex flex-col items-center justify-center bg-gradient-to-br from-primary-500/30 via-primary-600/25 to-emerald-500/25 rounded-2xl px-6 py-3 mb-3 border-2 border-primary-400/50 shadow-xl shadow-primary-500/30 backdrop-blur-sm">
@@ -426,37 +454,51 @@ export default async function Home() {
             </div>
           </div>
 
-          {/* How It Works Section */}
-          <section id="how-it-works" className="mt-24 md:mt-32">
-            <h2 className="text-3xl md:text-4xl font-bold text-slate-50 text-center mb-12">
-              How It Works
-            </h2>
-            <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-              <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-6 text-center">
-                <div className="w-16 h-16 bg-primary-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-2xl">📝</span>
+          {/* How It Works Section - Enhanced & More Visible */}
+          <section id="how-it-works" className="mt-20 sm:mt-24 md:mt-32 scroll-mt-20">
+            <div className="text-center mb-8 sm:mb-12">
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-slate-50 mb-3 sm:mb-4">
+                How It Works
+              </h2>
+              <p className="text-base sm:text-lg text-slate-400 max-w-2xl mx-auto">
+                Three simple steps to transform your relationship
+              </p>
+            </div>
+            <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8 max-w-5xl mx-auto">
+              <div className="bg-gradient-to-br from-slate-900/80 to-slate-800/50 border-2 border-primary-500/30 rounded-xl p-6 sm:p-8 text-center hover:border-primary-500/60 transition-all hover:shadow-xl hover:shadow-primary-500/20">
+                <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-primary-500/30 to-primary-600/20 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6 border-2 border-primary-500/50">
+                  <span className="text-3xl sm:text-4xl">📝</span>
                 </div>
-                <h3 className="text-xl font-semibold text-slate-200 mb-3">Sign Up & Take the Test</h3>
-                <p className="text-slate-400">
+                <div className="inline-flex items-center justify-center w-8 h-8 bg-primary-500 text-slate-950 rounded-full text-sm font-black mb-3 sm:mb-4">
+                  1
+                </div>
+                <h3 className="text-xl sm:text-2xl font-bold text-slate-200 mb-3 sm:mb-4">Sign Up & Take the Test</h3>
+                <p className="text-sm sm:text-base text-slate-400 leading-relaxed">
                   Sign up for free, then answer a few questions about your relationship. We&apos;ll create a personalized baseline and identify areas to focus on.
                 </p>
               </div>
-              <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-6 text-center">
-                <div className="w-16 h-16 bg-primary-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-2xl">📅</span>
+              <div className="bg-gradient-to-br from-slate-900/80 to-slate-800/50 border-2 border-primary-500/30 rounded-xl p-6 sm:p-8 text-center hover:border-primary-500/60 transition-all hover:shadow-xl hover:shadow-primary-500/20">
+                <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-primary-500/30 to-primary-600/20 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6 border-2 border-primary-500/50">
+                  <span className="text-3xl sm:text-4xl">📅</span>
                 </div>
-                <h3 className="text-xl font-semibold text-slate-200 mb-3">Get Daily & Weekly Actions</h3>
-                <p className="text-slate-400">
+                <div className="inline-flex items-center justify-center w-8 h-8 bg-primary-500 text-slate-950 rounded-full text-sm font-black mb-3 sm:mb-4">
+                  2
+                </div>
+                <h3 className="text-xl sm:text-2xl font-bold text-slate-200 mb-3 sm:mb-4">Get Daily & Weekly Actions</h3>
+                <p className="text-sm sm:text-base text-slate-400 leading-relaxed">
                   Daily actions delivered to your inbox and dashboard, plus weekly planning actions for bigger gestures. Track your progress with weekly summaries.
                 </p>
               </div>
-              <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-6 text-center">
-                <div className="w-16 h-16 bg-primary-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-2xl">🏆</span>
+              <div className="bg-gradient-to-br from-slate-900/80 to-slate-800/50 border-2 border-primary-500/30 rounded-xl p-6 sm:p-8 text-center hover:border-primary-500/60 transition-all hover:shadow-xl hover:shadow-primary-500/20 sm:col-span-2 md:col-span-1">
+                <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-primary-500/30 to-primary-600/20 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6 border-2 border-primary-500/50">
+                  <span className="text-3xl sm:text-4xl">🏆</span>
                 </div>
-                <h3 className="text-xl font-semibold text-slate-200 mb-3">Track Progress</h3>
-                <p className="text-slate-400">
-                  Feel the difference in your relationship. Visual dashboards show your growth.
+                <div className="inline-flex items-center justify-center w-8 h-8 bg-primary-500 text-slate-950 rounded-full text-sm font-black mb-3 sm:mb-4">
+                  3
+                </div>
+                <h3 className="text-xl sm:text-2xl font-bold text-slate-200 mb-3 sm:mb-4">Track Progress</h3>
+                <p className="text-sm sm:text-base text-slate-400 leading-relaxed">
+                  Feel the difference in your relationship. Visual dashboards show your growth with badges, streaks, and your Husband Health score.
                 </p>
               </div>
             </div>
@@ -552,39 +594,60 @@ export default async function Home() {
             />
           </section>
 
-          {/* CTA Section */}
-          <section className="mt-24 md:mt-32 text-center">
-            <div className="bg-gradient-to-br from-primary-500/20 to-primary-600/20 border border-primary-500/40 rounded-2xl p-12 max-w-4xl mx-auto">
-              <h2 className="text-2xl sm:text-3xl md:text-3xl lg:text-4xl font-bold text-slate-50 mb-4">
+          {/* CTA Section - Enhanced with Trust Signals */}
+          <section className="mt-20 sm:mt-24 md:mt-32 text-center">
+            <div className="bg-gradient-to-br from-primary-500/20 to-primary-600/20 border-2 border-primary-500/40 rounded-2xl p-8 sm:p-12 max-w-4xl mx-auto">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-slate-50 mb-4 sm:mb-6">
                 Ready to Become the Best Husband Ever?
               </h2>
-              <p className="text-lg text-slate-300 mb-4">
+              <p className="text-base sm:text-lg md:text-xl text-slate-300 mb-6 sm:mb-8">
                 Start your 7-day free trial. Just commitment to showing up.
               </p>
-              {/* Trust Signal - Prominent */}
-              <div className="mb-6 flex items-center justify-center gap-2 text-base font-semibold text-emerald-400">
-                <span>✓</span>
-                <span>No credit card required</span>
+              
+              {/* Enhanced Trust Signals */}
+              <div className="mb-6 sm:mb-8 flex flex-wrap items-center justify-center gap-4 sm:gap-6 text-sm sm:text-base">
+                <div className="flex items-center gap-2 font-semibold text-emerald-400">
+                  <span className="text-lg">✓</span>
+                  <span>No credit card required</span>
+                </div>
+                <div className="flex items-center gap-2 font-semibold text-emerald-400">
+                  <span className="text-lg">🔒</span>
+                  <span>100% Secure</span>
+                </div>
+                <div className="flex items-center gap-2 font-semibold text-emerald-400">
+                  <span className="text-lg">↩️</span>
+                  <span>Cancel anytime</span>
+                </div>
               </div>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              
+              {/* Enhanced CTAs - Mobile Optimized */}
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center mb-6 sm:mb-8">
                 <Link
                   href="/api/auth/login"
-                  className="inline-flex items-center justify-center px-10 py-5 rounded-xl bg-primary-500 text-slate-950 text-lg font-bold shadow-2xl shadow-primary-500/30 hover:bg-primary-400 transition-all transform hover:scale-105"
+                  className="inline-flex items-center justify-center px-8 sm:px-10 py-4 sm:py-5 rounded-xl bg-primary-500 text-slate-950 text-base sm:text-lg md:text-xl font-bold shadow-2xl shadow-primary-500/30 hover:bg-primary-400 transition-all transform hover:scale-105 active:scale-95"
                 >
                   Sign Up & Take Test →
                 </Link>
                 <Link
                   href="/api/auth/login"
-                  className="inline-flex items-center justify-center px-10 py-5 rounded-xl border-2 border-primary-500 text-primary-400 text-lg font-bold hover:bg-primary-500/10 transition-all transform hover:scale-105"
+                  className="inline-flex items-center justify-center px-8 sm:px-10 py-4 sm:py-5 rounded-xl border-2 border-primary-500 text-primary-400 text-base sm:text-lg md:text-xl font-bold hover:bg-primary-500/10 transition-all transform hover:scale-105 active:scale-95"
                 >
                   Start Free Trial →
                 </Link>
               </div>
-              {/* Pricing Badge in CTA */}
-              <div className="mt-6 flex items-center justify-center gap-2 text-sm text-slate-300">
-                <span>After trial:</span>
-                <span className="font-semibold text-primary-400">$7/month</span>
-                <span className="text-slate-400">• Cancel anytime</span>
+              
+              {/* Enhanced Pricing & Guarantee Info */}
+              <div className="space-y-3 sm:space-y-4 pt-6 border-t border-primary-500/30">
+                <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-4 text-sm sm:text-base text-slate-300">
+                  <span>After trial:</span>
+                  <span className="font-bold text-primary-400">$7/month</span>
+                  <span className="text-slate-400">•</span>
+                  <span className="text-slate-400">Cancel anytime</span>
+                </div>
+                <div className="flex items-center justify-center gap-2 text-xs sm:text-sm text-slate-400">
+                  <span className="text-primary-400">✓</span>
+                  <span>7-Day Money-Back Guarantee • SSL Encrypted • GDPR Compliant</span>
+                </div>
               </div>
             </div>
           </section>

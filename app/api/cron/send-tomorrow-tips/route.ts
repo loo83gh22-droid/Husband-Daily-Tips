@@ -339,22 +339,35 @@ export async function GET(request: Request) {
         }
 
         // Get all actions served last week for weekly review (Sunday only)
-        // Last week = previous Monday through Sunday (7-13 days ago)
+        // Last week = previous complete week based on user's first work day
         let allActionsLastWeek = [];
         if (isSunday) {
-          // Get last week's Monday (7 days ago, then get that week's Monday)
-          const today = new Date();
-          const lastWeekStart = new Date(today);
-          lastWeekStart.setDate(today.getDate() - 7); // Go back 7 days
-          // Use user's first work day to calculate last week start
-          const firstWorkDay = getFirstWorkDay(user.work_days);
-          const lastWeekStartDate = getWeekStartForUser(lastWeekStart, firstWorkDay);
-          const lastWeekMonday = lastWeekStartDate; // Keep variable name for compatibility
-          const lastWeekStartStr = lastWeekMonday.toISOString().split('T')[0];
+          // Calculate the previous complete week using the user's timezone
+          // Get today's date in the user's timezone (not UTC)
+          const timezone = user.timezone || 'America/New_York';
+          const dateFormatter = new Intl.DateTimeFormat('en-CA', {
+            timeZone: timezone,
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+          });
+          const todayInTimezone = dateFormatter.format(now);
+          const [year, month, day] = todayInTimezone.split('-').map(Number);
+          const today = new Date(year, month - 1, day); // month is 0-indexed
           
-          // Last week's Sunday (6 days after Monday)
-          const lastWeekEnd = new Date(lastWeekMonday);
-          lastWeekEnd.setDate(lastWeekMonday.getDate() + 6);
+          const firstWorkDay = getFirstWorkDay(user.work_days);
+          
+          // Get the start of the current week in user's timezone
+          const currentWeekStart = getWeekStartForUser(today, firstWorkDay);
+          
+          // Last week's start is 7 days before current week start
+          const lastWeekStartDate = new Date(currentWeekStart);
+          lastWeekStartDate.setDate(currentWeekStart.getDate() - 7);
+          const lastWeekStartStr = lastWeekStartDate.toISOString().split('T')[0];
+          
+          // Last week's end is 6 days after last week start (the Saturday before today's Sunday)
+          const lastWeekEnd = new Date(lastWeekStartDate);
+          lastWeekEnd.setDate(lastWeekStartDate.getDate() + 6);
           const lastWeekEndStr = lastWeekEnd.toISOString().split('T')[0];
 
           // Get ALL actions served last week (from user_daily_actions)
