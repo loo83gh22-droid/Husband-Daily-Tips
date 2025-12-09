@@ -439,23 +439,61 @@ export async function selectWeeklyPlanningActions(
   const adminSupabase = getSupabaseAdmin();
 
   // Check if we're in birthday week - if so, return birthday actions
+  // BUT: Add strict validation BEFORE calling getBirthdayWeekInfo to prevent false positives
   if (userProfile?.spouse_birthday) {
-    const { getBirthdayWeekInfo } = await import('@/lib/birthday-utils');
+    // First, do a quick check: parse the birthday and see if it's within 21 days
+    // This prevents calling getBirthdayWeekInfo unnecessarily
     const today = new Date();
-    const birthdayInfo = getBirthdayWeekInfo(
-      userProfile.spouse_birthday,
-      userProfile.work_days || null,
-      today
-    );
+    const todayStart = new Date(today);
+    todayStart.setHours(0, 0, 0, 0);
+    
+    const birthdayInput = userProfile.spouse_birthday;
+    const birthdayDate = typeof birthdayInput === 'string' 
+      ? new Date(birthdayInput) 
+      : birthdayInput;
+    
+    if (!isNaN(birthdayDate.getTime())) {
+      // Get this year's birthday
+      const currentYear = today.getFullYear();
+      const thisYearBirthday = new Date(birthdayDate);
+      thisYearBirthday.setFullYear(currentYear);
+      thisYearBirthday.setHours(0, 0, 0, 0);
 
-    if (birthdayInfo.isBirthdayWeek) {
-      // We're in birthday week - return birthday planning actions
-      return await selectBirthdayActions(
-        userId,
-        subscriptionTier,
-        categoryScores,
-        userProfile
-      );
+      // If birthday has already passed this year, use next year
+      const birthdayThisYear = thisYearBirthday < todayStart
+        ? new Date(thisYearBirthday.getFullYear() + 1, thisYearBirthday.getMonth(), thisYearBirthday.getDate())
+        : thisYearBirthday;
+
+      // Calculate days until birthday
+      const daysUntilBirthday = Math.floor((birthdayThisYear.getTime() - todayStart.getTime()) / (1000 * 60 * 60 * 24));
+      
+      // STRICT CHECK: Only proceed if birthday is within next 21 days
+      // This prevents getBirthdayWeekInfo from being called when birthday is months away
+      // CRITICAL: This is the PRIMARY safeguard - if birthday is more than 21 days away, NEVER serve birthday actions
+      if (daysUntilBirthday < 0 || daysUntilBirthday > 21) {
+        // Birthday is too far away - skip birthday actions entirely
+        console.log(`[selectWeeklyPlanningActions] Skipping birthday actions for user ${userId}: birthday is ${daysUntilBirthday} days away (must be 0-21 days)`);
+      } else if (daysUntilBirthday >= 0 && daysUntilBirthday <= 21) {
+        // Only proceed if birthday is within the valid range
+        const { getBirthdayWeekInfo } = await import('@/lib/birthday-utils');
+        const birthdayInfo = getBirthdayWeekInfo(
+          userProfile.spouse_birthday,
+          userProfile.work_days || null,
+          today
+        );
+
+        if (birthdayInfo.isBirthdayWeek) {
+          // We're in birthday week - return birthday planning actions
+          return await selectBirthdayActions(
+            userId,
+            subscriptionTier,
+            categoryScores,
+            userProfile
+          );
+        } else {
+          console.log(`[selectWeeklyPlanningActions] Skipping birthday actions for user ${userId}: not in birthday week (daysUntilBirthday=${daysUntilBirthday}, isBirthdayWeek=${birthdayInfo.isBirthdayWeek})`);
+        }
+      }
     }
   }
 
@@ -580,41 +618,65 @@ export async function selectBirthdayActions(
   categoryScores?: CategoryScores,
   userProfile?: UserProfile
 ) {
-  // CRITICAL: Double-check that birthday is within reasonable timeframe (21 days)
-  // This prevents serving birthday actions months in advance
-  if (userProfile?.spouse_birthday) {
-    const { getBirthdayWeekInfo } = await import('@/lib/birthday-utils');
-    const today = new Date();
-    const birthdayInfo = getBirthdayWeekInfo(
-      userProfile.spouse_birthday,
-      userProfile.work_days || null,
-      today
-    );
-    
-    // If birthday is not within the next 21 days, return empty array immediately
-    // This is a safeguard even if getBirthdayWeekInfo.isBirthdayWeek is incorrectly true
-    const birthdayDate = birthdayInfo.birthdayDate;
-    if (birthdayDate) {
-      const todayStart = new Date(today);
-      todayStart.setHours(0, 0, 0, 0);
-      const daysUntilBirthday = Math.floor((birthdayDate.getTime() - todayStart.getTime()) / (1000 * 60 * 60 * 24));
-      
-      // Only serve if birthday is within next 21 days (3 weeks)
-      if (daysUntilBirthday < 0 || daysUntilBirthday > 21) {
-        console.log(`[selectBirthdayActions] Skipping birthday actions for user ${userId}: birthday is ${daysUntilBirthday} days away (too far)`);
-        return [];
-      }
-    }
-    
-    // Additional check: if getBirthdayWeekInfo says it's NOT birthday week, don't serve
-    if (!birthdayInfo.isBirthdayWeek) {
-      console.log(`[selectBirthdayActions] Skipping birthday actions for user ${userId}: not in birthday week`);
-      return [];
-    }
-  } else {
-    // No birthday set, return empty
+  // CRITICAL: Multiple safeguards to prevent serving birthday actions when birthday is not coming up
+  if (!userProfile?.spouse_birthday) {
+    console.log(`[selectBirthdayActions] Skipping birthday actions for user ${userId}: no birthday set`);
     return [];
   }
+
+  const { getBirthdayWeekInfo } = await import('@/lib/birthday-utils');
+  const today = new Date();
+  const todayStart = new Date(today);
+  todayStart.setHours(0, 0, 0, 0);
+  
+  // Parse birthday date
+  const birthdayInput = userProfile.spouse_birthday;
+  const birthdayDate = typeof birthdayInput === 'string' 
+    ? new Date(birthdayInput) 
+    : birthdayInput;
+  
+  if (isNaN(birthdayDate.getTime())) {
+    console.log(`[selectBirthdayActions] Skipping birthday actions for user ${userId}: invalid birthday date`);
+    return [];
+  }
+
+  // Get this year's birthday
+  const currentYear = today.getFullYear();
+  const thisYearBirthday = new Date(birthdayDate);
+  thisYearBirthday.setFullYear(currentYear);
+  thisYearBirthday.setHours(0, 0, 0, 0);
+
+  // If birthday has already passed this year, use next year
+  const birthdayThisYear = thisYearBirthday < todayStart
+    ? new Date(thisYearBirthday.getFullYear() + 1, thisYearBirthday.getMonth(), thisYearBirthday.getDate())
+    : thisYearBirthday;
+
+  // Calculate days until birthday
+  const daysUntilBirthday = Math.floor((birthdayThisYear.getTime() - todayStart.getTime()) / (1000 * 60 * 60 * 24));
+  
+  // STRICT CHECK: Only serve if birthday is within next 21 days (3 weeks)
+  // This is the PRIMARY safeguard - if birthday is more than 21 days away, NEVER serve birthday actions
+  // CRITICAL: This check MUST come first and MUST prevent any birthday actions from being served if birthday is too far away
+  if (daysUntilBirthday < 0 || daysUntilBirthday > 21) {
+    console.log(`[selectBirthdayActions] BLOCKING birthday actions for user ${userId}: birthday is ${daysUntilBirthday} days away (must be 0-21 days). Birthday date: ${birthdayThisYear.toISOString().split('T')[0]}, Today: ${todayStart.toISOString().split('T')[0]}`);
+    return [];
+  }
+
+  // Secondary check: use getBirthdayWeekInfo to verify we're in the correct week
+  const birthdayInfo = getBirthdayWeekInfo(
+    userProfile.spouse_birthday,
+    userProfile.work_days || null,
+    today
+  );
+  
+  // Additional check: if getBirthdayWeekInfo says it's NOT birthday week, don't serve
+  if (!birthdayInfo.isBirthdayWeek) {
+    console.log(`[selectBirthdayActions] Skipping birthday actions for user ${userId}: not in birthday week according to getBirthdayWeekInfo`);
+    return [];
+  }
+  
+  // Log for debugging
+  console.log(`[selectBirthdayActions] Serving birthday actions for user ${userId}: birthday is ${daysUntilBirthday} days away, isBirthdayWeek=${birthdayInfo.isBirthdayWeek}`);
 
   const adminSupabase = getSupabaseAdmin();
 
@@ -640,8 +702,10 @@ export async function selectBirthdayActions(
   const hiddenActionIds = hiddenActions?.map((ha) => ha.action_id) || [];
 
   // Get birthday-specific actions (planning_required actions with birthday keywords)
-  // Birthday actions include: birthday party, weekend getaway, special dinner, experience, scavenger hunt, etc.
-  const birthdayKeywords = ['birthday', 'surprise party', 'weekend getaway', 'special dinner', 'experience', 'scavenger hunt', 'photo shoot', 'staycation'];
+  // CRITICAL: Only match actions that explicitly mention "birthday" in the name or description
+  // This prevents generic actions (like "Date Night", "Photo Album", "Staycation") from being served
+  // unless they are specifically birthday-themed (e.g., "Plan a Birthday Staycation")
+  const birthdayKeywords = ['birthday'];
   
   let { data: actions, error } = await adminSupabase
     .from('actions')
@@ -654,11 +718,13 @@ export async function selectBirthdayActions(
     return [];
   }
 
-  // Filter to birthday-specific actions by checking name and description
+  // Filter to birthday-specific actions - MUST contain "birthday" in name or description
+  // This is strict to prevent generic planning actions from being served as birthday actions
   if (actions) {
     actions = actions.filter((action) => {
       const actionText = `${action.name || ''} ${action.description || ''}`.toLowerCase();
-      return birthdayKeywords.some(keyword => actionText.includes(keyword));
+      // Must explicitly contain "birthday" - no generic keywords
+      return actionText.includes('birthday');
     });
   }
 

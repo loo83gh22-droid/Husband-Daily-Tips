@@ -68,7 +68,10 @@ export function generateEmailHTML(tip: EmailTip, baseUrl: string): string {
           ${isFirstWorkDay && weeklyPlanningActions.length > 0 ? `
             <!-- First Work Day: Planning Actions - Choose 1 (Full Details) -->
             <div style="background-color: #fef3c7; border-left: 4px solid #f59e0b; border-radius: 8px; padding: 25px; margin-bottom: 30px;">
-              ${weeklyPlanningActions.some(a => a.name?.toLowerCase().includes('birthday')) ? `
+              ${weeklyPlanningActions.length > 0 && weeklyPlanningActions.every(a => {
+                const actionText = `${a.name || ''} ${a.description || ''}`.toLowerCase();
+                return actionText.includes('birthday');
+              }) ? `
                 <h3 style="color: #78350f; font-size: 18px; margin: 0 0 15px 0; font-weight: 600;">
                   🎉 Birthday Planning Actions
                 </h3>
@@ -126,7 +129,10 @@ export function generateEmailHTML(tip: EmailTip, baseUrl: string): string {
             <!-- Other Work Days: Planning Actions Summarized Table -->
             <div style="background-color: #f3f4f6; border-left: 4px solid #6b7280; border-radius: 8px; padding: 20px; margin-bottom: 30px;">
               <h3 style="color: #374151; font-size: 16px; margin: 0 0 15px 0; font-weight: 600;">
-                ${weeklyPlanningActions.some(a => a.name?.toLowerCase().includes('birthday')) ? '🎉 This Week\'s Birthday Planning Actions' : weeklyPlanningActions.some(a => {
+                ${weeklyPlanningActions.length > 0 && weeklyPlanningActions.every(a => {
+                  const actionText = `${a.name || ''} ${a.description || ''}`.toLowerCase();
+                  return actionText.includes('birthday');
+                }) ? '🎉 This Week\'s Birthday Planning Actions' : weeklyPlanningActions.some(a => {
                   const actionText = `${a.name || ''} ${a.description || ''}`.toLowerCase();
                   const holidayKeywords = ['canada day', 'independence day', 'thanksgiving', 'valentine', 'christmas', 'new year', 'memorial day', 'labor day', 'labour day', 'victoria day', 'easter'];
                   return holidayKeywords.some(keyword => actionText.includes(keyword));
