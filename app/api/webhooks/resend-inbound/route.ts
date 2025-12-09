@@ -184,24 +184,11 @@ export async function POST(request: Request) {
       fromEmail.toLowerCase().includes('dmarc@');
 
     if (isAutomatedEmail || isDMARCReport) {
-      logger.log('Skipping automated email (DMARC/bounce/etc):', { fromEmail, subject });
-      // Store it with a special status but don't process as user reply
-      const supabase = getSupabaseAdmin();
-      try {
-        await storeEmailReply(supabase, {
-          from_email: fromEmail,
-          from_name: 'Automated System',
-          subject,
-          content: text || html || 'Automated email - no content',
-          user_id: null,
-          status: 'automated_email',
-        });
-      } catch (error) {
-        // Log but don't fail - automated emails aren't critical
-        logger.warn('Failed to store automated email:', error);
-      }
+      logger.log('Skipping automated email (DMARC/bounce/etc) - not storing:', { fromEmail, subject });
+      // Don't store automated emails - they're just noise in the database
+      // Return success but don't process or store
       return NextResponse.json({ 
-        message: 'Automated email filtered out',
+        message: 'Automated email filtered out - not stored',
         filtered: true 
       }, { status: 200 });
     }
