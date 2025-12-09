@@ -217,16 +217,27 @@ export async function GET(request: Request) {
 
     logger.log(`[Cron Job] Found ${usersToEmail.length} users to email at 6am in their timezone`);
 
-    // Get today's date (email now sends today's action, not tomorrow's)
-    const today = new Date();
-    const todayStr = today.toISOString().split('T')[0];
-
     let sentCount = 0;
     let errorCount = 0;
 
     // For each user where it's 6am, get an action for today (email and dashboard now in sync)
     for (const user of usersToEmail) {
       try {
+        // Get today's date in the user's timezone (not UTC)
+        // This ensures email and dashboard use the same date
+        const timezone = user.timezone || 'America/New_York';
+        const dateFormatter = new Intl.DateTimeFormat('en-CA', {
+          timeZone: timezone,
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+        });
+        const todayInTimezone = dateFormatter.format(now);
+        const [year, month, day] = todayInTimezone.split('-').map(Number);
+        const today = new Date(year, month - 1, day); // month is 0-indexed
+        today.setHours(0, 0, 0, 0); // Set to start of day
+        const todayStr = today.toISOString().split('T')[0];
+        
         const dayOfWeek = user.dayOfWeek; // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
         const firstWorkDay = getFirstWorkDay(user.work_days);
         const isFirstWorkDay = dayOfWeek === firstWorkDay;
@@ -267,16 +278,17 @@ export async function GET(request: Request) {
 
         // For Sunday-Thursday, only select weekly_routine actions for daily action
         // For Friday-Saturday, use normal selection (planning_required allowed)
-        // Use TODAY's action so email and dashboard are in sync
-        const { selectTodayAction } = await import('@/lib/action-selection');
+        // Use TODAY's action in user's timezone so email and dashboard are in sync
+        const { selectActionForDate } = await import('@/lib/action-selection');
         const weeklyRoutineOnly = dayOfWeek >= 0 && dayOfWeek <= 4; // Sunday-Thursday
         
-        const dailyAction = await selectTodayAction(
+        const dailyAction = await selectActionForDate(
           user.id,
           user.subscription_tier || 'free',
           categoryScores,
           userProfile,
-          weeklyRoutineOnly
+          weeklyRoutineOnly,
+          today // Pass the timezone-aware date
         );
 
         if (!dailyAction) {

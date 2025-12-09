@@ -32,7 +32,7 @@ async function getUserData(auth0Id: string) {
   const adminSupabase = getSupabaseAdmin();
   const { data: user, error } = await adminSupabase
     .from('users')
-      .select('*, subscription_tier, username, name, email, has_kids, kids_live_with_you, trial_started_at, trial_ends_at, country, partner_name, spouse_birthday, work_days, survey_completed, show_all_country_actions')
+      .select('*, subscription_tier, username, name, email, has_kids, kids_live_with_you, trial_started_at, trial_ends_at, country, partner_name, spouse_birthday, work_days, survey_completed, show_all_country_actions, timezone')
     .eq('auth0_id', auth0Id)
     .single();
 
@@ -43,14 +43,45 @@ async function getUserData(auth0Id: string) {
   return user;
 }
 
-async function getTodayAction(userId: string | null, subscriptionTier: string, categoryScores?: any, userProfile?: { has_kids?: boolean | null; kids_live_with_you?: boolean | null; country?: string | null; work_days?: number[] | null; spouse_birthday?: string | Date | null; show_all_country_actions?: boolean }) {
+async function getTodayAction(userId: string | null, subscriptionTier: string, timezone?: string | null, categoryScores?: any, userProfile?: { has_kids?: boolean | null; kids_live_with_you?: boolean | null; country?: string | null; work_days?: number[] | null; spouse_birthday?: string | Date | null; show_all_country_actions?: boolean }) {
   if (!userId) return null;
+
+  // Get today's date in the user's timezone (same as email cron)
+  // This ensures email and dashboard use the same date
+  const userTimezone = timezone || 'America/New_York';
+  const now = new Date();
+  const dateFormatter = new Intl.DateTimeFormat('en-CA', {
+    timeZone: userTimezone,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  });
+  const todayInTimezone = dateFormatter.format(now);
+  const [year, month, day] = todayInTimezone.split('-').map(Number);
+  const today = new Date(year, month - 1, day); // month is 0-indexed
+  today.setHours(0, 0, 0, 0); // Set to start of day
+  const todayStr = today.toISOString().split('T')[0];
+  
+  // Get day of week in user's timezone (same as email cron)
+  const dayFormatter = new Intl.DateTimeFormat('en-US', {
+    timeZone: userTimezone,
+    weekday: 'long',
+  });
+  const weekdayName = dayFormatter.format(now);
+  const weekdayMap: Record<string, number> = {
+    'Sunday': 0, 'Monday': 1, 'Tuesday': 2, 'Wednesday': 3,
+    'Thursday': 4, 'Friday': 5, 'Saturday': 6
+  };
+  const dayOfWeek = weekdayMap[weekdayName] ?? new Date().getDay();
+  
+  // For Sunday-Thursday, only select weekly_routine actions (same as email cron)
+  const weeklyRoutineOnly = dayOfWeek >= 0 && dayOfWeek <= 4;
 
   // Use the shared action selection function (same logic as email cron)
   // This ensures consistency between email and dashboard
-  // Now using TODAY's action so email and dashboard are in sync
-  const { selectTodayAction } = await import('@/lib/action-selection');
-  const action = await selectTodayAction(userId, subscriptionTier, categoryScores, userProfile);
+  // Use selectActionForDate with the timezone-aware date and weeklyRoutineOnly parameter
+  const { selectActionForDate } = await import('@/lib/action-selection');
+  const action = await selectActionForDate(userId, subscriptionTier, categoryScores, userProfile, weeklyRoutineOnly, today);
 
   if (!action) {
     return null;
@@ -58,8 +89,6 @@ async function getTodayAction(userId: string | null, subscriptionTier: string, c
 
   // Get the user_daily_actions record to include favorited and completed status
   const adminSupabase = getSupabaseAdmin();
-  const today = new Date();
-  const todayStr = today.toISOString().split('T')[0];
 
   const { data: existingAction } = await adminSupabase
     .from('user_daily_actions')
@@ -622,6 +651,7 @@ export default async function Dashboard() {
     displayAction = await getTodayAction(
       user.id,
       user.subscription_tier || 'free',
+      (user as any).timezone || null,
       stats.categoryScores,
       { 
         has_kids: (user as any).has_kids ?? null, 
