@@ -5,12 +5,7 @@ import AuthProvider from '@/components/AuthProvider';
 import { ToastProvider } from '@/components/Toast';
 import GoogleAnalytics from '@/components/GoogleAnalytics';
 import FacebookPixel from '@/components/FacebookPixel';
-import dynamic from 'next/dynamic';
-
-// Dynamically import UTMTracker with SSR disabled to prevent static generation issues
-const UTMTracker = dynamic(() => import('@/components/UTMTracker'), {
-  ssr: false,
-});
+import UTMTrackerWrapper from '@/components/UTMTrackerWrapper';
 
 const inter = Inter({ 
   subsets: ['latin'],
@@ -108,7 +103,7 @@ export default function RootLayout({
       <body className={`${inter.className} font-sans`} suppressHydrationWarning style={{ fontFamily: 'Inter, system-ui, -apple-system, sans-serif' }}>
         <GoogleAnalytics />
         <FacebookPixel />
-        <UTMTracker />
+        <UTMTrackerWrapper />
         <AuthProvider>
           <ToastProvider>{children}</ToastProvider>
         </AuthProvider>
