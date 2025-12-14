@@ -700,9 +700,10 @@ export default async function Dashboard() {
 
   const lastActionDate = lastAction?.date || undefined;
 
-  // Check if user is new (created in last 5 minutes) for signup tracking
+  // Check if user is new (created in last 24 hours) for signup tracking
+  // This gives a wider window to catch signups that happen but user visits dashboard later
   const userCreatedAt = user.created_at ? new Date(user.created_at) : null;
-  const isNewUser = userCreatedAt && (Date.now() - userCreatedAt.getTime()) < 5 * 60 * 1000; // 5 minutes
+  const isNewUser = userCreatedAt && (Date.now() - userCreatedAt.getTime()) < 24 * 60 * 60 * 1000; // 24 hours
 
   return (
     <div className="min-h-screen bg-slate-950">
