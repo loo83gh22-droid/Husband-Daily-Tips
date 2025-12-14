@@ -59,6 +59,11 @@ export default function GettingStarted({ userId, totalCompletions }: GettingStar
           <p className="text-slate-300 text-base md:text-lg mb-4">
             Welcome! Here&apos;s how to make the most of Best Husband Ever:
           </p>
+          <div className="bg-primary-500/10 border border-primary-500/30 rounded-lg p-3 mb-4">
+            <p className="text-sm text-slate-200">
+              <strong className="text-primary-300">Quick Start:</strong> Complete your first action below to begin building your Husband Health score. Every action you complete moves you closer to becoming the best husband ever.
+            </p>
+          </div>
         </div>
         <button
           onClick={handleDontShowAgain}

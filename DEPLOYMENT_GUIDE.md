@@ -20,7 +20,7 @@
 After creating the repo, run these commands (replace `YOUR_USERNAME` with your GitHub username):
 
 ```bash
-cd "C:\Users\keepi\OneDrive\Desktop\Coding\Test Project"
+cd "C:\Users\keepi\OneDrive\Desktop\Coding\Best_Husband_Ever"
 git remote add origin https://github.com/YOUR_USERNAME/husband-daily-tips.git
 git branch -M main
 git push -u origin main
@@ -69,7 +69,7 @@ git push -u origin main
 
 ```bash
 npm i -g vercel
-cd "C:\Users\keepi\OneDrive\Desktop\Coding\Test Project"
+cd "C:\Users\keepi\OneDrive\Desktop\Coding\Best_Husband_Ever"
 vercel
 ```
 

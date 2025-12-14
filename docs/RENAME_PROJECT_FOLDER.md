@@ -1,8 +1,8 @@
-# How to Rename "Test Project" Folder - Safe Guide
+# How to Rename Project Folder - Safe Guide
 
 ## ✅ **It's Safe!**
 
-Your code has **no hardcoded references** to "Test Project". The folder name appears only in:
+Your code has **no hardcoded references** to the folder name. The folder name appears only in:
 - Documentation examples (non-critical)
 - Git internally (handled automatically)
 
@@ -30,7 +30,7 @@ git push  # Optional but recommended
 ### Step 3: Rename the Folder
 1. Open File Explorer
 2. Navigate to: `C:\Users\keepi\OneDrive\Desktop\Coding\`
-3. Right-click "Test Project" folder
+3. Right-click "Best_Husband_Ever" folder
 4. Select "Rename"
 5. Type new name (e.g., `best-husband-ever` or `bhe-app`)
 6. Press Enter
@@ -66,7 +66,7 @@ npm run dev
 ## ⚠️ **What to Update (Optional)**
 
 ### Documentation Files (Optional cleanup)
-These files mention "Test Project" but won't break anything:
+These files mention the old folder name but won't break anything:
 
 - `docs/WORKING_ON_MULTIPLE_PROJECTS.md` - Examples
 - `DEPLOYMENT_GUIDE.md` - Examples

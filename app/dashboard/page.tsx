@@ -7,7 +7,8 @@ import SubscriptionBanner from '@/components/SubscriptionBanner';
 import HealthBar from '@/components/HealthBar';
 import BadgesDisplay from '@/components/BadgesDisplay';
 import DashboardNav from '@/components/DashboardNav';
-import OnboardingSurvey from '@/components/OnboardingSurvey';
+import SurveyAndWelcomeHandler from '@/components/SurveyAndWelcomeHandler';
+import FirstWeekExperience from '@/components/FirstWeekExperience';
 import OutstandingActions from '@/components/OutstandingActions';
 import OnboardingTour, { TourButton } from '@/components/OnboardingTour';
 import QuickActions from '@/components/QuickActions';
@@ -716,6 +717,10 @@ export default async function Dashboard() {
       <TourButton />
       <ReferralTracker />
       <SurveyPromptChecker userId={user.id} surveyCompleted={user.survey_completed || false} />
+      <SurveyAndWelcomeHandler 
+        userId={user.id} 
+        surveyCompleted={user.survey_completed || false}
+      />
       <NotificationSystem
         currentStreak={stats.currentStreak}
         healthScore={stats.healthScore}
@@ -755,6 +760,19 @@ export default async function Dashboard() {
         <div className="grid lg:grid-cols-[1.4fr,1fr] gap-4 sm:gap-6 md:gap-8 lg:gap-8 xl:gap-10 items-start">
           {/* Left column: Daily tip + health bar */}
           <div className="w-full min-w-0 max-w-full">
+            {/* First Week Experience - Show for first 7 days */}
+            {user.created_at && (() => {
+              const daysSinceSignup = Math.floor((Date.now() - new Date(user.created_at).getTime()) / (1000 * 60 * 60 * 24));
+              return daysSinceSignup <= 7 ? (
+                <FirstWeekExperience
+                  userId={user.id}
+                  daysSinceSignup={daysSinceSignup + 1} // +1 because day 1 is the signup day
+                  totalCompletions={stats.totalTips}
+                  currentStreak={stats.currentStreak}
+                />
+              ) : null;
+            })()}
+            
             {/* Getting Started Section - Only show for users with 0 completions */}
             {stats.totalTips === 0 && (
               <GettingStarted userId={user.id} totalCompletions={stats.totalTips} />
@@ -788,10 +806,22 @@ export default async function Dashboard() {
                 />
               </div>
             ) : (
-              <div className="bg-slate-900/80 rounded-xl shadow-lg p-8 text-center border border-slate-800">
-                <p className="text-slate-300">
-                  No action available at the moment. Please check back later.
-                </p>
+              <div className="bg-gradient-to-br from-slate-900/80 to-slate-800/80 rounded-xl shadow-lg p-8 md:p-10 text-center border border-slate-700/50">
+                <div className="max-w-md mx-auto">
+                  <div className="text-5xl mb-4">📋</div>
+                  <h3 className="text-xl font-semibold text-slate-50 mb-2">
+                    No action available right now
+                  </h3>
+                  <p className="text-slate-300 mb-6">
+                    Your daily action will appear here. Check back later or browse the Actions library to find actions you can do anytime.
+                  </p>
+                  <Link
+                    href="/dashboard/actions"
+                    className="inline-flex items-center gap-2 px-6 py-3 bg-primary-500 text-slate-950 font-semibold rounded-lg hover:bg-primary-400 transition-colors"
+                  >
+                    Browse Actions →
+                  </Link>
+                </div>
               </div>
             )}
 

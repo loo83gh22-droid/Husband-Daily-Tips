@@ -9,7 +9,7 @@
 1. **Create a new folder for your other project**
    ```
    Example:
-   - Current: C:\Users\keepi\OneDrive\Desktop\Coding\Test Project
+   - Current: C:\Users\keepi\OneDrive\Desktop\Coding\Best_Husband_Ever
    - New: C:\Users\keepi\OneDrive\Desktop\Coding\Other Project Name
    ```
 
@@ -39,7 +39,7 @@ If you want to switch between projects more quickly:
    {
      "folders": [
        {
-         "path": "C:\\Users\\keepi\\OneDrive\\Desktop\\Coding\\Test Project"
+         "path": "C:\\Users\\keepi\\OneDrive\\Desktop\\Coding\\Best_Husband_Ever"
        }
      ],
      "settings": {
@@ -120,7 +120,7 @@ git push  # If you want to save remotely
 
 1. ✅ **Open this project folder**
    ```
-   File → Open Recent → "Test Project"
+   File → Open Recent → "Best_Husband_Ever"
    ```
 
 2. ✅ **Check your status**
@@ -156,7 +156,7 @@ git push  # If you want to save remotely
 
 ```
 C:\Users\keepi\OneDrive\Desktop\Coding\
-├── Test Project\              ← Current Best Husband Ever project
+├── Best_Husband_Ever\         ← Current Best Husband Ever project
 │   ├── app\
 │   ├── docs\
 │   ├── package.json
