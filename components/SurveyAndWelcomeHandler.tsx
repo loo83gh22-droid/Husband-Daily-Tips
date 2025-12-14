@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import OnboardingSurveyEnhanced from './OnboardingSurveyEnhanced';
 import PersonalizedWelcomeModal from './PersonalizedWelcomeModal';
@@ -11,7 +11,7 @@ interface SurveyAndWelcomeHandlerProps {
   onSurveyComplete?: () => void;
 }
 
-export default function SurveyAndWelcomeHandler({
+function SurveyAndWelcomeHandlerInner({
   userId,
   surveyCompleted,
   onSurveyComplete,
@@ -99,5 +99,13 @@ export default function SurveyAndWelcomeHandler({
   }
 
   return null;
+}
+
+export default function SurveyAndWelcomeHandler(props: SurveyAndWelcomeHandlerProps) {
+  return (
+    <Suspense fallback={null}>
+      <SurveyAndWelcomeHandlerInner {...props} />
+    </Suspense>
+  );
 }
 

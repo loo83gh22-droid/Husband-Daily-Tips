@@ -1,9 +1,9 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 
-export default function ReferralCodeHandler() {
+function ReferralCodeHandlerInner() {
   const searchParams = useSearchParams();
   const refCode = searchParams.get('ref');
 
@@ -15,5 +15,13 @@ export default function ReferralCodeHandler() {
   }, [refCode]);
 
   return null; // This component doesn't render anything
+}
+
+export default function ReferralCodeHandler() {
+  return (
+    <Suspense fallback={null}>
+      <ReferralCodeHandlerInner />
+    </Suspense>
+  );
 }
 
