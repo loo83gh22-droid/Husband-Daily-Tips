@@ -1,34 +1,34 @@
 'use client';
 
-import { useEffect, Suspense } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useEffect } from 'react';
 import { captureUTMParameters } from '@/lib/analytics';
 
 /**
- * Internal component that uses useSearchParams
- * Wrapped in Suspense to satisfy Next.js requirements
- */
-function UTMTrackerInner() {
-  const searchParams = useSearchParams();
-
-  useEffect(() => {
-    // Capture UTM parameters when component mounts or URL changes
-    captureUTMParameters();
-  }, [searchParams]);
-
-  return null;
-}
-
-/**
  * Component to capture and track UTM parameters from URL
+ * Uses window.location directly instead of useSearchParams to avoid static generation issues
  * Should be placed in the root layout or main page
- * Wrapped in Suspense to satisfy Next.js requirements
  */
 export default function UTMTracker() {
-  return (
-    <Suspense fallback={null}>
-      <UTMTrackerInner />
-    </Suspense>
-  );
+  useEffect(() => {
+    // Only run on client side
+    if (typeof window === 'undefined') return;
+    
+    // Capture UTM parameters when component mounts
+    captureUTMParameters();
+    
+    // Also capture on navigation (for client-side routing)
+    const handleLocationChange = () => {
+      captureUTMParameters();
+    };
+    
+    // Listen for popstate (back/forward navigation)
+    window.addEventListener('popstate', handleLocationChange);
+    
+    return () => {
+      window.removeEventListener('popstate', handleLocationChange);
+    };
+  }, []);
+
+  return null;
 }
 
