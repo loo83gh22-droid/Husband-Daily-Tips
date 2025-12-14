@@ -1,14 +1,13 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { captureUTMParameters } from '@/lib/analytics';
 
 /**
- * Component to capture and track UTM parameters from URL
- * Should be placed in the root layout or main page
+ * Internal component that uses useSearchParams
  */
-export default function UTMTracker() {
+function UTMTrackerInner() {
   const searchParams = useSearchParams();
 
   useEffect(() => {
@@ -17,5 +16,18 @@ export default function UTMTracker() {
   }, [searchParams]);
 
   return null;
+}
+
+/**
+ * Component to capture and track UTM parameters from URL
+ * Should be placed in the root layout or main page
+ * Wrapped in Suspense to satisfy Next.js requirements
+ */
+export default function UTMTracker() {
+  return (
+    <Suspense fallback={null}>
+      <UTMTrackerInner />
+    </Suspense>
+  );
 }
 
