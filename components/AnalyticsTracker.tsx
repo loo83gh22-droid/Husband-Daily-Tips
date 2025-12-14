@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { trackEvent, trackSignup, trackSurveyCompletion, trackSubscription, trackActionCompletion } from '@/lib/analytics';
+import { trackEvent, trackSignup, trackSurveyCompletion, trackSubscription, trackActionCompletion, trackFacebookSignup, trackFacebookPurchase } from '@/lib/analytics';
 
 interface AnalyticsTrackerProps {
   isNewUser?: boolean;
@@ -32,6 +32,7 @@ export default function AnalyticsTracker({
         // Determine signup method (we'll default to email, could be enhanced)
         const signupMethod = 'email'; // Could check Auth0 connection type if available
         trackSignup(signupMethod);
+        trackFacebookSignup(signupMethod);
         sessionStorage.setItem('signup_tracked', 'true');
       }
     }
@@ -52,6 +53,7 @@ export default function AnalyticsTracker({
     if (subscriptionSuccess === 'true' && subscriptionTier && subscriptionPrice && !subscriptionTracked) {
       const tier = subscriptionTier === 'premium' ? 'premium' : 'pro';
       trackSubscription(tier, subscriptionPrice);
+      trackFacebookPurchase(subscriptionPrice);
       sessionStorage.setItem('subscription_tracked', 'true');
     }
   }, [isNewUser, surveyCompleted, searchParams, subscriptionTier, subscriptionPrice]);

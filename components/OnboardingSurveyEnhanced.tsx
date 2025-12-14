@@ -323,29 +323,43 @@ export default function OnboardingSurveyEnhanced({ userId, onComplete }: Onboard
           {/* Response Options */}
           <div className="space-y-3">
             {currentQuestion.response_type === 'scale' ? (
-              // 1-5 Scale Options
-              <div className="grid grid-cols-5 gap-3">
-                {[1, 2, 3, 4, 5].map((value) => {
-                  const isSelected = responses.get(currentQuestion.id) === value;
-                  return (
-                    <button
-                      key={value}
-                      onClick={() => handleResponse(value)}
-                      disabled={submitting}
-                      className={`p-4 rounded-lg border-2 transition-all ${
-                        isSelected
-                          ? 'bg-primary-500 border-primary-400 text-slate-50 shadow-lg scale-105'
-                          : 'bg-slate-800/50 border-slate-700 text-slate-300 hover:border-slate-600 hover:bg-slate-800'
-                      } disabled:opacity-50 disabled:cursor-not-allowed`}
-                    >
-                      <div className="text-2xl font-bold mb-1">{value}</div>
-                      <div className="text-[10px] text-slate-400">
-                        {value === 1 ? 'Never' : value === 2 ? 'Rarely' : value === 3 ? 'Sometimes' : value === 4 ? 'Often' : 'Always'}
-                      </div>
-                    </button>
-                  );
-                })}
-              </div>
+              // Scale Options - 1-3 for baseline questions (1-18), 1-5 for goal-setting questions
+              (() => {
+                const isBaselineQuestion = currentQuestion.id <= 18;
+                const scaleValues = isBaselineQuestion ? [1, 2, 3] : [1, 2, 3, 4, 5];
+                const gridCols = isBaselineQuestion ? 'grid-cols-3' : 'grid-cols-5';
+                const getLabel = (value: number) => {
+                  if (isBaselineQuestion) {
+                    return value === 1 ? 'No' : value === 2 ? 'Sometimes' : 'Yes';
+                  }
+                  return value === 1 ? 'Never' : value === 2 ? 'Rarely' : value === 3 ? 'Sometimes' : value === 4 ? 'Often' : 'Always';
+                };
+                
+                return (
+                  <div className={`grid ${gridCols} gap-3`}>
+                    {scaleValues.map((value) => {
+                      const isSelected = responses.get(currentQuestion.id) === value;
+                      return (
+                        <button
+                          key={value}
+                          onClick={() => handleResponse(value)}
+                          disabled={submitting}
+                          className={`p-4 rounded-lg border-2 transition-all ${
+                            isSelected
+                              ? 'bg-primary-500 border-primary-400 text-slate-50 shadow-lg scale-105'
+                              : 'bg-slate-800/50 border-slate-700 text-slate-300 hover:border-slate-600 hover:bg-slate-800'
+                          } disabled:opacity-50 disabled:cursor-not-allowed`}
+                        >
+                          <div className="text-2xl font-bold mb-1">{value}</div>
+                          <div className="text-[10px] text-slate-400">
+                            {getLabel(value)}
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                );
+              })()
             ) : (
               // Yes/No Options
               <div className="grid grid-cols-2 gap-4">

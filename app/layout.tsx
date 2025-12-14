@@ -4,6 +4,8 @@ import './globals.css';
 import AuthProvider from '@/components/AuthProvider';
 import { ToastProvider } from '@/components/Toast';
 import GoogleAnalytics from '@/components/GoogleAnalytics';
+import FacebookPixel from '@/components/FacebookPixel';
+import UTMTracker from '@/components/UTMTracker';
 
 const inter = Inter({ 
   subsets: ['latin'],
@@ -100,6 +102,8 @@ export default function RootLayout({
       </head>
       <body className={`${inter.className} font-sans`} suppressHydrationWarning style={{ fontFamily: 'Inter, system-ui, -apple-system, sans-serif' }}>
         <GoogleAnalytics />
+        <FacebookPixel />
+        <UTMTracker />
         <AuthProvider>
           <ToastProvider>{children}</ToastProvider>
         </AuthProvider>
