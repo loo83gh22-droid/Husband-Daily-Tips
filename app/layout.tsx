@@ -5,7 +5,12 @@ import AuthProvider from '@/components/AuthProvider';
 import { ToastProvider } from '@/components/Toast';
 import GoogleAnalytics from '@/components/GoogleAnalytics';
 import FacebookPixel from '@/components/FacebookPixel';
-import UTMTracker from '@/components/UTMTracker';
+import dynamic from 'next/dynamic';
+
+// Dynamically import UTMTracker with SSR disabled to prevent static generation issues
+const UTMTracker = dynamic(() => import('@/components/UTMTracker'), {
+  ssr: false,
+});
 
 const inter = Inter({ 
   subsets: ['latin'],
