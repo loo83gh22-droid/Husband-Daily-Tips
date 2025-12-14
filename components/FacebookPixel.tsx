@@ -2,25 +2,38 @@
 
 import Script from 'next/script';
 import { useEffect } from 'react';
-import { usePathname, useSearchParams } from 'next/navigation';
 
 interface FacebookPixelProps {
   pixelId?: string;
 }
 
 export default function FacebookPixel({ pixelId }: FacebookPixelProps) {
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
   const pixel = pixelId || process.env.NEXT_PUBLIC_FACEBOOK_PIXEL_ID;
 
   useEffect(() => {
     if (!pixel || typeof window === 'undefined') return;
 
-    // Track page view
-    if (window.fbq) {
-      window.fbq('track', 'PageView');
-    }
-  }, [pathname, searchParams, pixel]);
+    // Track page view on mount and navigation
+    const trackPageView = () => {
+      if (window.fbq) {
+        window.fbq('track', 'PageView');
+      }
+    };
+
+    // Track initial page view
+    trackPageView();
+
+    // Track on navigation (for client-side routing)
+    const handlePopState = () => {
+      trackPageView();
+    };
+
+    window.addEventListener('popstate', handlePopState);
+
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, [pixel]);
 
   if (!pixel) {
     return null;
