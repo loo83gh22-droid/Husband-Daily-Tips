@@ -298,55 +298,51 @@ export default async function Home() {
                 Daily actions that show you care. She&apos;ll notice. You&apos;ll both feel the difference.
               </p>
               <p className="text-base sm:text-lg md:text-xl text-slate-300 leading-relaxed mb-4 sm:mb-6 max-w-2xl">
-                Consistency transforms your relationship by building trust, connection, and genuine appreciation. It&apos;s the steady, reliable effort that shows you&apos;re committed that truly makes the difference.
-              </p>
-              <p className="text-sm sm:text-base md:text-lg text-slate-400 italic mb-6 sm:mb-8 max-w-2xl">
-                Designed for husbands, but it&apos;s not <span className="text-primary-400 font-semibold not-italic">just</span> for husbands. 
-                Boyfriends, partners, and anyone committed to leveling up their relationship can benefit.
+                One personalized action. Every day. No guesswork. Just clear steps that show you care.
               </p>
 
-              {/* Pricing Badge - Enhanced */}
-              <div className="mb-6 sm:mb-8 inline-flex items-center gap-2 px-4 sm:px-5 py-2 sm:py-2.5 bg-primary-500/10 border-2 border-primary-500/40 rounded-lg shadow-lg">
-                <span className="text-base sm:text-lg font-bold text-primary-300">Just $7/month</span>
-                <span className="text-xs sm:text-sm text-slate-400">after free trial</span>
+              {/* Free Trial Badge - More Prominent */}
+              <div className="mb-4 sm:mb-6 inline-flex items-center gap-2 px-5 sm:px-6 py-3 sm:py-3.5 bg-emerald-500/20 border-2 border-emerald-500/50 rounded-lg shadow-lg">
+                <span className="text-lg sm:text-xl font-bold text-emerald-300">7-Day Free Trial</span>
+                <span className="text-xs sm:text-sm text-slate-300">No credit card required</span>
               </div>
 
-              {/* Enhanced CTAs - Mobile Optimized */}
-              <div className="mb-6 sm:mb-8 flex flex-col sm:flex-row gap-3 sm:gap-4">
-                <Link
-                  href="/api/auth/login?returnTo=/dashboard"
-                  className="inline-flex items-center justify-center px-8 sm:px-10 py-4 sm:py-5 rounded-xl bg-primary-500 text-slate-950 text-base sm:text-lg md:text-xl font-bold shadow-2xl shadow-primary-500/30 hover:bg-primary-400 transition-all transform hover:scale-105 active:scale-95"
-                >
-                  Sign Up & Take Test →
-                </Link>
-                <Link
-                  href="/api/auth/login?returnTo=/dashboard"
-                  className="inline-flex items-center justify-center px-8 sm:px-10 py-4 sm:py-5 rounded-xl border-2 border-primary-500 text-primary-400 text-base sm:text-lg md:text-xl font-bold hover:bg-primary-500/10 transition-all transform hover:scale-105 active:scale-95"
-                >
-                  Start Free Trial →
-                </Link>
-              </div>
-              
-              {/* Enhanced Trust Signals - Simplified for desktop */}
-              <div className="mt-6 sm:mt-8">
-                <div className="flex flex-wrap items-center gap-4 sm:gap-5 text-xs sm:text-sm text-slate-400">
-                  <div className="flex items-center gap-1.5">
-                    <span className="text-emerald-400">✓</span>
-                    <span>No credit card</span>
-                  </div>
-                  <div className="flex items-center gap-1.5">
-                    <span className="text-emerald-400">🔒</span>
-                    <span>100% Secure</span>
-                  </div>
-                  <div className="flex items-center gap-1.5">
-                    <span className="text-emerald-400">↩️</span>
-                    <span>Cancel anytime</span>
-                  </div>
-                  <div className="hidden sm:flex items-center gap-1.5">
-                    <span className="text-primary-400">🛡️</span>
-                    <span>SSL Encrypted</span>
-                  </div>
+              {/* Quick Benefits List */}
+              <div className="mb-6 sm:mb-8 space-y-2 max-w-2xl">
+                <div className="flex items-center gap-2 text-slate-300">
+                  <span className="text-emerald-400 text-xl">✓</span>
+                  <span>Daily personalized actions delivered to your inbox</span>
                 </div>
+                <div className="flex items-center gap-2 text-slate-300">
+                  <span className="text-emerald-400 text-xl">✓</span>
+                  <span>Covering all 8 relationship categories</span>
+                </div>
+                <div className="flex items-center gap-2 text-slate-300">
+                  <span className="text-emerald-400 text-xl">✓</span>
+                  <span>Track your progress and see results</span>
+                </div>
+              </div>
+
+              {/* Single, Larger CTA */}
+              <div className="mb-4 sm:mb-6">
+                <Link
+                  href="/api/auth/login?returnTo=/dashboard"
+                  className="inline-flex items-center justify-center px-10 sm:px-12 py-5 sm:py-6 rounded-xl bg-primary-500 text-slate-950 text-lg sm:text-xl md:text-2xl font-bold shadow-2xl shadow-primary-500/30 hover:bg-primary-400 transition-all transform hover:scale-105 active:scale-95 w-full sm:w-auto"
+                >
+                  Start 7-Day Free Trial →
+                </Link>
+              </div>
+
+              {/* Trust Text */}
+              <p className="text-sm text-slate-400 mb-4">
+                No credit card required • Cancel anytime • 100% Secure
+              </p>
+
+              {/* Social Proof */}
+              <div className="mt-4">
+                <p className="text-sm text-slate-400">
+                  Join <span className="text-primary-400 font-semibold">hundreds of husbands</span> improving their relationships daily
+                </p>
               </div>
             </div>
 
@@ -448,7 +444,7 @@ export default async function Home() {
                 <div className="inline-flex items-center justify-center w-8 h-8 bg-primary-500 text-slate-950 rounded-full text-sm font-black mb-3 sm:mb-4">
                   1
                 </div>
-                <h3 className="text-xl sm:text-2xl font-bold text-slate-200 mb-3 sm:mb-4">Sign Up & Take the Test</h3>
+                <h3 className="text-xl sm:text-2xl font-bold text-slate-200 mb-3 sm:mb-4">Sign Up & Complete Survey</h3>
                 <p className="text-sm sm:text-base text-slate-400 leading-relaxed">
                   Sign up for free, then answer a few questions about your relationship. We&apos;ll create a personalized baseline and identify areas to focus on.
                 </p>
@@ -596,19 +592,13 @@ export default async function Home() {
                 </div>
               </div>
               
-              {/* Enhanced CTAs - Mobile Optimized */}
-              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center mb-6 sm:mb-8">
+              {/* Single, Larger CTA */}
+              <div className="flex justify-center mb-6 sm:mb-8">
                 <Link
-                  href="/api/auth/login"
-                  className="inline-flex items-center justify-center px-8 sm:px-10 py-4 sm:py-5 rounded-xl bg-primary-500 text-slate-950 text-base sm:text-lg md:text-xl font-bold shadow-2xl shadow-primary-500/30 hover:bg-primary-400 transition-all transform hover:scale-105 active:scale-95"
+                  href="/api/auth/login?returnTo=/dashboard"
+                  className="inline-flex items-center justify-center px-10 sm:px-12 py-5 sm:py-6 rounded-xl bg-primary-500 text-slate-950 text-lg sm:text-xl md:text-2xl font-bold shadow-2xl shadow-primary-500/30 hover:bg-primary-400 transition-all transform hover:scale-105 active:scale-95"
                 >
-                  Sign Up & Take Test →
-                </Link>
-                <Link
-                  href="/api/auth/login"
-                  className="inline-flex items-center justify-center px-8 sm:px-10 py-4 sm:py-5 rounded-xl border-2 border-primary-500 text-primary-400 text-base sm:text-lg md:text-xl font-bold hover:bg-primary-500/10 transition-all transform hover:scale-105 active:scale-95"
-                >
-                  Start Free Trial →
+                  Start 7-Day Free Trial →
                 </Link>
               </div>
               
