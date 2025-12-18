@@ -346,79 +346,106 @@ export default async function Home() {
               </div>
             </div>
 
-            {/* Mobile Stats Card - Enhanced */}
+            {/* Mobile CTA Card - Enhanced */}
             <div className="md:hidden mt-6 order-1 md:order-2">
-              <div className="relative bg-gradient-to-br from-slate-900/98 via-primary-950/30 to-slate-800/98 border-2 border-primary-500/50 rounded-2xl p-6 backdrop-blur-sm shadow-2xl shadow-primary-500/30 overflow-hidden">
-                <div className="text-center">
-                  <div className="inline-flex flex-col items-center justify-center bg-gradient-to-br from-primary-500/30 via-primary-600/25 to-emerald-500/25 rounded-2xl px-6 py-3 mb-3 border-2 border-primary-400/50 shadow-xl shadow-primary-500/30 backdrop-blur-sm">
-                    <div className="text-4xl font-black bg-gradient-to-r from-primary-300 via-primary-400 to-emerald-400 bg-clip-text text-transparent mb-1 leading-none">
-                      {actionCount}+
-                    </div>
-                    <div className="text-xs font-bold text-primary-300 uppercase tracking-widest">Daily Actions</div>
+              <div className="relative bg-gradient-to-br from-emerald-500/20 via-primary-500/20 to-primary-600/20 border-2 border-emerald-500/60 rounded-2xl p-6 backdrop-blur-sm shadow-2xl shadow-emerald-500/30 overflow-hidden">
+                {/* Animated gradient blobs */}
+                <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/20 rounded-full blur-2xl -mr-16 -mt-16"></div>
+                <div className="absolute bottom-0 left-0 w-24 h-24 bg-primary-500/20 rounded-full blur-xl -ml-12 -mb-12"></div>
+                
+                <div className="relative z-10 text-center">
+                  {/* CTA Message */}
+                  <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-emerald-500/30 border-2 border-emerald-400/60 rounded-lg mb-3">
+                    <span className="text-xl">🎯</span>
+                    <span className="text-sm font-bold text-emerald-200">NO STRINGS ATTACHED</span>
                   </div>
-                  <p className="text-xs text-slate-400 mt-2">Across 8 categories</p>
+                  <h2 className="text-2xl font-black text-slate-50 mb-2">
+                    Start Your Free Trial
+                  </h2>
+                  <p className="text-sm text-slate-200 mb-4">
+                    No credit card. No commitment.
+                  </p>
+
+                  {/* CTA Button */}
+                  <Link
+                    href="/api/auth/login?returnTo=/dashboard"
+                    className="block w-full text-center px-6 py-4 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-400 hover:to-emerald-500 text-slate-950 text-lg font-black shadow-2xl shadow-emerald-500/50 transition-all transform hover:scale-105 active:scale-95 border-2 border-emerald-400 mb-4"
+                  >
+                    JOIN FREE NOW →
+                  </Link>
+
+                  {/* Trust Signals */}
+                  <div className="space-y-2 text-sm">
+                    <div className="flex items-center justify-center gap-2 text-emerald-300">
+                      <span>✓</span>
+                      <span className="font-semibold">7-Day Free Trial</span>
+                    </div>
+                    <div className="flex items-center justify-center gap-2 text-emerald-300">
+                      <span>✓</span>
+                      <span className="font-semibold">No Credit Card</span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
 
-            {/* Right side - Visual/Stats - More Compact for Desktop */}
+            {/* Right side - Prominent CTA Box - Desktop */}
             <div className="hidden md:block order-1 md:order-2">
-              <div className="relative bg-gradient-to-br from-slate-900/98 via-primary-950/30 to-slate-800/98 border border-primary-500/30 rounded-xl p-6 backdrop-blur-sm shadow-xl shadow-primary-500/20 overflow-hidden">
-                {/* Decorative gradient blobs - Smaller */}
-                <div className="absolute top-0 right-0 w-32 h-32 bg-primary-500/15 rounded-full blur-2xl -mr-16 -mt-16"></div>
-                <div className="absolute bottom-0 left-0 w-24 h-24 bg-emerald-500/10 rounded-full blur-xl -ml-12 -mb-12"></div>
+              <div className="relative bg-gradient-to-br from-emerald-500/20 via-primary-500/20 to-primary-600/20 border-2 border-emerald-500/60 rounded-2xl p-8 backdrop-blur-sm shadow-2xl shadow-emerald-500/30 overflow-hidden">
+                {/* Animated gradient blobs for visual interest */}
+                <div className="absolute top-0 right-0 w-40 h-40 bg-emerald-500/20 rounded-full blur-3xl -mr-20 -mt-20 animate-pulse"></div>
+                <div className="absolute bottom-0 left-0 w-32 h-32 bg-primary-500/20 rounded-full blur-2xl -ml-16 -mb-16"></div>
                 
                 <div className="relative z-10">
-                  {/* Action Count - More Compact */}
-                  <div className="text-center mb-5 pb-4 border-b border-primary-500/20">
-                    <div className="inline-flex flex-col items-center justify-center bg-gradient-to-br from-primary-500/20 via-primary-600/15 to-emerald-500/15 rounded-xl px-5 py-3 mb-2 border border-primary-400/30 shadow-lg shadow-primary-500/20 backdrop-blur-sm">
-                      <div className="text-4xl lg:text-5xl font-black bg-gradient-to-r from-primary-300 via-primary-400 to-emerald-400 bg-clip-text text-transparent mb-0.5 leading-none">
+                  {/* Main CTA Message */}
+                  <div className="text-center mb-6">
+                    <div className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-500/30 border-2 border-emerald-400/60 rounded-lg mb-4">
+                      <span className="text-2xl">🎯</span>
+                      <span className="text-lg font-bold text-emerald-200">NO STRINGS ATTACHED</span>
+                    </div>
+                    <h2 className="text-3xl lg:text-4xl font-black text-slate-50 mb-3 leading-tight">
+                      Start Your Free Trial
+                    </h2>
+                    <p className="text-lg text-slate-200 mb-4">
+                      No credit card. No commitment. Just results.
+                    </p>
+                  </div>
+
+                  {/* Large CTA Button */}
+                  <div className="mb-6">
+                    <Link
+                      href="/api/auth/login?returnTo=/dashboard"
+                      className="block w-full text-center px-8 py-5 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-400 hover:to-emerald-500 text-slate-950 text-xl font-black shadow-2xl shadow-emerald-500/50 hover:shadow-emerald-500/70 transition-all transform hover:scale-105 active:scale-95 border-2 border-emerald-400"
+                    >
+                      JOIN FREE NOW →
+                    </Link>
+                  </div>
+
+                  {/* Trust Signals - Prominent */}
+                  <div className="space-y-3 mb-6">
+                    <div className="flex items-center justify-center gap-2 text-emerald-300">
+                      <span className="text-2xl">✓</span>
+                      <span className="font-bold text-base">7-Day Free Trial</span>
+                    </div>
+                    <div className="flex items-center justify-center gap-2 text-emerald-300">
+                      <span className="text-2xl">✓</span>
+                      <span className="font-bold text-base">No Credit Card Required</span>
+                    </div>
+                    <div className="flex items-center justify-center gap-2 text-emerald-300">
+                      <span className="text-2xl">✓</span>
+                      <span className="font-bold text-base">Cancel Anytime</span>
+                    </div>
+                  </div>
+
+                  {/* Stats - Compact but visible */}
+                  <div className="pt-6 border-t border-emerald-500/30">
+                    <div className="text-center">
+                      <div className="text-3xl font-black bg-gradient-to-r from-primary-300 via-emerald-300 to-emerald-400 bg-clip-text text-transparent mb-1">
                         {actionCount}+
                       </div>
+                      <div className="text-xs font-bold text-slate-300 uppercase tracking-wider">Daily Actions</div>
+                      <p className="text-xs text-slate-400 mt-1">Across 8 categories</p>
                     </div>
-                    <div className="text-xs font-bold text-primary-300 uppercase tracking-wider">Daily Actions</div>
-                    <p className="text-xs text-slate-400 mt-1">Across 8 categories</p>
-                  </div>
-                  
-                  {/* Categories Section - More Compact */}
-                  <div className="mb-4">
-                    <div className="text-center mb-3">
-                      <div className="text-xs font-extrabold text-emerald-400 uppercase tracking-wider">8 Categories</div>
-                    </div>
-                    <div className="grid grid-cols-2 gap-2">
-                      {categories.map((category, idx) => {
-                        const colorSchemes = [
-                          { bg: 'from-blue-500/20 to-cyan-500/15', border: 'border-blue-500/40', text: 'text-blue-200' },
-                          { bg: 'from-pink-500/20 to-rose-500/15', border: 'border-pink-500/40', text: 'text-pink-200' },
-                          { bg: 'from-emerald-500/20 to-teal-500/15', border: 'border-emerald-500/40', text: 'text-emerald-200' },
-                          { bg: 'from-purple-500/20 to-indigo-500/15', border: 'border-purple-500/40', text: 'text-purple-200' },
-                          { bg: 'from-orange-500/20 to-amber-500/15', border: 'border-orange-500/40', text: 'text-orange-200' },
-                          { bg: 'from-red-500/20 to-pink-500/15', border: 'border-red-500/40', text: 'text-red-200' },
-                          { bg: 'from-violet-500/20 to-purple-500/15', border: 'border-violet-500/40', text: 'text-violet-200' },
-                          { bg: 'from-cyan-500/20 to-blue-500/15', border: 'border-cyan-500/40', text: 'text-cyan-200' },
-                        ];
-                        const scheme = colorSchemes[idx % colorSchemes.length];
-                        return (
-                          <div 
-                            key={category} 
-                            className={`bg-gradient-to-br ${scheme.bg} border ${scheme.border} rounded-md px-2 py-1.5 transition-all duration-200 hover:opacity-80`}
-                          >
-                            <div className="flex items-center justify-center">
-                              <span className={`text-[10px] font-bold ${scheme.text}`}>
-                                {category}
-                              </span>
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                  
-                  {/* Compact Bottom Note */}
-                  <div className="pt-3 border-t border-primary-500/10">
-                    <p className="text-xs text-center text-slate-400">
-                      <span className="text-primary-400 font-semibold">Personalized</span> actions for your goals
-                    </p>
                   </div>
                 </div>
               </div>
