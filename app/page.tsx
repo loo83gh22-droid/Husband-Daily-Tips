@@ -295,12 +295,6 @@ export default async function Home() {
                 One personalized action. Every day. No guesswork. Just clear steps that show you care.
               </p>
 
-              {/* Free Trial Badge - More Prominent */}
-              <div className="mb-4 sm:mb-6 inline-flex flex-col sm:flex-row items-center gap-2 px-5 sm:px-6 py-3 sm:py-3.5 bg-emerald-500/20 border-2 border-emerald-500/50 rounded-lg shadow-lg">
-                <span className="text-lg sm:text-xl font-bold text-emerald-300">Try Premium Free for 7 Days</span>
-                <span className="text-xs sm:text-sm text-slate-300">No credit card • Free tier continues after</span>
-              </div>
-
               {/* Quick Benefits List */}
               <div className="mb-4 sm:mb-6 space-y-2 max-w-2xl">
                 <div className="flex items-center gap-2 text-slate-300">
