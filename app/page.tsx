@@ -323,10 +323,10 @@ export default async function Home() {
                 </div>
               </div>
 
-              {/* Free Tier Continues Message */}
+              {/* Simple Access Message */}
               <div className="mb-4 sm:mb-6 p-4 bg-slate-800/50 border border-primary-500/30 rounded-lg max-w-2xl">
                 <p className="text-sm sm:text-base text-slate-300">
-                  <span className="font-semibold text-primary-400">Always free:</span> After your trial, you can continue using the free tier with daily actions. Premium unlocks additional features like completing any action and journal access.
+                  <span className="font-semibold text-primary-400">Premium access</span> for subscribers after 7 days. <span className="font-semibold text-emerald-400">Free tier users</span> have basic access.
                 </p>
               </div>
 
@@ -394,16 +394,12 @@ export default async function Home() {
                       <span>✓</span>
                       <span className="font-semibold">No Credit Card</span>
                     </div>
-                    <div className="flex items-center justify-center gap-2 text-emerald-300">
-                      <span>✓</span>
-                      <span className="font-semibold">Free Tier Continues</span>
-                    </div>
                   </div>
 
                   {/* Free Tier Info */}
                   <div className="p-2 bg-slate-800/40 border border-emerald-500/20 rounded">
                     <p className="text-xs text-slate-300 text-center">
-                      <span className="font-semibold text-emerald-300">Always free:</span> Daily actions continue
+                      <span className="font-semibold text-primary-400">Premium</span> for subscribers. <span className="font-semibold text-emerald-300">Free tier</span> has basic access.
                     </p>
                   </div>
                 </div>
@@ -427,11 +423,8 @@ export default async function Home() {
                     <h2 className="text-3xl lg:text-4xl font-black text-slate-50 mb-3 leading-tight">
                       Try Premium Free for 7 Days
                     </h2>
-                    <p className="text-lg text-slate-200 mb-2">
+                    <p className="text-lg text-slate-200 mb-4">
                       No credit card. No commitment.
-                    </p>
-                    <p className="text-sm text-emerald-300 font-semibold mb-4">
-                      Free tier continues after trial
                     </p>
                   </div>
 
@@ -455,16 +448,12 @@ export default async function Home() {
                       <span className="text-2xl">✓</span>
                       <span className="font-bold text-base">No Credit Card Required</span>
                     </div>
-                    <div className="flex items-center justify-center gap-2 text-emerald-300">
-                      <span className="text-2xl">✓</span>
-                      <span className="font-bold text-base">Free Tier Continues After</span>
-                    </div>
                   </div>
 
                   {/* Free Tier Info */}
                   <div className="mb-6 p-3 bg-slate-800/40 border border-emerald-500/20 rounded-lg">
                     <p className="text-xs text-slate-300 text-center">
-                      <span className="font-semibold text-emerald-300">Always free:</span> Daily actions continue even if you don't subscribe
+                      <span className="font-semibold text-primary-400">Premium access</span> for subscribers after 7 days. <span className="font-semibold text-emerald-300">Free tier</span> users have basic access.
                     </p>
                   </div>
 
@@ -630,11 +619,8 @@ export default async function Home() {
               <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-slate-50 mb-4 sm:mb-6">
                 Ready to Become the Best Husband Ever?
               </h2>
-              <p className="text-base sm:text-lg md:text-xl text-slate-300 mb-3 sm:mb-4">
-                Try Premium free for 7 days. No credit card required.
-              </p>
-              <p className="text-sm sm:text-base text-emerald-300 font-semibold mb-6 sm:mb-8">
-                Free tier continues after trial - daily actions always available
+              <p className="text-base sm:text-lg md:text-xl text-slate-300 mb-6 sm:mb-8">
+                Try Premium free for 7 days. No credit card required. Premium access for subscribers after 7 days. Free tier users have basic access.
               </p>
               
               {/* Enhanced Trust Signals */}
@@ -665,19 +651,11 @@ export default async function Home() {
               
               {/* Enhanced Pricing & Guarantee Info */}
               <div className="space-y-3 sm:space-y-4 pt-6 border-t border-primary-500/30">
-                <div className="p-4 bg-slate-800/50 border border-primary-500/30 rounded-lg mb-3">
-                  <p className="text-sm sm:text-base text-slate-300 mb-2">
-                    <span className="font-semibold text-primary-400">Free tier includes:</span> Daily action, progress tracking, read-only access to actions library
-                  </p>
-                  <p className="text-sm sm:text-base text-slate-300">
-                    <span className="font-semibold text-emerald-400">Premium ($7/month):</span> Complete any action, journal access, all features unlocked
-                  </p>
-                </div>
                 <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-4 text-sm sm:text-base text-slate-300">
                   <span>After trial:</span>
                   <span className="font-bold text-primary-400">$7/month for Premium</span>
                   <span className="text-slate-400">•</span>
-                  <span className="text-emerald-400 font-semibold">Free tier continues</span>
+                  <span className="text-emerald-400 font-semibold">Free tier has basic access</span>
                 </div>
                 <div className="flex items-center justify-center gap-2 text-xs sm:text-sm text-slate-400">
                   <span className="text-primary-400">✓</span>
