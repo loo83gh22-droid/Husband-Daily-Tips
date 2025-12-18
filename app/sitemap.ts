@@ -8,12 +8,8 @@ const allGuideSlugs = Object.keys(guides);
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://www.besthusbandever.com';
   
-  // Blog posts (legacy - these may not exist anymore)
+  // Blog posts (only include pages that actually exist)
   const blogPosts = [
-    {
-      slug: 'how-to-become-a-better-husband',
-      date: '2024-01-15',
-    },
     {
       slug: 'product-hunt-launch-guide',
       date: '2024-01-10',
@@ -22,10 +18,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
       slug: 'seo-setup-guide',
       date: '2024-01-05',
     },
-    {
-      slug: 'launch-announcement-guide',
-      date: '2024-01-01',
-    },
+    // Removed 'how-to-become-a-better-husband' - doesn't exist (404)
+    // Removed 'launch-announcement-guide' - doesn't exist (404)
   ];
   
   return [
@@ -35,12 +29,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'daily',
       priority: 1,
     },
-    {
-      url: `${baseUrl}/survey`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.8,
-    },
+    // Removed /survey - it just redirects to login, not a public page
     {
       url: `${baseUrl}/blog`,
       lastModified: new Date(),
