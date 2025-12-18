@@ -261,12 +261,6 @@ export default async function Home() {
               <div className="flex items-center gap-3">
                 <Link
                   href="/api/auth/login?returnTo=/dashboard"
-                  className="hidden md:inline-flex px-4 py-2 text-sm font-medium text-slate-300 hover:text-white transition-colors"
-                >
-                  Sign Up & Take Test
-                </Link>
-                <Link
-                  href="/api/auth/login?returnTo=/dashboard"
                   className="px-4 py-2 text-sm font-medium text-slate-300 hover:text-white transition-colors"
                 >
                   Sign In
