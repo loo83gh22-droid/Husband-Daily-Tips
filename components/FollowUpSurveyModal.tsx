@@ -262,6 +262,16 @@ export default function FollowUpSurveyModal({ surveyType, onComplete, onDismiss 
                               </div>
                             );
                           }
+                          // Check if this is a likelihood question
+                          const isLikelihoodQuestion = currentQuestion.question_text.toLowerCase().includes('likely') || 
+                                                       currentQuestion.question_text.toLowerCase().includes('continue using');
+                          if (isLikelihoodQuestion) {
+                            return (
+                              <div className="text-[10px] text-slate-400">
+                                {value === 1 ? 'Not at all likely' : value === 2 ? 'Somewhat likely' : value === 3 ? 'Moderately likely' : value === 4 ? 'Very likely' : 'Extremely likely'}
+                              </div>
+                            );
+                          }
                           return (
                             <div className="text-[10px] text-slate-400">
                               {value === 1 ? 'Poor' : value === 2 ? 'Fair' : value === 3 ? 'Good' : value === 4 ? 'Very Good' : 'Excellent'}
