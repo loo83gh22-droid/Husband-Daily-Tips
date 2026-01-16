@@ -204,71 +204,10 @@ export default async function JournalPage() {
   }
 
   const auth0Id = session.user.sub;
-  const subscriptionStatus = await getUserSubscriptionStatus(auth0Id);
   
-  // Check if user has premium access
-  const hasPremiumAccess = subscriptionStatus.isOnPremium || subscriptionStatus.hasActiveTrial;
+  // All users now have access to journal - no restrictions
+  // (Previously had restrictions for free users, but we're making everything free to focus on growth)
   
-  // If free user, show upgrade message instead of journal
-  if (!hasPremiumAccess) {
-    return (
-      <div className="min-h-screen bg-slate-950">
-        <DashboardNav />
-        <main className="container mx-auto px-4 py-8 md:py-10">
-          <div className="max-w-4xl mx-auto">
-            <div className="bg-gradient-to-br from-slate-900/90 via-slate-800/80 to-slate-900/90 border border-slate-700/50 rounded-2xl p-8 md:p-12 text-center shadow-2xl">
-              <div className="mb-6">
-                <span className="text-6xl mb-4 block">📔</span>
-                <h1 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-primary-400 to-primary-600 bg-clip-text text-transparent">
-                  Journal Access
-                </h1>
-                <p className="text-lg text-slate-300 mb-2">
-                  Journaling is a Premium feature
-                </p>
-                <p className="text-sm text-slate-400 mb-8">
-                  Upgrade to Premium to access your journal, track your reflections, and build a record of your relationship wins.
-                </p>
-              </div>
-              
-              <div className="bg-slate-800/50 border border-slate-700/50 rounded-xl p-6 mb-8">
-                <h2 className="text-xl font-semibold text-slate-200 mb-4">What you get with Premium:</h2>
-                <ul className="text-left space-y-3 text-slate-300">
-                  <li className="flex items-start gap-3">
-                    <span className="text-primary-400 mt-1">✓</span>
-                    <span>Full journal access to reflect on your actions</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <span className="text-primary-400 mt-1">✓</span>
-                    <span>Complete any action from the Actions page</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <span className="text-primary-400 mt-1">✓</span>
-                    <span>Daily personalized actions</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <span className="text-primary-400 mt-1">✓</span>
-                    <span>Progress tracking and analytics</span>
-                  </li>
-                </ul>
-              </div>
-
-              <Link
-                href="/dashboard/subscription?upgrade=journal"
-                className="inline-flex items-center justify-center bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white font-bold px-10 py-4 rounded-xl transition-all shadow-2xl shadow-primary-500/30 hover:shadow-primary-500/50 transform hover:scale-105 text-lg"
-              >
-                Start Free Trial →
-              </Link>
-              
-              <p className="text-xs text-slate-500 mt-6">
-                Free users can still complete the daily action served on the dashboard
-              </p>
-            </div>
-          </div>
-        </main>
-      </div>
-    );
-  }
-
   const { favorites, regular } = await getUserReflections(auth0Id);
   const allReflections = [...favorites, ...regular];
   const { userId, stats } = await getUserData(auth0Id);

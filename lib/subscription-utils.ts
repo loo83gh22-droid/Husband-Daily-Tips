@@ -20,17 +20,19 @@ export function hasPremiumAccess(status: SubscriptionStatus): boolean {
 
 /**
  * Check if user can complete actions from the actions page
- * Free users can only complete the daily served action
+ * All users can now complete any action - no restrictions
+ * (Previously had restrictions for free users, but we're making everything free to focus on growth)
  */
 export function canCompleteFromActionsPage(status: SubscriptionStatus): boolean {
-  return hasPremiumAccess(status);
+  return true; // All users can complete actions
 }
 
 /**
  * Check if user can access the journal
- * Free users cannot access journal
+ * All users can now access journal - no restrictions
+ * (Previously had restrictions for free users, but we're making everything free to focus on growth)
  */
 export function canAccessJournal(status: SubscriptionStatus): boolean {
-  return hasPremiumAccess(status);
+  return true; // All users can access journal
 }
 

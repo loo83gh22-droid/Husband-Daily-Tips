@@ -35,27 +35,8 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
-    // Check if user is a paid user (premium or pro tier)
-    const isPaidUser = user.subscription_tier === 'premium' || user.subscription_tier === 'pro';
-    
-    // Check if user has an active trial
-    const trialEndsAt = user.trial_ends_at ? new Date(user.trial_ends_at) : null;
-    const now = new Date();
-    const hasActiveTrial = user.subscription_tier === 'premium' && 
-                          trialEndsAt && 
-                          trialEndsAt > now && 
-                          !user.stripe_subscription_id;
-    
-    // User must be a paid user (with active subscription or trial) to join 7-day events
-    if (!isPaidUser && !hasActiveTrial) {
-      return NextResponse.json(
-        { 
-          error: 'Premium subscription required',
-          message: '7-day events are available for premium subscribers only. Upgrade to join events and unlock all features.',
-        },
-        { status: 403 }
-      );
-    }
+    // All users can now join challenges - no restrictions
+    // (Previously had restrictions for free users, but we're making everything free to focus on growth)
 
     // Check if challenge exists and is active
     const { data: challenge, error: challengeError } = await supabase

@@ -46,53 +46,8 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Action not found' }, { status: 404 });
     }
 
-    // Check subscription status for free users
-    const trialEndsAt = user?.trial_ends_at ? new Date(user.trial_ends_at) : null;
-    const trialStartedAt = user?.trial_started_at ? new Date(user.trial_started_at) : null;
-    const now = new Date();
-    // Active trial: premium tier, has trial dates, trial hasn't ended, and no paid subscription
-    const hasActiveTrial = user?.subscription_tier === 'premium' && 
-                          trialStartedAt && 
-                          trialEndsAt && 
-                          trialEndsAt > now && 
-                          !user?.stripe_subscription_id;
-    const hasSubscription = !!user?.stripe_subscription_id;
-    const isOnPremium = user?.subscription_tier === 'premium' && hasSubscription;
-    const hasPremiumAccess = isOnPremium || hasActiveTrial;
-
-    // Check if free user is trying to share to forum
-    if (shareToForum && user.subscription_tier === 'free') {
-      return NextResponse.json(
-        { error: 'Upgrade to Paid to share your wins to Team Wins' },
-        { status: 403 }
-      );
-    }
-
-    // Check if this action is the user's daily served action
-    const today = new Date().toISOString().split('T')[0];
-    const { data: dailyAction } = await supabase
-      .from('user_daily_actions')
-      .select('id')
-      .eq('user_id', user.id)
-      .eq('action_id', actionId)
-      .eq('date', today)
-      .single();
-
-    // If not the daily action and user doesn't have premium, block completion
-    if (!dailyAction && !hasPremiumAccess) {
-      // Check if user can start a trial (hasn't started one before)
-      const canStartTrial = !trialStartedAt;
-      
-      return NextResponse.json(
-        { 
-          error: 'Premium required',
-          message: 'Free users can only complete the daily action served on the dashboard. Upgrade to Premium to complete any action from the Actions page.',
-          canStartTrial,
-          trialStartedAt: user.trial_started_at,
-        },
-        { status: 403 }
-      );
-    }
+    // All users can now complete any action - no restrictions
+    // (Previously had restrictions for free users, but we're making everything free to focus on growth)
 
     // Always create journal entry for action completions
     // This is the running record of all action completions

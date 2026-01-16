@@ -8,6 +8,7 @@ import { getMarketingMessage } from '@/lib/marketing-messages';
 import ReferralCodeHandler from '@/components/ReferralCodeHandler';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import FAQAccordion from '@/components/FAQAccordion';
+import OptionalImage from '@/components/OptionalImage';
 
 export const metadata: Metadata = {
   title: 'Best Husband Ever - Daily Actions to Level Up Your Marriage',
@@ -312,9 +313,9 @@ export default async function Home() {
               </div>
 
               {/* Simple Access Message */}
-              <div className="mb-4 sm:mb-6 p-4 bg-slate-800/50 border border-primary-500/30 rounded-lg max-w-2xl">
-                <p className="text-sm sm:text-base text-slate-300">
-                  <span className="font-semibold text-primary-400">Premium access</span> for subscribers after 7 days. <span className="font-semibold text-emerald-400">Free tier users</span> have basic access.
+              <div className="mb-4 sm:mb-6 p-4 bg-emerald-500/20 border border-emerald-500/40 rounded-lg max-w-2xl">
+                <p className="text-sm sm:text-base text-slate-200 font-semibold text-center">
+                  <span className="text-2xl">🎉</span> <span className="text-emerald-300">100% FREE</span> - All features unlocked. No credit card. No trial. Just sign up and start improving your relationship today.
                 </p>
               </div>
 
@@ -322,15 +323,15 @@ export default async function Home() {
               <div className="mb-4 sm:mb-6">
                 <Link
                   href="/api/auth/login?returnTo=/dashboard"
-                  className="inline-flex items-center justify-center px-10 sm:px-12 py-5 sm:py-6 rounded-xl bg-primary-500 text-slate-950 text-lg sm:text-xl md:text-2xl font-bold shadow-2xl shadow-primary-500/30 hover:bg-primary-400 transition-all transform hover:scale-105 active:scale-95 w-full sm:w-auto"
+                  className="inline-flex items-center justify-center px-10 sm:px-12 py-5 sm:py-6 rounded-xl bg-emerald-500 text-slate-950 text-lg sm:text-xl md:text-2xl font-bold shadow-2xl shadow-emerald-500/30 hover:bg-emerald-400 transition-all transform hover:scale-105 active:scale-95 w-full sm:w-auto"
                 >
-                  Start 7-Day Free Trial →
+                  Get Started Free →
                 </Link>
               </div>
 
               {/* Trust Text */}
               <p className="text-sm text-slate-400 mb-4">
-                No credit card required • Cancel anytime • 100% Secure
+                100% Free • No credit card required • Start improving today
               </p>
 
               {/* Social Proof */}
@@ -355,13 +356,13 @@ export default async function Home() {
                     <span className="text-sm font-bold text-emerald-200">NO STRINGS ATTACHED</span>
                   </div>
                   <h2 className="text-2xl font-black text-slate-50 mb-2">
-                    Try Premium Free for 7 Days
+                    100% Free Forever
                   </h2>
                   <p className="text-sm text-slate-200 mb-2">
-                    No credit card. No commitment.
+                    All features unlocked. No credit card. No trial period.
                   </p>
                   <p className="text-xs text-emerald-300 font-semibold mb-4">
-                    Free tier continues after trial
+                    Start improving your relationship today
                   </p>
 
                   {/* CTA Button */}
@@ -369,33 +370,40 @@ export default async function Home() {
                     href="/api/auth/login?returnTo=/dashboard"
                     className="block w-full text-center px-6 py-4 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-400 hover:to-emerald-500 text-slate-950 text-lg font-black shadow-2xl shadow-emerald-500/50 transition-all transform hover:scale-105 active:scale-95 border-2 border-emerald-400 mb-4"
                   >
-                    JOIN FREE NOW →
+                    GET STARTED FREE →
                   </Link>
 
                   {/* Trust Signals */}
                   <div className="space-y-2 text-sm mb-3">
                     <div className="flex items-center justify-center gap-2 text-emerald-300">
                       <span>✓</span>
-                      <span className="font-semibold">7-Day Premium Trial</span>
+                      <span className="font-semibold">100% Free</span>
+                    </div>
+                    <div className="flex items-center justify-center gap-2 text-emerald-300">
+                      <span>✓</span>
+                      <span className="font-semibold">All Features Unlocked</span>
                     </div>
                     <div className="flex items-center justify-center gap-2 text-emerald-300">
                       <span>✓</span>
                       <span className="font-semibold">No Credit Card</span>
                     </div>
                   </div>
-
-                  {/* Free Tier Info */}
-                  <div className="p-2 bg-slate-800/40 border border-emerald-500/20 rounded">
-                    <p className="text-xs text-slate-300 text-center">
-                      <span className="font-semibold text-primary-400">Premium</span> for subscribers. <span className="font-semibold text-emerald-300">Free tier</span> has basic access.
-                    </p>
-                  </div>
                 </div>
               </div>
             </div>
 
-            {/* Right side - Prominent CTA Box - Desktop */}
+            {/* Right side - Hero Image or CTA Box - Desktop */}
             <div className="hidden md:block order-1 md:order-2">
+              {/* Hero Image - Optional, falls back gracefully if image doesn't exist */}
+              <OptionalImage
+                src="/images/landing/hero-image.jpg"
+                alt="Happy couple - Better relationships through daily actions"
+                width={600}
+                height={400}
+                className="w-full h-auto object-cover rounded-2xl border-2 border-primary-500/30 shadow-2xl mb-6"
+                priority
+                fallback={null}
+              />
               <div className="relative bg-gradient-to-br from-emerald-500/20 via-primary-500/20 to-primary-600/20 border-2 border-emerald-500/60 rounded-2xl p-8 backdrop-blur-sm shadow-2xl shadow-emerald-500/30 overflow-hidden">
                 {/* Animated gradient blobs for visual interest */}
                 <div className="absolute top-0 right-0 w-40 h-40 bg-emerald-500/20 rounded-full blur-3xl -mr-20 -mt-20 animate-pulse"></div>
@@ -409,10 +417,10 @@ export default async function Home() {
                       <span className="text-lg font-bold text-emerald-200">NO STRINGS ATTACHED</span>
                     </div>
                     <h2 className="text-3xl lg:text-4xl font-black text-slate-50 mb-3 leading-tight">
-                      Try Premium Free for 7 Days
+                      100% Free Forever
                     </h2>
                     <p className="text-lg text-slate-200 mb-4">
-                      No credit card. No commitment.
+                      All features unlocked. No credit card. No trial period.
                     </p>
                   </div>
 
@@ -422,7 +430,7 @@ export default async function Home() {
                       href="/api/auth/login?returnTo=/dashboard"
                       className="block w-full text-center px-8 py-5 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-400 hover:to-emerald-500 text-slate-950 text-xl font-black shadow-2xl shadow-emerald-500/50 hover:shadow-emerald-500/70 transition-all transform hover:scale-105 active:scale-95 border-2 border-emerald-400"
                     >
-                      JOIN FREE NOW →
+                      GET STARTED FREE →
                     </Link>
                   </div>
 
@@ -430,19 +438,16 @@ export default async function Home() {
                   <div className="space-y-3 mb-4">
                     <div className="flex items-center justify-center gap-2 text-emerald-300">
                       <span className="text-2xl">✓</span>
-                      <span className="font-bold text-base">7-Day Premium Trial</span>
+                      <span className="font-bold text-base">100% Free</span>
+                    </div>
+                    <div className="flex items-center justify-center gap-2 text-emerald-300">
+                      <span className="text-2xl">✓</span>
+                      <span className="font-bold text-base">All Features Unlocked</span>
                     </div>
                     <div className="flex items-center justify-center gap-2 text-emerald-300">
                       <span className="text-2xl">✓</span>
                       <span className="font-bold text-base">No Credit Card Required</span>
                     </div>
-                  </div>
-
-                  {/* Free Tier Info */}
-                  <div className="mb-6 p-3 bg-slate-800/40 border border-emerald-500/20 rounded-lg">
-                    <p className="text-xs text-slate-300 text-center">
-                      <span className="font-semibold text-primary-400">Premium access</span> for subscribers after 7 days. <span className="font-semibold text-emerald-300">Free tier</span> users have basic access.
-                    </p>
                   </div>
 
                   {/* Stats - Compact but visible */}
@@ -473,8 +478,15 @@ export default async function Home() {
             </div>
             <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8 max-w-5xl mx-auto">
               <div className="bg-gradient-to-br from-slate-900/80 to-slate-800/50 border-2 border-primary-500/30 rounded-xl p-6 sm:p-8 text-center hover:border-primary-500/60 transition-all hover:shadow-xl hover:shadow-primary-500/20">
-                <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-primary-500/30 to-primary-600/20 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6 border-2 border-primary-500/50">
-                  <span className="text-3xl sm:text-4xl">📝</span>
+                <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-primary-500/30 to-primary-600/20 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6 border-2 border-primary-500/50 overflow-hidden">
+                  <OptionalImage
+                    src="/images/landing/step-1-icon.png"
+                    alt="Sign up icon"
+                    width={80}
+                    height={80}
+                    className="w-full h-full object-cover"
+                    fallback={<span className="text-3xl sm:text-4xl">📝</span>}
+                  />
                 </div>
                 <div className="inline-flex items-center justify-center w-8 h-8 bg-primary-500 text-slate-950 rounded-full text-sm font-black mb-3 sm:mb-4">
                   1
@@ -485,8 +497,15 @@ export default async function Home() {
                 </p>
               </div>
               <div className="bg-gradient-to-br from-slate-900/80 to-slate-800/50 border-2 border-primary-500/30 rounded-xl p-6 sm:p-8 text-center hover:border-primary-500/60 transition-all hover:shadow-xl hover:shadow-primary-500/20">
-                <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-primary-500/30 to-primary-600/20 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6 border-2 border-primary-500/50">
-                  <span className="text-3xl sm:text-4xl">📅</span>
+                <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-primary-500/30 to-primary-600/20 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6 border-2 border-primary-500/50 overflow-hidden">
+                  <OptionalImage
+                    src="/images/landing/step-2-icon.png"
+                    alt="Daily actions icon"
+                    width={80}
+                    height={80}
+                    className="w-full h-full object-cover"
+                    fallback={<span className="text-3xl sm:text-4xl">📅</span>}
+                  />
                 </div>
                 <div className="inline-flex items-center justify-center w-8 h-8 bg-primary-500 text-slate-950 rounded-full text-sm font-black mb-3 sm:mb-4">
                   2
@@ -497,8 +516,15 @@ export default async function Home() {
                 </p>
               </div>
               <div className="bg-gradient-to-br from-slate-900/80 to-slate-800/50 border-2 border-primary-500/30 rounded-xl p-6 sm:p-8 text-center hover:border-primary-500/60 transition-all hover:shadow-xl hover:shadow-primary-500/20 sm:col-span-2 md:col-span-1">
-                <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-primary-500/30 to-primary-600/20 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6 border-2 border-primary-500/50">
-                  <span className="text-3xl sm:text-4xl">🏆</span>
+                <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-primary-500/30 to-primary-600/20 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6 border-2 border-primary-500/50 overflow-hidden">
+                  <OptionalImage
+                    src="/images/landing/step-3-icon.png"
+                    alt="Track progress icon"
+                    width={80}
+                    height={80}
+                    className="w-full h-full object-cover"
+                    fallback={<span className="text-3xl sm:text-4xl">🏆</span>}
+                  />
                 </div>
                 <div className="inline-flex items-center justify-center w-8 h-8 bg-primary-500 text-slate-950 rounded-full text-sm font-black mb-3 sm:mb-4">
                   3
@@ -518,23 +544,79 @@ export default async function Home() {
             </h2>
             <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
               <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-6 text-center">
+                <div className="mb-4 flex justify-center">
+                  <OptionalImage
+                    src="/images/landing/feature-action.png"
+                    alt="Action-based icon"
+                    width={80}
+                    height={80}
+                    className="w-20 h-20 object-contain"
+                    fallback={<span className="text-4xl">⚡</span>}
+                  />
+                </div>
                 <h3 className="text-xl font-semibold text-slate-200 mb-3">⚡ Action-Based, Not Advice</h3>
                 <p className="text-slate-400">
                   No generic tips. Get specific, actionable steps delivered daily. You know exactly what to do, when to do it, and why it matters.
                 </p>
               </div>
               <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-6 text-center">
+                <div className="mb-4 flex justify-center">
+                  <OptionalImage
+                    src="/images/landing/feature-personalized.png"
+                    alt="Personalized icon"
+                    width={80}
+                    height={80}
+                    className="w-20 h-20 object-contain"
+                    fallback={<span className="text-4xl">🎯</span>}
+                  />
+                </div>
                 <h3 className="text-xl font-semibold text-slate-200 mb-3">🎯 Personalized for Your Relationship</h3>
                 <p className="text-slate-400">
                   Actions tailored to your goals, schedule, and relationship stage. What you need, when you need it, not a one-size-fits-all approach.
                 </p>
               </div>
               <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-6 text-center">
+                <div className="mb-4 flex justify-center">
+                  <OptionalImage
+                    src="/images/landing/feature-results.png"
+                    alt="Results icon"
+                    width={80}
+                    height={80}
+                    className="w-20 h-20 object-contain"
+                    fallback={<span className="text-4xl">📈</span>}
+                  />
+                </div>
                 <h3 className="text-xl font-semibold text-slate-200 mb-3">📈 See Real Results</h3>
                 <p className="text-slate-400">
                   Track your progress, build streaks, and watch your relationship improve. Small daily actions compound into meaningful change.
                 </p>
               </div>
+            </div>
+          </section>
+
+          {/* Dashboard Preview Section */}
+          <section className="mt-24 md:mt-32">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl md:text-4xl font-bold text-slate-50 mb-4">
+                See It In Action
+              </h2>
+              <p className="text-lg text-slate-400 max-w-2xl mx-auto">
+                Your personalized dashboard shows daily actions, progress tracking, and relationship health at a glance
+              </p>
+            </div>
+            <div className="max-w-5xl mx-auto">
+              <OptionalImage
+                src="/images/landing/dashboard-screenshot.png"
+                alt="Best Husband Ever Dashboard Preview"
+                width={1200}
+                height={800}
+                className="w-full h-auto rounded-2xl border-2 border-primary-500/30 shadow-2xl"
+                fallback={
+                  <div className="bg-slate-900/50 border-2 border-slate-800 rounded-2xl p-12 text-center">
+                    <p className="text-slate-400">Dashboard preview coming soon</p>
+                  </div>
+                }
+              />
             </div>
           </section>
 
