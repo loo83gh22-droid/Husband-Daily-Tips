@@ -155,7 +155,7 @@ export default async function Home() {
                 name: 'How much does it cost?',
                 acceptedAnswer: {
                   '@type': 'Answer',
-                  text: 'Best Husband Ever is 100% free forever. No credit card required. No trial period. All features are unlocked from day one. Just sign up, take the survey, and start receiving daily actions.',
+                  text: 'Best Husband Ever is free to use. No credit card required. No trial period. All features are unlocked from day one. Just sign up, take the survey, and start receiving daily actions.',
                 },
               },
               {
@@ -163,7 +163,7 @@ export default async function Home() {
                 name: 'Is it really free?',
                 acceptedAnswer: {
                   '@type': 'Answer',
-                  text: 'Yes. 100% free forever. No credit card required. No hidden fees. No trial period. All features are available immediately. Just sign up, take the survey, and start improving your relationship today.',
+                  text: 'Yes. Free to use. No credit card required. No hidden fees. No trial period. All features are available immediately. Just sign up, take the survey, and start improving your relationship today.',
                 },
               },
               {
@@ -315,7 +315,7 @@ export default async function Home() {
               {/* Simple Access Message */}
               <div className="mb-4 sm:mb-6 p-4 bg-emerald-500/20 border border-emerald-500/40 rounded-lg max-w-2xl">
                 <p className="text-sm sm:text-base text-slate-200 font-semibold text-center">
-                  <span className="text-2xl">🎉</span> <span className="text-emerald-300">100% FREE</span> - All features unlocked. No credit card. No trial. Just sign up and start improving your relationship today.
+                  <span className="text-emerald-300">Free to Use</span> (for those that want to do a little better). All features unlocked. No credit card required.
                 </p>
               </div>
 
@@ -331,7 +331,7 @@ export default async function Home() {
 
               {/* Trust Text */}
               <p className="text-sm text-slate-400 mb-4">
-                100% Free • No credit card required • Start improving today
+                Free to Use • No credit card required • Start improving today
               </p>
 
               {/* Social Proof */}
@@ -356,10 +356,10 @@ export default async function Home() {
                     <span className="text-sm font-bold text-emerald-200">NO STRINGS ATTACHED</span>
                   </div>
                   <h2 className="text-2xl font-black text-slate-50 mb-2">
-                    100% Free Forever
+                    Free to Use
                   </h2>
                   <p className="text-sm text-slate-200 mb-2">
-                    All features unlocked. No credit card. No trial period.
+                    For those that want to do a little better. All features unlocked. No credit card.
                   </p>
                   <p className="text-xs text-emerald-300 font-semibold mb-4">
                     Start improving your relationship today
@@ -377,7 +377,7 @@ export default async function Home() {
                   <div className="space-y-2 text-sm mb-3">
                     <div className="flex items-center justify-center gap-2 text-emerald-300">
                       <span>✓</span>
-                      <span className="font-semibold">100% Free</span>
+                      <span className="font-semibold">Free to Use</span>
                     </div>
                     <div className="flex items-center justify-center gap-2 text-emerald-300">
                       <span>✓</span>
@@ -417,10 +417,10 @@ export default async function Home() {
                       <span className="text-lg font-bold text-emerald-200">NO STRINGS ATTACHED</span>
                     </div>
                     <h2 className="text-3xl lg:text-4xl font-black text-slate-50 mb-3 leading-tight">
-                      100% Free Forever
+                      Free to Use
                     </h2>
                     <p className="text-lg text-slate-200 mb-4">
-                      All features unlocked. No credit card. No trial period.
+                      For those that want to do a little better. All features unlocked. No credit card.
                     </p>
                   </div>
 
@@ -438,7 +438,7 @@ export default async function Home() {
                   <div className="space-y-3 mb-4">
                     <div className="flex items-center justify-center gap-2 text-emerald-300">
                       <span className="text-2xl">✓</span>
-                      <span className="font-bold text-base">100% Free</span>
+                      <span className="font-bold text-base">Free to Use</span>
                     </div>
                     <div className="flex items-center justify-center gap-2 text-emerald-300">
                       <span className="text-2xl">✓</span>
@@ -637,11 +637,11 @@ export default async function Home() {
                 },
                 {
                   question: 'How much does it cost?',
-                  answer: 'Best Husband Ever is 100% free forever. No credit card required. No trial period. All features are unlocked from day one. Just sign up, take the survey, and start receiving daily actions.',
+                  answer: 'Best Husband Ever is free to use. No credit card required. No trial period. All features are unlocked from day one. Just sign up, take the survey, and start receiving daily actions.',
                 },
                 {
                   question: 'Is it really free?',
-                  answer: 'Yes. 100% free forever. No credit card required. No hidden fees. No trial period. All features are available immediately. Just sign up, take the survey, and start improving your relationship today.',
+                  answer: 'Yes. Free to use. No credit card required. No hidden fees. No trial period. All features are available immediately. Just sign up, take the survey, and start improving your relationship today.',
                 },
                 {
                   question: 'What if I\'m not married yet?',
@@ -690,14 +690,14 @@ export default async function Home() {
                 Ready to Become the Best Husband Ever?
               </h2>
               <p className="text-base sm:text-lg md:text-xl text-slate-300 mb-6 sm:mb-8">
-                <span className="text-2xl">🎉</span> <span className="text-emerald-300 font-bold">100% FREE FOREVER</span> - All features unlocked. No credit card. No trial period. Just sign up and start improving your relationship today.
+                <span className="text-emerald-300 font-bold">Free to Use</span> (for those that want to do a little better). All features unlocked. No credit card required.
               </p>
               
               {/* Enhanced Trust Signals */}
               <div className="mb-6 sm:mb-8 flex flex-wrap items-center justify-center gap-4 sm:gap-6 text-sm sm:text-base">
                 <div className="flex items-center gap-2 font-semibold text-emerald-400">
                   <span className="text-lg">✓</span>
-                  <span>100% Free</span>
+                  <span>Free to Use</span>
                 </div>
                 <div className="flex items-center gap-2 font-semibold text-emerald-400">
                   <span className="text-lg">🔓</span>
