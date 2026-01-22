@@ -155,15 +155,15 @@ export default async function Home() {
                 name: 'How much does it cost?',
                 acceptedAnswer: {
                   '@type': 'Answer',
-                  text: 'Start with a 7-day free trial, no credit card required. After that, premium membership is $7/month. That\'s less than $0.25 per day for daily actions that can transform your relationship.',
+                  text: 'Best Husband Ever is 100% free forever. No credit card required. No trial period. All features are unlocked from day one. Just sign up, take the survey, and start receiving daily actions.',
                 },
               },
               {
                 '@type': 'Question',
-                name: 'Is there really a free trial?',
+                name: 'Is it really free?',
                 acceptedAnswer: {
                   '@type': 'Answer',
-                  text: 'Yes. 7 days completely free. No credit card required. No automatic charges. Just sign up, take the survey, and start receiving daily actions. Cancel anytime during the trial with no obligation.',
+                  text: 'Yes. 100% free forever. No credit card required. No hidden fees. No trial period. All features are available immediately. Just sign up, take the survey, and start improving your relationship today.',
                 },
               },
               {
@@ -637,11 +637,11 @@ export default async function Home() {
                 },
                 {
                   question: 'How much does it cost?',
-                  answer: 'Start with a 7-day free trial, no credit card required. After that, premium membership is $7/month. That\'s less than $0.25 per day for daily actions that can transform your relationship.',
+                  answer: 'Best Husband Ever is 100% free forever. No credit card required. No trial period. All features are unlocked from day one. Just sign up, take the survey, and start receiving daily actions.',
                 },
                 {
-                  question: 'Is there really a free trial?',
-                  answer: 'Yes. 7 days completely free. No credit card required. No automatic charges. Just sign up, take the survey, and start receiving daily actions. Cancel anytime during the trial with no obligation.',
+                  question: 'Is it really free?',
+                  answer: 'Yes. 100% free forever. No credit card required. No hidden fees. No trial period. All features are available immediately. Just sign up, take the survey, and start improving your relationship today.',
                 },
                 {
                   question: 'What if I\'m not married yet?',
@@ -690,22 +690,22 @@ export default async function Home() {
                 Ready to Become the Best Husband Ever?
               </h2>
               <p className="text-base sm:text-lg md:text-xl text-slate-300 mb-6 sm:mb-8">
-                Try Premium free for 7 days. No credit card required. Premium access for subscribers after 7 days. Free tier users have basic access.
+                <span className="text-2xl">🎉</span> <span className="text-emerald-300 font-bold">100% FREE FOREVER</span> - All features unlocked. No credit card. No trial period. Just sign up and start improving your relationship today.
               </p>
               
               {/* Enhanced Trust Signals */}
               <div className="mb-6 sm:mb-8 flex flex-wrap items-center justify-center gap-4 sm:gap-6 text-sm sm:text-base">
                 <div className="flex items-center gap-2 font-semibold text-emerald-400">
                   <span className="text-lg">✓</span>
-                  <span>No credit card required</span>
+                  <span>100% Free</span>
+                </div>
+                <div className="flex items-center gap-2 font-semibold text-emerald-400">
+                  <span className="text-lg">🔓</span>
+                  <span>All Features Unlocked</span>
                 </div>
                 <div className="flex items-center gap-2 font-semibold text-emerald-400">
                   <span className="text-lg">🔒</span>
                   <span>100% Secure</span>
-                </div>
-                <div className="flex items-center gap-2 font-semibold text-emerald-400">
-                  <span className="text-lg">↩️</span>
-                  <span>Cancel anytime</span>
                 </div>
               </div>
               
@@ -713,23 +713,22 @@ export default async function Home() {
               <div className="flex justify-center mb-6 sm:mb-8">
                 <Link
                   href="/api/auth/login?returnTo=/dashboard"
-                  className="inline-flex items-center justify-center px-10 sm:px-12 py-5 sm:py-6 rounded-xl bg-primary-500 text-slate-950 text-lg sm:text-xl md:text-2xl font-bold shadow-2xl shadow-primary-500/30 hover:bg-primary-400 transition-all transform hover:scale-105 active:scale-95"
+                  className="inline-flex items-center justify-center px-10 sm:px-12 py-5 sm:py-6 rounded-xl bg-emerald-500 text-slate-950 text-lg sm:text-xl md:text-2xl font-bold shadow-2xl shadow-emerald-500/30 hover:bg-emerald-400 transition-all transform hover:scale-105 active:scale-95"
                 >
-                  Start 7-Day Free Trial →
+                  Get Started Free →
                 </Link>
               </div>
               
               {/* Enhanced Pricing & Guarantee Info */}
-              <div className="space-y-3 sm:space-y-4 pt-6 border-t border-primary-500/30">
+              <div className="space-y-3 sm:space-y-4 pt-6 border-t border-emerald-500/30">
                 <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-4 text-sm sm:text-base text-slate-300">
-                  <span>After trial:</span>
-                  <span className="font-bold text-primary-400">$7/month for Premium</span>
+                  <span className="text-emerald-300 font-bold">No credit card required</span>
                   <span className="text-slate-400">•</span>
-                  <span className="text-emerald-400 font-semibold">Free tier has basic access</span>
+                  <span className="text-emerald-300 font-semibold">Start improving today</span>
                 </div>
                 <div className="flex items-center justify-center gap-2 text-xs sm:text-sm text-slate-400">
-                  <span className="text-primary-400">✓</span>
-                  <span>7-Day Money-Back Guarantee • SSL Encrypted • GDPR Compliant</span>
+                  <span className="text-emerald-400">✓</span>
+                  <span>SSL Encrypted • GDPR Compliant • Privacy First</span>
                 </div>
               </div>
             </div>
