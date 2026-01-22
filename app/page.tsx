@@ -155,7 +155,7 @@ export default async function Home() {
                 name: 'How much does it cost?',
                 acceptedAnswer: {
                   '@type': 'Answer',
-                  text: 'Best Husband Ever is free to use. No credit card required. No trial period. All features are unlocked from day one. Just sign up, take the survey, and start receiving daily actions.',
+                  text: 'Best Husband Ever is free to use (for those that want to do a little better). No credit card required. All features are unlocked from day one. Just sign up, take the survey, and start receiving daily actions.',
                 },
               },
               {
@@ -163,7 +163,7 @@ export default async function Home() {
                 name: 'Is it really free?',
                 acceptedAnswer: {
                   '@type': 'Answer',
-                  text: 'Yes. Free to use. No credit card required. No hidden fees. No trial period. All features are available immediately. Just sign up, take the survey, and start improving your relationship today.',
+                  text: 'Yes. Free to use for those that want to do a little better. No credit card required. No hidden fees. All features are available immediately. Just sign up, take the survey, and start improving your relationship today.',
                 },
               },
               {
@@ -637,11 +637,11 @@ export default async function Home() {
                 },
                 {
                   question: 'How much does it cost?',
-                  answer: 'Best Husband Ever is free to use. No credit card required. No trial period. All features are unlocked from day one. Just sign up, take the survey, and start receiving daily actions.',
+                  answer: 'Best Husband Ever is free to use (for those that want to do a little better). No credit card required. All features are unlocked from day one. Just sign up, take the survey, and start receiving daily actions.',
                 },
                 {
                   question: 'Is it really free?',
-                  answer: 'Yes. Free to use. No credit card required. No hidden fees. No trial period. All features are available immediately. Just sign up, take the survey, and start improving your relationship today.',
+                  answer: 'Yes. Free to use for those that want to do a little better. No credit card required. No hidden fees. All features are available immediately. Just sign up, take the survey, and start improving your relationship today.',
                 },
                 {
                   question: 'What if I\'m not married yet?',
